@@ -13,6 +13,8 @@ import DonationModal from './DonationModal';
 import CurriculumSelector from './CurriculumSelector';
 import ContactModal from './ContactModal';
 import USFQIcon from './USFQIcon';
+import ModeSelector, { SelectionMode } from './ModeSelector';
+import WritingIntensiveSidebar from './WritingIntensiveSidebar';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
@@ -21,6 +23,9 @@ export default function CurriculumGrid() {
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
+  const [inProgressCourses, setInProgressCourses] = useState<Set<string>>(new Set());
+  const [plannedCourses, setPlannedCourses] = useState<Set<string>>(new Set());
+  const [currentMode, setCurrentMode] = useState<SelectionMode>('completed');
   const [showUpload, setShowUpload] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showDonation, setShowDonation] = useState(false);
@@ -32,6 +37,8 @@ export default function CurriculumGrid() {
   // Load state from localStorage on mount
   useEffect(() => {
     const savedCompleted = localStorage.getItem('completedCourses');
+    const savedInProgress = localStorage.getItem('inProgressCourses');
+    const savedPlanned = localStorage.getItem('plannedCourses');
     const savedCurriculum = localStorage.getItem('curriculumData');
     const savedWritingIntensive = localStorage.getItem('hasWritingIntensive');
     
@@ -40,6 +47,22 @@ export default function CurriculumGrid() {
         setCompletedCourses(new Set(JSON.parse(savedCompleted)));
       } catch (error) {
         console.error('Error loading completed courses:', error);
+      }
+    }
+
+    if (savedInProgress) {
+      try {
+        setInProgressCourses(new Set(JSON.parse(savedInProgress)));
+      } catch (error) {
+        console.error('Error loading in-progress courses:', error);
+      }
+    }
+
+    if (savedPlanned) {
+      try {
+        setPlannedCourses(new Set(JSON.parse(savedPlanned)));
+      } catch (error) {
+        console.error('Error loading planned courses:', error);
       }
     }
     
@@ -64,6 +87,14 @@ export default function CurriculumGrid() {
   useEffect(() => {
     localStorage.setItem('completedCourses', JSON.stringify([...completedCourses]));
   }, [completedCourses]);
+
+  useEffect(() => {
+    localStorage.setItem('inProgressCourses', JSON.stringify([...inProgressCourses]));
+  }, [inProgressCourses]);
+
+  useEffect(() => {
+    localStorage.setItem('plannedCourses', JSON.stringify([...plannedCourses]));
+  }, [plannedCourses]);
 
   useEffect(() => {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
@@ -144,17 +175,100 @@ export default function CurriculumGrid() {
     if (course.prerequisites.length === 0) return true;
     
     if (course.alternatives.length > 0) {
-      return course.alternatives.some(altId => completedCourses.has(altId));
+      return course.alternatives.some(altId => completedCourses.has(altId) || inProgressCourses.has(altId));
     }
     
-    return course.prerequisites.every(prereqId => completedCourses.has(prereqId));
+    return course.prerequisites.every(prereqId => completedCourses.has(prereqId) || inProgressCourses.has(prereqId));
   };
 
-  const handleCourseClick = (courseId: string, isShiftClick: boolean) => {
+  const handleCourseClick = (courseId: string) => {
     const course = curriculumData.courses.find(c => c.id === courseId);
-    if (!course || (!isUnlocked(course) && !completedCourses.has(courseId))) return;
+    if (!course) return;
 
-    if (isShiftClick) {
+    const isCurrentlyUnlocked = isUnlocked(course);
+    const isCurrentlyCompleted = completedCourses.has(courseId);
+    const isCurrentlyInProgress = inProgressCourses.has(courseId);
+    const isCurrentlyPlanned = plannedCourses.has(courseId);
+    const isCurrentlySelected = selectedCourses.has(courseId);
+
+    if (!isCurrentlyUnlocked && !isCurrentlyCompleted && !isCurrentlyInProgress && !isCurrentlyPlanned && !isCurrentlySelected) return;
+
+    if (currentMode === 'completed') {
+      setCompletedCourses(prev => {
+        const newCompleted = new Set(prev);
+        if (newCompleted.has(courseId)) {
+          newCompleted.delete(courseId);
+        } else {
+          newCompleted.add(courseId);
+          setInProgressCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+          setPlannedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+          setSelectedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+        }
+        return newCompleted;
+      });
+    } else if (currentMode === 'in-progress') {
+      setInProgressCourses(prev => {
+        const newInProgress = new Set(prev);
+        if (newInProgress.has(courseId)) {
+          newInProgress.delete(courseId);
+        } else {
+          newInProgress.add(courseId);
+          setCompletedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+          setPlannedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+          setSelectedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+        }
+        return newInProgress;
+      });
+    } else if (currentMode === 'planned') {
+      setPlannedCourses(prev => {
+        const newPlanned = new Set(prev);
+        if (newPlanned.has(courseId)) {
+          newPlanned.delete(courseId);
+        } else {
+          newPlanned.add(courseId);
+          setCompletedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+          setInProgressCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+          setSelectedCourses(p => {
+            const n = new Set(p);
+            n.delete(courseId);
+            return n;
+          });
+        }
+        return newPlanned;
+      });
+    } else if (currentMode === 'selected') {
       setSelectedCourses(prev => {
         const newSelected = new Set(prev);
         if (newSelected.has(courseId)) {
@@ -163,16 +277,6 @@ export default function CurriculumGrid() {
           newSelected.add(courseId);
         }
         return newSelected;
-      });
-    } else {
-      setCompletedCourses(prev => {
-        const newCompleted = new Set(prev);
-        if (newCompleted.has(courseId)) {
-          newCompleted.delete(courseId);
-        } else {
-          newCompleted.add(courseId);
-        }
-        return newCompleted;
       });
     }
   };
@@ -199,11 +303,14 @@ export default function CurriculumGrid() {
   };
 
   const resetProgress = () => {
-    // Reiniciar el progreso
     setCompletedCourses(new Set());
     setSelectedCourses(new Set());
+    setInProgressCourses(new Set());
+    setPlannedCourses(new Set());
     setHasWritingIntensive(false);
     localStorage.removeItem("completedCourses");
+    localStorage.removeItem("inProgressCourses");
+    localStorage.removeItem("plannedCourses");
     localStorage.removeItem("hasWritingIntensive");
 
     // Verificar si hay cambios en el JSON de datos comparando la fecha de última modificación
@@ -250,6 +357,8 @@ export default function CurriculumGrid() {
     setCurriculumData(data);
     setCompletedCourses(new Set());
     setSelectedCourses(new Set());
+    setInProgressCourses(new Set());
+    setPlannedCourses(new Set());
     setHasWritingIntensive(false);
     setShowUpload(false);
     toast({
@@ -262,6 +371,8 @@ export default function CurriculumGrid() {
     setCurriculumData(data);
     setCompletedCourses(new Set());
     setSelectedCourses(new Set());
+    setInProgressCourses(new Set());
+    setPlannedCourses(new Set());
     setHasWritingIntensive(false);
     toast({
       title: "Malla curricular cargada",
@@ -456,9 +567,17 @@ export default function CurriculumGrid() {
               <div className="w-4 h-4 bg-yellow-400 rounded"></div>
               <span className="text-sm dark:text-gray-300">Seleccionada</span>
             </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-blue-600 rounded"></div>
+              <span className="text-sm dark:text-gray-300">Cursando</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-purple-500 rounded"></div>
+              <span className="text-sm dark:text-gray-300">Planeada</span>
+            </div>
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            Mantén presionado Shift y haz clic para seleccionar múltiples asignaturas
+            Usa el selector de modo en la esquina inferior izquierda para cambiar entre estados
           </p>
         </CardContent>
       </Card>
@@ -505,6 +624,8 @@ export default function CurriculumGrid() {
                     isCompleted={completedCourses.has(course.id)}
                     isUnlocked={isUnlocked(course)}
                     isSelected={selectedCourses.has(course.id)}
+                    isInProgress={inProgressCourses.has(course.id)}
+                    isPlanned={plannedCourses.has(course.id)}
                     onClick={handleCourseClick}
                     allCourses={curriculumData.courses}
                   />
@@ -531,6 +652,18 @@ export default function CurriculumGrid() {
       {/* Contact Modal */}
       {showContact && (
         <ContactModal onClose={() => setShowContact(false)} />
+      )}
+
+      {/* Mode Selector */}
+      <ModeSelector currentMode={currentMode} onModeChange={setCurrentMode} />
+
+      {/* Writing Intensive Sidebar */}
+      {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
+        <WritingIntensiveSidebar
+          hasWritingIntensive={hasWritingIntensive}
+          onToggle={(checked) => setHasWritingIntensive(checked)}
+          allEnglishCompleted={allEnglishCompleted}
+        />
       )}
     </div>
   );

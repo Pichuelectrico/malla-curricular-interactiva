@@ -614,19 +614,6 @@
       "alternatives": []
     },
     {
-      "id": "PAS4000",
-      "code": "PAS4000",
-      "title": "Práctica Pre-profesional PASEM",
-      "description": "",
-      "credits": 5,
-      "semester": 8.5,
-      "block": "Verano",
-      "area": "Proyecto",
-      "type": "proyecto",
-      "prerequisites": [],
-      "alternatives": []
-    },
-    {
       "id": "ELECTIVA2",
       "code": "ELECTIVA2",
       "title": "Electiva Libre 2/2",
@@ -688,7 +675,7 @@
       "block": "Semestre 9",
       "area": "Proyecto",
       "type": "proyecto",
-      "prerequisites": ["CMP1001", "CMP3002"],
+      "prerequisites": [],
       "alternatives": []
     },
     {
@@ -701,6 +688,19 @@
       "block": "Semestre 9",
       "area": "Proyecto",
       "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS4000",
+      "title": "Práctica Pre-profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 8,
+      "block": "PASEM",
+      "area": "Proyecto",
+      "type": "proyecto",
       "prerequisites": [],
       "alternatives": []
     }
