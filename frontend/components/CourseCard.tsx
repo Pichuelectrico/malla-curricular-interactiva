@@ -16,7 +16,6 @@ interface CourseCardProps {
   course: Course;
   isCompleted: boolean;
   isUnlocked: boolean;
-  isSelected: boolean;
   isInProgress: boolean;
   isPlanned: boolean;
   onClick: (courseId: string) => void;
@@ -27,7 +26,6 @@ export default function CourseCard({
   course,
   isCompleted,
   isUnlocked,
-  isSelected,
   isInProgress,
   isPlanned,
   onClick,
@@ -40,13 +38,10 @@ export default function CourseCard({
       return 'bg-green-100 dark:bg-green-900/30 border-green-500 dark:border-green-600 text-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-900/50';
     }
     if (isInProgress) {
-      return 'bg-blue-100 dark:bg-blue-900/30 border-blue-600 dark:border-blue-700 text-blue-900 dark:text-blue-100 hover:bg-blue-200 dark:hover:bg-blue-900/50';
+      return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-500 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-900/50';
     }
     if (isPlanned) {
       return 'bg-purple-100 dark:bg-purple-900/30 border-purple-500 dark:border-purple-600 text-purple-900 dark:text-purple-100 hover:bg-purple-200 dark:hover:bg-purple-900/50';
-    }
-    if (isSelected) {
-      return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-500 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-900/50';
     }
     if (isUnlocked) {
       return 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600 text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer';

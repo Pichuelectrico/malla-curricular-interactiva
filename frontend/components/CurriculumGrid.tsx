@@ -22,7 +22,6 @@ import defaultCurriculumData from '../data/Malla-CMP.json';
 export default function CurriculumGrid() {
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
-  const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [inProgressCourses, setInProgressCourses] = useState<Set<string>>(new Set());
   const [plannedCourses, setPlannedCourses] = useState<Set<string>>(new Set());
   const [currentMode, setCurrentMode] = useState<SelectionMode>('completed');
@@ -34,7 +33,6 @@ export default function CurriculumGrid() {
   const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
   const { toast } = useToast();
 
-  // Load state from localStorage on mount
   useEffect(() => {
     const savedCompleted = localStorage.getItem('completedCourses');
     const savedInProgress = localStorage.getItem('inProgressCourses');
@@ -83,7 +81,6 @@ export default function CurriculumGrid() {
     }
   }, []);
 
-  // Save to localStorage when state changes
   useEffect(() => {
     localStorage.setItem('completedCourses', JSON.stringify([...completedCourses]));
   }, [completedCourses]);
@@ -189,9 +186,8 @@ export default function CurriculumGrid() {
     const isCurrentlyCompleted = completedCourses.has(courseId);
     const isCurrentlyInProgress = inProgressCourses.has(courseId);
     const isCurrentlyPlanned = plannedCourses.has(courseId);
-    const isCurrentlySelected = selectedCourses.has(courseId);
 
-    if (!isCurrentlyUnlocked && !isCurrentlyCompleted && !isCurrentlyInProgress && !isCurrentlyPlanned && !isCurrentlySelected) return;
+    if (!isCurrentlyUnlocked && !isCurrentlyCompleted && !isCurrentlyInProgress && !isCurrentlyPlanned) return;
 
     if (currentMode === 'completed') {
       setCompletedCourses(prev => {
@@ -206,11 +202,6 @@ export default function CurriculumGrid() {
             return n;
           });
           setPlannedCourses(p => {
-            const n = new Set(p);
-            n.delete(courseId);
-            return n;
-          });
-          setSelectedCourses(p => {
             const n = new Set(p);
             n.delete(courseId);
             return n;
@@ -235,11 +226,6 @@ export default function CurriculumGrid() {
             n.delete(courseId);
             return n;
           });
-          setSelectedCourses(p => {
-            const n = new Set(p);
-            n.delete(courseId);
-            return n;
-          });
         }
         return newInProgress;
       });
@@ -260,51 +246,16 @@ export default function CurriculumGrid() {
             n.delete(courseId);
             return n;
           });
-          setSelectedCourses(p => {
-            const n = new Set(p);
-            n.delete(courseId);
-            return n;
-          });
         }
         return newPlanned;
-      });
-    } else if (currentMode === 'selected') {
-      setSelectedCourses(prev => {
-        const newSelected = new Set(prev);
-        if (newSelected.has(courseId)) {
-          newSelected.delete(courseId);
-        } else {
-          newSelected.add(courseId);
-        }
-        return newSelected;
       });
     }
   };
 
-  const handleMultipleComplete = () => {
-    if (selectedCourses.size === 0) return;
-    
-    setCompletedCourses(prev => {
-      const newCompleted = new Set(prev);
-      selectedCourses.forEach(courseId => {
-        const course = curriculumData.courses.find(c => c.id === courseId);
-        if (course && (isUnlocked(course) || newCompleted.has(courseId))) {
-          if (newCompleted.has(courseId)) {
-            newCompleted.delete(courseId);
-          } else {
-            newCompleted.add(courseId);
-          }
-        }
-      });
-      return newCompleted;
-    });
-    
-    setSelectedCourses(new Set());
-  };
+
 
   const resetProgress = () => {
     setCompletedCourses(new Set());
-    setSelectedCourses(new Set());
     setInProgressCourses(new Set());
     setPlannedCourses(new Set());
     setHasWritingIntensive(false);
@@ -356,7 +307,6 @@ export default function CurriculumGrid() {
   const handleFileUpload = (data: CurriculumData) => {
     setCurriculumData(data);
     setCompletedCourses(new Set());
-    setSelectedCourses(new Set());
     setInProgressCourses(new Set());
     setPlannedCourses(new Set());
     setHasWritingIntensive(false);
@@ -370,7 +320,6 @@ export default function CurriculumGrid() {
   const handleCurriculumSelect = (data: CurriculumData) => {
     setCurriculumData(data);
     setCompletedCourses(new Set());
-    setSelectedCourses(new Set());
     setInProgressCourses(new Set());
     setPlannedCourses(new Set());
     setHasWritingIntensive(false);
@@ -464,19 +413,6 @@ export default function CurriculumGrid() {
           <Coffee className="w-4 h-4 mr-2" />
           Buy Me a Coffee
         </Button>
-        {selectedCourses.size > 0 && (
-          <Button
-            onClick={handleMultipleComplete}
-            variant="default"
-            className="dark:bg-blue-600 dark:hover:bg-blue-700"
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Completaste{" "}
-            {selectedCourses.size === 1
-              ? `tu ${selectedCourses.size} seleccionada`
-              : `tus ${selectedCourses.size} seleccionadas`}
-          </Button>
-        )}
       </div>
 
       {/* Progress Overview */}
@@ -564,11 +500,7 @@ export default function CurriculumGrid() {
               <span className="text-sm dark:text-gray-300">Bloqueada</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-yellow-400 rounded"></div>
-              <span className="text-sm dark:text-gray-300">Seleccionada</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-600 rounded"></div>
+              <div className="w-4 h-4 bg-yellow-500 rounded"></div>
               <span className="text-sm dark:text-gray-300">Cursando</span>
             </div>
             <div className="flex items-center gap-2">
@@ -623,7 +555,6 @@ export default function CurriculumGrid() {
                     course={course}
                     isCompleted={completedCourses.has(course.id)}
                     isUnlocked={isUnlocked(course)}
-                    isSelected={selectedCourses.has(course.id)}
                     isInProgress={inProgressCourses.has(course.id)}
                     isPlanned={plannedCourses.has(course.id)}
                     onClick={handleCourseClick}

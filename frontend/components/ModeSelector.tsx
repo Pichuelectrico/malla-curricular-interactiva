@@ -3,7 +3,7 @@ import { ChevronRight, ChevronLeft, CheckCircle, Circle, Loader, Target } from '
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-export type SelectionMode = 'completed' | 'selected' | 'in-progress' | 'planned';
+export type SelectionMode = 'completed' | 'in-progress' | 'planned';
 
 interface ModeSelectorProps {
   currentMode: SelectionMode;
@@ -21,16 +21,10 @@ export default function ModeSelector({ currentMode, onModeChange }: ModeSelector
       color: 'bg-green-500 hover:bg-green-600 text-white',
     },
     {
-      id: 'selected',
-      label: 'Seleccionadas',
-      icon: <Circle className="w-5 h-5" />,
-      color: 'bg-yellow-500 hover:bg-yellow-600 text-white',
-    },
-    {
       id: 'in-progress',
       label: 'Cursando',
       icon: <Loader className="w-5 h-5" />,
-      color: 'bg-blue-500 hover:bg-blue-600 text-white',
+      color: 'bg-yellow-500 hover:bg-yellow-600 text-white',
     },
     {
       id: 'planned',
