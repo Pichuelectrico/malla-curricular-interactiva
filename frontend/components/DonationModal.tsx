@@ -9,7 +9,7 @@ interface DonationModalProps {
 
 export default function DonationModal({ onClose }: DonationModalProps) {
   const handleDonateClick = () => {
-    window.open('https://buymeacoffee.com/yourhandle', '_blank');
+    window.open('https://buymeacoffee.com/joshreino', '_blank');
   };
 
   return (
