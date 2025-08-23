@@ -11,8 +11,8 @@ export default function USFQIcon() {
   }, []);
 
   return (
-    <div className="fixed top-4 left-8 z-10">
-      <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center border-2 border-blue-200 dark:border-blue-600 transition-colors duration-300">
+    <div className="fixed top-2 left-2 z-10">
+      <div className="w-11 h-11 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center border-2 border-blue-200 dark:border-blue-600 transition-colors duration-300">
         {!imageError && imageSrc ? (
           <img 
             src={imageSrc}
