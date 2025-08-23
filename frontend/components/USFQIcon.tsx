@@ -17,7 +17,7 @@ export default function USFQIcon() {
           <img 
             src={imageSrc}
             alt="USFQ Logo" 
-            className="w-12 h-12 object-contain dark:filter dark:invert"
+            className="w-12 h-12 object-contain dark:[filter:brightness(0)_saturate(100%)_invert(13%)_sepia(94%)_saturate(7482%)_hue-rotate(356deg)_brightness(91%)_contrast(135%)]"
             onError={() => setImageError(true)}
           />
         ) : (
