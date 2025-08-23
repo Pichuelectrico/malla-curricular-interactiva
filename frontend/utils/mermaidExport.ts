@@ -1,23 +1,49 @@
 import { Course } from '../types/curriculum';
 
-export function generateMermaidDiagram(courses: Course[], completedCourses: Set<string>): string {
-  const mermaidCode = ['graph TD'];
+export function generateMermaidDiagram(courses: Course[], completedCourses: Set<string>, sourceFile?: string): string {
+  const mermaidCode = ['flowchart TD'];
   
-  // Add nodes with styling
-  courses.forEach(course => {
-    const isCompleted = completedCourses.has(course.id);
-    const nodeStyle = isCompleted ? ':::completed' : ':::pending';
-    const nodeLabel = `${course.code}<br/>${course.title}<br/>${course.credits} cr`;
-    mermaidCode.push(`    ${course.id}["${nodeLabel}"]${nodeStyle}`);
+  // Add title
+  const title = sourceFile || 'Malla Curricular';
+  mermaidCode.push(`    Title["${title}"]:::title`);
+  mermaidCode.push('');
+  
+  // Group courses by semester for better organization
+  const coursesBySemester = courses.reduce((acc, course) => {
+    const semester = course.semester;
+    if (!acc[semester]) {
+      acc[semester] = [];
+    }
+    acc[semester].push(course);
+    return acc;
+  }, {} as Record<number, Course[]>);
+  
+  // Add semester subgraphs
+  Object.keys(coursesBySemester).sort((a, b) => parseInt(a) - parseInt(b)).forEach(semester => {
+    const semesterCourses = coursesBySemester[parseInt(semester)];
+    const semesterName = semesterCourses[0]?.block || `Semestre ${semester}`;
+    
+    mermaidCode.push(`    subgraph S${semester}["${semesterName}"]`);
+    
+    // Add nodes for this semester
+    semesterCourses.forEach(course => {
+      const isCompleted = completedCourses.has(course.id);
+      const nodeStyle = isCompleted ? ':::completed' : ':::pending';
+      const nodeLabel = `${course.code}<br/>${course.title}<br/>${course.credits} cr`;
+      mermaidCode.push(`        ${course.id}["${nodeLabel}"]${nodeStyle}`);
+    });
+    
+    mermaidCode.push('    end');
+    mermaidCode.push('');
   });
   
-  // Add dependencies
+  // Add dependencies with proper arrow styling
   courses.forEach(course => {
     course.prerequisites.forEach(prereqId => {
       mermaidCode.push(`    ${prereqId} --> ${course.id}`);
     });
     
-    // Handle alternatives (OR relationships)
+    // Handle alternatives (OR relationships) with dotted lines
     if (course.alternatives.length > 0) {
       course.alternatives.forEach(altId => {
         mermaidCode.push(`    ${altId} -.-> ${course.id}`);
@@ -25,10 +51,23 @@ export function generateMermaidDiagram(courses: Course[], completedCourses: Set<
     }
   });
   
-  // Add styling
+  // Connect title to first semester courses
+  const firstSemesterCourses = coursesBySemester[1] || [];
+  firstSemesterCourses.forEach(course => {
+    if (course.prerequisites.length === 0) {
+      mermaidCode.push(`    Title --> ${course.id}`);
+    }
+  });
+  
   mermaidCode.push('');
-  mermaidCode.push('    classDef completed fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#fff');
-  mermaidCode.push('    classDef pending fill:#f3f4f6,stroke:#9ca3af,stroke-width:1px,color:#374151');
+  
+  // Add styling with better flowchart appearance
+  mermaidCode.push('    classDef title fill:#1e40af,stroke:#1d4ed8,stroke-width:3px,color:#fff,font-weight:bold,font-size:16px');
+  mermaidCode.push('    classDef completed fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#fff,font-weight:bold');
+  mermaidCode.push('    classDef pending fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#334155');
+  
+  // Style subgraphs
+  mermaidCode.push('    classDef default fill:#f1f5f9,stroke:#cbd5e1,stroke-width:1px');
   
   return mermaidCode.join('\n');
 }
@@ -59,6 +98,10 @@ export async function downloadPDF(mermaidCode: string, filename: string): Promis
             color: #333;
             margin-bottom: 30px;
         }
+        @media print {
+            body { margin: 0; padding: 10px; }
+            .mermaid { min-height: auto; }
+        }
     </style>
 </head>
 <body>
@@ -72,14 +115,24 @@ ${mermaidCode}
             theme: 'default',
             flowchart: {
                 useMaxWidth: true,
-                htmlLabels: true
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            },
+            themeVariables: {
+                primaryColor: '#f8fafc',
+                primaryTextColor: '#334155',
+                primaryBorderColor: '#64748b',
+                lineColor: '#475569',
+                secondaryColor: '#e2e8f0',
+                tertiaryColor: '#f1f5f9'
             }
         });
         
         // Wait for mermaid to render, then trigger print
         setTimeout(() => {
             window.print();
-        }, 2000);
+        }, 3000);
     </script>
 </body>
 </html>`;

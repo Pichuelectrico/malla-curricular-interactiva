@@ -119,7 +119,7 @@ export default function CurriculumGrid() {
 
   const exportProgress = async () => {
     try {
-      const mermaidCode = generateMermaidDiagram(curriculumData.courses, completedCourses);
+      const mermaidCode = generateMermaidDiagram(curriculumData.courses, completedCourses, curriculumData.source_file);
       await downloadPDF(mermaidCode, 'malla-curricular-progreso.pdf');
       toast({
         title: "Progreso exportado",
@@ -170,6 +170,9 @@ export default function CurriculumGrid() {
     'Semestre 1', 'Semestre 2', 'Semestre 3', 'Semestre 4', 'Semestre 5',
     'Semestre 6', 'Semestre 7', 'Semestre 8', 'Semestre 9', 'PASEM'
   ];
+
+  // Get career title from source file
+  const careerTitle = curriculumData.source_file || 'Malla Curricular';
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -257,6 +260,13 @@ export default function CurriculumGrid() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Career Title */}
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-blue-800 bg-blue-50 py-4 px-6 rounded-lg border-2 border-blue-200">
+          {careerTitle}
+        </h2>
+      </div>
 
       {/* Curriculum Grid */}
       <div className="space-y-8">
