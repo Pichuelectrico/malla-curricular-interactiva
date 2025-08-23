@@ -24,10 +24,24 @@ export default function DonationModal({ onClose }: DonationModalProps) {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Dragon Image */}
+          {/* QR Code Image */}
           <div className="flex justify-center">
-            <div className="w-32 h-32 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
-              <div className="text-6xl">🐉</div>
+            <div className="bg-white p-4 rounded-2xl shadow-lg">
+              <img 
+                src="/Img/qr-code.png" 
+                alt="QR Code para donaciones" 
+                className="w-48 h-48 object-contain rounded-xl"
+                onError={(e) => {
+                  // Fallback to dragon emoji if QR image fails to load
+                  const img = e.currentTarget as HTMLImageElement;
+                  const container = img.parentElement as HTMLElement;
+                  container.innerHTML = `
+                    <div class="w-48 h-48 bg-gradient-to-br from-purple-400 to-blue-500 rounded-xl flex items-center justify-center">
+                      <div class="text-8xl">🐉</div>
+                    </div>
+                  `;
+                }}
+              />
             </div>
           </div>
           
