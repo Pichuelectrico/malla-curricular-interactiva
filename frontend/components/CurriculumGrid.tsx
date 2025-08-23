@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Upload, Download, RotateCcw, FileText } from 'lucide-react';
+import { Upload, Download, RotateCcw, FileText, GraduationCap } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import CourseCard from './CourseCard';
 import FileUpload from './FileUpload';
+import ConfettiAnimation from './ConfettiAnimation';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
@@ -16,6 +17,7 @@ export default function CurriculumGrid() {
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [showUpload, setShowUpload] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const { toast } = useToast();
 
   // Load state from localStorage on mount
@@ -48,6 +50,22 @@ export default function CurriculumGrid() {
   useEffect(() => {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
   }, [curriculumData]);
+
+  // Check if all courses are completed
+  const isAllCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
+
+  // Trigger celebration when all courses are completed
+  useEffect(() => {
+    if (isAllCompleted && completedCourses.size > 0) {
+      setShowCelebration(true);
+      toast({
+        title: "¡Felicitaciones! 🎓",
+        description: "Has completado toda la malla curricular. ¡Excelente trabajo!",
+      });
+    } else {
+      setShowCelebration(false);
+    }
+  }, [isAllCompleted, completedCourses.size, toast]);
 
   const isUnlocked = (course: Course): boolean => {
     if (course.prerequisites.length === 0) return true;
@@ -175,7 +193,10 @@ export default function CurriculumGrid() {
   const careerTitle = curriculumData.source_file || 'Malla Curricular';
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="container mx-auto p-4 space-y-6 relative">
+      {/* Confetti Animation */}
+      {showCelebration && <ConfettiAnimation />}
+
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gray-900">Malla Curricular Interactiva</h1>
@@ -262,9 +283,16 @@ export default function CurriculumGrid() {
       </Card>
 
       {/* Career Title */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-blue-800 bg-blue-50 py-4 px-6 rounded-lg border-2 border-blue-200">
+      <div className="text-center relative">
+        <h2 className={`text-2xl font-bold py-4 px-6 rounded-lg border-2 transition-all duration-500 ${
+          isAllCompleted 
+            ? 'text-green-800 bg-green-50 border-green-200 shadow-lg' 
+            : 'text-blue-800 bg-blue-50 border-blue-200'
+        }`}>
           {careerTitle}
+          {isAllCompleted && (
+            <GraduationCap className="inline-block w-8 h-8 ml-3 text-green-600 animate-bounce" />
+          )}
         </h2>
       </div>
 
