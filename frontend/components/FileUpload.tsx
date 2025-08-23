@@ -88,11 +88,11 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Cargar Malla Curricular</CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+            <CardTitle className="dark:text-white">Cargar Malla Curricular</CardTitle>
+            <Button variant="ghost" size="sm" onClick={onClose} className="dark:hover:bg-gray-700">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -101,8 +101,8 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
               isDragging
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-300 hover:border-gray-400'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400'
+                : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
             }`}
             onDrop={handleDrop}
             onDragOver={(e) => {
@@ -111,12 +111,12 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
             }}
             onDragLeave={() => setIsDragging(false)}
           >
-            <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <p className="text-sm text-gray-600 mb-4">
+            <FileText className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
               Arrastra y suelta un archivo JSON aquí, o haz clic para seleccionar
             </p>
             <Label htmlFor="file-upload">
-              <Button variant="outline" disabled={isLoading} asChild>
+              <Button variant="outline" disabled={isLoading} asChild className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
                 <span>
                   <Upload className="w-4 h-4 mr-2" />
                   {isLoading ? 'Cargando...' : 'Seleccionar archivo'}
@@ -133,9 +133,9 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
             />
           </div>
           
-          <div className="text-xs text-gray-500 space-y-2">
+          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-2">
             <p><strong>Formato esperado:</strong></p>
-            <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
+            <pre className="bg-gray-100 dark:bg-gray-900 p-2 rounded text-xs overflow-x-auto">
 {`{
   "courses": [
     {

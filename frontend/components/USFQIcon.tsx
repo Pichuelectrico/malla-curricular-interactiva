@@ -12,16 +12,16 @@ export default function USFQIcon() {
 
   return (
     <div className="fixed top-4 left-8 z-10">
-      <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-blue-200">
+      <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center border-2 border-blue-200 dark:border-blue-600 transition-colors duration-300">
         {!imageError && imageSrc ? (
           <img 
             src={imageSrc}
             alt="USFQ Logo" 
-            className="w-12 h-12 object-contain"
+            className="w-12 h-12 object-contain dark:filter dark:invert"
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="text-xs font-bold text-blue-600 text-center leading-tight">
+          <div className="text-xs font-bold text-blue-600 dark:text-blue-400 text-center leading-tight">
             USFQ<br/>🐉
           </div>
         )}

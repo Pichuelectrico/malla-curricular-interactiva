@@ -33,15 +33,15 @@ export default function CourseCard({
 
   const getCardStyle = () => {
     if (isCompleted) {
-      return 'bg-green-100 border-green-500 text-green-900 hover:bg-green-200';
+      return 'bg-green-100 dark:bg-green-900/30 border-green-500 dark:border-green-600 text-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-900/50';
     }
     if (isSelected) {
-      return 'bg-yellow-100 border-yellow-500 text-yellow-900 hover:bg-yellow-200';
+      return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-500 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-900/50';
     }
     if (isUnlocked) {
-      return 'bg-blue-50 border-blue-300 text-blue-900 hover:bg-blue-100 cursor-pointer';
+      return 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600 text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer';
     }
-    return 'bg-gray-100 border-gray-300 text-gray-500 cursor-not-allowed';
+    return 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed';
   };
 
   const getAreaColor = (area: string) => {
@@ -108,45 +108,45 @@ export default function CourseCard({
             <CardTitle className="text-sm font-medium truncate">
               {course.title}
             </CardTitle>
-            <p className="text-xs text-gray-600 mt-1">{course.code}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{course.code}</p>
           </div>
           <Dialog open={showDetails} onOpenChange={setShowDetails}>
             <DialogTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1 h-auto"
+                className="p-1 h-auto dark:hover:bg-gray-700"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Info className="w-4 h-4" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-md dark:bg-gray-800 dark:border-gray-700">
               <DialogHeader>
-                <DialogTitle>{course.title}</DialogTitle>
+                <DialogTitle className="dark:text-white">{course.title}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="font-medium">Código:</span>
-                    <p>{course.code}</p>
+                    <span className="font-medium dark:text-gray-200">Código:</span>
+                    <p className="dark:text-gray-300">{course.code}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Créditos:</span>
-                    <p>{course.credits}</p>
+                    <span className="font-medium dark:text-gray-200">Créditos:</span>
+                    <p className="dark:text-gray-300">{course.credits}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Semestre:</span>
-                    <p>{course.semester}</p>
+                    <span className="font-medium dark:text-gray-200">Semestre:</span>
+                    <p className="dark:text-gray-300">{course.semester}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Tipo:</span>
-                    <p>{getTypeLabel(course.type)}</p>
+                    <span className="font-medium dark:text-gray-200">Tipo:</span>
+                    <p className="dark:text-gray-300">{getTypeLabel(course.type)}</p>
                   </div>
                 </div>
                 
                 <div>
-                  <span className="font-medium text-sm">Área:</span>
+                  <span className="font-medium text-sm dark:text-gray-200">Área:</span>
                   <Badge className={`ml-2 text-white ${getAreaColor(course.area)}`}>
                     {course.area}
                   </Badge>
@@ -154,15 +154,15 @@ export default function CourseCard({
 
                 {course.description && (
                   <div>
-                    <span className="font-medium text-sm">Descripción:</span>
-                    <p className="text-sm text-gray-600 mt-1">{course.description}</p>
+                    <span className="font-medium text-sm dark:text-gray-200">Descripción:</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{course.description}</p>
                   </div>
                 )}
 
                 {course.prerequisites.length > 0 && (
                   <div>
-                    <span className="font-medium text-sm">Prerrequisitos:</span>
-                    <ul className="text-sm text-gray-600 mt-1 space-y-1">
+                    <span className="font-medium text-sm dark:text-gray-200">Prerrequisitos:</span>
+                    <ul className="text-sm text-gray-600 dark:text-gray-400 mt-1 space-y-1">
                       {getPrerequisiteNames().map((name, index) => (
                         <li key={index} className="flex items-center">
                           <BookOpen className="w-3 h-3 mr-2" />
@@ -175,8 +175,8 @@ export default function CourseCard({
 
                 {course.alternatives.length > 0 && (
                   <div>
-                    <span className="font-medium text-sm">Alternativas:</span>
-                    <ul className="text-sm text-gray-600 mt-1 space-y-1">
+                    <span className="font-medium text-sm dark:text-gray-200">Alternativas:</span>
+                    <ul className="text-sm text-gray-600 dark:text-gray-400 mt-1 space-y-1">
                       {getAlternativeNames().map((name, index) => (
                         <li key={index} className="flex items-center">
                           <Users className="w-3 h-3 mr-2" />
@@ -199,13 +199,13 @@ export default function CourseCard({
           >
             {course.area}
           </Badge>
-          <div className="flex items-center text-xs text-gray-600">
+          <div className="flex items-center text-xs text-gray-600 dark:text-gray-400">
             <Clock className="w-3 h-3 mr-1" />
             {course.credits} cr
           </div>
         </div>
         {course.type !== 'obligatoria' && (
-          <Badge variant="secondary" className="text-xs mt-2">
+          <Badge variant="secondary" className="text-xs mt-2 dark:bg-gray-700 dark:text-gray-300">
             {getTypeLabel(course.type)}
           </Badge>
         )}

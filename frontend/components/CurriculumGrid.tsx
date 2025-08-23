@@ -224,8 +224,8 @@ export default function CurriculumGrid() {
 
   return (
     <div className="container mx-auto p-4 space-y-6 relative">
-      {/* USFQ Icon in top right corner */}
-      <div className="fixed top-4 right-4 z-40">
+      {/* USFQ Icon in top left corner */}
+      <div className="fixed top-4 left-8 z-40">
         <USFQIcon />
       </div>
 
@@ -234,30 +234,30 @@ export default function CurriculumGrid() {
 
       {/* Header */}
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900">Malla Curricular Interactiva</h1>
-        <p className="text-gray-600">Haz clic en las asignaturas para marcarlas como completadas</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Malla Curricular Interactiva</h1>
+        <p className="text-gray-600 dark:text-gray-300">Haz clic en las asignaturas para marcarlas como completadas</p>
       </div>
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 justify-center">
-        <Button onClick={() => setShowUpload(true)} variant="outline">
+        <Button onClick={() => setShowUpload(true)} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <Upload className="w-4 h-4 mr-2" />
           Cargar Malla
         </Button>
-        <Button onClick={resetProgress} variant="outline">
+        <Button onClick={resetProgress} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <RotateCcw className="w-4 h-4 mr-2" />
           Reiniciar Progreso
         </Button>
-        <Button onClick={exportProgress} variant="outline">
+        <Button onClick={exportProgress} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <Download className="w-4 h-4 mr-2" />
           Exportar PDF
         </Button>
-        <Button onClick={() => setShowDonation(true)} variant="outline" className="bg-yellow-50 hover:bg-yellow-100 border-yellow-300">
+        <Button onClick={() => setShowDonation(true)} variant="outline" className="bg-yellow-50 hover:bg-yellow-100 border-yellow-300 dark:bg-yellow-900/20 dark:border-yellow-600 dark:hover:bg-yellow-900/30">
           <Coffee className="w-4 h-4 mr-2" />
           Buy Me a Coffee
         </Button>
         {selectedCourses.size > 0 && (
-          <Button onClick={handleMultipleComplete} variant="default">
+          <Button onClick={handleMultipleComplete} variant="default" className="dark:bg-blue-600 dark:hover:bg-blue-700">
             <FileText className="w-4 h-4 mr-2" />
             Alternar {selectedCourses.size} seleccionadas
           </Button>
@@ -265,33 +265,33 @@ export default function CurriculumGrid() {
       </div>
 
       {/* Progress Overview */}
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Progreso General</CardTitle>
+          <CardTitle className="dark:text-white">Progreso General</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-sm mb-2 dark:text-gray-300">
                 <span>Créditos completados</span>
                 <span>{completedCredits} / {totalCredits}</span>
               </div>
               <Progress value={creditProgress} className="h-2" />
-              <p className="text-xs text-gray-500 mt-1">{creditProgress.toFixed(1)}%</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{creditProgress.toFixed(1)}%</p>
             </div>
             <div>
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-sm mb-2 dark:text-gray-300">
                 <span>Asignaturas completadas</span>
                 <span>{completedCoursesCount} / {totalCourses}</span>
               </div>
               <Progress value={courseProgress} className="h-2" />
-              <p className="text-xs text-gray-500 mt-1">{courseProgress.toFixed(1)}%</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{courseProgress.toFixed(1)}%</p>
             </div>
           </div>
 
           {/* Writing Intensive Requirement */}
           {hasCompletedFiveSemesters && (
-            <div className="border-t pt-4">
+            <div className="border-t pt-4 dark:border-gray-600">
               <div className="flex items-center space-x-3">
                 <Checkbox
                   id="writing-intensive"
@@ -300,13 +300,13 @@ export default function CurriculumGrid() {
                 />
                 <label
                   htmlFor="writing-intensive"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-gray-200"
                 >
                   ¿Tomaste una materia en inglés (Writing Intensive)?
                 </label>
               </div>
               {allCoursesCompleted && !hasWritingIntensive && (
-                <p className="text-sm text-amber-600 mt-2 flex items-center">
+                <p className="text-sm text-amber-600 dark:text-amber-400 mt-2 flex items-center">
                   <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
                   Debes completar el requisito de Writing Intensive para graduarte
                 </p>
@@ -317,30 +317,30 @@ export default function CurriculumGrid() {
       </Card>
 
       {/* Legend */}
-      <Card>
+      <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Leyenda</CardTitle>
+          <CardTitle className="dark:text-white">Leyenda</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-green-500 rounded"></div>
-              <span className="text-sm">Completada</span>
+              <span className="text-sm dark:text-gray-300">Completada</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-blue-500 rounded"></div>
-              <span className="text-sm">Disponible</span>
+              <span className="text-sm dark:text-gray-300">Disponible</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-300 rounded"></div>
-              <span className="text-sm">Bloqueada</span>
+              <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+              <span className="text-sm dark:text-gray-300">Bloqueada</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 bg-yellow-400 rounded"></div>
-              <span className="text-sm">Seleccionada</span>
+              <span className="text-sm dark:text-gray-300">Seleccionada</span>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             Mantén presionado Shift y haz clic para seleccionar múltiples asignaturas
           </p>
         </CardContent>
@@ -350,12 +350,12 @@ export default function CurriculumGrid() {
       <div className="text-center relative">
         <h2 className={`text-2xl font-bold py-4 px-6 rounded-lg border-2 transition-all duration-500 ${
           isAllCompleted 
-            ? 'text-green-800 bg-green-50 border-green-200 shadow-lg' 
-            : 'text-blue-800 bg-blue-50 border-blue-200'
+            ? 'text-green-800 dark:text-green-200 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 shadow-lg' 
+            : 'text-blue-800 dark:text-blue-200 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
         }`}>
           {careerTitle}
           {isAllCompleted && (
-            <GraduationCap className="inline-block w-8 h-8 ml-3 text-green-600 animate-bounce" />
+            <GraduationCap className="inline-block w-8 h-8 ml-3 text-green-600 dark:text-green-400 animate-bounce" />
           )}
         </h2>
       </div>
@@ -375,8 +375,8 @@ export default function CurriculumGrid() {
           return (
             <div key={blockName} className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-800">{blockName}</h2>
-                <Badge variant="outline">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{blockName}</h2>
+                <Badge variant="outline" className="dark:border-gray-600 dark:text-gray-300">
                   {blockCompletedCredits}/{blockTotalCredits} créditos ({blockProgress.toFixed(0)}%)
                 </Badge>
               </div>

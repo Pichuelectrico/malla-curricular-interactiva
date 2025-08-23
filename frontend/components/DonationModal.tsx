@@ -14,11 +14,11 @@ export default function DonationModal({ onClose }: DonationModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xl font-bold text-gray-800">¡Apoya este proyecto!</CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+            <CardTitle className="text-xl font-bold text-gray-800 dark:text-white">¡Apoya este proyecto!</CardTitle>
+            <Button variant="ghost" size="sm" onClick={onClose} className="dark:hover:bg-gray-700">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -47,10 +47,10 @@ export default function DonationModal({ onClose }: DonationModalProps) {
           
           {/* Message */}
           <div className="text-center space-y-3">
-            <h3 className="text-lg font-semibold text-gray-800">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
               Todo apoyo se agradece
             </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
               Si esta herramienta te ha sido útil para planificar tu carrera universitaria, 
               considera apoyar su desarrollo y mantenimiento. ¡Cada contribución cuenta!
             </p>
@@ -69,7 +69,7 @@ export default function DonationModal({ onClose }: DonationModalProps) {
 
           {/* Additional message */}
           <div className="text-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Tu apoyo ayuda a mantener esta herramienta gratuita y actualizada
             </p>
           </div>
