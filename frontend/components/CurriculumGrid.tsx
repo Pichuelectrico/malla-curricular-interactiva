@@ -4,7 +4,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee } from 'lucide-react';
+import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee, Languages } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import CourseCard from './CourseCard';
 import FileUpload from './FileUpload';
@@ -23,6 +23,7 @@ export default function CurriculumGrid() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [showDonation, setShowDonation] = useState(false);
   const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
+  const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
   const { toast } = useToast();
 
   // Load state from localStorage on mount
@@ -69,6 +70,41 @@ export default function CurriculumGrid() {
     localStorage.setItem('hasWritingIntensive', JSON.stringify(hasWritingIntensive));
   }, [hasWritingIntensive]);
 
+  // Check if ESL0006 exists in the curriculum
+  const hasESL0006 = curriculumData.courses.some(course => course.id === 'ESL0006');
+
+  // Check if all English courses are completed and ESL0006 was just completed
+  useEffect(() => {
+    if (!hasESL0006) return;
+
+    const englishCourses = curriculumData.courses.filter(course => 
+      course.area === 'Idiomas' || course.type === 'idioma'
+    );
+    
+    const allEnglishCompleted = englishCourses.length > 0 && 
+      englishCourses.every(course => completedCourses.has(course.id));
+    
+    const esl0006JustCompleted = completedCourses.has('ESL0006');
+    
+    // Show animation when ESL0006 is completed and all English courses are done
+    if (allEnglishCompleted && esl0006JustCompleted && !hasWritingIntensive) {
+      const timer = setTimeout(() => {
+        setShowEnglishAnimation(true);
+        toast({
+          title: "¡Inglés completado! 🌟",
+          description: "Has completado todos los niveles de inglés. Ahora puedes marcar el requisito de Writing Intensive.",
+        });
+        
+        // Auto-hide animation after 3 seconds
+        setTimeout(() => {
+          setShowEnglishAnimation(false);
+        }, 3000);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [completedCourses, curriculumData.courses, hasWritingIntensive, hasESL0006, toast]);
+
   // Check if all courses are completed and writing intensive requirement is met
   const allCoursesCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
   const isAllCompleted = allCoursesCompleted && hasWritingIntensive;
@@ -80,6 +116,13 @@ export default function CurriculumGrid() {
       .map(course => course.semester)
   );
   const hasCompletedFiveSemesters = completedSemesters.size >= 5;
+
+  // Check if all English courses are completed (for showing the writing intensive checkbox)
+  const englishCourses = curriculumData.courses.filter(course => 
+    course.area === 'Idiomas' || course.type === 'idioma'
+  );
+  const allEnglishCompleted = hasESL0006 && englishCourses.length > 0 && 
+    englishCourses.every(course => completedCourses.has(course.id));
 
   // Trigger celebration when all requirements are met
   useEffect(() => {
@@ -232,6 +275,24 @@ export default function CurriculumGrid() {
       {/* Confetti Animation */}
       {showCelebration && <ConfettiAnimation />}
 
+      {/* English Completion Animation */}
+      {showEnglishAnimation && (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-blue-500/90 backdrop-blur-sm rounded-lg p-8 shadow-2xl border-2 border-blue-300 text-center animate-pulse transform scale-110">
+              <div className="flex items-center justify-center mb-4">
+                <Languages className="w-16 h-16 text-white mr-4 animate-bounce" />
+                <div>
+                  <h2 className="text-4xl font-bold text-white mb-2">¡Inglés Completado!</h2>
+                  <p className="text-xl text-blue-100">Ahora puedes marcar Writing Intensive</p>
+                </div>
+              </div>
+              <div className="text-6xl animate-bounce">🌟</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Malla Curricular Interactiva</h1>
@@ -290,8 +351,10 @@ export default function CurriculumGrid() {
           </div>
 
           {/* Writing Intensive Requirement */}
-          {hasCompletedFiveSemesters && (
-            <div className="border-t pt-4 dark:border-gray-600">
+          {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
+            <div className={`border-t pt-4 dark:border-gray-600 transition-all duration-500 ${
+              allEnglishCompleted ? 'bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-2 border-blue-200 dark:border-blue-700' : ''
+            }`}>
               <div className="flex items-center space-x-3">
                 <Checkbox
                   id="writing-intensive"
@@ -300,15 +363,26 @@ export default function CurriculumGrid() {
                 />
                 <label
                   htmlFor="writing-intensive"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-gray-200"
+                  className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
+                    allEnglishCompleted ? 'text-blue-800 dark:text-blue-200 font-semibold' : 'dark:text-gray-200'
+                  }`}
                 >
                   ¿Tomaste una materia en inglés (Writing Intensive)?
                 </label>
+                {allEnglishCompleted && (
+                  <Languages className="w-5 h-5 text-blue-600 dark:text-blue-400 animate-pulse" />
+                )}
               </div>
               {allCoursesCompleted && !hasWritingIntensive && (
                 <p className="text-sm text-amber-600 dark:text-amber-400 mt-2 flex items-center">
                   <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
                   Debes completar el requisito de Writing Intensive para graduarte
+                </p>
+              )}
+              {allEnglishCompleted && !hasWritingIntensive && (
+                <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 flex items-center">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
+                  ¡Has completado todos los niveles de inglés! Ahora puedes marcar este requisito.
                 </p>
               )}
             </div>
