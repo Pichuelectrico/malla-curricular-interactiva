@@ -3,11 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Upload, Download, RotateCcw, FileText, GraduationCap } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import CourseCard from './CourseCard';
 import FileUpload from './FileUpload';
 import ConfettiAnimation from './ConfettiAnimation';
+import DonationModal from './DonationModal';
+import USFQIcon from './USFQIcon';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
@@ -18,12 +21,15 @@ export default function CurriculumGrid() {
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [showUpload, setShowUpload] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showDonation, setShowDonation] = useState(false);
+  const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
   const { toast } = useToast();
 
   // Load state from localStorage on mount
   useEffect(() => {
     const savedCompleted = localStorage.getItem('completedCourses');
     const savedCurriculum = localStorage.getItem('curriculumData');
+    const savedWritingIntensive = localStorage.getItem('hasWritingIntensive');
     
     if (savedCompleted) {
       try {
@@ -40,6 +46,14 @@ export default function CurriculumGrid() {
         console.error('Error loading curriculum data:', error);
       }
     }
+
+    if (savedWritingIntensive) {
+      try {
+        setHasWritingIntensive(JSON.parse(savedWritingIntensive));
+      } catch (error) {
+        console.error('Error loading writing intensive status:', error);
+      }
+    }
   }, []);
 
   // Save to localStorage when state changes
@@ -51,16 +65,29 @@ export default function CurriculumGrid() {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
   }, [curriculumData]);
 
-  // Check if all courses are completed
-  const isAllCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
+  useEffect(() => {
+    localStorage.setItem('hasWritingIntensive', JSON.stringify(hasWritingIntensive));
+  }, [hasWritingIntensive]);
 
-  // Trigger celebration when all courses are completed
+  // Check if all courses are completed and writing intensive requirement is met
+  const allCoursesCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
+  const isAllCompleted = allCoursesCompleted && hasWritingIntensive;
+
+  // Check if student has completed at least 5 semesters worth of courses
+  const completedSemesters = new Set(
+    curriculumData.courses
+      .filter(course => completedCourses.has(course.id))
+      .map(course => course.semester)
+  );
+  const hasCompletedFiveSemesters = completedSemesters.size >= 5;
+
+  // Trigger celebration when all requirements are met
   useEffect(() => {
     if (isAllCompleted && completedCourses.size > 0) {
       setShowCelebration(true);
       toast({
         title: "¡Felicitaciones! 🎓",
-        description: "Has completado toda la malla curricular. ¡Excelente trabajo!",
+        description: "Has completado toda la malla curricular y cumplido todos los requisitos. ¡Excelente trabajo!",
       });
     } else {
       setShowCelebration(false);
@@ -128,7 +155,9 @@ export default function CurriculumGrid() {
   const resetProgress = () => {
     setCompletedCourses(new Set());
     setSelectedCourses(new Set());
+    setHasWritingIntensive(false);
     localStorage.removeItem('completedCourses');
+    localStorage.removeItem('hasWritingIntensive');
     toast({
       title: "Progreso reiniciado",
       description: "Se ha borrado todo el progreso guardado.",
@@ -157,6 +186,7 @@ export default function CurriculumGrid() {
     setCurriculumData(data);
     setCompletedCourses(new Set());
     setSelectedCourses(new Set());
+    setHasWritingIntensive(false);
     setShowUpload(false);
     toast({
       title: "Malla curricular cargada",
@@ -194,6 +224,11 @@ export default function CurriculumGrid() {
 
   return (
     <div className="container mx-auto p-4 space-y-6 relative">
+      {/* USFQ Icon in top right corner */}
+      <div className="fixed top-4 right-4 z-40">
+        <USFQIcon />
+      </div>
+
       {/* Confetti Animation */}
       {showCelebration && <ConfettiAnimation />}
 
@@ -216,6 +251,10 @@ export default function CurriculumGrid() {
         <Button onClick={exportProgress} variant="outline">
           <Download className="w-4 h-4 mr-2" />
           Exportar PDF
+        </Button>
+        <Button onClick={() => setShowDonation(true)} variant="outline" className="bg-yellow-50 hover:bg-yellow-100 border-yellow-300">
+          <Coffee className="w-4 h-4 mr-2" />
+          Buy Me a Coffee
         </Button>
         {selectedCourses.size > 0 && (
           <Button onClick={handleMultipleComplete} variant="default">
@@ -249,6 +288,31 @@ export default function CurriculumGrid() {
               <p className="text-xs text-gray-500 mt-1">{courseProgress.toFixed(1)}%</p>
             </div>
           </div>
+
+          {/* Writing Intensive Requirement */}
+          {hasCompletedFiveSemesters && (
+            <div className="border-t pt-4">
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  id="writing-intensive"
+                  checked={hasWritingIntensive}
+                  onCheckedChange={(checked) => setHasWritingIntensive(checked as boolean)}
+                />
+                <label
+                  htmlFor="writing-intensive"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  ¿Tomaste una materia en inglés (Writing Intensive)?
+                </label>
+              </div>
+              {allCoursesCompleted && !hasWritingIntensive && (
+                <p className="text-sm text-amber-600 mt-2 flex items-center">
+                  <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                  Debes completar el requisito de Writing Intensive para graduarte
+                </p>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -340,6 +404,11 @@ export default function CurriculumGrid() {
           onUpload={handleFileUpload}
           onClose={() => setShowUpload(false)}
         />
+      )}
+
+      {/* Donation Modal */}
+      {showDonation && (
+        <DonationModal onClose={() => setShowDonation(false)} />
       )}
     </div>
   );
