@@ -41,7 +41,7 @@ export default function ThemeToggle() {
             }`}
           >
             <img 
-              src={getAssetPath('Img/moon.svg')} 
+              src={getAssetPath('/malla-curricular-interactiva/Img/moon.svg')} 
               alt="Modo oscuro" 
               className="w-5 h-5 filter invert dark:invert-0"
             />
@@ -52,7 +52,7 @@ export default function ThemeToggle() {
             }`}
           >
             <img 
-              src={getAssetPath('Img/sun.svg')} 
+              src={getAssetPath('/malla-curricular-interactiva/Img/sun.svg')} 
               alt="Modo claro" 
               className="w-5 h-5"
             />
