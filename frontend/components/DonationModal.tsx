@@ -28,7 +28,7 @@ export default function DonationModal({ onClose }: DonationModalProps) {
           <div className="flex justify-center">
             <div className="bg-white p-4 rounded-2xl shadow-lg">
               <img 
-                src="/Img/qr-code.png" 
+                src="qr-code.png" 
                 alt="QR Code para donaciones" 
                 className="w-48 h-48 object-contain rounded-xl"
                 onError={(e) => {

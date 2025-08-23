@@ -6,7 +6,7 @@ export default function USFQIcon() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {
-    const logoPath = getAssetPath('/malla-curricular-interactiva/Img/USFQ Logo.svg');
+    const logoPath = getAssetPath('USFQ_Logo.svg');
     setImageSrc(logoPath);
   }, []);
 
