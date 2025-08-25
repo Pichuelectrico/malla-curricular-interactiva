@@ -13,7 +13,7 @@ export default function DonationModal({ onClose }: DonationModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-gray-900/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -56,7 +56,8 @@ export default function DonationModal({ onClose }: DonationModalProps) {
             </p>
           </div>
 
-          {/* Donation Button */}
+          
+          {/* Donation Button
           <div className="flex justify-center">
             <Button 
               onClick={handleDonateClick}
@@ -65,7 +66,7 @@ export default function DonationModal({ onClose }: DonationModalProps) {
               <ExternalLink className="w-4 h-4 mr-2" />
               Buy Me a Coffee ☕
             </Button>
-          </div>
+          </div> */}
 
           {/* Additional message */}
           <div className="text-center">
