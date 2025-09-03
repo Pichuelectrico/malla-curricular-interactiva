@@ -241,11 +241,12 @@ export default function CurriculumGrid() {
     localStorage.removeItem("completedCourses");
     localStorage.removeItem("hasWritingIntensive");
 
-    // Verificar si hay cambios en el JSON de datos
-    const currentData = JSON.stringify(curriculumData);
-    const latestData = JSON.stringify(defaultCurriculumData);
+    // Verificar si hay cambios en el JSON de datos comparando la fecha de última modificación
+    const currentLastModified = curriculumData["Last-Modified"];
+    const latestLastModified = defaultCurriculumData["Last-Modified"];
 
-    if (currentData !== latestData) {
+    // Si las fechas de modificación son diferentes o si no existe la fecha en los datos actuales
+    if (!currentLastModified || currentLastModified !== latestLastModified) {
       // Actualizar con los datos más recientes
       setCurriculumData(defaultCurriculumData);
       localStorage.removeItem("curriculumData");
