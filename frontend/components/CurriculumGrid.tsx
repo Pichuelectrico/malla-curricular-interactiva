@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Upload,
-  Download,
-  RotateCcw,
-  FileText,
-  GraduationCap,
-  Coffee,
-  Languages,
-} from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import CourseCard from "./CourseCard";
-import FileUpload from "./FileUpload";
-import ConfettiAnimation from "./ConfettiAnimation";
-import DonationModal from "./DonationModal";
-import USFQIcon from "./USFQIcon";
-import { Course, CurriculumData } from "../types/curriculum";
-import { generateMermaidDiagram, downloadPDF } from "../utils/mermaidExport";
-import defaultCurriculumData from "../data/Malla-CMP.json";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee, Languages } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import CourseCard from './CourseCard';
+import FileUpload from './FileUpload';
+import ConfettiAnimation from './ConfettiAnimation';
+import DonationModal from './DonationModal';
+import CurriculumSelector from './CurriculumSelector';
+import ContactModal from './ContactModal';
+import USFQIcon from './USFQIcon';
+import { Course, CurriculumData } from '../types/curriculum';
+import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
+import defaultCurriculumData from '../data/Malla-CMP.json';
+
 
 export default function CurriculumGrid() {
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(
@@ -36,6 +31,7 @@ export default function CurriculumGrid() {
   const [showUpload, setShowUpload] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showDonation, setShowDonation] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
   const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
   const { toast } = useToast();
@@ -297,6 +293,17 @@ export default function CurriculumGrid() {
     });
   };
 
+  const handleCurriculumSelect = (data: CurriculumData) => {
+    setCurriculumData(data);
+    setCompletedCourses(new Set());
+    setSelectedCourses(new Set());
+    setHasWritingIntensive(false);
+    toast({
+      title: "Malla curricular cargada",
+      description: "Se ha cargado la malla curricular seleccionada.",
+    });
+  };
+
   // Calculate progress
   const totalCredits = curriculumData.courses.reduce(
     (sum, course) => sum + course.credits,
@@ -382,14 +389,14 @@ export default function CurriculumGrid() {
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 justify-center">
-        {/*añadir un togle list para seleccionar entre carreras /data jsons*/}
-
-        {/* Temporalmente deshabilitado
+        <CurriculumSelector 
+          onSelect={handleCurriculumSelect}
+          onRequestCurriculum={() => setShowContact(true)}
+        />
         <Button onClick={() => setShowUpload(true)} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <Upload className="w-4 h-4 mr-2" />
           Cargar Malla
         </Button>
-        */}
         <Button
           onClick={resetProgress}
           variant="outline"
@@ -618,7 +625,14 @@ export default function CurriculumGrid() {
       )}
 
       {/* Donation Modal */}
-      {showDonation && <DonationModal onClose={() => setShowDonation(false)} />}
+      {showDonation && (
+        <DonationModal onClose={() => setShowDonation(false)} />
+      )}
+
+      {/* Contact Modal */}
+      {showContact && (
+        <ContactModal onClose={() => setShowContact(false)} />
+      )}
     </div>
   );
 }
