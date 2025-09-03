@@ -124,7 +124,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </span>
               </div>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                Si me compras un café ☕, priorizaré tu solicitud y la tendré lista en 24-48 horas.
+                Si me compras un café ☕, priorizaré tu solicitud y la tendré lista lo más rápido posible.
               </p>
             </div>
 
@@ -178,7 +178,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   value={formData.message}
                   onChange={handleInputChange}
                   className="dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none"
-                  placeholder="Cuéntanos más detalles sobre tu malla curricular, año de plan de estudios, etc."
+                  placeholder="Cuéntanos más detalles sobre tu malla curricular, algún consejo para los nuevos estudiantes (materias que tomarías juntas), link a tu malla, etc."
                   rows={3}
                 />
               </div>
@@ -194,7 +194,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                     className="rounded border-gray-300 dark:border-gray-600 text-yellow-600 focus:ring-yellow-500"
                   />
                   <Label htmlFor="buyMeCoffee" className="text-sm dark:text-gray-200 cursor-pointer">
-                    ☕ Sí, quiero comprarte un café para priorizar mi solicitud
+                    ☕ Sí, quiero invitarte un café para priorizar mi solicitud
                   </Label>
                 </div>
 
@@ -267,7 +267,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
 
             <div className="text-center pt-2">
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Te contactaremos a tu email dentro de 3-5 días hábiles
+                Te contactaremos a tu email dentro de algunos días hábiles
                 {formData.buyMeCoffee && " (24-48 horas con café ☕)"}
               </p>
             </div>
@@ -282,7 +282,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 <div className="flex items-center gap-2">
                   <Coffee className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                   <CardTitle className="text-lg font-bold text-gray-800 dark:text-white">
-                    ¡Cómprame un café!
+                    ¡Invítame un café!
                   </CardTitle>
                 </div>
                 <Button 
@@ -298,7 +298,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
             <CardContent className="space-y-4">
               {/* QR Code o imagen de Buy Me a Coffee */}
               <div className="flex justify-center">
-                <div className="bg-white p-4 rounded-2xl shadow-lg">
+                <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl shadow-lg">
                   <img 
                     src="qr-code.png"
                     alt="QR Code para Buy Me a Coffee"
