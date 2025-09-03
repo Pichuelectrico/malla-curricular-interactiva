@@ -199,15 +199,33 @@ export default function CurriculumGrid() {
   };
 
   const resetProgress = () => {
+    // Reiniciar el progreso
     setCompletedCourses(new Set());
     setSelectedCourses(new Set());
     setHasWritingIntensive(false);
-    localStorage.removeItem('completedCourses');
-    localStorage.removeItem('hasWritingIntensive');
-    toast({
-      title: "Progreso reiniciado",
-      description: "Se ha borrado todo el progreso guardado.",
-    });
+    localStorage.removeItem("completedCourses");
+    localStorage.removeItem("hasWritingIntensive");
+
+    // Verificar si hay cambios en el JSON de datos comparando la fecha de última modificación
+    const currentLastModified = curriculumData["Last-Modified"];
+    const latestLastModified = defaultCurriculumData["Last-Modified"];
+
+    // Si las fechas de modificación son diferentes o si no existe la fecha en los datos actuales
+    if (!currentLastModified || currentLastModified !== latestLastModified) {
+      // Actualizar con los datos más recientes
+      setCurriculumData(defaultCurriculumData);
+      localStorage.removeItem("curriculumData");
+      toast({
+        title: "Progreso reiniciado",
+        description:
+          "Se ha borrado el progreso y actualizado la malla curricular con la versión más reciente.",
+      });
+    } else {
+      toast({
+        title: "Progreso reiniciado",
+        description: "Se ha borrado todo el progreso guardado.",
+      });
+    }
   };
 
   const exportProgress = async () => {
