@@ -336,9 +336,16 @@ export default function CurriculumGrid() {
           Buy Me a Coffee
         </Button>
         {selectedCourses.size > 0 && (
-          <Button onClick={handleMultipleComplete} variant="default" className="dark:bg-blue-600 dark:hover:bg-blue-700">
+          <Button
+            onClick={handleMultipleComplete}
+            variant="default"
+            className="dark:bg-blue-600 dark:hover:bg-blue-700"
+          >
             <FileText className="w-4 h-4 mr-2" />
-            Alternar {selectedCourses.size} seleccionadas
+            Completaste{" "}
+            {selectedCourses.size === 1
+              ? `tu ${selectedCourses.size} seleccionada`
+              : `tus ${selectedCourses.size} seleccionadas`}
           </Button>
         )}
       </div>
