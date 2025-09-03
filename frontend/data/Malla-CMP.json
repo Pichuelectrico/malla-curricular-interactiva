@@ -432,8 +432,8 @@
       "alternatives": []
     },
     {
-      "id": "CMP3004",
-      "code": "CMP3004",
+      "id": "CMP3104",
+      "code": "CMP3104",
       "title": "Programación Avanzada de Apps",
       "description": "",
       "credits": 3,
@@ -445,8 +445,8 @@
       "alternatives": []
     },
     {
-      "id": "CMP3104",
-      "code": "CMP3104",
+      "id": "CMP3004",
+      "code": "CMP3004",
       "title": "Organización de Computadores",
       "description": "",
       "credits": 3,
