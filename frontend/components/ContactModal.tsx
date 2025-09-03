@@ -15,7 +15,6 @@ export default function ContactModal({ onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    university: '',
     career: '',
     message: '',
     buyMeCoffee: false
@@ -56,7 +55,6 @@ export default function ContactModal({ onClose }: ContactModalProps) {
       const form = new FormData();
       form.append('name', formData.name);
       form.append('email', formData.email);
-      form.append('university', formData.university);
       form.append('career', formData.career);
       form.append('message', formData.message);
       form.append('buyMeCoffee', formData.buyMeCoffee ? 'Sí' : 'No');
@@ -69,7 +67,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
       form.append('_captcha', 'false');
       form.append('_next', window.location.origin + '/?submitted=true');
 
-      const response = await fetch('https://formsubmit.co/joshxreinoso@gmail.com', {
+      const response = await fetch('https://formsubmit.co/c65548cafea3234a171bd1cc680f1e0c', {
         method: 'POST',
         body: form
       });
@@ -157,19 +155,6 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                     placeholder="tu@email.com"
                   />
                 </div>
-              </div>
-
-              <div>
-                <Label htmlFor="university" className="dark:text-gray-200">Universidad *</Label>
-                <Input
-                  id="university"
-                  name="university"
-                  value={formData.university}
-                  onChange={handleInputChange}
-                  required
-                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ej: Universidad San Francisco de Quito"
-                />
               </div>
 
               <div>
@@ -315,8 +300,8 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               <div className="flex justify-center">
                 <div className="bg-white p-4 rounded-2xl shadow-lg">
                   <img 
-                    src="/Img/qr-code.png" 
-                    alt="QR Code para Buy Me a Coffee" 
+                    src="qr-code.png"
+                    alt="QR Code para Buy Me a Coffee"
                     className="w-48 h-48 object-contain rounded-xl"
                     onError={(e) => {
                       const img = e.currentTarget as HTMLImageElement;
@@ -341,7 +326,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </p>
               </div>
 
-              {/* Botón para ir a Buy Me a Coffee */}
+              {/* Botón para ir a Buy Me a Coffee]
               <div className="flex justify-center">
                 <Button 
                   onClick={handleBuyMeCoffeeClick}
@@ -355,7 +340,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </Button>
               </div>
 
-              {/* Instrucciones */}
+              [{/* Instrucciones]
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
                   📱 Instrucciones:
@@ -366,7 +351,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   <li>3. Toma captura del comprobante</li>
                   <li>4. Súbela en el formulario de la izquierda</li>
                 </ol>
-              </div>
+              </div> */}
 
               {/* Mensaje de agradecimiento */}
               <div className="text-center">
