@@ -421,7 +421,7 @@ export default function CurriculumGrid() {
             className="dark:bg-blue-600 dark:hover:bg-blue-700"
           >
             <FileText className="w-4 h-4 mr-2" />
-            Alternar {selectedCourses.size} seleccionadas
+            Completaste tus {selectedCourses.size} seleccionadas
           </Button>
         )}
       </div>
