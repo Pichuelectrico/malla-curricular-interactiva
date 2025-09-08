@@ -5,8 +5,5 @@
   "packageManager": "bun",
   "workspaces": [
     "frontend"
-  ],
-  "dependencies": {
-    "@supabase/supabase-js": "^2.57.4"
-  }
+  ]
 }

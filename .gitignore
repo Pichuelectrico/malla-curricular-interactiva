@@ -4,6 +4,3 @@ encore.gen.cue
 /.encore
 node_modules
 /encore.gen
-.env
-.DS_Store
-__pycache__

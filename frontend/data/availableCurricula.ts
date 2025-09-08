@@ -16,17 +16,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     year: '2024',
     credits: 152,
     courses: 41,
-    dataPath: './data/Malla-CMP.json'
-  },
-  {
-    id: "btc-usfq",
-    name: "Ingeniería en Biotecnología",
-    description: "Universidad San Francisco de Quito",
-    year: "2024",
-    credits: 152,
-    courses: 41,
-    dataPath: './data/Malla-BIOTEC.json'
-  },
+    dataPath: '/data/Malla-CMP.json'
+  }
   // Aquí se pueden agregar más mallas cuando estén disponibles
   // {
   //   id: 'sistemas-usfq',

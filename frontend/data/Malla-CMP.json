@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-CMP",
-  "Last-Modified": "2025-09-03T00:00:00Z",
+  "Last-Modified": "2025-08-22T00:00:00Z",
   "courses": [
     {
       "id": "CMP1001",
@@ -317,7 +317,7 @@
     {
       "id": "PRC2000",
       "code": "PRC2000",
-      "title": "Aprendizaje y Servicio Pasec",
+      "title": "Aprendizaje y Servicio",
       "description": "",
       "credits": 1,
       "semester": 4,
@@ -432,8 +432,8 @@
       "alternatives": []
     },
     {
-      "id": "CMP3104",
-      "code": "CMP3104",
+      "id": "CMP3004",
+      "code": "CMP3004",
       "title": "Programación Avanzada de Apps",
       "description": "",
       "credits": 3,
@@ -445,8 +445,8 @@
       "alternatives": []
     },
     {
-      "id": "CMP3004",
-      "code": "CMP3004",
+      "id": "CMP3104",
+      "code": "CMP3104",
       "title": "Organización de Computadores",
       "description": "",
       "credits": 3,
