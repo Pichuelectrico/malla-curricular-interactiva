@@ -26,7 +26,7 @@ export default function DonationModal({ onClose }: DonationModalProps) {
         <CardContent className="space-y-6">
           {/* QR Code Image */}
           <div className="flex justify-center">
-            <div className="bg-white p-4 rounded-2xl shadow-lg">
+            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl shadow-lg">
               <img 
                 src="qr-code.png" 
                 alt="QR Code para donaciones" 
@@ -36,8 +36,8 @@ export default function DonationModal({ onClose }: DonationModalProps) {
                   const img = e.currentTarget as HTMLImageElement;
                   const container = img.parentElement as HTMLElement;
                   container.innerHTML = `
-                    <div class="w-48 h-48 bg-gradient-to-br from-purple-400 to-blue-500 rounded-xl flex items-center justify-center">
-                      <div class="text-8xl">🐉</div>
+                    <div class="w-48 h-48 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                      <div class="text-8xl">☕</div>
                     </div>
                   `;
                 }}
