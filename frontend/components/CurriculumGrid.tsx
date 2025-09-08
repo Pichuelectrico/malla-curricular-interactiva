@@ -79,57 +79,57 @@ export default function CurriculumGrid() {
     localStorage.setItem("curriculumData", JSON.stringify(curriculumData));
   }, [curriculumData]);
 
-  useEffect(() => {
-    localStorage.setItem(
-      "hasWritingIntensive",
-      JSON.stringify(hasWritingIntensive)
-    );
-  }, [hasWritingIntensive]);
+  // useEffect(() => {
+  //   localStorage.setItem(
+  //     "hasWritingIntensive",
+  //     JSON.stringify(hasWritingIntensive)
+  //   );
+  // }, [hasWritingIntensive]);
 
-  // Check if ESL0006 exists in the curriculum
-  const hasESL0006 = curriculumData.courses.some(
-    (course) => course.id === "ESL0006"
-  );
+  // // Check if ESL0006 exists in the curriculum
+  // const hasESL0006 = curriculumData.courses.some(
+  //   (course) => course.id === "ESL0006"
+  // );
 
-  // Check if all English courses are completed and ESL0006 was just completed
-  useEffect(() => {
-    if (!hasESL0006) return;
+  // // Check if all English courses are completed and ESL0006 was just completed
+  // useEffect(() => {
+  //   if (!hasESL0006) return;
 
-    const englishCourses = curriculumData.courses.filter(
-      (course) => course.area === "Idiomas" || course.type === "idioma"
-    );
+  //   const englishCourses = curriculumData.courses.filter(
+  //     (course) => course.area === "Idiomas" || course.type === "idioma"
+  //   );
 
-    const allEnglishCompleted =
-      englishCourses.length > 0 &&
-      englishCourses.every((course) => completedCourses.has(course.id));
+  //   const allEnglishCompleted =
+  //     englishCourses.length > 0 &&
+  //     englishCourses.every((course) => completedCourses.has(course.id));
 
-    const esl0006JustCompleted = completedCourses.has("ESL0006");
+  //   const esl0006JustCompleted = completedCourses.has("ESL0006");
 
-    // Show animation when ESL0006 is completed and all English courses are done
-    if (allEnglishCompleted && esl0006JustCompleted && !hasWritingIntensive) {
-      const timer = setTimeout(() => {
-        setShowEnglishAnimation(true);
-        toast({
-          title: "¡Inglés completado! 🌟",
-          description:
-            "Has completado todos los niveles de inglés. Ahora puedes marcar el requisito de Writing Intensive.",
-        });
+  //   // Show animation when ESL0006 is completed and all English courses are done
+  //   if (allEnglishCompleted && esl0006JustCompleted && !hasWritingIntensive) {
+  //     const timer = setTimeout(() => {
+  //       setShowEnglishAnimation(true);
+  //       toast({
+  //         title: "¡Inglés completado! 🌟",
+  //         description:
+  //           "Has completado todos los niveles de inglés. Ahora puedes marcar el requisito de Writing Intensive.",
+  //       });
 
-        // Auto-hide animation after 3 seconds
-        setTimeout(() => {
-          setShowEnglishAnimation(false);
-        }, 3000);
-      }, 500);
+  //       // Auto-hide animation after 3 seconds
+  //       setTimeout(() => {
+  //         setShowEnglishAnimation(false);
+  //       }, 3000);
+  //     }, 500);
 
-      return () => clearTimeout(timer);
-    }
-  }, [
-    completedCourses,
-    curriculumData.courses,
-    hasWritingIntensive,
-    hasESL0006,
-    toast,
-  ]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [
+  //   completedCourses,
+  //   curriculumData.courses,
+  //   hasWritingIntensive,
+  //   hasESL0006,
+  //   toast,
+  // ]);
 
   // Check if all courses are completed and writing intensive requirement is met
   const allCoursesCompleted =
@@ -150,23 +150,23 @@ export default function CurriculumGrid() {
     (course) => course.area === "Idiomas" || course.type === "idioma"
   );
   const allEnglishCompleted =
-    hasESL0006 &&
+    // hasESL0006 &&
     englishCourses.length > 0 &&
     englishCourses.every((course) => completedCourses.has(course.id));
 
   // Trigger celebration when all requirements are met
-  useEffect(() => {
-    if (isAllCompleted && completedCourses.size > 0) {
-      setShowCelebration(true);
-      toast({
-        title: "¡Felicitaciones! 🎓",
-        description:
-          "Has completado toda la malla curricular y cumplido todos los requisitos. ¡Excelente trabajo!",
-      });
-    } else {
-      setShowCelebration(false);
-    }
-  }, [isAllCompleted, completedCourses.size, toast]);
+  // useEffect(() => {
+  //   if (isAllCompleted && completedCourses.size > 0) {
+  //     setShowCelebration(true);
+  //     toast({
+  //       title: "¡Felicitaciones! 🎓",
+  //       description:
+  //         "Has completado toda la malla curricular y cumplido todos los requisitos. ¡Excelente trabajo!",
+  //     });
+  //   } else {
+  //     setShowCelebration(false);
+  //   }
+  // }, [isAllCompleted, completedCourses.size, toast]);
 
   const isUnlocked = (course: Course): boolean => {
     if (course.prerequisites.length === 0) return true;
@@ -259,27 +259,27 @@ export default function CurriculumGrid() {
     }
   };
 
-  const exportProgress = async () => {
-    try {
-      const mermaidCode = generateMermaidDiagram(
-        curriculumData.courses,
-        completedCourses,
-        curriculumData.source_file
-      );
-      await downloadPDF(mermaidCode, "malla-curricular-progreso.pdf");
-      toast({
-        title: "Progreso exportado",
-        description: "El diagrama PDF se ha descargado correctamente.",
-      });
-    } catch (error) {
-      console.error("Error exporting progress:", error);
-      toast({
-        title: "Error al exportar",
-        description: "No se pudo generar el PDF. Inténtalo de nuevo.",
-        variant: "destructive",
-      });
-    }
-  };
+  // const exportProgress = async () => {
+  //   try {
+  //     const mermaidCode = generateMermaidDiagram(
+  //       curriculumData.courses,
+  //       completedCourses,
+  //       curriculumData.source_file
+  //     );
+  //     await downloadPDF(mermaidCode, "malla-curricular-progreso.pdf");
+  //     toast({
+  //       title: "Progreso exportado",
+  //       description: "El diagrama PDF se ha descargado correctamente.",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error exporting progress:", error);
+  //     toast({
+  //       title: "Error al exportar",
+  //       description: "No se pudo generar el PDF. Inténtalo de nuevo.",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
 
   const handleFileUpload = (data: CurriculumData) => {
     setCurriculumData(data);
@@ -348,9 +348,9 @@ export default function CurriculumGrid() {
   return (
     <div className="container mx-auto p-4 space-y-6 relative">
       {/* USFQ Icon in top left corner */}
-      <div className="fixed top-4 left-8 z-40">
+      {/* <div className="fixed top-4 left-8 z-40">
         <USFQIcon />
-      </div>
+      </div> */}
 
       {/* Confetti Animation */}
       {showCelebration && <ConfettiAnimation />}
@@ -389,14 +389,14 @@ export default function CurriculumGrid() {
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 justify-center">
-        <CurriculumSelector 
+        {/* <CurriculumSelector 
           onSelect={handleCurriculumSelect}
           onRequestCurriculum={() => setShowContact(true)}
         />
         <Button onClick={() => setShowUpload(true)} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <Upload className="w-4 h-4 mr-2" />
           Cargar Malla
-        </Button>
+        </Button> */}
         <Button
           onClick={resetProgress}
           variant="outline"
@@ -405,22 +405,22 @@ export default function CurriculumGrid() {
           <RotateCcw className="w-4 h-4 mr-2" />
           Reiniciar Progreso
         </Button>
-        <Button
+        {/* <Button
           onClick={exportProgress}
           variant="outline"
           className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
         >
           <Download className="w-4 h-4 mr-2" />
           Exportar PDF
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           onClick={() => setShowDonation(true)}
           variant="outline"
           className="bg-yellow-50 hover:bg-yellow-100 border-yellow-300 dark:bg-yellow-900/20 dark:border-yellow-600 dark:hover:bg-yellow-900/30"
         >
           <Coffee className="w-4 h-4 mr-2" />
           Buy Me a Coffee
-        </Button>
+        </Button> */}
         {selectedCourses.size > 0 && (
           <Button
             onClick={handleMultipleComplete}
@@ -469,7 +469,7 @@ export default function CurriculumGrid() {
             </div>
           </div>
 
-          {/* Writing Intensive Requirement */}
+          {/* Writing Intensive Requirement
           {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
             <div
               className={`border-t pt-4 dark:border-gray-600 transition-all duration-500 ${
@@ -515,7 +515,7 @@ export default function CurriculumGrid() {
                 </p>
               )}
             </div>
-          )}
+          )} */}
         </CardContent>
       </Card>
 

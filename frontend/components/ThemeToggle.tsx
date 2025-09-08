@@ -25,40 +25,41 @@ export default function ThemeToggle() {
     setIsDark(!isDark);
   };
 
-  return (
-    <div className="fixed top-2 right-2 z-50">
-      <Button
-        onClick={toggleTheme}
-        variant="outline"
-        size="sm"
-        className="w-12 h-12 rounded-full p-0 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 shadow-lg hover:shadow-xl transition-all duration-300"
-        aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-      >
-        <div className="relative w-full h-full flex items-center justify-center">
-          <div 
-            className={`absolute transition-all duration-300 transform ${
-              isDark ? 'scale-100 rotate-0' : 'scale-0 rotate-180'
-            }`}
-          >
-            <img 
-              src={getAssetPath('moon.svg')} 
-              alt="Modo oscuro" 
-              className="w-5 h-5 filter invert dark:invert-0"
-            />
-          </div>
-          <div 
-            className={`absolute transition-all duration-300 transform ${
-              !isDark ? 'scale-100 rotate-0' : 'scale-0 -rotate-180'
-            }`}
-          >
-            <img 
-              src={getAssetPath('sun.svg')} 
-              alt="Modo claro" 
-              className="w-5 h-5"
-            />
-          </div>
-        </div>
-      </Button>
-    </div>
-  );
+  return () => {};
+  // return (
+  //   <div className="fixed top-2 right-2 z-50">
+  //     <Button
+  //       onClick={toggleTheme}
+  //       variant="outline"
+  //       size="sm"
+  //       className="w-12 h-12 rounded-full p-0 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 shadow-lg hover:shadow-xl transition-all duration-300"
+  //       aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+  //     >
+  //       <div className="relative w-full h-full flex items-center justify-center">
+  //         <div 
+  //           className={`absolute transition-all duration-300 transform ${
+  //             isDark ? 'scale-100 rotate-0' : 'scale-0 rotate-180'
+  //           }`}
+  //         >
+  //           <img 
+  //             src={getAssetPath('moon.svg')} 
+  //             alt="Modo oscuro" 
+  //             className="w-5 h-5 filter invert dark:invert-0"
+  //           />
+  //         </div>
+  //         <div 
+  //           className={`absolute transition-all duration-300 transform ${
+  //             !isDark ? 'scale-100 rotate-0' : 'scale-0 -rotate-180'
+  //           }`}
+  //         >
+  //           <img 
+  //             src={getAssetPath('sun.svg')} 
+  //             alt="Modo claro" 
+  //             className="w-5 h-5"
+  //           />
+  //         </div>
+  //       </div>
+  //     </Button>
+  //   </div>
+  // );
 }
