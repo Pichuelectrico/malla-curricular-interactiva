@@ -15,7 +15,6 @@ export default function ContactModal({ onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    university: '',
     career: '',
     message: '',
     buyMeCoffee: false
@@ -56,7 +55,6 @@ export default function ContactModal({ onClose }: ContactModalProps) {
       const form = new FormData();
       form.append('name', formData.name);
       form.append('email', formData.email);
-      form.append('university', formData.university);
       form.append('career', formData.career);
       form.append('message', formData.message);
       form.append('buyMeCoffee', formData.buyMeCoffee ? 'Sí' : 'No');
@@ -69,7 +67,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
       form.append('_captcha', 'false');
       form.append('_next', window.location.origin + '/?submitted=true');
 
-      const response = await fetch('https://formsubmit.co/joshxreinoso@gmail.com', {
+      const response = await fetch('https://formsubmit.co/c65548cafea3234a171bd1cc680f1e0c', {
         method: 'POST',
         body: form
       });
@@ -126,7 +124,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </span>
               </div>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                Si me compras un café ☕, priorizaré tu solicitud y la tendré lista en 24-48 horas.
+                Si me compras un café ☕, priorizaré tu solicitud y la tendré lista lo más rápido posible.
               </p>
             </div>
 
@@ -160,19 +158,6 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               </div>
 
               <div>
-                <Label htmlFor="university" className="dark:text-gray-200">Universidad *</Label>
-                <Input
-                  id="university"
-                  name="university"
-                  value={formData.university}
-                  onChange={handleInputChange}
-                  required
-                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Ej: Universidad San Francisco de Quito"
-                />
-              </div>
-
-              <div>
                 <Label htmlFor="career" className="dark:text-gray-200">Carrera *</Label>
                 <Input
                   id="career"
@@ -193,7 +178,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   value={formData.message}
                   onChange={handleInputChange}
                   className="dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none"
-                  placeholder="Cuéntanos más detalles sobre tu malla curricular, año de plan de estudios, etc."
+                  placeholder="Cuéntanos más detalles sobre tu malla curricular, algún consejo para los nuevos estudiantes (materias que tomarías juntas), link a tu malla, etc."
                   rows={3}
                 />
               </div>
@@ -209,7 +194,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                     className="rounded border-gray-300 dark:border-gray-600 text-yellow-600 focus:ring-yellow-500"
                   />
                   <Label htmlFor="buyMeCoffee" className="text-sm dark:text-gray-200 cursor-pointer">
-                    ☕ Sí, quiero comprarte un café para priorizar mi solicitud
+                    ☕ Sí, quiero invitarte un café para priorizar mi solicitud
                   </Label>
                 </div>
 
@@ -282,7 +267,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
 
             <div className="text-center pt-2">
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Te contactaremos a tu email dentro de 3-5 días hábiles
+                Te contactaremos a tu email dentro de algunos días hábiles
                 {formData.buyMeCoffee && " (24-48 horas con café ☕)"}
               </p>
             </div>
@@ -297,7 +282,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 <div className="flex items-center gap-2">
                   <Coffee className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                   <CardTitle className="text-lg font-bold text-gray-800 dark:text-white">
-                    ¡Cómprame un café!
+                    ¡Invítame un café!
                   </CardTitle>
                 </div>
                 <Button 
@@ -313,10 +298,10 @@ export default function ContactModal({ onClose }: ContactModalProps) {
             <CardContent className="space-y-4">
               {/* QR Code o imagen de Buy Me a Coffee */}
               <div className="flex justify-center">
-                <div className="bg-white p-4 rounded-2xl shadow-lg">
+                <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl shadow-lg">
                   <img 
-                    src="/Img/qr-code.png" 
-                    alt="QR Code para Buy Me a Coffee" 
+                    src="qr-code.png"
+                    alt="QR Code para Buy Me a Coffee"
                     className="w-48 h-48 object-contain rounded-xl"
                     onError={(e) => {
                       const img = e.currentTarget as HTMLImageElement;
@@ -341,7 +326,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </p>
               </div>
 
-              {/* Botón para ir a Buy Me a Coffee */}
+              {/* Botón para ir a Buy Me a Coffee]
               <div className="flex justify-center">
                 <Button 
                   onClick={handleBuyMeCoffeeClick}
@@ -355,7 +340,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </Button>
               </div>
 
-              {/* Instrucciones */}
+              [{/* Instrucciones]
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
                   📱 Instrucciones:
@@ -366,7 +351,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   <li>3. Toma captura del comprobante</li>
                   <li>4. Súbela en el formulario de la izquierda</li>
                 </ol>
-              </div>
+              </div> */}
 
               {/* Mensaje de agradecimiento */}
               <div className="text-center">

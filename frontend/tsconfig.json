@@ -21,6 +21,12 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "~backend/*": [
+        "../backend/*"
+      ],
+      "~backend/client": [
+        "./client.ts"
       ]
     }
   },
