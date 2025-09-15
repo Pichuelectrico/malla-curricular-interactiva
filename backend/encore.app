@@ -1,1 +1,0 @@
-{"id": "malla-curricular-interactiva-hayi", "lang": "typescript"}
