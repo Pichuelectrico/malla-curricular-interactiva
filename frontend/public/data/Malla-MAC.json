@@ -484,19 +484,6 @@
       "alternatives": []
     },
     {
-      "id": "PAS4000",
-      "code": "PAS4000",
-      "title": "Práctica Pre-profesional PASEM",
-      "description": "",
-      "credits": 5,
-      "semester": 6,
-      "block": "PASEM",
-      "area": "Proyecto",
-      "type": "proyecto",
-      "prerequisites": [],
-      "alternatives": []
-    },
-    {
       "id": "MAC4002",
       "code": "MAC4002",
       "title": "Aprendizaje Automático",
@@ -689,6 +676,19 @@
       "area": "Proyecto",
       "type": "proyecto",
       "prerequisites": ["MAC4081", "MAC4001", "MAC4002"],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS4000",
+      "title": "Práctica Pre-profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 8,
+      "block": "PASEM",
+      "area": "Proyecto",
+      "type": "proyecto",
+      "prerequisites": [],
       "alternatives": []
     }
   ]
