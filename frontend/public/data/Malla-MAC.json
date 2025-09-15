@@ -337,7 +337,7 @@
       "block": "Semestre 4",
       "area": "Física",
       "type": "obligatoria",
-      "prerequisites": ["MAT2701"],
+      "prerequisites": ["FIS2701"],
       "alternatives": []
     },
     {
@@ -376,7 +376,7 @@
       "block": "Semestre 5",
       "area": "Matemáticas",
       "type": "obligatoria",
-      "prerequisites": ["FIS2701", "MAT2002"],
+      "prerequisites": ["FIS2702", "MAT2002"],
       "alternatives": []
     },
     {
