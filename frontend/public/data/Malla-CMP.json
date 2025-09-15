@@ -688,7 +688,7 @@
       "block": "Semestre 9",
       "area": "Proyecto",
       "type": "proyecto",
-      "prerequisites": [],
+      "prerequisites": ["CMP1001", "CMP3002"],
       "alternatives": []
     },
     {
