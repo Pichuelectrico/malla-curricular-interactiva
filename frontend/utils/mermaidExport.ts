@@ -93,7 +93,7 @@ export function generateMermaidDiagram(
     "    classDef title fill:#1e40af,stroke:#1d4ed8,stroke-width:3px,color:#000,font-weight:bold,font-size:16px"
   );
   mermaidCode.push(
-    "    classDef completed fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#fff,font-weight:bold"
+    "    classDef completed fill:#22c55e,stroke:#16a34a,stroke-width:2px,color:#000"
   );
   mermaidCode.push(
     "    classDef pending fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#334155"
