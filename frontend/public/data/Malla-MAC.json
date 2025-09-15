@@ -120,19 +120,6 @@
       "alternatives": []
     },
     {
-      "id": "MAT1202",
-      "code": "MAT1202",
-      "title": "Cálculo Integral",
-      "description": "",
-      "credits": 3,
-      "semester": 2,
-      "block": "Semestre 2",
-      "area": "Matemáticas",
-      "type": "obligatoria",
-      "prerequisites": ["MAT1201"],
-      "alternatives": []
-    },
-    {
       "id": "DEP0010",
       "code": "DEP0010",
       "title": "Deportes",
@@ -143,6 +130,19 @@
       "area": "Humanidades",
       "type": "obligatoria",
       "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1202",
+      "code": "MAT1202",
+      "title": "Cálculo Integral",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "Matemáticas",
+      "type": "obligatoria",
+      "prerequisites": ["MAT1201"],
       "alternatives": []
     },
     {
