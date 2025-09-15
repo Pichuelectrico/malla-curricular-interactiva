@@ -44,17 +44,38 @@ export function generateMermaidDiagram(
     });
 
   // Add dependencies with proper arrow styling
+  const linkStyles: string[] = [];
+  let linkIndex = 0;
+  const colors = [
+    '#3b82f6', // blue-500
+    '#10b981', // emerald-500
+    '#f59e0b', // amber-500
+    '#ef4444', // red-500
+    '#8b5cf6', // violet-500
+    '#ec4899', // pink-500
+    '#14b8a6', // teal-500
+    '#f97316', // orange-500
+    '#06b6d4', // cyan-500
+    '#a855f7'  // purple-500
+  ];
+
+  // First, add all the connections
   courses.forEach((course) => {
+    // Prerequisites (solid arrows)
     course.prerequisites.forEach((prereqId) => {
       mermaidCode.push(`    ${prereqId} --> ${course.id}`);
+      const color = colors[linkIndex % colors.length];
+      linkStyles.push(`    linkStyle ${linkIndex} stroke:${color},stroke-width:2px`);
+      linkIndex++;
     });
 
-    // Handle alternatives (OR relationships) with dotted lines
-    if (course.alternatives.length > 0) {
-      course.alternatives.forEach((altId) => {
-        mermaidCode.push(`    ${altId} -.-> ${course.id}`);
-      });
-    }
+    // Alternatives (dotted arrows)
+    course.alternatives.forEach((altId) => {
+      mermaidCode.push(`    ${altId} -.-> ${course.id}`);
+      const color = colors[linkIndex % colors.length];
+      linkStyles.push(`    linkStyle ${linkIndex} stroke:${color},stroke-width:2px,stroke-dasharray:3`);
+      linkIndex++;
+    });
   });
 
   // Connect title to first semester courses
@@ -82,7 +103,9 @@ export function generateMermaidDiagram(
   mermaidCode.push(
     "    classDef default fill:#f1f5f9,stroke:#cbd5e1,stroke-width:1px"
   );
-  mermaidCode.push("    linkStyle default stroke:#475569,stroke-width:2px;");
+  
+  // Add the custom link styles
+  mermaidCode.push(...linkStyles);
 
   return mermaidCode.join("\n");
 }
