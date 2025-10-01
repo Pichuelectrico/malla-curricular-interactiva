@@ -17,7 +17,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     credits: 152,
     courses: 41,
     dataLoader: async () => {
-      const res = await fetch('/data/Malla-CMP.json');
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-CMP.json`);
       if (!res.ok) throw new Error('No se pudo cargar /data/Malla-CMP.json');
       return { default: await res.json() };
     },
@@ -30,7 +31,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     credits: 152,
     courses: 41,
     dataLoader: async () => {
-      const res = await fetch('/data/Malla-BIOTEC.json');
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-BIOTEC.json`);
       if (!res.ok) throw new Error('No se pudo cargar /data/Malla-BIOTEC.json');
       return { default: await res.json() };
     },
@@ -43,7 +45,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     credits: 152,
     courses: 41,
     dataLoader: async () => {
-      const res = await fetch('/data/Malla-MAC.json');
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-MAC.json`);
       if (!res.ok) throw new Error('No se pudo cargar /data/Malla-MAC.json');
       return { default: await res.json() };
     },
