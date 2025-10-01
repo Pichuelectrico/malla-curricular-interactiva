@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getAssetPath } from '@/lib/assets';
 
 export default function USFQIcon() {
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {
-    const logoPath = getAssetPath('USFQ_Logo.svg');
+    // Construir la URL dinámicamente para evitar que Vite la procese durante el build
+    const logoPath = `/Img/USFQ_Logo.svg`;
     setImageSrc(logoPath);
   }, []);
 

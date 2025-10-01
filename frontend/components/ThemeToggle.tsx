@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { getAssetPath } from '@/lib/assets';
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
@@ -41,7 +40,7 @@ export default function ThemeToggle() {
             }`}
           >
             <img 
-              src={getAssetPath('moon.svg')} 
+              src="/Img/moon.svg" 
               alt="Modo oscuro" 
               className="w-5 h-5 filter invert dark:invert-0"
             />
@@ -52,7 +51,7 @@ export default function ThemeToggle() {
             }`}
           >
             <img 
-              src={getAssetPath('sun.svg')} 
+              src="/Img/sun.svg" 
               alt="Modo claro" 
               className="w-5 h-5"
             />
