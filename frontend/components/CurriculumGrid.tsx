@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,8 +19,11 @@ import WritingIntensiveSidebar from './WritingIntensiveSidebar';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
+import { useBackend } from '../lib/backend';
 
 export default function CurriculumGrid() {
+  const { isSignedIn } = useAuth();
+  const backend = useBackend();
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
   const [inProgressCourses, setInProgressCourses] = useState<Set<string>>(new Set());
@@ -31,67 +35,104 @@ export default function CurriculumGrid() {
   const [showContact, setShowContact] = useState(false);
   const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
   const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const savedCompleted = localStorage.getItem('completedCourses');
-    const savedInProgress = localStorage.getItem('inProgressCourses');
-    const savedPlanned = localStorage.getItem('plannedCourses');
-    const savedCurriculum = localStorage.getItem('curriculumData');
-    const savedWritingIntensive = localStorage.getItem('hasWritingIntensive');
-    
-    if (savedCompleted) {
-      try {
-        setCompletedCourses(new Set(JSON.parse(savedCompleted)));
-      } catch (error) {
-        console.error('Error loading completed courses:', error);
-      }
-    }
-
-    if (savedInProgress) {
-      try {
-        setInProgressCourses(new Set(JSON.parse(savedInProgress)));
-      } catch (error) {
-        console.error('Error loading in-progress courses:', error);
-      }
-    }
-
-    if (savedPlanned) {
-      try {
-        setPlannedCourses(new Set(JSON.parse(savedPlanned)));
-      } catch (error) {
-        console.error('Error loading planned courses:', error);
-      }
-    }
-    
-    if (savedCurriculum) {
-      try {
-        setCurriculumData(JSON.parse(savedCurriculum));
-      } catch (error) {
-        console.error('Error loading curriculum data:', error);
-      }
-    }
-
-    if (savedWritingIntensive) {
-      try {
-        setHasWritingIntensive(JSON.parse(savedWritingIntensive));
-      } catch (error) {
-        console.error('Error loading writing intensive status:', error);
-      }
-    }
-  }, []);
+  const curriculumId = curriculumData.source_file || 'Malla-CMP';
 
   useEffect(() => {
-    localStorage.setItem('completedCourses', JSON.stringify([...completedCourses]));
-  }, [completedCourses]);
+    const loadData = async () => {
+      if (isSignedIn) {
+        try {
+          const response = await backend.progress.loadProgress({ curriculumId });
+          if (response.data) {
+            setCompletedCourses(new Set(response.data.completedCourses));
+            const selectedCourses = response.data.selectedCourses || [];
+            const completed = new Set(response.data.completedCourses);
+            setInProgressCourses(new Set(selectedCourses.filter((id: string) => !completed.has(id))));
+          }
+        } catch (error) {
+          console.error('Error loading progress from backend:', error);
+        }
+      } else {
+        const savedCompleted = localStorage.getItem('completedCourses');
+        const savedInProgress = localStorage.getItem('inProgressCourses');
+        const savedPlanned = localStorage.getItem('plannedCourses');
+        
+        if (savedCompleted) {
+          try {
+            setCompletedCourses(new Set(JSON.parse(savedCompleted)));
+          } catch (error) {
+            console.error('Error loading completed courses:', error);
+          }
+        }
+
+        if (savedInProgress) {
+          try {
+            setInProgressCourses(new Set(JSON.parse(savedInProgress)));
+          } catch (error) {
+            console.error('Error loading in-progress courses:', error);
+          }
+        }
+
+        if (savedPlanned) {
+          try {
+            setPlannedCourses(new Set(JSON.parse(savedPlanned)));
+          } catch (error) {
+            console.error('Error loading planned courses:', error);
+          }
+        }
+      }
+
+      const savedCurriculum = localStorage.getItem('curriculumData');
+      const savedWritingIntensive = localStorage.getItem('hasWritingIntensive');
+      
+      if (savedCurriculum) {
+        try {
+          setCurriculumData(JSON.parse(savedCurriculum));
+        } catch (error) {
+          console.error('Error loading curriculum data:', error);
+        }
+      }
+
+      if (savedWritingIntensive) {
+        try {
+          setHasWritingIntensive(JSON.parse(savedWritingIntensive));
+        } catch (error) {
+          console.error('Error loading writing intensive status:', error);
+        }
+      }
+
+      setDataLoaded(true);
+    };
+
+    loadData();
+  }, [isSignedIn, curriculumId]);
 
   useEffect(() => {
-    localStorage.setItem('inProgressCourses', JSON.stringify([...inProgressCourses]));
-  }, [inProgressCourses]);
+    if (!dataLoaded) return;
 
-  useEffect(() => {
-    localStorage.setItem('plannedCourses', JSON.stringify([...plannedCourses]));
-  }, [plannedCourses]);
+    if (isSignedIn) {
+      const saveProgress = async () => {
+        try {
+          const selectedCourses = [...completedCourses, ...inProgressCourses, ...plannedCourses];
+          await backend.progress.saveProgress({
+            curriculumId,
+            completedCourses: [...completedCourses],
+            selectedCourses,
+          });
+        } catch (error) {
+          console.error('Error saving progress to backend:', error);
+        }
+      };
+
+      saveProgress();
+    } else {
+      localStorage.setItem('completedCourses', JSON.stringify([...completedCourses]));
+      localStorage.setItem('inProgressCourses', JSON.stringify([...inProgressCourses]));
+      localStorage.setItem('plannedCourses', JSON.stringify([...plannedCourses]));
+    }
+  }, [completedCourses, inProgressCourses, plannedCourses, isSignedIn, dataLoaded, curriculumId]);
 
   useEffect(() => {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
@@ -101,10 +142,8 @@ export default function CurriculumGrid() {
     localStorage.setItem('hasWritingIntensive', JSON.stringify(hasWritingIntensive));
   }, [hasWritingIntensive]);
 
-  // Check if ESL0006 exists in the curriculum
   const hasESL0006 = curriculumData.courses.some(course => course.id === 'ESL0006');
 
-  // Check if all English courses are completed and ESL0006 was just completed
   useEffect(() => {
     if (!hasESL0006) return;
 
@@ -117,7 +156,6 @@ export default function CurriculumGrid() {
     
     const esl0006JustCompleted = completedCourses.has('ESL0006');
     
-    // Show animation when ESL0006 is completed and all English courses are done
     if (allEnglishCompleted && esl0006JustCompleted && !hasWritingIntensive) {
       const timer = setTimeout(() => {
         setShowEnglishAnimation(true);
@@ -126,7 +164,6 @@ export default function CurriculumGrid() {
           description: "Has completado todos los niveles de inglés. Ahora puedes marcar el requisito de Writing Intensive.",
         });
         
-        // Auto-hide animation after 3 seconds
         setTimeout(() => {
           setShowEnglishAnimation(false);
         }, 3000);
@@ -136,11 +173,9 @@ export default function CurriculumGrid() {
     }
   }, [completedCourses, curriculumData.courses, hasWritingIntensive, hasESL0006, toast]);
 
-  // Check if all courses are completed and writing intensive requirement is met
   const allCoursesCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
   const isAllCompleted = allCoursesCompleted && hasWritingIntensive;
 
-  // Check if student has completed at least 5 semesters worth of courses
   const completedSemesters = new Set(
     curriculumData.courses
       .filter(course => completedCourses.has(course.id))
@@ -148,14 +183,12 @@ export default function CurriculumGrid() {
   );
   const hasCompletedFiveSemesters = completedSemesters.size >= 5;
 
-  // Check if all English courses are completed (for showing the writing intensive checkbox)
   const englishCourses = curriculumData.courses.filter(course => 
     course.area === 'Idiomas' || course.type === 'idioma'
   );
   const allEnglishCompleted = hasESL0006 && englishCourses.length > 0 && 
     englishCourses.every(course => completedCourses.has(course.id));
 
-  // Trigger celebration when all requirements are met
   useEffect(() => {
     if (isAllCompleted && completedCourses.size > 0) {
       setShowCelebration(true);
@@ -264,13 +297,10 @@ export default function CurriculumGrid() {
     localStorage.removeItem("plannedCourses");
     localStorage.removeItem("hasWritingIntensive");
 
-    // Verificar si hay cambios en el JSON de datos comparando la fecha de última modificación
     const currentLastModified = curriculumData["Last-Modified"];
     const latestLastModified = defaultCurriculumData["Last-Modified"];
 
-    // Si las fechas de modificación son diferentes o si no existe la fecha en los datos actuales
     if (!currentLastModified || currentLastModified !== latestLastModified) {
-      // Actualizar con los datos más recientes
       setCurriculumData(defaultCurriculumData);
       localStorage.removeItem("curriculumData");
       toast({
@@ -342,7 +372,6 @@ export default function CurriculumGrid() {
     });
   };
 
-  // Calculate progress
   const totalCredits = curriculumData.courses.reduce((sum, course) => sum + course.credits, 0);
   const completedCredits = curriculumData.courses
     .filter(course => completedCourses.has(course.id))
@@ -353,7 +382,6 @@ export default function CurriculumGrid() {
   const creditProgress = totalCredits > 0 ? (completedCredits / totalCredits) * 100 : 0;
   const courseProgress = totalCourses > 0 ? (completedCoursesCount / totalCourses) * 100 : 0;
 
-  // Group courses by semester/block
   const coursesByBlock = curriculumData.courses.reduce((acc, course) => {
     if (!acc[course.block]) {
       acc[course.block] = [];
@@ -367,20 +395,16 @@ export default function CurriculumGrid() {
     'Semestre 6', 'Semestre 7', 'Semestre 8', 'Semestre 9', 'PASEM'
   ];
 
-  // Get career title from source file
   const careerTitle = curriculumData.source_file || 'Malla Curricular';
 
   return (
     <div className="container mx-auto p-4 space-y-6 relative">
-      {/* USFQ Icon in top left corner */}
       <div className="fixed top-4 left-8 z-40">
         <USFQIcon />
       </div>
 
-      {/* Confetti Animation */}
       {showCelebration && <ConfettiAnimation />}
 
-      {/* English Completion Animation */}
       {showEnglishAnimation && (
         <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -398,13 +422,11 @@ export default function CurriculumGrid() {
         </div>
       )}
 
-      {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Malla Curricular Interactiva</h1>
         <p className="text-gray-600 dark:text-gray-300">Haz clic en las asignaturas para marcarlas como completadas</p>
       </div>
 
-      {/* Controls */}
       <div className="flex flex-wrap gap-4 justify-center">
         <CurriculumSelector 
           onSelect={handleCurriculumSelect}
@@ -434,7 +456,6 @@ export default function CurriculumGrid() {
         </Button>
       </div>
 
-      {/* Progress Overview */}
       <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
           <CardTitle className="dark:text-white">Progreso General</CardTitle>
@@ -459,7 +480,6 @@ export default function CurriculumGrid() {
             </div>
           </div>
 
-          {/* Writing Intensive Requirement */}
           {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
             <div className={`border-t pt-4 dark:border-gray-600 transition-all duration-500 ${
               allEnglishCompleted ? 'bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-2 border-blue-200 dark:border-blue-700' : ''
@@ -499,7 +519,6 @@ export default function CurriculumGrid() {
         </CardContent>
       </Card>
 
-      {/* Legend */}
       <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
           <CardTitle className="dark:text-white">Leyenda</CardTitle>
@@ -533,7 +552,6 @@ export default function CurriculumGrid() {
         </CardContent>
       </Card>
 
-      {/* Career Title */}
       <div className="text-center relative">
         <h2 className={`text-2xl font-bold py-4 px-6 rounded-lg border-2 transition-all duration-500 ${
           isAllCompleted 
@@ -547,7 +565,6 @@ export default function CurriculumGrid() {
         </h2>
       </div>
 
-      {/* Curriculum Grid */}
       <div className="space-y-8">
         {blockOrder.map(blockName => {
           const blockCourses = coursesByBlock[blockName];
@@ -586,7 +603,6 @@ export default function CurriculumGrid() {
         })}
       </div>
 
-      {/* File Upload Modal */}
       {showUpload && (
         <FileUpload
           onUpload={handleFileUpload}
@@ -594,20 +610,16 @@ export default function CurriculumGrid() {
         />
       )}
 
-      {/* Donation Modal */}
       {showDonation && (
         <DonationModal onClose={() => setShowDonation(false)} />
       )}
 
-      {/* Contact Modal */}
       {showContact && (
         <ContactModal onClose={() => setShowContact(false)} />
       )}
 
-      {/* Mode Selector */}
       <ModeSelector currentMode={currentMode} onModeChange={setCurrentMode} />
 
-      {/* Writing Intensive Sidebar */}
       {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
         <WritingIntensiveSidebar
           hasWritingIntensive={hasWritingIntensive}
