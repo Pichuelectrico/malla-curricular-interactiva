@@ -432,10 +432,10 @@ export default function CurriculumGrid() {
           onSelect={handleCurriculumSelect}
           onRequestCurriculum={() => setShowContact(true)}
         />
-        <Button onClick={() => setShowUpload(true)} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
+        {/* <Button onClick={() => setShowUpload(true)} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <Upload className="w-4 h-4 mr-2" />
           Cargar Malla
-        </Button>
+        </Button> */}
         <Button onClick={resetProgress} variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
           <RotateCcw className="w-4 h-4 mr-2" />
           Reiniciar Progreso
