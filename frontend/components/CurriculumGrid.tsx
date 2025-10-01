@@ -4,7 +4,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee, Languages } from 'lucide-react';
+import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee, Languages, CheckCheck } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import CourseCard from './CourseCard';
 import FileUpload from './FileUpload';
@@ -329,6 +329,19 @@ export default function CurriculumGrid() {
     });
   };
 
+  const completeAllInProgress = () => {
+    setCompletedCourses(prev => {
+      const newCompleted = new Set(prev);
+      inProgressCourses.forEach(courseId => newCompleted.add(courseId));
+      return newCompleted;
+    });
+    setInProgressCourses(new Set());
+    toast({
+      title: "Materias completadas",
+      description: `Se han marcado ${inProgressCourses.size} materia(s) como completadas.`,
+    });
+  };
+
   // Calculate progress
   const totalCredits = curriculumData.courses.reduce((sum, course) => sum + course.credits, 0);
   const completedCredits = curriculumData.courses
@@ -409,6 +422,12 @@ export default function CurriculumGrid() {
           <Download className="w-4 h-4 mr-2" />
           Exportar PDF
         </Button>
+        {inProgressCourses.size > 0 && (
+          <Button onClick={completeAllInProgress} variant="outline" className="bg-green-50 hover:bg-green-100 border-green-300 dark:bg-green-900/20 dark:border-green-600 dark:hover:bg-green-900/30">
+            <CheckCheck className="w-4 h-4 mr-2" />
+            Completar Cursando ({inProgressCourses.size})
+          </Button>
+        )}
         <Button onClick={() => setShowDonation(true)} variant="outline" className="bg-yellow-50 hover:bg-yellow-100 border-yellow-300 dark:bg-yellow-900/20 dark:border-yellow-600 dark:hover:bg-yellow-900/30">
           <Coffee className="w-4 h-4 mr-2" />
           Buy Me a Coffee
