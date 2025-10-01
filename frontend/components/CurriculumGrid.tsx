@@ -112,6 +112,46 @@ export default function CurriculumGrid() {
     saveProgress();
   }, [completedCourses, inProgressCourses, plannedCourses, dataLoaded, curriculumId, isLoadingProgress]);
 
+  // Overlay global completed courses onto current curriculum after data loads
+  useEffect(() => {
+    if (!dataLoaded) return;
+    try {
+      const raw = localStorage.getItem('globalCompletedCourses');
+      if (!raw) return;
+      const globalCompleted: string[] = JSON.parse(raw);
+      const currentIds = new Set(curriculumData.courses.map(c => c.id));
+      const overlay = globalCompleted.filter(id => currentIds.has(id));
+      if (overlay.length === 0) return;
+      setCompletedCourses(prev => new Set([...prev, ...overlay]));
+    } catch (e) {
+      console.error('Error overlaying global completed courses:', e);
+    }
+  }, [dataLoaded, curriculumData.courses]);
+
+  // Keep a global store of completed courses across curricula in localStorage
+  useEffect(() => {
+    if (!dataLoaded) return;
+    try {
+      const raw = localStorage.getItem('globalCompletedCourses');
+      const globalSet = new Set<string>(raw ? JSON.parse(raw) : []);
+      const currentIds = new Set(curriculumData.courses.map(c => c.id));
+
+      // Remove current-curriculum IDs not completed anymore
+      for (const id of Array.from(globalSet)) {
+        if (currentIds.has(id) && !completedCourses.has(id)) {
+          globalSet.delete(id);
+        }
+      }
+      // Add all currently completed IDs
+      for (const id of completedCourses) {
+        globalSet.add(id);
+      }
+      localStorage.setItem('globalCompletedCourses', JSON.stringify(Array.from(globalSet)));
+    } catch (e) {
+      console.error('Error saving global completed courses:', e);
+    }
+  }, [completedCourses, dataLoaded, curriculumData.courses]);
+
   useEffect(() => {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
   }, [curriculumData]);
