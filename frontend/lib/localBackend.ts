@@ -7,6 +7,7 @@ interface ProgressData {
   inProgressCourses?: string[];
   plannedCourses?: string[];
   currentSemester?: number;
+  hasWritingIntensive?: boolean;
   lastUpdated: string;
 }
 
@@ -30,6 +31,7 @@ export const mockBackendClient = {
             completedCourses: data.completedCourses || [],
             inProgressCourses: data.inProgressCourses || [],
             plannedCourses: data.plannedCourses || [],
+            hasWritingIntensive: typeof data.hasWritingIntensive === 'boolean' ? data.hasWritingIntensive : false,
             lastUpdated: data.lastUpdated || new Date().toISOString()
           };
         }
@@ -38,6 +40,7 @@ export const mockBackendClient = {
           completedCourses: [],
           inProgressCourses: [],
           plannedCourses: [],
+          hasWritingIntensive: false,
           lastUpdated: new Date().toISOString()
         };
       } catch (error) {
@@ -47,6 +50,7 @@ export const mockBackendClient = {
           completedCourses: [],
           inProgressCourses: [],
           plannedCourses: [],
+          hasWritingIntensive: false,
           lastUpdated: new Date().toISOString()
         };
       }
@@ -59,6 +63,7 @@ export const mockBackendClient = {
           completedCourses: params.completedCourses || [],
           inProgressCourses: params.inProgressCourses || [],
           plannedCourses: params.plannedCourses || [],
+          hasWritingIntensive: !!params.hasWritingIntensive,
           lastUpdated: new Date().toISOString()
         };
         localStorage.setItem(`progress_${params.curriculumId}`, JSON.stringify(dataToSave));

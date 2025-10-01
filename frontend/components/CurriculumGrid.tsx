@@ -50,6 +50,9 @@ export default function CurriculumGrid() {
           setCompletedCourses(new Set(response.completedCourses || []));
           setInProgressCourses(new Set(response.inProgressCourses || []));
           setPlannedCourses(new Set(response.plannedCourses || []));
+          if (typeof (response as any).hasWritingIntensive === 'boolean') {
+            setHasWritingIntensive((response as any).hasWritingIntensive);
+          }
         } else {
           // Initialize empty progress for new curriculum
           setCompletedCourses(new Set());
@@ -65,21 +68,41 @@ export default function CurriculumGrid() {
       }
 
       const savedCurriculum = localStorage.getItem('curriculumData');
-      const savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${curriculumId}`);
+      let idForWI = curriculumId;
+      let savedWritingIntensive: string | null = null;
+      const legacyWritingIntensive = localStorage.getItem('hasWritingIntensive');
       
       if (savedCurriculum) {
         try {
-          setCurriculumData(JSON.parse(savedCurriculum));
+          const parsed = JSON.parse(savedCurriculum);
+          setCurriculumData(parsed);
+          if (parsed?.source_file && typeof parsed.source_file === 'string') {
+            idForWI = parsed.source_file;
+          }
         } catch (error) {
           console.error('Error loading curriculum data:', error);
         }
       }
+
+      // read per-curriculum WI using the best id we have
+      savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${idForWI}`);
 
       if (savedWritingIntensive) {
         try {
           setHasWritingIntensive(JSON.parse(savedWritingIntensive));
         } catch (error) {
           console.error('Error loading writing intensive status:', error);
+        }
+      } else if (legacyWritingIntensive) {
+        // Migrate legacy global key to per-curriculum key
+        try {
+          const legacy = JSON.parse(legacyWritingIntensive);
+          setHasWritingIntensive(legacy);
+          localStorage.setItem(`hasWritingIntensive:${idForWI}`, JSON.stringify(legacy));
+          localStorage.removeItem('hasWritingIntensive');
+        } catch (error) {
+          console.error('Error migrating legacy writing intensive status:', error);
+          setHasWritingIntensive(false);
         }
       } else {
         setHasWritingIntensive(false);
@@ -102,6 +125,7 @@ export default function CurriculumGrid() {
           completedCourses: [...completedCourses],
           inProgressCourses: [...inProgressCourses],
           plannedCourses: [...plannedCourses],
+          hasWritingIntensive,
           lastUpdated: new Date().toISOString()
         });
       } catch (error) {
@@ -157,8 +181,9 @@ export default function CurriculumGrid() {
   }, [curriculumData]);
 
   useEffect(() => {
+    if (!dataLoaded || isLoadingProgress) return;
     localStorage.setItem(`hasWritingIntensive:${curriculumId}`, JSON.stringify(hasWritingIntensive));
-  }, [hasWritingIntensive, curriculumId]);
+  }, [hasWritingIntensive, curriculumId, dataLoaded, isLoadingProgress]);
 
   const hasESL0006 = curriculumData.courses.some(course => course.id === 'ESL0006');
 
