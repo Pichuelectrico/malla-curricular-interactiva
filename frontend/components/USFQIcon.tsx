@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import USFQLogo from '../src/assets/USFQ_Logo.svg?url';
 
 export default function USFQIcon() {
   const [imageError, setImageError] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Construir la URL dinámicamente para evitar que Vite la procese durante el build
-    const logoPath = `/Img/USFQ_Logo.svg`;
-    setImageSrc(logoPath);
-  }, []);
 
   return (
     <div className="fixed top-2 left-2 z-10">
       <div className="w-11 h-11 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center border-2 border-blue-200 dark:border-blue-600 transition-colors duration-300">
-        {!imageError && imageSrc ? (
+        {!imageError ? (
           <img 
-            src={imageSrc}
+            src={USFQLogo}
             alt="USFQ Logo" 
             className="w-12 h-12 object-contain dark:[filter:brightness(0)_saturate(100%)_invert(13%)_sepia(94%)_saturate(7482%)_hue-rotate(356deg)_brightness(91%)_contrast(135%)]"
             onError={() => setImageError(true)}

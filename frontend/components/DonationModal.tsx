@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, ExternalLink } from 'lucide-react';
+import QRCodeImage from '../src/assets/qr-code.png';
 
 interface DonationModalProps {
   onClose: () => void;
@@ -28,7 +29,7 @@ export default function DonationModal({ onClose }: DonationModalProps) {
           <div className="flex justify-center">
             <div className="bg-white p-4 rounded-2xl shadow-lg">
               <img 
-                src="/Img/qr-code.png" 
+                src={QRCodeImage} 
                 alt="QR Code para donaciones" 
                 className="w-48 h-48 object-contain rounded-xl"
                 onError={(e) => {
