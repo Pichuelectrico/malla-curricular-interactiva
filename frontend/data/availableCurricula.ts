@@ -10,14 +10,32 @@ export interface AvailableCurriculum {
 
 export const availableCurricula: AvailableCurriculum[] = [
   {
-    id: 'cmp-usfq',
-    name: 'Ingeniería en Ciencias de la Computación',
-    description: 'Universidad San Francisco de Quito',
-    year: '2024',
+    id: "cmp-usfq",
+    name: "Ingeniería en Ciencias de la Computación",
+    description: "Universidad San Francisco de Quito",
+    year: "2024",
     credits: 152,
     courses: 41,
-    dataPath: '/data/Malla-CMP.json'
-  }
+    dataPath: "./data/Malla-CMP.json",
+  },
+  {
+    id: "btc-usfq",
+    name: "Ingeniería en Biotecnología",
+    description: "Universidad San Francisco de Quito",
+    year: "2024",
+    credits: 152,
+    courses: 41,
+    dataPath: "./data/Malla-BIOTEC.json",
+  },
+  {
+    id: "mac-usfq",
+    name: "Ingeniería en Matemáticas Aplicadas y Computación",
+    description: "Universidad San Francisco de Quito",
+    year: "2024",
+    credits: 152,
+    courses: 41,
+    dataPath: "./data/Malla-MAC.json",
+  },
   // Aquí se pueden agregar más mallas cuando estén disponibles
   // {
   //   id: 'sistemas-usfq',
