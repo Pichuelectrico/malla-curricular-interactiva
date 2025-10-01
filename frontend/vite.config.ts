@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: '/malla-curricular-interactiva/',
+  base: './',
   resolve: {
     alias: {
       '@': path.resolve(__dirname),
@@ -14,9 +14,7 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
-  mode: "development",
   build: {
-    minify: false,
     outDir: 'dist',
     assetsDir: 'assets',
   }
