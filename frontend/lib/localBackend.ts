@@ -4,6 +4,8 @@
 interface ProgressData {
   curriculumId: string;
   completedCourses: string[];
+  inProgressCourses?: string[];
+  plannedCourses?: string[];
   currentSemester?: number;
   lastUpdated: string;
 }
@@ -20,9 +22,22 @@ export const mockBackendClient = {
     async loadProgress(params: { curriculumId: string }): Promise<ProgressData | null> {
       try {
         const stored = localStorage.getItem(`progress_${params.curriculumId}`);
-        return stored ? JSON.parse(stored) : {
+        if (stored) {
+          const data = JSON.parse(stored);
+          // Ensure we return the expected structure
+          return {
+            curriculumId: params.curriculumId,
+            completedCourses: data.completedCourses || [],
+            inProgressCourses: data.inProgressCourses || [],
+            plannedCourses: data.plannedCourses || [],
+            lastUpdated: data.lastUpdated || new Date().toISOString()
+          };
+        }
+        return {
           curriculumId: params.curriculumId,
           completedCourses: [],
+          inProgressCourses: [],
+          plannedCourses: [],
           lastUpdated: new Date().toISOString()
         };
       } catch (error) {
@@ -30,6 +45,8 @@ export const mockBackendClient = {
         return {
           curriculumId: params.curriculumId,
           completedCourses: [],
+          inProgressCourses: [],
+          plannedCourses: [],
           lastUpdated: new Date().toISOString()
         };
       }
@@ -38,7 +55,10 @@ export const mockBackendClient = {
     async saveProgress(params: ProgressData): Promise<void> {
       try {
         const dataToSave = {
-          ...params,
+          curriculumId: params.curriculumId,
+          completedCourses: params.completedCourses || [],
+          inProgressCourses: params.inProgressCourses || [],
+          plannedCourses: params.plannedCourses || [],
           lastUpdated: new Date().toISOString()
         };
         localStorage.setItem(`progress_${params.curriculumId}`, JSON.stringify(dataToSave));

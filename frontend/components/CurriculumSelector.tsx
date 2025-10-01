@@ -19,8 +19,12 @@ export default function CurriculumSelector({ onSelect, onRequestCurriculum }: Cu
       const curriculum = availableCurricula.find(c => c.id === curriculumId);
       if (!curriculum) return;
 
-      const response = await fetch(curriculum.dataPath);
-      const data = await response.json();
+      const module = await curriculum.dataLoader();
+      const data = module.default as CurriculumData;
+      // Ensure a stable identifier to persist progress per curriculum
+      if (!data.source_file) {
+        data.source_file = curriculumId;
+      }
       onSelect(data);
       setIsOpen(false);
     } catch (error) {

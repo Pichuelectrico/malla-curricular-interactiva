@@ -5,7 +5,7 @@ export interface AvailableCurriculum {
   year: string;
   credits: number;
   courses: number;
-  dataPath: string;
+  dataLoader: () => Promise<any>;
 }
 
 export const availableCurricula: AvailableCurriculum[] = [
@@ -16,7 +16,11 @@ export const availableCurricula: AvailableCurriculum[] = [
     year: "2024",
     credits: 152,
     courses: 41,
-    dataPath: "./data/Malla-CMP.json",
+    dataLoader: async () => {
+      const res = await fetch('/data/Malla-CMP.json');
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-CMP.json');
+      return { default: await res.json() };
+    },
   },
   {
     id: "btc-usfq",
@@ -25,7 +29,11 @@ export const availableCurricula: AvailableCurriculum[] = [
     year: "2024",
     credits: 152,
     courses: 41,
-    dataPath: "./data/Malla-BIOTEC.json",
+    dataLoader: async () => {
+      const res = await fetch('/data/Malla-BIOTEC.json');
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-BIOTEC.json');
+      return { default: await res.json() };
+    },
   },
   {
     id: "mac-usfq",
@@ -34,7 +42,11 @@ export const availableCurricula: AvailableCurriculum[] = [
     year: "2024",
     credits: 152,
     courses: 41,
-    dataPath: "./data/Malla-MAC.json",
+    dataLoader: async () => {
+      const res = await fetch('/data/Malla-MAC.json');
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-MAC.json');
+      return { default: await res.json() };
+    },
   },
   // Aquí se pueden agregar más mallas cuando estén disponibles
   // {
@@ -44,6 +56,6 @@ export const availableCurricula: AvailableCurriculum[] = [
   //   year: '2024',
   //   credits: 148,
   //   courses: 39,
-  //   dataPath: '/data/Malla-Sistemas.json'
+  //   dataLoader: () => import('./Malla-Sistemas.json')
   // }
 ];

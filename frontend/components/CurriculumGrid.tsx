@@ -36,56 +36,36 @@ export default function CurriculumGrid() {
   const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
   const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const { toast } = useToast();
 
   const curriculumId = curriculumData.source_file || 'Malla-CMP';
 
   useEffect(() => {
     const loadData = async () => {
-      if (isSignedIn) {
-        try {
-          const response = await backend.progress.loadProgress({ curriculumId });
-          if (response.data) {
-            setCompletedCourses(new Set(response.data.completedCourses));
-            const selectedCourses = response.data.selectedCourses || [];
-            const completed = new Set(response.data.completedCourses);
-            setInProgressCourses(new Set(selectedCourses.filter((id: string) => !completed.has(id))));
-          }
-        } catch (error) {
-          console.error('Error loading progress from backend:', error);
+      setIsLoadingProgress(true);
+      try {
+        const response = await backend.progress.loadProgress({ curriculumId });
+        if (response) {
+          setCompletedCourses(new Set(response.completedCourses || []));
+          setInProgressCourses(new Set(response.inProgressCourses || []));
+          setPlannedCourses(new Set(response.plannedCourses || []));
+        } else {
+          // Initialize empty progress for new curriculum
+          setCompletedCourses(new Set());
+          setInProgressCourses(new Set());
+          setPlannedCourses(new Set());
         }
-      } else {
-        const savedCompleted = localStorage.getItem('completedCourses');
-        const savedInProgress = localStorage.getItem('inProgressCourses');
-        const savedPlanned = localStorage.getItem('plannedCourses');
-        
-        if (savedCompleted) {
-          try {
-            setCompletedCourses(new Set(JSON.parse(savedCompleted)));
-          } catch (error) {
-            console.error('Error loading completed courses:', error);
-          }
-        }
-
-        if (savedInProgress) {
-          try {
-            setInProgressCourses(new Set(JSON.parse(savedInProgress)));
-          } catch (error) {
-            console.error('Error loading in-progress courses:', error);
-          }
-        }
-
-        if (savedPlanned) {
-          try {
-            setPlannedCourses(new Set(JSON.parse(savedPlanned)));
-          } catch (error) {
-            console.error('Error loading planned courses:', error);
-          }
-        }
+      } catch (error) {
+        console.error('Error loading progress:', error);
+        // Fallback to empty state on error
+        setCompletedCourses(new Set());
+        setInProgressCourses(new Set());
+        setPlannedCourses(new Set());
       }
 
       const savedCurriculum = localStorage.getItem('curriculumData');
-      const savedWritingIntensive = localStorage.getItem('hasWritingIntensive');
+      const savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${curriculumId}`);
       
       if (savedCurriculum) {
         try {
@@ -101,46 +81,44 @@ export default function CurriculumGrid() {
         } catch (error) {
           console.error('Error loading writing intensive status:', error);
         }
+      } else {
+        setHasWritingIntensive(false);
       }
 
       setDataLoaded(true);
+      setIsLoadingProgress(false);
     };
 
     loadData();
   }, [isSignedIn, curriculumId]);
 
   useEffect(() => {
-    if (!dataLoaded) return;
+    if (!dataLoaded || isLoadingProgress) return;
 
-    if (isSignedIn) {
-      const saveProgress = async () => {
-        try {
-          const selectedCourses = [...completedCourses, ...inProgressCourses, ...plannedCourses];
-          await backend.progress.saveProgress({
-            curriculumId,
-            completedCourses: [...completedCourses],
-            selectedCourses,
-          });
-        } catch (error) {
-          console.error('Error saving progress to backend:', error);
-        }
-      };
+    const saveProgress = async () => {
+      try {
+        await backend.progress.saveProgress({
+          curriculumId,
+          completedCourses: [...completedCourses],
+          inProgressCourses: [...inProgressCourses],
+          plannedCourses: [...plannedCourses],
+          lastUpdated: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    };
 
-      saveProgress();
-    } else {
-      localStorage.setItem('completedCourses', JSON.stringify([...completedCourses]));
-      localStorage.setItem('inProgressCourses', JSON.stringify([...inProgressCourses]));
-      localStorage.setItem('plannedCourses', JSON.stringify([...plannedCourses]));
-    }
-  }, [completedCourses, inProgressCourses, plannedCourses, isSignedIn, dataLoaded, curriculumId]);
+    saveProgress();
+  }, [completedCourses, inProgressCourses, plannedCourses, dataLoaded, curriculumId, isLoadingProgress]);
 
   useEffect(() => {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
   }, [curriculumData]);
 
   useEffect(() => {
-    localStorage.setItem('hasWritingIntensive', JSON.stringify(hasWritingIntensive));
-  }, [hasWritingIntensive]);
+    localStorage.setItem(`hasWritingIntensive:${curriculumId}`, JSON.stringify(hasWritingIntensive));
+  }, [hasWritingIntensive, curriculumId]);
 
   const hasESL0006 = curriculumData.courses.some(course => course.id === 'ESL0006');
 
@@ -295,7 +273,7 @@ export default function CurriculumGrid() {
     localStorage.removeItem("completedCourses");
     localStorage.removeItem("inProgressCourses");
     localStorage.removeItem("plannedCourses");
-    localStorage.removeItem("hasWritingIntensive");
+    localStorage.removeItem(`hasWritingIntensive:${curriculumId}`);
 
     const currentLastModified = curriculumData["Last-Modified"];
     const latestLastModified = defaultCurriculumData["Last-Modified"];
@@ -336,10 +314,6 @@ export default function CurriculumGrid() {
 
   const handleFileUpload = (data: CurriculumData) => {
     setCurriculumData(data);
-    setCompletedCourses(new Set());
-    setInProgressCourses(new Set());
-    setPlannedCourses(new Set());
-    setHasWritingIntensive(false);
     setShowUpload(false);
     toast({
       title: "Malla curricular cargada",
@@ -349,10 +323,6 @@ export default function CurriculumGrid() {
 
   const handleCurriculumSelect = (data: CurriculumData) => {
     setCurriculumData(data);
-    setCompletedCourses(new Set());
-    setInProgressCourses(new Set());
-    setPlannedCourses(new Set());
-    setHasWritingIntensive(false);
     toast({
       title: "Malla curricular cargada",
       description: "Se ha cargado la malla curricular seleccionada.",
