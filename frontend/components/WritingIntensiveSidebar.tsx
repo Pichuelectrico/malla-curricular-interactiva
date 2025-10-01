@@ -18,7 +18,7 @@ export default function WritingIntensiveSidebar({
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="fixed bottom-[220px] left-4 z-30">
+    <div className="fixed bottom-[270px] left-4 z-30">
       <Card className={`bg-white dark:bg-gray-800 shadow-lg border-2 transition-all duration-300 ${
         allEnglishCompleted
           ? 'border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20'
