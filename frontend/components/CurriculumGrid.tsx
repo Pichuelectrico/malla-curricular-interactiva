@@ -20,6 +20,7 @@ import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
+import { availableCurricula } from '../data/availableCurricula';
 
 export default function CurriculumGrid() {
   const { isSignedIn } = useAuth();
@@ -175,6 +176,44 @@ export default function CurriculumGrid() {
       console.error('Error saving global completed courses:', e);
     }
   }, [completedCourses, dataLoaded, curriculumData.courses]);
+
+  // Auto-complete courses that declare an already-completed course as an alternative
+  useEffect(() => {
+    if (!dataLoaded) return;
+    setCompletedCourses((prev) => {
+      const next = new Set(prev);
+      let added = false;
+
+      // Build a map from alternative course ID -> list of courses that accept it as alternative
+      const altToCourses = new Map<string, string[]>();
+      for (const course of curriculumData.courses) {
+        for (const alt of course.alternatives) {
+          const list = altToCourses.get(alt) || [];
+          list.push(course.id);
+          altToCourses.set(alt, list);
+        }
+      }
+
+      // BFS/DFS over dependents to handle transitive alternative chains
+      const queue: string[] = Array.from(prev);
+      const seen = new Set<string>();
+      while (queue.length > 0) {
+        const id = queue.pop() as string;
+        if (seen.has(id)) continue;
+        seen.add(id);
+        const dependents = altToCourses.get(id) || [];
+        for (const depId of dependents) {
+          if (!next.has(depId)) {
+            next.add(depId);
+            added = true;
+            queue.push(depId);
+          }
+        }
+      }
+
+      return added ? next : prev;
+    });
+  }, [completedCourses, curriculumData.courses, dataLoaded]);
 
   useEffect(() => {
     localStorage.setItem('curriculumData', JSON.stringify(curriculumData));
@@ -343,28 +382,56 @@ export default function CurriculumGrid() {
     setInProgressCourses(new Set());
     setPlannedCourses(new Set());
     setHasWritingIntensive(false);
+    // Legacy keys cleanup
     localStorage.removeItem("completedCourses");
     localStorage.removeItem("inProgressCourses");
     localStorage.removeItem("plannedCourses");
-    localStorage.removeItem(`hasWritingIntensive:${curriculumId}`);
-
-    const currentLastModified = curriculumData["Last-Modified"];
-    const latestLastModified = defaultCurriculumData["Last-Modified"];
-
-    if (!currentLastModified || currentLastModified !== latestLastModified) {
-      setCurriculumData(defaultCurriculumData);
-      localStorage.removeItem("curriculumData");
-      toast({
-        title: "Progreso reiniciado",
-        description:
-          "Se ha borrado el progreso y actualizado la malla curricular con la versión más reciente.",
-      });
-    } else {
-      toast({
-        title: "Progreso reiniciado",
-        description: "Se ha borrado todo el progreso guardado.",
-      });
+    // Clear per-curriculum WI for current and others
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        if (key.startsWith('hasWritingIntensive:')) keysToRemove.push(key);
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+    } catch (e) {
+      console.error('Error clearing writing intensive keys:', e);
     }
+    // Clear per-curriculum WI current key (idempotent)
+    localStorage.removeItem(`hasWritingIntensive:${curriculumId}`);
+    // Clear global overlay so it doesn't re-apply on other mallas
+    localStorage.removeItem('globalCompletedCourses');
+
+    // Persist empty progress for current curriculum and all other curricula to backend
+    (async () => {
+      try {
+        const now = new Date().toISOString();
+        const empty = {
+          completedCourses: [] as string[],
+          inProgressCourses: [] as string[],
+          plannedCourses: [] as string[],
+          hasWritingIntensive: false,
+          lastUpdated: now,
+        };
+
+        // Current curriculum
+        await backend.progress.saveProgress({ curriculumId, ...empty });
+
+        // All known curricula
+        for (const c of availableCurricula) {
+          if (!c?.id || c.id === curriculumId) continue;
+          await backend.progress.saveProgress({ curriculumId: c.id, ...empty });
+        }
+      } catch (e) {
+        console.error('Error clearing backend progress:', e);
+      }
+    })();
+
+    toast({
+      title: "Progreso reiniciado",
+      description: "Se borró el progreso de esta malla y el progreso global (todas las mallas).",
+    });
   };
 
   const exportProgress = async () => {

@@ -221,7 +221,7 @@
       "area": "Física",
       "type": "obligatoria",
       "prerequisites": [],
-      "alternatives": []
+      "alternatives": ["FIS2701"]
     },
     {
       "id": "MAT2008",
