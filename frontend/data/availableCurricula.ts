@@ -29,7 +29,7 @@ export const availableCurricula: AvailableCurriculum[] = [
     description: "Universidad San Francisco de Quito",
     year: "2025",
     credits: 139,
-    courses: 41,
+    courses: 44,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
       const res = await fetch(`${base}data/Malla-BIOTEC.json`);
@@ -50,7 +50,21 @@ export const availableCurricula: AvailableCurriculum[] = [
       if (!res.ok) throw new Error('No se pudo cargar /data/Malla-MAC.json');
       return { default: await res.json() };
     },
-  },
+    },
+    {
+    id: "adm-usfq",
+    name: "Administración de Empresas",
+    description: "Universidad San Francisco de Quito",
+    year: "2025",
+    credits: 127,
+    courses: 39,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-ADM.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-ADM.json');
+      return { default: await res.json() };
+    },
+    },
   // Aquí se pueden agregar más mallas cuando estén disponibles
   // {
   //   id: 'sistemas-usfq',

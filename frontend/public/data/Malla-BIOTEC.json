@@ -221,7 +221,7 @@
       "area": "Física",
       "type": "obligatoria",
       "prerequisites": [],
-      "alternatives": ["FIS2701"]
+      "alternatives": []
     },
     {
       "id": "MAT2008",
@@ -461,7 +461,7 @@
       "code": "PRC2000",
       "title": "Aprendizaje y Servicio",
       "description": "",
-      "credits": 1,
+      "credits": 3,
       "semester": 6,
       "block": "Semestre 6",
       "area": "Humanidades",

@@ -63,10 +63,23 @@ export function generateMermaidDiagram(
   courses.forEach((course) => {
     // Prerequisites (solid arrows)
     course.prerequisites.forEach((prereqId) => {
-      mermaidCode.push(`    ${prereqId} --> ${course.id}`);
-      const color = colors[linkIndex % colors.length];
-      linkStyles.push(`    linkStyle ${linkIndex} stroke:${color},stroke-width:2px`);
-      linkIndex++;
+      const options = prereqId.split('||').map(s => s.trim()).filter(Boolean);
+      if (options.length > 1) {
+        options.forEach((opt) => {
+          mermaidCode.push(`    ${opt} --> ${course.id}`);
+          const color = colors[linkIndex % colors.length];
+          linkStyles.push(`    linkStyle ${linkIndex} stroke:${color},stroke-width:2px`);
+          linkIndex++;
+        });
+      } else {
+        const id = options[0] || '';
+        if (id) {
+          mermaidCode.push(`    ${id} --> ${course.id}`);
+          const color = colors[linkIndex % colors.length];
+          linkStyles.push(`    linkStyle ${linkIndex} stroke:${color},stroke-width:2px`);
+          linkIndex++;
+        }
+      }
     });
 
     // Alternatives (dotted arrows)

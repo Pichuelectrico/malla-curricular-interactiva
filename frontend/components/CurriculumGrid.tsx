@@ -251,7 +251,15 @@ export default function CurriculumGrid() {
       return course.alternatives.some(altId => completedCourses.has(altId) || inProgressCourses.has(altId));
     }
     
-    return course.prerequisites.every(prereqId => completedCourses.has(prereqId) || inProgressCourses.has(prereqId));
+    // Support OR groups written as a single string like "ADM3003 || ADM2003"
+    return course.prerequisites.every((prereqGroup) => {
+      const options = prereqGroup.split('||').map(s => s.trim()).filter(Boolean);
+      if (options.length > 1) {
+        return options.some(id => completedCourses.has(id) || inProgressCourses.has(id));
+      }
+      const id = options[0] || '';
+      return completedCourses.has(id) || inProgressCourses.has(id);
+    });
   };
 
   const handleCourseClick = (courseId: string) => {
