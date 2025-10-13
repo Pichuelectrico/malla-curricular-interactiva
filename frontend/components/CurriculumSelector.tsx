@@ -25,11 +25,10 @@ export default function CurriculumSelector({ onSelect, onRequestCurriculum }: Cu
       if (!data.source_file) {
         data.source_file = curriculumId;
       }
-      // Update URL to pretty slug without reloading the page
+      // Update URL hash for GitHub Pages compatibility (#/slug)
       try {
-        const base = (import.meta as any).env?.BASE_URL || '/';
-        const target = `${base}${curriculum.slug}`.replace(/\/+$/, '').replace(/([^:])\/\/+/, '$1/');
-        window.history.pushState({}, '', target);
+        const slug = `/${curriculum.slug}`.replace(/\/+/, '/');
+        window.location.hash = slug;
       } catch (e) {
         console.error('Error updating URL slug:', e);
       }

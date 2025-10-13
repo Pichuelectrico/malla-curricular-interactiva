@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirigiendo…</title>
+    <meta http-equiv="refresh" content="0; url=./" />
+    <script>
+      (function () {
+        try {
+          // Example: /<repo>/<slug or path>
+          var path = window.location.pathname; // e.g., /malla-curricular-interactiva/malla-adm
+          var parts = path.split('/').filter(Boolean);
+          var repo = parts[0] || '';
+          var rest = parts.slice(1).join('/');
+          var target = '/' + repo + '/#/' + rest;
+          // Preserve query and hash if any
+          var search = window.location.search || '';
+          var hash = window.location.hash || '';
+          if (hash && !rest) {
+            // if already hash, just go to index
+            target = '/' + repo + '/';
+          }
+          window.location.replace(target + search);
+        } catch (e) {
+          // Fallback to repo root
+          window.location.replace('./');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirigiendo…</p>
+  </body>
+</html>
