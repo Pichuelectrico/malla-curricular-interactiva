@@ -13,8 +13,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     id: "cmp-usfq",
     name: "Ingeniería en Ciencias de la Computación",
     description: "Universidad San Francisco de Quito",
-    year: "2024",
-    credits: 152,
+    year: "2025",
+    credits: 142,
     courses: 41,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
@@ -27,8 +27,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     id: "btc-usfq",
     name: "Ingeniería en Biotecnología",
     description: "Universidad San Francisco de Quito",
-    year: "2024",
-    credits: 152,
+    year: "2025",
+    credits: 139,
     courses: 41,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
@@ -41,8 +41,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     id: "mac-usfq",
     name: "Ingeniería en Matemáticas Aplicadas y Computación",
     description: "Universidad San Francisco de Quito",
-    year: "2024",
-    credits: 152,
+    year: "2025",
+    credits: 139,
     courses: 41,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
@@ -56,7 +56,7 @@ export const availableCurricula: AvailableCurriculum[] = [
   //   id: 'sistemas-usfq',
   //   name: 'Ingeniería en Sistemas',
   //   description: 'Universidad San Francisco de Quito',
-  //   year: '2024',
+  //   year: '2025',
   //   credits: 148,
   //   courses: 39,
   //   dataLoader: () => import('./Malla-Sistemas.json')
