@@ -25,6 +25,14 @@ export default function CurriculumSelector({ onSelect, onRequestCurriculum }: Cu
       if (!data.source_file) {
         data.source_file = curriculumId;
       }
+      // Update URL to pretty slug without reloading the page
+      try {
+        const base = (import.meta as any).env?.BASE_URL || '/';
+        const target = `${base}${curriculum.slug}`.replace(/\/+$/, '').replace(/([^:])\/\/+/, '$1/');
+        window.history.pushState({}, '', target);
+      } catch (e) {
+        console.error('Error updating URL slug:', e);
+      }
       onSelect(data);
       setIsOpen(false);
     } catch (error) {

@@ -1,5 +1,6 @@
 export interface AvailableCurriculum {
   id: string;
+  slug: string; // pretty URL path, e.g., 'malla-adm'
   name: string;
   description: string;
   year: string;
@@ -11,6 +12,7 @@ export interface AvailableCurriculum {
 export const availableCurricula: AvailableCurriculum[] = [
   {
     id: "cmp-usfq",
+    slug: "malla-cmp",
     name: "Ingeniería en Ciencias de la Computación",
     description: "Universidad San Francisco de Quito",
     year: "2025",
@@ -25,6 +27,7 @@ export const availableCurricula: AvailableCurriculum[] = [
   },
   {
     id: "btc-usfq",
+    slug: "malla-biotec",
     name: "Ingeniería en Biotecnología",
     description: "Universidad San Francisco de Quito",
     year: "2025",
@@ -39,6 +42,7 @@ export const availableCurricula: AvailableCurriculum[] = [
   },
   {
     id: "mac-usfq",
+    slug: "malla-mac",
     name: "Ingeniería en Matemáticas Aplicadas y Computación",
     description: "Universidad San Francisco de Quito",
     year: "2025",
@@ -53,6 +57,7 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
     {
     id: "adm-usfq",
+    slug: "malla-adm",
     name: "Administración de Empresas",
     description: "Universidad San Francisco de Quito",
     year: "2025",

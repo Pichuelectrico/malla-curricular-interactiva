@@ -42,6 +42,38 @@ export default function CurriculumGrid() {
 
   const curriculumId = curriculumData.source_file || 'Malla-CMP';
 
+  // Load curriculum based on URL slug (pretty URLs like /malla-adm)
+  useEffect(() => {
+    const loadFromUrl = async () => {
+      try {
+        const base = (import.meta as any).env?.BASE_URL || '/';
+        const path = window.location.pathname;
+        // Normalize: remove base prefix and leading/trailing slashes
+        const slug = path.startsWith(base)
+          ? path.slice(base.length)
+          : path.replace(/^\/+/, '');
+        const clean = slug.replace(/^\/+|\/+$/g, '');
+        if (!clean) return; // no slug -> keep current
+        const target = availableCurricula.find(c => c.slug === clean);
+        if (!target) return;
+        const module = await target.dataLoader();
+        const data = module.default as CurriculumData;
+        if (!data.source_file) data.source_file = target.id;
+        setCurriculumData(data);
+      } catch (e) {
+        console.error('Error loading curriculum from URL:', e);
+      }
+    };
+
+    loadFromUrl();
+
+    const onPopState = () => {
+      loadFromUrl();
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingProgress(true);
