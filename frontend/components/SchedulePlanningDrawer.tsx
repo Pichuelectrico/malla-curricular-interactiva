@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Course } from '../types/curriculum';
 
-const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] as const;
+const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'] as const;
 type DayType = typeof DAYS[number];
 
 const TIME_SLOTS = [
@@ -301,7 +301,7 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave }: Sched
                     <tbody>
                       {TIME_SLOTS.map(time => (
                         <tr key={time}>
-                          <td className="border border-gray-300 dark:border-gray-600 p-2 text-sm font-medium text-center bg-gray-50 dark:bg-gray-750">
+                          <td className="border border-gray-300 dark:border-gray-600 p-2 text-sm font-medium text-center bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                             {time}
                           </td>
                           {DAYS.map(day => {
