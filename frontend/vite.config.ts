@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: './',
   resolve: {
     alias: {
       '@': path.resolve(__dirname),
@@ -12,12 +11,9 @@ export default defineConfig({
       '~backend': path.resolve(__dirname, '../backend'),
     },
   },
-  plugins: [
-    tailwindcss(),
-    react(),
-  ],
+  plugins: [tailwindcss(), react()],
+  mode: "development",
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+    minify: false,
   }
 })
