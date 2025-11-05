@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Mail, Coffee, Send, Upload, ExternalLink } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import QRCodeImage from '../src/assets/qr-code.png';
+import { qrCodeAsset } from '../lib/assets';
 
 interface ContactModalProps {
   onClose: () => void;
@@ -316,7 +316,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               <div className="flex justify-center">
                 <div className="bg-white p-4 rounded-2xl shadow-lg">
                   <img 
-                    src={QRCodeImage} 
+                    src={qrCodeAsset} 
                     alt="QR Code para Buy Me a Coffee" 
                     className="w-48 h-48 object-contain rounded-xl"
                     onError={(e) => {

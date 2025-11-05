@@ -6,12 +6,20 @@ export interface SaveProgressRequest {
   curriculumId: string;
   completedCourses: string[];
   selectedCourses: string[];
+  inProgressCourses?: string[];
+  plannedCourses?: string[];
+  hasWritingIntensive?: boolean;
+  lastUpdated?: string;
 }
 
 export const saveProgress = api<SaveProgressRequest, void>(
   { auth: true, expose: true, method: "POST", path: "/progress/save" },
   async (req) => {
     const auth = getAuthData()!;
+
+    const inProgressCourses = req.inProgressCourses || [];
+    const plannedCourses = req.plannedCourses || [];
+    const hasWritingIntensive = req.hasWritingIntensive || false;
 
     await db.exec`
       INSERT INTO user_progress (user_id, curriculum_id, completed_courses, selected_courses, updated_at)

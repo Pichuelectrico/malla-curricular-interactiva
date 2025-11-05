@@ -16,6 +16,7 @@ import ContactModal from './ContactModal';
 import USFQIcon from './USFQIcon';
 import ModeSelector, { SelectionMode } from './ModeSelector';
 import WritingIntensiveSidebar from './WritingIntensiveSidebar';
+import SchedulePlanningDrawer from './SchedulePlanningDrawer';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
@@ -166,6 +167,7 @@ export default function CurriculumGrid() {
         await backend.progress.saveProgress({
           curriculumId,
           completedCourses: [...completedCourses],
+          selectedCourses: [],
           inProgressCourses: [...inProgressCourses],
           plannedCourses: [...plannedCourses],
           hasWritingIntensive,
@@ -451,6 +453,7 @@ export default function CurriculumGrid() {
         const now = new Date().toISOString();
         const empty = {
           completedCourses: [] as string[],
+          selectedCourses: [] as string[],
           inProgressCourses: [] as string[],
           plannedCourses: [] as string[],
           hasWritingIntensive: false,
@@ -779,6 +782,17 @@ export default function CurriculumGrid() {
           allEnglishCompleted={allEnglishCompleted}
         />
       )}
+
+      <SchedulePlanningDrawer
+        plannedCourses={curriculumData.courses.filter(c => plannedCourses.has(c.id))}
+        onSave={(schedules) => {
+          console.log('Schedules saved:', schedules);
+          toast({
+            title: "Planeación guardada",
+            description: "Tu horario ha sido guardado correctamente.",
+          });
+        }}
+      />
     </div>
   );
 }

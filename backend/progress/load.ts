@@ -9,11 +9,13 @@ export interface LoadProgressRequest {
 export interface ProgressData {
   completedCourses: string[];
   selectedCourses: string[];
+  inProgressCourses?: string[];
+  plannedCourses?: string[];
+  hasWritingIntensive?: boolean;
+  lastUpdated?: string;
 }
 
-export interface LoadProgressResponse {
-  data: ProgressData | null;
-}
+export interface LoadProgressResponse extends ProgressData {}
 
 export const loadProgress = api<LoadProgressRequest, LoadProgressResponse>(
   { auth: true, expose: true, method: "GET", path: "/progress/load/:curriculumId" },
@@ -30,14 +32,23 @@ export const loadProgress = api<LoadProgressRequest, LoadProgressResponse>(
     `;
 
     if (!row) {
-      return { data: null };
+      return {
+        completedCourses: [],
+        selectedCourses: [],
+        inProgressCourses: [],
+        plannedCourses: [],
+        hasWritingIntensive: false,
+        lastUpdated: new Date().toISOString()
+      };
     }
 
     return {
-      data: {
-        completedCourses: JSON.parse(row.completed_courses),
-        selectedCourses: JSON.parse(row.selected_courses),
-      },
+      completedCourses: JSON.parse(row.completed_courses),
+      selectedCourses: JSON.parse(row.selected_courses),
+      inProgressCourses: [],
+      plannedCourses: [],
+      hasWritingIntensive: false,
+      lastUpdated: new Date().toISOString()
     };
   }
 );
