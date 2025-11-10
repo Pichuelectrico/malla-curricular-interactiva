@@ -34,6 +34,11 @@
     "typescript": "^5.8.3",
     "vite": "^6.2.5"
   },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base=/malla-curricular-interactiva/",
+    "preview": "vite preview"
+  },
   "optionalDependencies": {
     "rollup": "^4.44.1"
   }
