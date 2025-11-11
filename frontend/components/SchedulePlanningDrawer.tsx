@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Course } from '../types/curriculum';
+import { generateSchedulePDF } from '../utils/pdfGenerator';
 
 const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'] as const;
 type DayType = typeof DAYS[number];
@@ -157,57 +158,116 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave }: Sched
   };
 
   const generateHTMLReport = () => {
-    let html = `
+    // Build a grid: days as columns, hours as rows
+    const DAYS_FULL = ['Lunes','Martes','Miércoles','Jueves','Viernes'] as const;
+    const MAP_SHORT: Record<string,string> = { 'Lun':'Lunes','Mar':'Martes','Mié':'Miércoles','Mie':'Miércoles','Jue':'Jueves','Vie':'Viernes' };
+
+    const grid: Record<string, Record<string, Array<{ title: string; nrc: string }>>> = {};
+    DAYS_FULL.forEach(d => { grid[d] = {}; TIME_SLOTS.forEach(t => grid[d][t] = []); });
+
+    const allNrcs = new Set<string>();
+
+    schedules.forEach(s => {
+      const course = plannedCourses.find(c => c.id === s.courseId);
+      if (!course) return;
+      const base = course.title.replace(/(\s+EJ|\s+LAB)$/i, '').trim();
+
+      if (s.nrc) {
+        allNrcs.add(s.nrc);
+        s.sessions.forEach(sess => {
+          const day = MAP_SHORT[sess.day] ?? sess.day;
+          if (grid[day]?.[sess.startTime]) grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
+        });
+      }
+      if (s.hasEJ && s.nrcEJ && s.sessionsEJ) {
+        allNrcs.add(s.nrcEJ);
+        s.sessionsEJ.forEach(sess => {
+          const day = MAP_SHORT[sess.day] ?? sess.day;
+          if (grid[day]?.[sess.startTime]) grid[day][sess.startTime].push({ title: `${base} EJ`, nrc: s.nrcEJ! });
+        });
+      }
+      if (s.hasLAB && s.nrcLAB && s.sessionsLAB) {
+        allNrcs.add(s.nrcLAB);
+        s.sessionsLAB.forEach(sess => {
+          const day = MAP_SHORT[sess.day] ?? sess.day;
+          if (grid[day]?.[sess.startTime]) grid[day][sess.startTime].push({ title: `${base} LAB`, nrc: s.nrcLAB! });
+        });
+      }
+    });
+
+    const tableHeader = `
+      <tr>
+        <th class="time">Hora</th>
+        ${DAYS_FULL.map(d => `<th>${d}</th>`).join('')}
+      </tr>
+    `;
+
+    const tableBody = TIME_SLOTS.map(time => {
+      const cells = DAYS_FULL.map(day => {
+        const entries = grid[day][time];
+        if (!entries.length) return `<td></td>`;
+        const content = entries.map(e => `
+          <div class="entry">
+            <div class="title">${e.title}</div>
+            <div class="nrc">NRC: ${e.nrc}</div>
+          </div>
+        `).join('');
+        return `<td class="filled">${content}</td>`;
+      }).join('');
+      return `
+        <tr>
+          <td class="time">${time}</td>
+          ${cells}
+        </tr>
+      `;
+    }).join('');
+
+    const nrcs = Array.from(allNrcs);
+    const nrcRow = nrcs.length
+      ? `<div class="nrcs">
+           ${nrcs.map(n => `<div class="nrc-cell">${n}</div>`).join('')}
+         </div>`
+      : '';
+
+    const html = `
       <!DOCTYPE html>
       <html>
       <head>
-        <meta charset="UTF-8">
-        <title>Horario de Clases</title>
+        <meta charset="UTF-8" />
+        <title>Calendario de clases</title>
         <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { text-align: center; color: #333; }
-          .course { margin-bottom: 30px; page-break-inside: avoid; }
-          .course-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-          .course-nrc { font-size: 14px; color: #666; margin-bottom: 10px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          th { background-color: #428bca; color: white; }
-          @media print {
-            body { padding: 10px; }
-            .no-print { display: none; }
-          }
+          :root{ --border:#d1d5db; --head:#0f172a; --bg:#ffffff; --filled:#e6f4ff; --text:#0f172a; }
+          *{ box-sizing:border-box; }
+          body{ font-family:Arial, Helvetica, sans-serif; color:var(--text); background:var(--bg); margin:0; padding:24px; }
+          h1{ text-align:center; margin:0 0 16px; font-size:24px; }
+          .schedule{ width:100%; border-collapse:collapse; table-layout:fixed; }
+          .schedule th, .schedule td{ border:1px solid var(--border); padding:6px; vertical-align:top; }
+          .schedule th{ background:var(--head); color:#fff; font-weight:700; text-align:center; }
+          .schedule th.time, .schedule td.time{ width:70px; text-align:center; font-weight:700; background:#f8fafc; }
+          .schedule td{ height:60px; }
+          .schedule td.filled{ background:var(--filled); }
+          .entry{ margin-bottom:6px; }
+          .entry:last-child{ margin-bottom:0; }
+          .entry .title{ font-weight:700; font-size:12px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+          .entry .nrc{ font-size:11px; color:#334155; }
+          h2{ margin:20px 0 8px; font-size:16px; }
+          .nrcs{ display:flex; flex-wrap:wrap; gap:6px; }
+          .nrc-cell{ border:1px solid var(--border); padding:6px 10px; border-radius:4px; font-size:12px; background:#fff; }
+          .controls{ text-align:center; margin-top:20px; }
+          .btn{ padding:10px 16px; border:1px solid #0f172a; background:#0f172a; color:#fff; border-radius:6px; cursor:pointer; }
+          @media print{ .no-print{ display:none; } body{ padding:8px; } }
         </style>
       </head>
       <body>
-        <h1>Horario de Clases</h1>
-    `;
-
-    schedules.forEach(schedule => {
-      const course = plannedCourses.find(c => c.id === schedule.courseId);
-      if (!course) return;
-
-      const nrcList: string[] = [];
-      if (schedule.nrc) nrcList.push(schedule.nrc);
-      if (schedule.hasEJ && schedule.nrcEJ) nrcList.push(`${schedule.nrcEJ} (EJ)`);
-      if (schedule.hasLAB && schedule.nrcLAB) nrcList.push(`${schedule.nrcLAB} (LAB)`);
-
-      html += `
-        <div class="course">
-          <div class="course-title">${course.title}</div>
-          <div class="course-nrc">Código: ${course.code}</div>
-          <table>
-            <tr><th>NRCs Asociados</th></tr>
-            <tr><td>${nrcList.join(', ') || 'N/A'}</td></tr>
-          </table>
-        </div>
-      `;
-    });
-
-    html += `
-        <div class="no-print" style="margin-top: 30px; text-align: center;">
-          <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
-            Imprimir / Guardar como PDF
-          </button>
+        <h1>Calendario de clases</h1>
+        <table class="schedule">
+          <thead>${tableHeader}</thead>
+          <tbody>${tableBody}</tbody>
+        </table>
+        ${nrcs.length ? '<h2>NRCs</h2>' : ''}
+        ${nrcRow}
+        <div class="controls no-print">
+          <button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         </div>
       </body>
       </html>
@@ -219,7 +279,7 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave }: Sched
     setTimeout(() => URL.revokeObjectURL(url), 100);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (checkConflicts(schedules)) {
       generateHTMLReport();
       onSave(schedules);

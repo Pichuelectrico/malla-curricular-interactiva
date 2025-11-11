@@ -1,17 +1,21 @@
 import { Course } from '../types/curriculum';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] as const;
+const TIME_SLOTS = [
+  '07:00', '08:30', '10:00', '11:30', '13:00', '14:30', '16:00', '17:30'
+];
+
+// Allow either short (Lun) or full (Lunes) day labels in the input
 const DAY_SHORT_TO_FULL: Record<string, string> = {
   'Lun': 'Lunes',
   'Mar': 'Martes',
   'Mié': 'Miércoles',
+  'Mie': 'Miércoles',
   'Jue': 'Jueves',
-  'Vie': 'Viernes'
+  'Vie': 'Viernes',
 };
-
-const TIME_SLOTS = [
-  '07:00', '08:30', '10:00', '11:30', '13:00', '14:30', '16:00', '17:30'
-];
 
 interface CourseSchedule {
   courseId: string;
@@ -37,297 +41,216 @@ interface CourseSchedule {
 interface ScheduleEntry {
   courseName: string;
   nrc: string;
-  type?: string;
+  type?: 'TEORIA' | 'EJ' | 'LAB';
+  baseCourseName: string;
 }
 
-export function generateSchedulePDF(schedules: CourseSchedule[], courses: Course[]) {
-  const scheduleGrid: Record<string, Record<string, ScheduleEntry>> = {};
+function getCourseBaseName(courseName: string): string {
+  return courseName.replace(/(\s+EJ|\s+LAB)$/i, '').trim();
+}
+
+export async function generateSchedulePDF(schedules: CourseSchedule[], courses: Course[]) {
+  // Initialize the grid
+  const scheduleGrid: Record<string, Record<string, ScheduleEntry[]>> = {};
+  const allNRCs = new Set<string>();
   
+  // Initialize grid structure
   DAYS.forEach(day => {
     scheduleGrid[day] = {};
+    TIME_SLOTS.forEach(time => {
+      scheduleGrid[day][time] = [];
+    });
   });
 
-  const allNRCs: string[] = [];
-
+  // Process each course schedule
   schedules.forEach(schedule => {
     const course = courses.find(c => c.id === schedule.courseId);
     if (!course) return;
 
-    if (schedule.nrc) allNRCs.push(schedule.nrc);
-    if (schedule.hasEJ && schedule.nrcEJ) allNRCs.push(schedule.nrcEJ);
-    if (schedule.hasLAB && schedule.nrcLAB) allNRCs.push(schedule.nrcLAB);
+    const baseCourseName = getCourseBaseName(course.title);
 
-    schedule.sessions.forEach(session => {
-      const fullDay = DAY_SHORT_TO_FULL[session.day];
-      if (fullDay) {
-        scheduleGrid[fullDay][session.startTime] = {
-          courseName: course.code,
-          nrc: schedule.nrc,
-          type: ''
-        };
-      }
-    });
+    // Process regular sessions (TEORIA)
+    if (schedule.nrc) {
+      allNRCs.add(schedule.nrc);
+      schedule.sessions?.forEach(session => {
+        const fullDay = DAY_SHORT_TO_FULL[session.day] ?? session.day;
+        if (fullDay && scheduleGrid[fullDay]?.[session.startTime]) {
+          scheduleGrid[fullDay][session.startTime].push({
+            courseName: baseCourseName,
+            baseCourseName,
+            nrc: schedule.nrc,
+            type: 'TEORIA'
+          });
+        }
+      });
+    }
 
-    if (schedule.hasEJ && schedule.sessionsEJ) {
+    // Process EJ sessions
+    if (schedule.hasEJ && schedule.nrcEJ && schedule.sessionsEJ) {
+      allNRCs.add(schedule.nrcEJ);
       schedule.sessionsEJ.forEach(session => {
-        const fullDay = DAY_SHORT_TO_FULL[session.day];
-        if (fullDay) {
-          scheduleGrid[fullDay][session.startTime] = {
-            courseName: `${course.code} EJ`,
+        const fullDay = DAY_SHORT_TO_FULL[session.day] ?? session.day;
+        if (fullDay && scheduleGrid[fullDay]?.[session.startTime]) {
+          scheduleGrid[fullDay][session.startTime].push({
+            courseName: `${baseCourseName} EJ`,
+            baseCourseName,
             nrc: schedule.nrcEJ || '',
             type: 'EJ'
-          };
+          });
         }
       });
     }
 
-    if (schedule.hasLAB && schedule.sessionsLAB) {
+    // Process LAB sessions
+    if (schedule.hasLAB && schedule.nrcLAB && schedule.sessionsLAB) {
+      allNRCs.add(schedule.nrcLAB);
       schedule.sessionsLAB.forEach(session => {
-        const fullDay = DAY_SHORT_TO_FULL[session.day];
-        if (fullDay) {
-          scheduleGrid[fullDay][session.startTime] = {
-            courseName: `${course.code} LAB`,
+        const fullDay = DAY_SHORT_TO_FULL[session.day] ?? session.day;
+        if (fullDay && scheduleGrid[fullDay]?.[session.startTime]) {
+          scheduleGrid[fullDay][session.startTime].push({
+            courseName: `${baseCourseName} LAB`,
+            baseCourseName,
             nrc: schedule.nrcLAB || '',
             type: 'LAB'
-          };
+          });
         }
       });
     }
   });
 
-  let html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Calendario de clases</title>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          padding: 30px;
-          background: white;
-        }
-        
-        h1 {
-          text-align: center;
-          color: #1a202c;
-          margin-bottom: 30px;
-          font-size: 28px;
-          font-weight: 600;
-        }
-        
-        .schedule-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          page-break-inside: avoid;
-        }
-        
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-bottom: 30px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        th {
-          background-color: #2563eb;
-          color: white;
-          padding: 12px 8px;
-          text-align: center;
-          font-weight: 600;
-          font-size: 14px;
-          border: 1px solid #1e40af;
-        }
-        
-        td {
-          border: 1px solid #d1d5db;
-          padding: 10px;
-          text-align: center;
-          vertical-align: middle;
-          height: 60px;
-          font-size: 13px;
-        }
-        
-        td.time-cell {
-          background-color: #f3f4f6;
-          font-weight: 600;
-          color: #374151;
-          width: 80px;
-        }
-        
-        td.empty {
-          background-color: #fafafa;
-        }
-        
-        .course-box {
-          background-color: #dbeafe;
-          border: 2px solid #3b82f6;
-          border-radius: 6px;
-          padding: 8px;
-          min-height: 50px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: 4px;
-        }
-        
-        .course-name {
-          font-weight: 700;
-          color: #1e40af;
-          font-size: 13px;
-        }
-        
-        .course-nrc {
-          font-size: 11px;
-          color: #475569;
-          font-weight: 500;
-        }
-        
-        .nrc-section {
-          margin-top: 30px;
-          page-break-inside: avoid;
-        }
-        
-        .nrc-section h2 {
-          font-size: 20px;
-          color: #1a202c;
-          margin-bottom: 15px;
-          font-weight: 600;
-        }
-        
-        .nrc-grid {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          border: 2px solid #d1d5db;
-          padding: 15px;
-          background-color: #f9fafb;
-          border-radius: 6px;
-        }
-        
-        .nrc-cell {
-          background-color: white;
-          border: 1px solid #9ca3af;
-          padding: 10px 15px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #374151;
-          border-radius: 4px;
-          min-width: 80px;
-          text-align: center;
-        }
-        
-        @media print {
-          body {
-            padding: 15px;
-          }
-          
-          h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-          }
-          
-          .no-print {
-            display: none;
-          }
-          
-          table {
-            box-shadow: none;
-          }
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Calendario de clases</h1>
-      
-      <div class="schedule-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Hora</th>
-              ${DAYS.map(day => `<th>${day}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-  `;
+  // Create PDF with landscape orientation
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  });
 
-  TIME_SLOTS.forEach(time => {
-    html += `
-            <tr>
-              <td class="time-cell">${time}</td>
-    `;
+  // Add title
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('Calendario de clases', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+  
+  // Calculate dimensions
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 15;
+  const timeColWidth = 20;
+  const dayColWidth = (pageWidth - 2 * margin - timeColWidth) / DAYS.length;
+  const rowHeight = 18;
+  const headerHeight = 10;
+  const startY = 30;
+  
+  // Draw table header
+  doc.setFillColor(41, 128, 185);
+  doc.setTextColor(255, 255, 255);
+  doc.rect(margin, startY, timeColWidth, headerHeight, 'F');
+  doc.text('Hora', margin + timeColWidth / 2, startY + headerHeight / 2 + 2, { align: 'center', baseline: 'middle' });
+  
+  // Draw day headers
+  DAYS.forEach((day, i) => {
+    const x = margin + timeColWidth + (i * dayColWidth);
+    doc.rect(x, startY, dayColWidth, headerHeight, 'F');
+    doc.text(day, x + dayColWidth / 2, startY + headerHeight / 2 + 2, { align: 'center', baseline: 'middle' });
+  });
+  
+  // Draw time slots and course cells
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  
+  TIME_SLOTS.forEach((time, timeIndex) => {
+    const y = startY + headerHeight + (timeIndex * rowHeight);
     
-    DAYS.forEach(day => {
-      const entry = scheduleGrid[day][time];
-      if (entry) {
-        html += `
-              <td>
-                <div class="course-box">
-                  <div class="course-name">${entry.courseName}</div>
-                  <div class="course-nrc">NRC: ${entry.nrc}</div>
-                </div>
-              </td>
-        `;
-      } else {
-        html += `
-              <td class="empty"></td>
-        `;
+    // Draw time cell
+    doc.rect(margin, y, timeColWidth, rowHeight);
+    doc.text(time, margin + timeColWidth / 2, y + rowHeight / 2, { align: 'center', baseline: 'middle' });
+    
+    // Draw day cells
+    DAYS.forEach((day, dayIndex) => {
+      const x = margin + timeColWidth + (dayIndex * dayColWidth);
+      const entries = scheduleGrid[day][time] || [];
+      
+      // Draw cell border
+      doc.rect(x, y, dayColWidth, rowHeight);
+      
+      if (entries.length > 0) {
+        // Light background for cells with content
+        doc.setFillColor(230, 244, 255);
+        doc.rect(x, y, dayColWidth, rowHeight, 'F');
+        
+        // Add course info
+        let textY = y + 4;
+        const maxWidth = dayColWidth - 4;
+        
+        entries.forEach((entry, i) => {
+          // Course name (bold)
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          let courseName = entry.courseName;
+          
+          // Truncate long course names
+          if (doc.getTextWidth(courseName) > maxWidth) {
+            while (courseName.length > 3 && doc.getTextWidth(courseName + '...') > maxWidth) {
+              courseName = courseName.substring(0, courseName.length - 1);
+            }
+            courseName += '...';
+          }
+          
+          doc.text(courseName, x + 2, textY, { maxWidth });
+          textY += 3.5;
+          
+          // NRC (smaller font)
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(7);
+          doc.text(`NRC: ${entry.nrc}`, x + 2, textY, { maxWidth });
+          textY += 3.5;
+          
+          // Reset font size for next entry
+          doc.setFontSize(8);
+          
+          // Add separator if there are more entries
+          if (i < entries.length - 1) {
+            doc.setDrawColor(200, 200, 200);
+            doc.line(x + 2, textY, x + dayColWidth - 2, textY);
+            textY += 2;
+          }
+        });
       }
     });
-    
-    html += `
-            </tr>
-    `;
   });
-
-  html += `
-          </tbody>
-        </table>
-        
-        <div class="nrc-section">
-          <h2>NRCs</h2>
-          <div class="nrc-grid">
-  `;
-
-  allNRCs.forEach(nrc => {
-    html += `
-            <div class="nrc-cell">${nrc}</div>
-    `;
+  
+  // Add NRC section
+  const nrcStartY = startY + headerHeight + (TIME_SLOTS.length * rowHeight) + 15;
+  
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.text('NRCs', margin, nrcStartY);
+  
+  // Single-row NRCs that fit the page width
+  const nrcArray = Array.from(allNRCs);
+  const availableWidth = pageWidth - margin * 2;
+  const minCellWidth = 14; // do not go smaller than this for legibility
+  const cellHeight = 8;
+  const dynamicCellWidth = Math.max(minCellWidth, Math.floor(availableWidth / Math.max(1, nrcArray.length)));
+  const totalRowWidth = dynamicCellWidth * nrcArray.length;
+  let startX = margin;
+  if (totalRowWidth < availableWidth) {
+    // center the row if it does not fill the width
+    startX = margin + (availableWidth - totalRowWidth) / 2;
+  }
+  const y = nrcStartY + 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  nrcArray.forEach((nrc, i) => {
+    const x = startX + i * dynamicCellWidth;
+    doc.rect(x, y, dynamicCellWidth, cellHeight);
+    doc.text(String(nrc), x + dynamicCellWidth / 2, y + cellHeight / 2 + 1, { align: 'center', baseline: 'middle' });
   });
-
-  html += `
-          </div>
-        </div>
-      </div>
-      
-      <div class="no-print" style="margin-top: 40px; text-align: center;">
-        <button onclick="window.print()" style="
-          padding: 12px 24px;
-          font-size: 16px;
-          cursor: pointer;
-          background-color: #2563eb;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          font-weight: 600;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        ">
-          Descargar PDF
-        </button>
-      </div>
-    </body>
-    </html>
-  `;
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
-  setTimeout(() => URL.revokeObjectURL(url), 100);
+  
+  // Small note for Excel copy
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(8);
+  doc.text('Copia y pega esta fila directamente en Excel', margin, pageHeight - 10);
+  
+  // Save the PDF
+  doc.save('calendario-clases.pdf');
 }
