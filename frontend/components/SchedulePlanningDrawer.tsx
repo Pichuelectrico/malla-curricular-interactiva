@@ -40,9 +40,11 @@ interface CourseSchedule {
 interface SchedulePlanningDrawerProps {
   plannedCourses: Course[];
   onSave: (schedules: CourseSchedule[]) => void;
+  exposeOpen?: (openFn: () => void) => void;
+  hideFloatingButton?: boolean;
 }
 
-export default function SchedulePlanningDrawer({ plannedCourses, onSave }: SchedulePlanningDrawerProps) {
+export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloatingButton }: SchedulePlanningDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [schedules, setSchedules] = useState<CourseSchedule[]>([]);
   const [conflicts, setConflicts] = useState<string[]>([]);
@@ -333,19 +335,30 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave }: Sched
     return null;
   };
 
+  useEffect(() => {
+    // Registrar función de apertura una sola vez para evitar bucles de render
+    if (exposeOpen) {
+      exposeOpen(() => setIsOpen(true));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
-      <div className="fixed bottom-4 right-4 z-30">
-        <Card className="bg-white dark:bg-gray-800 shadow-lg border-2 border-gray-200 dark:border-gray-700">
-          <Button
-            onClick={() => setIsOpen(true)}
-            className="bg-blue-500 hover:bg-blue-600 text-white gap-2 p-4"
-          >
-            <Calendar className="w-5 h-5" />
-            <span>Preparación de horario</span>
-          </Button>
-        </Card>
-      </div>
+      {!hideFloatingButton && (
+        <div className="fixed bottom-4 right-4 z-30">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 p-0 py-0">
+            <Button
+              size="sm"
+              onClick={() => setIsOpen(true)}
+              className="bg-blue-500 hover:bg-blue-600 text-white gap-2 px-3 py-2"
+            >
+              <Calendar className="w-4 h-4" />
+              <span className="text-sm">Preparación</span>
+            </Button>
+          </Card>
+        </div>
+      )}
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex">
