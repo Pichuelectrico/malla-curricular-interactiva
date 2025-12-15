@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee, Languages, CheckCheck } from 'lucide-react';
+import { Upload, Download, RotateCcw, FileText, GraduationCap, Coffee, Languages, CheckCheck, Wrench } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import CourseCard from './CourseCard';
 import FileUpload from './FileUpload';
@@ -17,6 +17,7 @@ import USFQIcon from './USFQIcon';
 import ModeSelector, { SelectionMode } from './ModeSelector';
 import WritingIntensiveSidebar from './WritingIntensiveSidebar';
 import SchedulePlanningDrawer from './SchedulePlanningDrawer';
+import GradeEstimatorDrawer from './GradeEstimatorDrawer';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import defaultCurriculumData from '../data/Malla-CMP.json';
@@ -40,6 +41,11 @@ export default function CurriculumGrid() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const { toast } = useToast();
+
+  // Floating toolbox state and drawer open handlers
+  const [toolboxOpen, setToolboxOpen] = useState(false);
+  const [openScheduleDrawer, setOpenScheduleDrawer] = useState<(() => void) | null>(null);
+  const [openGradeEstimator, setOpenGradeEstimator] = useState<(() => void) | null>(null);
 
   const curriculumId = curriculumData.source_file || 'Malla-CMP';
 
@@ -783,6 +789,7 @@ export default function CurriculumGrid() {
         />
       )}
 
+      {/* Drawers without their own floating buttons; expose open functions */}
       <SchedulePlanningDrawer
         plannedCourses={curriculumData.courses.filter(c => plannedCourses.has(c.id))}
         onSave={(schedules) => {
@@ -792,7 +799,47 @@ export default function CurriculumGrid() {
             description: "Tu horario ha sido guardado correctamente.",
           });
         }}
+        exposeOpen={(fn: () => void) => setOpenScheduleDrawer(() => fn)}
+        hideFloatingButton
       />
+
+      <GradeEstimatorDrawer
+        exposeOpen={(fn: () => void) => setOpenGradeEstimator(() => fn)}
+        hideFloatingButton
+      />
+
+      {/* Floating toolbox with tool icon */}
+      <div className="fixed bottom-[80px] right-4 z-40 flex flex-col items-end gap-2">
+        {toolboxOpen && (
+          <div className="flex flex-col items-stretch gap-2">
+            <Button
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 px-3 py-2"
+              onClick={() => openGradeEstimator && openGradeEstimator()}
+              disabled={!openGradeEstimator}
+            >
+              Calculadora de Notas
+            </Button>
+            <Button
+              size="sm"
+              className="bg-blue-500 hover:bg-blue-600 text-white gap-2 px-3 py-2"
+              onClick={() => openScheduleDrawer && openScheduleDrawer()}
+              disabled={!openScheduleDrawer}
+            >
+              Preparación de horario
+            </Button>
+          </div>
+        )}
+        <Button
+          size="sm"
+          variant="outline"
+          className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 gap-2 px-3 py-2"
+          onClick={() => setToolboxOpen(v => !v)}
+        >
+          <Wrench className="w-4 h-4" />
+          {toolboxOpen ? 'Ocultar herramientas' : 'Herramientas'}
+        </Button>
+      </div>
     </div>
   );
 }
