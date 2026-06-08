@@ -48511,6 +48511,7 @@ function useBackend() {
   }
   return mockBackendClient;
 }
+const MAX_SEMESTER_CREDITS = 16;
 function CurriculumGrid() {
   const { isSignedIn } = useSupabaseAuth();
   const backend = useBackend();
@@ -48764,6 +48765,7 @@ function CurriculumGrid() {
       setShowCelebration(false);
     }
   }, [isAllCompleted, completedCourses.size, toast2]);
+  const sumCredits = (courseIds) => curriculumData.courses.filter((c) => courseIds.has(c.id)).reduce((sum, c) => sum + c.credits, 0);
   const isUnlocked = (course) => {
     if (course.prerequisites.length === 0) return true;
     if (course.alternatives.length > 0) {
@@ -48807,6 +48809,17 @@ function CurriculumGrid() {
         return newCompleted;
       });
     } else if (currentMode === "in-progress") {
+      if (!isCurrentlyInProgress) {
+        const projectedCredits = sumCredits(inProgressCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast2({
+            title: "Límite de créditos",
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en cursando.`,
+            variant: "destructive"
+          });
+          return;
+        }
+      }
       setInProgressCourses((prev) => {
         const newInProgress = new Set(prev);
         if (newInProgress.has(courseId)) {
@@ -48827,6 +48840,17 @@ function CurriculumGrid() {
         return newInProgress;
       });
     } else if (currentMode === "planned") {
+      if (!isCurrentlyPlanned) {
+        const projectedCredits = sumCredits(plannedCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast2({
+            title: "Límite de créditos",
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en planeadas.`,
+            variant: "destructive"
+          });
+          return;
+        }
+      }
       setPlannedCourses((prev) => {
         const newPlanned = new Set(prev);
         if (newPlanned.has(courseId)) {
@@ -49274,7 +49298,7 @@ function ThemeToggle() {
 }
 function Footer() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 mt-16", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto px-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center space-y-4 text-center", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-gray-600 dark:text-gray-400", children: "© 2025 Joshua Reinoso." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-gray-600 dark:text-gray-400", children: "© 2026 Joshua Reinoso." }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "a",
