@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-ARQ",
-  "Last-Modified": "2026-06-08T21:00:44.062Z",
+  "Last-Modified": "2026-06-08T21:53:49.090Z",
   "courses": [
     {
       "id": "MAT1006",
@@ -461,7 +461,7 @@
       "description": "",
       "credits": 3,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PRC",
       "type": "obligatoria",
       "prerequisites": [],
@@ -586,7 +586,7 @@
       "description": "",
       "credits": 5,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Verano 2",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

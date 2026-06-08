@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-ARV",
-  "Last-Modified": "2026-06-08T21:00:50.868Z",
+  "Last-Modified": "2026-06-08T21:53:50.559Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -526,7 +526,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

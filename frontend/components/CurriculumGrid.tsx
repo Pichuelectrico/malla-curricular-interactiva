@@ -20,6 +20,7 @@ import SchedulePlanningDrawer from './SchedulePlanningDrawer';
 import GradeEstimatorDrawer from './GradeEstimatorDrawer';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
+import { getBlockDisplayName, getOrderedBlocks } from '../utils/curriculumBlocks';
 import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
 import { availableCurricula } from '../data/availableCurricula';
@@ -585,10 +586,7 @@ export default function CurriculumGrid() {
     return acc;
   }, {} as Record<string, Course[]>);
 
-  const blockOrder = [
-    'Semestre 1', 'Semestre 2', 'Semestre 3', 'Semestre 4', 'Semestre 5',
-    'Semestre 6', 'Semestre 7', 'Semestre 8', 'Semestre 9', 'PASEM'
-  ];
+  const blockOrder = getOrderedBlocks(curriculumData.courses);
 
   const careerTitle = curriculumData.source_file || 'Malla Curricular';
 
@@ -763,7 +761,9 @@ export default function CurriculumGrid() {
           return (
             <div key={blockName} className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{blockName}</h2>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                  {getBlockDisplayName(blockName, blockCourses)}
+                </h2>
                 <Badge variant="outline" className="dark:border-gray-600 dark:text-gray-300">
                   {blockCompletedCredits}/{blockTotalCredits} créditos ({blockProgress.toFixed(0)}%)
                 </Badge>

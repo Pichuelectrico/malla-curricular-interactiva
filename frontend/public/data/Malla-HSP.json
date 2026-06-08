@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-HSP",
-  "Last-Modified": "2026-06-08T21:01:33.187Z",
+  "Last-Modified": "2026-06-08T21:54:08.474Z",
   "courses": [
     {
       "id": "MAT1009",
@@ -527,7 +527,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

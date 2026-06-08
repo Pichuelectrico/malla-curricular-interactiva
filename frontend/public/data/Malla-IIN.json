@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-IIN",
-  "Last-Modified": "2026-06-08T21:01:59.183Z",
+  "Last-Modified": "2026-06-08T21:54:16.516Z",
   "courses": [
     {
       "id": "MAT1201",
@@ -699,7 +699,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

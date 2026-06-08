@@ -104,7 +104,7 @@ const KNOWN_CAREERS: CareerEntry[] = [
   { code: "INQ", name: "Ingeniería Química" },
   { code: "LIT", name: "Literatura" },
   { code: "MAC", name: "Ingeniería en Matemáticas Aplicadas y Computación" },
-  { code: "MKT", name: "Marketing" },
+  { code: "MAK", name: "Marketing" },
   { code: "MAT", name: "Matemática" },
   { code: "MED", name: "Medicina" },
   { code: "VET", name: "Medicina Veterinaria" },
@@ -279,6 +279,7 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
 
     const rows: RawRow[] = [];
     let semesterCounter = 0;
+    let veranoCounter = 0;
     let currentBlock = "";
 
     const allEls = Array.from(
@@ -295,9 +296,13 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
         continue;
       }
 
-      // TH containing "SEMESTRE" or "SEMESTER" or "VERANO" or "SUMMER" = new semester
+      // TH containing "SEMESTRE"/"VERANO" = new semester slot in document order
       if (tag === "TH") {
-        if (/SEMESTRE|SEMESTER|VERANO|SUMMER/i.test(text)) {
+        if (/VERANO|SUMMER/i.test(text)) {
+          semesterCounter++;
+          veranoCounter++;
+          currentBlock = veranoCounter > 1 ? `Verano ${veranoCounter}` : "Verano";
+        } else if (/SEMESTRE|SEMESTER/i.test(text)) {
           semesterCounter++;
           currentBlock = `Semestre ${semesterCounter}`;
         }

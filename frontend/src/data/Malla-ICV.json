@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-ICV",
-  "Last-Modified": "2026-06-08T21:01:55.304Z",
+  "Last-Modified": "2026-06-08T21:54:13.255Z",
   "courses": [
     {
       "id": "ICV2003",
@@ -667,7 +667,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

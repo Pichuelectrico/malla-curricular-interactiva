@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-ANT",
-  "Last-Modified": "2026-06-08T21:00:42.693Z",
+  "Last-Modified": "2026-06-08T21:53:47.585Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -513,7 +513,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

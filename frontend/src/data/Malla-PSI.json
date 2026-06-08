@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-PSI",
-  "Last-Modified": "2026-06-08T21:03:11.693Z",
+  "Last-Modified": "2026-06-08T21:54:40.871Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -531,7 +531,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

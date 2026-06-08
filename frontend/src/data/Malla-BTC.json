@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-BTC",
-  "Last-Modified": "2026-06-08T21:00:52.360Z",
+  "Last-Modified": "2026-06-08T21:53:52.126Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -663,7 +663,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

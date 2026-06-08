@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-CMP",
-  "Last-Modified": "2026-06-08T21:00:55.486Z",
+  "Last-Modified": "2026-06-08T21:53:55.236Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -686,7 +686,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],
