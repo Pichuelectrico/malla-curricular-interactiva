@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col items-center space-y-4 text-center">
           {/* Copyright */}
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            © 2025 Joshua Reinoso.
+            © 2026 Joshua Reinoso.
           </div>
           
           {/* Social Links */}
