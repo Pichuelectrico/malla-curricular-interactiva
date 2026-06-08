@@ -279,6 +279,7 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
 
     const rows: RawRow[] = [];
     let semesterCounter = 0;
+    let regularSemesterCounter = 0;
     let veranoCounter = 0;
     let currentBlock = "";
 
@@ -304,7 +305,8 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
           currentBlock = veranoCounter > 1 ? `Verano ${veranoCounter}` : "Verano";
         } else if (/SEMESTRE|SEMESTER/i.test(text)) {
           semesterCounter++;
-          currentBlock = `Semestre ${semesterCounter}`;
+          regularSemesterCounter++;
+          currentBlock = `Semestre ${regularSemesterCounter}`;
         }
         continue;
       }
