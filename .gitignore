@@ -5,3 +5,6 @@ encore.gen.cue
 node_modules
 /encore.gen
 .DS_Store
+.opencode/
+skills-lock.json
+.agents/

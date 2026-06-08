@@ -1,0 +1,682 @@
+{
+  "source_file": "Malla-academica-PER",
+  "Last-Modified": "2026-06-08T21:03:08.616Z",
+  "courses": [
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCO1001",
+      "code": "CCO 1001",
+      "title": "Fundamentos de Comunicación",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "CCO",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER2005",
+      "code": "PER 2005",
+      "title": "Investigación y Reportería",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PER1002",
+      "code": "PER 1002",
+      "title": "Redacción Multimedios Básica",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESP1001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DIC1101",
+      "code": "DIC 1101",
+      "title": "Herramientas Digitales 1",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "DIC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS",
+      "code": "CCSS",
+      "title": "CCSS:HIS/SOC/ANT/POL/REL/PSI",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "CCSS",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PER2003",
+      "code": "PER 2003",
+      "title": "Redacción Audiovisual Avanzada",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER1002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "CCO2101",
+      "code": "CCO 2101",
+      "title": "Teoría Crítica 1: Arte & Media",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "CCO",
+      "type": "obligatoria",
+      "prerequisites": [
+        "CCO1001 || ART1701"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CIN2007",
+      "code": "CIN 2007",
+      "title": "Lenguaje Visual y Montaje",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "CIN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER2007",
+      "code": "PER 2007",
+      "title": "Taller Producción Audiovisual",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER2003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PER2101",
+      "code": "PER 2101",
+      "title": "Prácticas Multimedios 1",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER2005",
+        "PER2003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FOT2101",
+      "code": "FOT 2101",
+      "title": "Fotografía 1",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "FOT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER3004",
+      "code": "PER 3004",
+      "title": "Reportajes y Crónicas",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER2101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PER4003",
+      "code": "PER 4003",
+      "title": "Comunicación: Leyes y Ética",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCO3002",
+      "code": "CCO 3002",
+      "title": "Taller de Investigación",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "CCO",
+      "type": "obligatoria",
+      "prerequisites": [
+        "CCO1001 || ART1701",
+        "CCO2101 || CCO2101E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CIENCIAS",
+      "code": "CIENCIAS",
+      "title": "CC:FIS/QUI/BIO/ECL/NUT/GEO",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "CIENCIAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCO0001",
+      "code": "CCO 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "CCO",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1001",
+      "code": "MAT 1001",
+      "title": "Matemáticas Cotidianas",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER3007",
+      "code": "PER 3007",
+      "title": "Visualización de Datos",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "DIC1101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PER4002",
+      "code": "PER 4002",
+      "title": "Contenidos Digitales y SEO",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER3004",
+        "PER2003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "OPT1",
+      "code": "OPT 1",
+      "title": "Optativa 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARTE",
+      "code": "ARTE",
+      "title": "Arte: ART/MUS/DAN/TEA",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ARTE",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "COM4402",
+      "code": "COM 4402",
+      "title": "Estrategias Digitales",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "COM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER4102",
+      "code": "PER 4102",
+      "title": "Prácticas Multimedios 2",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER2101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "OPTCOCOA",
+      "code": "OPT COCOA",
+      "title": "Optativa COCOA",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT2",
+      "code": "OPT 2",
+      "title": "Optativa 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCO",
+      "code": "CCO",
+      "title": "Temas en Comunicación y Arte",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "CCO",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER4005",
+      "code": "PER 4005",
+      "title": "Producción Editorial",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER4003",
+        "PER3004",
+        "PER4102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA3",
+      "code": "ELECTIVA 3",
+      "title": "Electiva Libre 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT3",
+      "code": "OPT 3",
+      "title": "Optativa 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PER4992",
+      "code": "PER 4992",
+      "title": "Reportaje Multimedia Avanzado",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "PER",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PER4002"
+      ],
+      "alternatives": []
+    }
+  ]
+}

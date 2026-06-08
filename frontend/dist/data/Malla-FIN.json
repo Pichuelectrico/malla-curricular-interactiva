@@ -1,0 +1,680 @@
+{
+  "source_file": "Malla-academica-FIN",
+  "Last-Modified": "2026-06-08T21:01:19.273Z",
+  "courses": [
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1009",
+      "code": "MAT 1009",
+      "title": "Matemática Empresarial +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM1001",
+      "code": "ADM 1001",
+      "title": "Principios de Administración",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2009",
+      "code": "MAT 2009",
+      "title": "Estadística Empresarial +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1009 || MAT1009E || MAT1003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAK1001",
+      "code": "MAK 1001",
+      "title": "Principios de Marketing",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAK",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CIENCIAS",
+      "code": "CIENCIAS",
+      "title": "CC:FIS/QUI/BIO/ECL/NUT/GEO",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "CIENCIAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM2005",
+      "code": "ADM 2005",
+      "title": "Integridad Empresarial",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ADM1001 || ADM1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN2002",
+      "code": "FIN 2002",
+      "title": "Contabilidad Financiera",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM2004",
+      "code": "ADM 2004",
+      "title": "Tecnología en los Negocios",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ADM1001 || ADM1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARTE",
+      "code": "ARTE",
+      "title": "Arte:ART/MUS/DAN/TEA",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARTE",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS",
+      "code": "CCSS",
+      "title": "CCSS:HIS/SOC/ ANT /POL/REL/PSI",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "CCSS",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM2003",
+      "code": "ADM 2003",
+      "title": "Análisis de Datos",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ADM2004 || ADM2004E || FIN2003 || MAK3002 || ADM4008 || MAK4001 || SEG1001",
+        "MAT2009 || MAT2008 || MAT1101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN2003",
+      "code": "FIN 2003",
+      "title": "Gestión de Costos",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN2002 || FIN2002E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "FIN3005",
+      "code": "FIN 3005",
+      "title": "Principios de Finanzas",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN2002 || FIN2002E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3003",
+      "code": "ADM 3003",
+      "title": "Dirección Estratégica",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ADM1001 || ADM1001E",
+        "MAK1001 || MAK1001E",
+        "FIN2002 || FIN2002E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN3006",
+      "code": "FIN 3006",
+      "title": "Tributación",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN2002 || FIN2002E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM0001",
+      "code": "ADM 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "FIN3001",
+      "code": "FIN 3001",
+      "title": "Finanzas Corporativas",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN2001 || FIN2001E || FIN3005 || FIN3005E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN3002",
+      "code": "FIN 3002",
+      "title": "Mercados Financieros",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN2001 || FIN2001E || FIN3005 || FIN3005E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN3007",
+      "code": "FIN 3007",
+      "title": "Mercados Financieros Internac.",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN2001 || FIN2001E || FIN3005 || FIN3005E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT1",
+      "code": "OPT 1",
+      "title": "Opt. CADE 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM4012",
+      "code": "ADM 4012",
+      "title": "Operaciones y Tecnología",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ADM2003 || ADM2003E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM4006",
+      "code": "ADM 4006",
+      "title": "Proyectos Empresariales",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN3001 || FIN3001E",
+        "ADM2003 || ADM2003E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN4002E",
+      "code": "FIN 4002E",
+      "title": "Risk Management",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN3002 || FIN3002E",
+        "ESL0006 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIN4009",
+      "code": "FIN 4009",
+      "title": "Valoración + Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN4007 || FIN4007E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "OPT2",
+      "code": "OPT 2",
+      "title": "Opt. CADE 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "FIN4010",
+      "code": "FIN 4010",
+      "title": "Inversiones +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN4007 || FIN4007E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA3",
+      "code": "ELECTIVA 3",
+      "title": "Electiva Libre 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT3",
+      "code": "OPT 3",
+      "title": "Opt. CADE 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "FIN4991",
+      "code": "FIN 4991",
+      "title": "Evaluación Integral FIN",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "FIN",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIN4009 || FIN4009E",
+        "FIN4002 || FIN4002E || FIN4004 || FIN4004E"
+      ],
+      "alternatives": []
+    }
+  ]
+}

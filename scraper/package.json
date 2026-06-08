@@ -1,0 +1,21 @@
+{
+  "name": "usfq-scraper",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Playwright scraper for USFQ career curricula",
+  "scripts": {
+    "setup": "bun install && bun run install-browsers",
+    "install-browsers": "bunx tsx install-browsers.ts",
+    "scrape": "bunx tsx scrape.ts",
+    "scrape:career": "bunx tsx scrape.ts --career",
+    "scrape:dry": "bunx tsx scrape.ts --dry-run"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0",
+    "tsx": "^4.19.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "typescript": "^5.8.3"
+  }
+}

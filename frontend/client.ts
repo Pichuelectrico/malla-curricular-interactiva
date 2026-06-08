@@ -69,7 +69,7 @@ export class Client {
 /**
  * Import the auth handler to be able to derive the auth type
  */
-import type { auth as auth_auth } from "~backend/auth/auth";
+import type { auth as auth_auth } from "~backend/auth/supabaseAuth";
 
 /**
  * ClientOptions allows you to override any default behaviour within the generated Encore client.

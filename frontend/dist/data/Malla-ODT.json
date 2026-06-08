@@ -1,0 +1,1712 @@
+{
+  "source_file": "Malla-academica-ODT",
+  "Last-Modified": "2026-06-08T21:03:06.719Z",
+  "courses": [
+    {
+      "id": "ODT1101",
+      "code": "ODT 1101",
+      "title": "Anatomía 1",
+      "description": "",
+      "credits": 1,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1004",
+      "code": "ODT 1004",
+      "title": "Embriología",
+      "description": "",
+      "credits": 1,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1202",
+      "code": "ODT 1202",
+      "title": "Morfología +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1003",
+      "code": "MAT 1003",
+      "title": "Cálculo para Cs de la Vida +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1201",
+      "code": "ODT 1201",
+      "title": "Principios de Química +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1102",
+      "code": "ODT 1102",
+      "title": "Anatomía 2 + Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1400",
+      "code": "ODT 1400",
+      "title": "Materiales Dentales 1+Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1101",
+        "ODT1202"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1205",
+      "code": "ODT 1205",
+      "title": "Histología + Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1211",
+      "code": "ODT 1211",
+      "title": "Química Orgánica Básica",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "BIO1102",
+      "code": "BIO 1102",
+      "title": "Biología General +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "BIO",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1103",
+      "code": "ODT 1103",
+      "title": "Anatomía 3 + Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT1005",
+      "code": "ODT 1005",
+      "title": "Bioseguridad",
+      "description": "",
+      "credits": 1,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3009",
+      "code": "ODT 3009",
+      "title": "Ética en Odontología",
+      "description": "",
+      "credits": 1,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2002",
+      "code": "ODT 2002",
+      "title": "Inmunología Oral",
+      "description": "",
+      "credits": 1,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2401",
+      "code": "ODT 2401",
+      "title": "Materiales Dentales 2 + Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1400"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2101",
+      "code": "ODT 2101",
+      "title": "Endodoncia 1",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2001",
+      "code": "ODT 2001",
+      "title": "Fisiología General",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2011",
+      "code": "ODT 2011",
+      "title": "Microbiología Oral",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2004",
+      "code": "ODT 2004",
+      "title": "Radiología",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2007",
+      "code": "ODT 2007",
+      "title": "Operatoria Dental 1",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT1400"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MED2011",
+      "code": "MED 2011",
+      "title": "Bioquímica para Cs Salud + Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "MED",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MED1001 || QUI1005 || ODT1201 || ODT1211 || QUI1003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS/ART",
+      "code": "CCSS/ART",
+      "title": "Ciencias Sociales/Arte",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "CCSS/ART",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2014",
+      "code": "ODT 2014",
+      "title": "Técnicas de Anestesia + Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2102",
+      "code": "ODT 2102",
+      "title": "Endodoncia 2 +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2012",
+      "code": "ODT 2012",
+      "title": "Bases de investigación",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3102",
+      "code": "ODT 3102",
+      "title": "Oclusión 1",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2016",
+      "code": "ODT 2016",
+      "title": "Diagnóstico Oral",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2008",
+      "code": "ODT 2008",
+      "title": "Operatoria Dental 2 + Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2015",
+      "code": "ODT 2015",
+      "title": "Cariología",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MCR2002",
+      "code": "MCR 2002",
+      "title": "Microbiología Patogénica +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "MCR",
+      "type": "obligatoria",
+      "prerequisites": [
+        "BIO1102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2017",
+      "code": "ODT 2017",
+      "title": "Tecnología Digital +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT1005",
+        "ODT2007",
+        "ODT2401"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2005",
+      "code": "ODT 2005",
+      "title": "Semiología Oral",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2330",
+      "code": "ODT 2330",
+      "title": "Preclínico de Operatoria",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2008",
+        "ODT2014",
+        "ODT2004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2013",
+      "code": "ODT 2013",
+      "title": "Procedimiento Endodoncia +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3001",
+      "code": "ODT 3001",
+      "title": "Prótesis Fija 1 +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3005",
+      "code": "ODT 3005",
+      "title": "Emergencias Médicas",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2005",
+        "ODT2001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4102",
+      "code": "ODT 4102",
+      "title": "Oclusión 2",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT2201",
+      "code": "ODT 2201",
+      "title": "Cirugía Oral 1 +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2001",
+        "ODT2014"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3002",
+      "code": "ODT 3002",
+      "title": "Periodoncia 1",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2001",
+        "ODT2330"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3401",
+      "code": "ODT 3401",
+      "title": "Farmacología",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT1103",
+        "ODT2016",
+        "ODT2330"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3301",
+      "code": "ODT 3301",
+      "title": "Clínica de Diagnóstico",
+      "description": "",
+      "credits": 2,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3331",
+      "code": "ODT 3331",
+      "title": "Clínica de Operatoria 1",
+      "description": "",
+      "credits": 2,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3311",
+      "code": "ODT 3311",
+      "title": "Medicina Oral 1",
+      "description": "",
+      "credits": 2,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330",
+        "ODT2005",
+        "ODT2016"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3321",
+      "code": "ODT 3321",
+      "title": "Clínica de Periodoncia 1",
+      "description": "",
+      "credits": 2,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3006",
+      "code": "ODT 3006",
+      "title": "Prótesis Fija 2 +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5202",
+      "code": "ODT 5202",
+      "title": "Cirugía Oral 2",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4601",
+      "code": "ODT 4601",
+      "title": "Ortodoncia 1",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4501",
+      "code": "ODT 4501",
+      "title": "Odontopediatría 1",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330",
+        "ODT3331",
+        "ODT3301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3003",
+      "code": "ODT 3003",
+      "title": "Periodoncia 2",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3002",
+        "ODT3321"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3340",
+      "code": "ODT 3340",
+      "title": "Endodoncia Preclínica",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2013"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4404",
+      "code": "ODT 4404",
+      "title": "Terapéutica",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3401"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3302",
+      "code": "ODT 3302",
+      "title": "Clínica del Adulto 1",
+      "description": "",
+      "credits": 2,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3332",
+      "code": "ODT 3332",
+      "title": "Clínica de Operatoria 2",
+      "description": "",
+      "credits": 2,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3331",
+        "ODT3301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3312",
+      "code": "ODT 3312",
+      "title": "Medicina Oral 2",
+      "description": "",
+      "credits": 2,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3311"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3322",
+      "code": "ODT 3322",
+      "title": "Clínica de Periodoncia 2",
+      "description": "",
+      "credits": 2,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3321",
+        "ODT3002",
+        "ODT3301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5003",
+      "code": "ODT 5003",
+      "title": "Patología Oral 1",
+      "description": "",
+      "credits": 1,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2201",
+        "ODT2005",
+        "ODT3311"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3303",
+      "code": "ODT 3303",
+      "title": "Clínica del Adulto 2",
+      "description": "",
+      "credits": 2,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3302"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3333",
+      "code": "ODT 3333",
+      "title": "Clínica de Operatoria 3",
+      "description": "",
+      "credits": 2,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3332"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3350",
+      "code": "ODT 3350",
+      "title": "Preclínico Prótesis",
+      "description": "",
+      "credits": 2,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3006 || ODT3332 || ODT3302"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4008",
+      "code": "ODT 4008",
+      "title": "Estética",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3006",
+        "ODT3350"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5004",
+      "code": "ODT 5004",
+      "title": "Patología Oral 2",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5003",
+        "ODT5202"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4602",
+      "code": "ODT 4602",
+      "title": "Ortodoncia 2",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4601"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4502",
+      "code": "ODT 4502",
+      "title": "Odontopediatría 2",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4501"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4001",
+      "code": "ODT 4001",
+      "title": "Prótesis Removible +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3350"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4361",
+      "code": "ODT 4361",
+      "title": "Clínica de Odontopediatría 1",
+      "description": "",
+      "credits": 2,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3303",
+        "ODT3333",
+        "ODT4501"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT3341",
+      "code": "ODT 3341",
+      "title": "Clínica de Endodoncia 1",
+      "description": "",
+      "credits": 2,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3340",
+        "ODT3333",
+        "ODT3303"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4301",
+      "code": "ODT 4301",
+      "title": "Clínica de Prótesis Fija",
+      "description": "",
+      "credits": 2,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3350",
+        "ODT3303",
+        "ODT3333"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4304",
+      "code": "ODT 4304",
+      "title": "Clínica de Cirugía 1",
+      "description": "",
+      "credits": 2,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330",
+        "ODT5003",
+        "ODT5202"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4006E",
+      "code": "ODT 4006E",
+      "title": "Endodontic Emergencies",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3340 || ESL0006 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4007",
+      "code": "ODT 4007",
+      "title": "Implantología",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3003",
+        "ODT3322"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5801",
+      "code": "ODT 5801",
+      "title": "Medicina Interna 1",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4404",
+        "ODT5004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5001",
+      "code": "ODT 5001",
+      "title": "Ortopedia",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4602"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5002",
+      "code": "ODT 5002",
+      "title": "Prótesis Total +Lab",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4305",
+      "code": "ODT 4305",
+      "title": "Clínica de Odontología Digital",
+      "description": "",
+      "credits": 2,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT2330",
+        "ODT4301",
+        "ODT2017 || ODT2006"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4342",
+      "code": "ODT 4342",
+      "title": "Clínica de Endodoncia 2",
+      "description": "",
+      "credits": 2,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3341"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5371",
+      "code": "ODT 5371",
+      "title": "Clínica Rehabilitación Oral 1",
+      "description": "",
+      "credits": 2,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5362",
+      "code": "ODT 5362",
+      "title": "Clínica de Odontopediatría 2",
+      "description": "",
+      "credits": 2,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4361",
+        "ODT4502"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 12,
+      "block": "Semestre 12",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5802",
+      "code": "ODT 5802",
+      "title": "Medicina Interna 2",
+      "description": "",
+      "credits": 1,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5801"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4701",
+      "code": "ODT 4701",
+      "title": "Boards de Rehabilitación Oral",
+      "description": "",
+      "credits": 1,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3350",
+        "ODT5002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5702",
+      "code": "ODT 5702",
+      "title": "Boards de Ortodoncia",
+      "description": "",
+      "credits": 1,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT4343",
+      "code": "ODT 4343",
+      "title": "Clínica de Endodoncia 3",
+      "description": "",
+      "credits": 2,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4342"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5372",
+      "code": "ODT 5372",
+      "title": "Clínica Rehabilitación Oral 2",
+      "description": "",
+      "credits": 2,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5371"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5363",
+      "code": "ODT 5363",
+      "title": "Clínica de Odontopediatría 3",
+      "description": "",
+      "credits": 2,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5362",
+        "ODT4502"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5306",
+      "code": "ODT 5306",
+      "title": "Clínica de Periodoncia 3",
+      "description": "",
+      "credits": 2,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT3322",
+        "ODT3003",
+        "ODT4007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 13,
+      "block": "Semestre 13",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT0001",
+      "code": "ODT 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5704E",
+      "code": "ODT 5704E",
+      "title": "Endodontic Boards",
+      "description": "",
+      "credits": 1,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4006E || ESL0006 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5803",
+      "code": "ODT 5803",
+      "title": "Medicina Interna 3",
+      "description": "",
+      "credits": 1,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5802"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5703",
+      "code": "ODT 5703",
+      "title": "Boards de Periodoncia",
+      "description": "",
+      "credits": 1,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4007",
+        "ODT5306"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5005",
+      "code": "ODT 5005",
+      "title": "Trastornos Temporomandibulares",
+      "description": "",
+      "credits": 1,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5702"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5303",
+      "code": "ODT 5303",
+      "title": "Clínica Periodoncia Avanzada",
+      "description": "",
+      "credits": 2,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5306"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5307",
+      "code": "ODT 5307",
+      "title": "Clínica de Endodoncia 4",
+      "description": "",
+      "credits": 2,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4343"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5000",
+      "code": "ODT 5000",
+      "title": "Preparación de Titulación",
+      "description": "",
+      "credits": 2,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5801"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5373",
+      "code": "ODT 5373",
+      "title": "Clínica Rehab. Integral",
+      "description": "",
+      "credits": 2,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5372",
+        "ODT4305"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5302",
+      "code": "ODT 5302",
+      "title": "Clínica de Cirugía 2",
+      "description": "",
+      "credits": 2,
+      "semester": 14,
+      "block": "Semestre 14",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT4304",
+        "ODT5802"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5374",
+      "code": "ODT 5374",
+      "title": "Casos Clínicos",
+      "description": "",
+      "credits": 2,
+      "semester": 15,
+      "block": "Semestre 15",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5372",
+        "ODT5307",
+        "ODT5303"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ODT5705",
+      "code": "ODT 5705",
+      "title": "Evaluación Integral ODT",
+      "description": "",
+      "credits": 5,
+      "semester": 15,
+      "block": "Semestre 15",
+      "area": "ODT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ODT5704E",
+        "ODT5702",
+        "ODT5703",
+        "ODT4701",
+        "ODT5802",
+        "ODT5000"
+      ],
+      "alternatives": []
+    }
+  ]
+}

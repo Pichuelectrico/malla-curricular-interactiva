@@ -7,20 +7,20 @@ import { Checkbox } from '@/components/ui/checkbox';
 interface WritingIntensiveSidebarProps {
   hasWritingIntensive: boolean;
   onToggle: (checked: boolean) => void;
-  allEnglishCompleted: boolean;
+  showNotice: boolean;
 }
 
 export default function WritingIntensiveSidebar({
   hasWritingIntensive,
   onToggle,
-  allEnglishCompleted,
+  showNotice,
 }: WritingIntensiveSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className="fixed bottom-[270px] left-4 z-30">
       <Card className={`bg-white dark:bg-gray-800 shadow-lg border-2 transition-all duration-300 ${
-        allEnglishCompleted
+        showNotice
           ? 'border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20'
           : 'border-gray-200 dark:border-gray-700'
       }`}>
@@ -28,7 +28,7 @@ export default function WritingIntensiveSidebar({
           {!isCollapsed && (
             <div className="p-3">
               <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 flex items-center gap-2">
-                <Languages className={`w-4 h-4 ${allEnglishCompleted ? 'text-blue-600 dark:text-blue-400 animate-pulse' : ''}`} />
+                <Languages className={`w-4 h-4 ${showNotice ? 'text-blue-600 dark:text-blue-400 animate-pulse' : ''}`} />
                 Requisito Especial
               </div>
               <div className="flex items-center space-x-2">
@@ -40,7 +40,7 @@ export default function WritingIntensiveSidebar({
                 <label
                   htmlFor="writing-intensive-sidebar"
                   className={`text-sm font-medium leading-none cursor-pointer ${
-                    allEnglishCompleted
+                    showNotice
                       ? 'text-blue-800 dark:text-blue-200 font-semibold'
                       : 'text-gray-700 dark:text-gray-300'
                   }`}
@@ -48,9 +48,9 @@ export default function WritingIntensiveSidebar({
                   Writing Intensive
                 </label>
               </div>
-              {allEnglishCompleted && !hasWritingIntensive && (
+              {showNotice && !hasWritingIntensive && (
                 <p className="text-xs text-blue-600 dark:text-blue-400 mt-2">
-                  ¡Inglés completado! Marca este requisito.
+                  ¡Inglés 6 completado! Marca este requisito.
                 </p>
               )}
             </div>
@@ -64,7 +64,7 @@ export default function WritingIntensiveSidebar({
             {isCollapsed ? (
               <div className="flex flex-col items-center gap-1 p-1">
                 <ChevronRight className="w-4 h-4" />
-                <Languages className={`w-4 h-4 ${allEnglishCompleted ? 'text-blue-600 dark:text-blue-400 animate-pulse' : 'text-gray-600'}`} />
+                <Languages className={`w-4 h-4 ${showNotice ? 'text-blue-600 dark:text-blue-400 animate-pulse' : 'text-gray-600'}`} />
               </div>
             ) : (
               <ChevronLeft className="w-4 h-4" />

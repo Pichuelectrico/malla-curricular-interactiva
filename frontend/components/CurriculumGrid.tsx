@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/clerk-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSupabaseAuth } from '../lib/auth';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +25,7 @@ import { useBackend } from '../lib/backend';
 import { availableCurricula } from '../data/availableCurricula';
 
 export default function CurriculumGrid() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn } = useSupabaseAuth();
   const backend = useBackend();
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
@@ -38,6 +38,7 @@ export default function CurriculumGrid() {
   const [showContact, setShowContact] = useState(false);
   const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
   const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
+  const prevEsl0006CompletedRef = useRef<boolean | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const { toast } = useToast();
@@ -185,7 +186,7 @@ export default function CurriculumGrid() {
     };
 
     saveProgress();
-  }, [completedCourses, inProgressCourses, plannedCourses, dataLoaded, curriculumId, isLoadingProgress]);
+  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, dataLoaded, curriculumId, isLoadingProgress]);
 
   // Overlay global completed courses onto current curriculum after data loads
   useEffect(() => {
@@ -275,35 +276,40 @@ export default function CurriculumGrid() {
   }, [hasWritingIntensive, curriculumId, dataLoaded, isLoadingProgress]);
 
   const hasESL0006 = curriculumData.courses.some(course => course.id === 'ESL0006');
+  const esl0006Completed = completedCourses.has('ESL0006');
 
   useEffect(() => {
-    if (!hasESL0006) return;
+    prevEsl0006CompletedRef.current = null;
+  }, [curriculumId]);
 
-    const englishCourses = curriculumData.courses.filter(course => 
-      course.area === 'Idiomas' || course.type === 'idioma'
-    );
-    
-    const allEnglishCompleted = englishCourses.length > 0 && 
-      englishCourses.every(course => completedCourses.has(course.id));
-    
-    const esl0006JustCompleted = completedCourses.has('ESL0006');
-    
-    if (allEnglishCompleted && esl0006JustCompleted && !hasWritingIntensive) {
-      const timer = setTimeout(() => {
-        setShowEnglishAnimation(true);
-        toast({
-          title: "¡Inglés completado! 🌟",
-          description: "Has completado todos los niveles de inglés. Ahora puedes marcar el requisito de Writing Intensive.",
-        });
-        
-        setTimeout(() => {
-          setShowEnglishAnimation(false);
-        }, 3000);
-      }, 500);
-      
-      return () => clearTimeout(timer);
+  useEffect(() => {
+    if (!hasESL0006 || !dataLoaded) return;
+
+    const wasCompleted = prevEsl0006CompletedRef.current;
+    if (wasCompleted === null) {
+      prevEsl0006CompletedRef.current = esl0006Completed;
+      return;
     }
-  }, [completedCourses, curriculumData.courses, hasWritingIntensive, hasESL0006, toast]);
+
+    const justCompleted = esl0006Completed && !wasCompleted;
+    prevEsl0006CompletedRef.current = esl0006Completed;
+
+    if (!justCompleted || hasWritingIntensive) return;
+
+    const timer = setTimeout(() => {
+      setShowEnglishAnimation(true);
+      toast({
+        title: "¡Inglés 6 completado! 🌟",
+        description: "Ahora puedes marcar el requisito de Writing Intensive.",
+      });
+
+      setTimeout(() => {
+        setShowEnglishAnimation(false);
+      }, 3000);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [esl0006Completed, hasWritingIntensive, hasESL0006, dataLoaded, toast]);
 
   const allCoursesCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
   const isAllCompleted = allCoursesCompleted && hasWritingIntensive;
@@ -315,11 +321,8 @@ export default function CurriculumGrid() {
   );
   const hasCompletedFiveSemesters = completedSemesters.size >= 5;
 
-  const englishCourses = curriculumData.courses.filter(course => 
-    course.area === 'Idiomas' || course.type === 'idioma'
-  );
-  const allEnglishCompleted = hasESL0006 && englishCourses.length > 0 && 
-    englishCourses.every(course => completedCourses.has(course.id));
+  const showWritingIntensiveSection =
+    hasESL0006 && (hasCompletedFiveSemesters || esl0006Completed);
 
   useEffect(() => {
     if (isAllCompleted && completedCourses.size > 0) {
@@ -573,7 +576,7 @@ export default function CurriculumGrid() {
               <div className="flex items-center justify-center mb-4">
                 <Languages className="w-16 h-16 text-white mr-4 animate-bounce" />
                 <div>
-                  <h2 className="text-4xl font-bold text-white mb-2">¡Inglés Completado!</h2>
+                  <h2 className="text-4xl font-bold text-white mb-2">¡Inglés 6 Completado!</h2>
                   <p className="text-xl text-blue-100">Ahora puedes marcar Writing Intensive</p>
                 </div>
               </div>
@@ -641,9 +644,9 @@ export default function CurriculumGrid() {
             </div>
           </div>
 
-          {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
+          {showWritingIntensiveSection && (
             <div className={`border-t pt-4 dark:border-gray-600 transition-all duration-500 ${
-              allEnglishCompleted ? 'bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-2 border-blue-200 dark:border-blue-700' : ''
+              showEnglishAnimation ? 'bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-2 border-blue-200 dark:border-blue-700' : ''
             }`}>
               <div className="flex items-center space-x-3">
                 <Checkbox
@@ -653,26 +656,15 @@ export default function CurriculumGrid() {
                 />
                 <label
                   htmlFor="writing-intensive"
-                  className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
-                    allEnglishCompleted ? 'text-blue-800 dark:text-blue-200 font-semibold' : 'dark:text-gray-200'
-                  }`}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-gray-200"
                 >
                   ¿Tomaste una materia en inglés (Writing Intensive)?
                 </label>
-                {allEnglishCompleted && (
-                  <Languages className="w-5 h-5 text-blue-600 dark:text-blue-400 animate-pulse" />
-                )}
               </div>
               {allCoursesCompleted && !hasWritingIntensive && (
                 <p className="text-sm text-amber-600 dark:text-amber-400 mt-2 flex items-center">
                   <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
                   Debes completar el requisito de Writing Intensive para graduarte
-                </p>
-              )}
-              {allEnglishCompleted && !hasWritingIntensive && (
-                <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 flex items-center">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
-                  ¡Has completado todos los niveles de inglés! Ahora puedes marcar este requisito.
                 </p>
               )}
             </div>
@@ -781,11 +773,11 @@ export default function CurriculumGrid() {
 
       <ModeSelector currentMode={currentMode} onModeChange={setCurrentMode} />
 
-      {(hasCompletedFiveSemesters || allEnglishCompleted) && hasESL0006 && (
+      {showWritingIntensiveSection && (
         <WritingIntensiveSidebar
           hasWritingIntensive={hasWritingIntensive}
           onToggle={(checked) => setHasWritingIntensive(checked)}
-          allEnglishCompleted={allEnglishCompleted}
+          showNotice={showEnglishAnimation}
         />
       )}
 

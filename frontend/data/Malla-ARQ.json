@@ -1,0 +1,664 @@
+{
+  "source_file": "Malla-academica-ARQ",
+  "Last-Modified": "2026-06-08T21:00:44.062Z",
+  "courses": [
+    {
+      "id": "MAT1006",
+      "code": "MAT 1006",
+      "title": "Cálculo Diferencial e Integral",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2002",
+      "code": "ARQ 2002",
+      "title": "Dibujo Arquitectónico",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ1101",
+      "code": "ARQ 1101",
+      "title": "Taller 1 Fundamentos",
+      "description": "",
+      "credits": 6,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2001",
+      "code": "ARQ 2001",
+      "title": "Representación Gráfica 2",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ1102",
+      "code": "ARQ 1102",
+      "title": "Taller 2 Fundamentos",
+      "description": "",
+      "credits": 6,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ1101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2401",
+      "code": "ARQ 2401",
+      "title": "Historia de la Arquitectura 1",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESP1001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2501",
+      "code": "ARQ 2501",
+      "title": "Estructuras 1",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1006"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2201",
+      "code": "ARQ 2201",
+      "title": "Taller 3 Formación",
+      "description": "",
+      "credits": 6,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ1102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2402",
+      "code": "ARQ 2402",
+      "title": "Historia de la Arquitectura 2",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2401 || ARQ2401E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ3502",
+      "code": "ARQ 3502",
+      "title": "Estructuras 2",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2501"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2202",
+      "code": "ARQ 2202",
+      "title": "Taller 4 Formación",
+      "description": "",
+      "credits": 6,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ3403",
+      "code": "ARQ 3403",
+      "title": "Historia de la Arquitectura 3",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2402 || ARQ2402E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2301",
+      "code": "ARQ 2301",
+      "title": "Construcciones 1",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ3502"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ3203",
+      "code": "ARQ 3203",
+      "title": "Taller 5 Formación",
+      "description": "",
+      "credits": 6,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2202"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ0001",
+      "code": "ARQ 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ2302",
+      "code": "ARQ 2302",
+      "title": "Construcciones 2",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2301 || ARQ2301E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS",
+      "code": "CCSS",
+      "title": "CCSS:HIS/SOC/ANT/POL/REL/PSI",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "CCSS",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ3204",
+      "code": "ARQ 3204",
+      "title": "Taller 6 Formación",
+      "description": "",
+      "credits": 6,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ3203"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ3303",
+      "code": "ARQ 3303",
+      "title": "Construcciones 3",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ2302"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQOPT1",
+      "code": "ARQ OPT 1",
+      "title": "Optativa 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ4205",
+      "code": "ARQ 4205",
+      "title": "Taller 7 Formación",
+      "description": "",
+      "credits": 6,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ3204 || ARQ3204E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ3601",
+      "code": "ARQ 3601",
+      "title": "Teoría Urbana 1",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ3403 || ARQ3403E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARQOPT2",
+      "code": "ARQ OPT 2",
+      "title": "Optativa 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ4206",
+      "code": "ARQ 4206",
+      "title": "Taller 8 Formación /Taller Int",
+      "description": "",
+      "credits": 6,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ4205"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQOPT3",
+      "code": "ARQ OPT 3",
+      "title": "Optativa 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA3",
+      "code": "ELECTIVA 3",
+      "title": "Electiva Libre 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CIENCIAS",
+      "code": "CIENCIAS",
+      "title": "CC:FIS/QUI/BIO/ECL/NUT/GEO",
+      "description": "",
+      "credits": 3,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "CIENCIAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARQ5992",
+      "code": "ARQ 5992",
+      "title": "Taller Avanzado ARQ",
+      "description": "",
+      "credits": 5,
+      "semester": 11,
+      "block": "Semestre 11",
+      "area": "ARQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ARQ4206",
+        "PAS4000"
+      ],
+      "alternatives": []
+    }
+  ]
+}
