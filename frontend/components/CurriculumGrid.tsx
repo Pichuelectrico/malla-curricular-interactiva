@@ -24,6 +24,8 @@ import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
 import { availableCurricula } from '../data/availableCurricula';
 
+const MAX_SEMESTER_CREDITS = 16;
+
 export default function CurriculumGrid() {
   const { isSignedIn } = useSupabaseAuth();
   const backend = useBackend();
@@ -336,6 +338,11 @@ export default function CurriculumGrid() {
     }
   }, [isAllCompleted, completedCourses.size, toast]);
 
+  const sumCredits = (courseIds: Set<string>) =>
+    curriculumData.courses
+      .filter(c => courseIds.has(c.id))
+      .reduce((sum, c) => sum + c.credits, 0);
+
   const isUnlocked = (course: Course): boolean => {
     if (course.prerequisites.length === 0) return true;
     
@@ -386,6 +393,18 @@ export default function CurriculumGrid() {
         return newCompleted;
       });
     } else if (currentMode === 'in-progress') {
+      if (!isCurrentlyInProgress) {
+        const projectedCredits = sumCredits(inProgressCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast({
+            title: "Límite de créditos",
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en cursando.`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       setInProgressCourses(prev => {
         const newInProgress = new Set(prev);
         if (newInProgress.has(courseId)) {
@@ -406,6 +425,18 @@ export default function CurriculumGrid() {
         return newInProgress;
       });
     } else if (currentMode === 'planned') {
+      if (!isCurrentlyPlanned) {
+        const projectedCredits = sumCredits(plannedCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast({
+            title: "Límite de créditos",
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en planeadas.`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       setPlannedCourses(prev => {
         const newPlanned = new Set(prev);
         if (newPlanned.has(courseId)) {
