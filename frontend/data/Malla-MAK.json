@@ -1,6 +1,6 @@
 {
-  "source_file": "Malla-academica-ADM",
-  "Last-Modified": "2026-06-08T21:53:46.152Z",
+  "source_file": "Malla-academica-MAK",
+  "Last-Modified": "2026-06-08T21:54:25.083Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -238,7 +238,7 @@
     {
       "id": "ARTE",
       "code": "ARTE",
-      "title": "Arte ART/MUS/DAN/TEA",
+      "title": "Arte: ART/MUS/DAN/TEA",
       "description": "",
       "credits": 3,
       "semester": 3,
@@ -279,7 +279,7 @@
     {
       "id": "ESL0006",
       "code": "ESL 0006",
-      "title": "Inglés Nivel 6",
+      "title": "Ingles Nivel 6",
       "description": "",
       "credits": 0,
       "semester": 3,
@@ -321,16 +321,18 @@
       "alternatives": []
     },
     {
-      "id": "ADM2006",
-      "code": "ADM 2006",
-      "title": "Entorno Legal de los Negocios",
+      "id": "MAK2001",
+      "code": "MAK 2001",
+      "title": "Comportamiento del Consumidor",
       "description": "",
       "credits": 3,
       "semester": 4,
       "block": "Semestre 4",
-      "area": "ADM",
+      "area": "MAK",
       "type": "obligatoria",
-      "prerequisites": [],
+      "prerequisites": [
+        "MAK1001 || MAK1001E"
+      ],
       "alternatives": []
     },
     {
@@ -362,7 +364,7 @@
     {
       "id": "HUM",
       "code": "HUM",
-      "title": "Humanidades LIT/FIL/ARH/ESC",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
       "description": "",
       "credits": 3,
       "semester": 4,
@@ -401,18 +403,19 @@
       "alternatives": []
     },
     {
-      "id": "NIT3004",
-      "code": "NIT 3004",
-      "title": "Negocios Internacionales",
+      "id": "MAK3002",
+      "code": "MAK 3002",
+      "title": "Investigación de Mercados",
       "description": "",
       "credits": 3,
       "semester": 5,
       "block": "Semestre 5",
-      "area": "NIT",
+      "area": "MAK",
       "type": "obligatoria",
       "prerequisites": [
-        "ADM1001",
-        "MAK1001"
+        "MAT2009 || MAT2009E",
+        "MAK2001 || MAK2001E",
+        "ADM2003 || ADM2003E"
       ],
       "alternatives": []
     },
@@ -462,32 +465,33 @@
       "alternatives": []
     },
     {
-      "id": "ADM3008",
-      "code": "ADM 3008",
-      "title": "Transformación Digital",
+      "id": "MAK3005",
+      "code": "MAK 3005",
+      "title": "Marketing Digital",
       "description": "",
       "credits": 3,
       "semester": 6,
       "block": "Semestre 6",
-      "area": "ADM",
+      "area": "MAK",
       "type": "obligatoria",
       "prerequisites": [
-        "ADM3003 || ADM2003 || ADM2003E"
+        "MAK2001 || MAK2001E",
+        "ADM2003 || ADM2003E"
       ],
       "alternatives": []
     },
     {
-      "id": "ADM3001",
-      "code": "ADM 3001",
-      "title": "Gestión del Talento",
+      "id": "MAK3004",
+      "code": "MAK 3004",
+      "title": "Desarrollo de Producto y Marca",
       "description": "",
       "credits": 3,
       "semester": 6,
       "block": "Semestre 6",
-      "area": "ADM",
+      "area": "MAK",
       "type": "obligatoria",
       "prerequisites": [
-        "ADM2005 || FIN2001 || FIN2001E || PSI2402 || PSI2402E || PSI3406 || PSI3406E"
+        "MAK3002 || MAK3002E"
       ],
       "alternatives": []
     },
@@ -531,33 +535,18 @@
       "alternatives": []
     },
     {
-      "id": "ADM4003",
-      "code": "ADM 4003",
-      "title": "Gestión de Emprendimiento",
+      "id": "MAK4003",
+      "code": "MAK 4003",
+      "title": "Estrategia Omnicanal",
       "description": "",
       "credits": 3,
       "semester": 8,
       "block": "Semestre 8",
-      "area": "ADM",
+      "area": "MAK",
       "type": "obligatoria",
       "prerequisites": [
-        "ADM3002 || ADM3002E",
-        "FIN2001 || FIN2001E || FIN3084 || FIN3005 || FIN3005E"
-      ],
-      "alternatives": []
-    },
-    {
-      "id": "ADM4013",
-      "code": "ADM 4013",
-      "title": "Negociación",
-      "description": "",
-      "credits": 3,
-      "semester": 8,
-      "block": "Semestre 8",
-      "area": "ADM",
-      "type": "obligatoria",
-      "prerequisites": [
-        "ADM2005 || FIN2001 || FIN2001E || FIN3005 || FIN3005E"
+        "MAK3002 || MAK3002E",
+        "MAK4001 || MAK4001E || MAK3005 || MAK3005E"
       ],
       "alternatives": []
     },
@@ -593,6 +582,21 @@
       "alternatives": []
     },
     {
+      "id": "MAK4010",
+      "code": "MAK 4010",
+      "title": "Tópicos en Marketing",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "MAK",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAK3004 || MAK3004E || MAK4002 || MAK4002E"
+      ],
+      "alternatives": []
+    },
+    {
       "id": "OPT2",
       "code": "OPT 2",
       "title": "Opt. CADE 2/3",
@@ -619,17 +623,18 @@
       "alternatives": []
     },
     {
-      "id": "ADM4014",
-      "code": "ADM 4014",
-      "title": "Liderazgo",
+      "id": "MAK4004",
+      "code": "MAK 4004",
+      "title": "Marketing Estratégico",
       "description": "",
       "credits": 3,
       "semester": 9,
       "block": "Semestre 9",
-      "area": "ADM",
+      "area": "MAK",
       "type": "obligatoria",
       "prerequisites": [
-        "ADM3001 || ADM3001E"
+        "MAK4003 || MAK4003E",
+        "MAK4002 || MAK4002E || MAK3004 || MAK3004E"
       ],
       "alternatives": []
     },
@@ -660,18 +665,18 @@
       "alternatives": []
     },
     {
-      "id": "ADM4991",
-      "code": "ADM 4991",
-      "title": "Evaluación Integral ADM",
+      "id": "MAK4991",
+      "code": "MAK 4991",
+      "title": "Evaluación Integral MAK",
       "description": "",
       "credits": 5,
       "semester": 9,
       "block": "Semestre 9",
-      "area": "ADM",
+      "area": "MAK",
       "type": "obligatoria",
       "prerequisites": [
-        "ADM4003 || ADM4003E",
-        "ADM3005 || ADM3005E || ADM4013 || ADM4013E"
+        "MAK4003 || MAK4003E",
+        "COM1001 || COM2002 || COM2101 || COM3001 || COM3003 || COM3004 || COM4003 || COM4082 || COM4102 || COM4402 || MAK1001 || MAK2001 || MAK2001E || MAK3001E || MAK3002 || MAK3002E || MAK3080 || MAK4001 || MAK4001E || MAK4002 || MAK4003 || MAK4003E || MAK4005 || MAK4009 || MAK4010 || MAK4080E || MAK4083 || PUB1001 || PUB1001E || PUB2003 || PUB2004 || PUB2101 || PUB4001 || PUB4002 || PUB4003 || PUB4004 || PUB4006 || PUB4102 || MAK3005 || MAK3005E"
       ],
       "alternatives": []
     }

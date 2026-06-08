@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-DIC",
-  "Last-Modified": "2026-06-08T21:01:14.901Z",
+  "Last-Modified": "2026-06-08T21:53:59.830Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -541,7 +541,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

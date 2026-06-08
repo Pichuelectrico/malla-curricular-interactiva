@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-VET",
-  "Last-Modified": "2026-06-08T21:02:34.072Z",
+  "Last-Modified": "2026-06-08T21:54:31.094Z",
   "courses": [
     {
       "id": "VET1302",
@@ -676,7 +676,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

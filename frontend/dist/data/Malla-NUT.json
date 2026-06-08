@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-NUT",
-  "Last-Modified": "2026-06-08T21:02:38.854Z",
+  "Last-Modified": "2026-06-08T21:54:33.658Z",
   "courses": [
     {
       "id": "NUT1003",
@@ -525,7 +525,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

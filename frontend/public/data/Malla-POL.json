@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-POL",
-  "Last-Modified": "2026-06-08T21:03:10.196Z",
+  "Last-Modified": "2026-06-08T21:54:39.411Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -525,7 +525,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

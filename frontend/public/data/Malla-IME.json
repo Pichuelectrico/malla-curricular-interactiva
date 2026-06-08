@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-IME",
-  "Last-Modified": "2026-06-08T21:02:00.922Z",
+  "Last-Modified": "2026-06-08T21:54:18.038Z",
   "courses": [
     {
       "id": "MAT1201",
@@ -705,7 +705,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

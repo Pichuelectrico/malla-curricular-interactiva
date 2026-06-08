@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-JUR",
-  "Last-Modified": "2026-06-08T21:01:09.120Z",
+  "Last-Modified": "2026-06-08T21:53:58.292Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -537,7 +537,7 @@
       "description": "",
       "credits": 3,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PRC",
       "type": "obligatoria",
       "prerequisites": [],
@@ -725,7 +725,7 @@
       "description": "",
       "credits": 5,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Verano 2",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

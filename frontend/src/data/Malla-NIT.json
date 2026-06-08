@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-NIT",
-  "Last-Modified": "2026-06-08T21:02:37.528Z",
+  "Last-Modified": "2026-06-08T21:54:32.499Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -508,7 +508,7 @@
       "description": "",
       "credits": 5,
       "semester": 7,
-      "block": "Semestre 7",
+      "block": "Verano",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],

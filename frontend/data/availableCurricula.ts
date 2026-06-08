@@ -401,6 +401,21 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
   },
   {
+    id: "mak-usfq",
+    slug: "malla-mak",
+    name: "Marketing",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 124,
+    courses: 48,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-MAK.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-MAK.json');
+      return { default: await res.json() };
+    },
+  },
+  {
     id: "mat-usfq",
     slug: "malla-mat",
     name: "Matemática",

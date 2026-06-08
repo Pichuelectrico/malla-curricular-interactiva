@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-ODT",
-  "Last-Modified": "2026-06-08T21:03:06.719Z",
+  "Last-Modified": "2026-06-08T21:54:36.478Z",
   "courses": [
     {
       "id": "ODT1101",
@@ -258,7 +258,7 @@
       "description": "",
       "credits": 1,
       "semester": 3,
-      "block": "Semestre 3",
+      "block": "Verano",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -273,7 +273,7 @@
       "description": "",
       "credits": 1,
       "semester": 3,
-      "block": "Semestre 3",
+      "block": "Verano",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [],
@@ -286,7 +286,7 @@
       "description": "",
       "credits": 1,
       "semester": 3,
-      "block": "Semestre 3",
+      "block": "Verano",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [],
@@ -299,7 +299,7 @@
       "description": "",
       "credits": 1,
       "semester": 3,
-      "block": "Semestre 3",
+      "block": "Verano",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [],
@@ -611,7 +611,7 @@
       "description": "",
       "credits": 1,
       "semester": 6,
-      "block": "Semestre 6",
+      "block": "Verano 2",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -629,7 +629,7 @@
       "description": "",
       "credits": 1,
       "semester": 6,
-      "block": "Semestre 6",
+      "block": "Verano 2",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -644,7 +644,7 @@
       "description": "",
       "credits": 3,
       "semester": 6,
-      "block": "Semestre 6",
+      "block": "Verano 2",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -661,7 +661,7 @@
       "description": "",
       "credits": 3,
       "semester": 6,
-      "block": "Semestre 6",
+      "block": "Verano 2",
       "area": "PRC",
       "type": "obligatoria",
       "prerequisites": [],
@@ -1019,7 +1019,7 @@
       "description": "",
       "credits": 1,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano 3",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -1036,7 +1036,7 @@
       "description": "",
       "credits": 2,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano 3",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -1051,7 +1051,7 @@
       "description": "",
       "credits": 2,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano 3",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -1066,7 +1066,7 @@
       "description": "",
       "credits": 2,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Verano 3",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -1392,7 +1392,7 @@
       "description": "",
       "credits": 5,
       "semester": 12,
-      "block": "Semestre 12",
+      "block": "Verano 4",
       "area": "PAS",
       "type": "obligatoria",
       "prerequisites": [],
@@ -1678,7 +1678,7 @@
       "description": "",
       "credits": 2,
       "semester": 15,
-      "block": "Semestre 15",
+      "block": "Verano 5",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
@@ -1695,7 +1695,7 @@
       "description": "",
       "credits": 5,
       "semester": 15,
-      "block": "Semestre 15",
+      "block": "Verano 5",
       "area": "ODT",
       "type": "obligatoria",
       "prerequisites": [
