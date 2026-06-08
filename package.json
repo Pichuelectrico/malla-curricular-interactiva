@@ -5,6 +5,14 @@
   "packageManager": "bun",
   "workspaces": [
     "backend",
-    "frontend"
-  ]
+    "frontend",
+    "scraper"
+  ],
+  "scripts": {
+    "scraper:setup": "bun run --filter usfq-scraper setup",
+    "scraper": "bun run --filter usfq-scraper scrape",
+    "scraper:career": "bun run --filter usfq-scraper scrape:career",
+    "join": "python3 joiner/join.py",
+    "join:dry": "python3 joiner/join.py --dry-run"
+  }
 }

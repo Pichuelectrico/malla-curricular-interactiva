@@ -1,0 +1,749 @@
+{
+  "source_file": "Malla-academica-PSC",
+  "Last-Modified": "2026-06-08T21:03:13.254Z",
+  "courses": [
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2101",
+      "code": "PSI 2101",
+      "title": "Desarrollo: Niño y Adolescente",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "BIO1102",
+      "code": "BIO 1102",
+      "title": "Biología General +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "BIO",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2103",
+      "code": "PSI 2103",
+      "title": "Introducción a la Psicología",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2501",
+      "code": "PSI 2501",
+      "title": "Bases de Neurociencia",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "BIO1002 || BIO1102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2102",
+      "code": "PSI 2102",
+      "title": "Desarrollo: Adultez y Vejez",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI2101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2109",
+      "code": "PSI 2109",
+      "title": "Psicología Cognitiva",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI3502 || PSI2501"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI3502",
+      "code": "PSI 3502",
+      "title": "Neurociencia y Conducta",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI2501"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2106",
+      "code": "PSI 2106",
+      "title": "Psicología de la Personalidad",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI2103 || PSI2103E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1101",
+      "code": "MAT 1101",
+      "title": "Estadística para CCSS",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARTE",
+      "code": "ARTE",
+      "title": "Arte: ART/MUS/DAN/TEA",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARTE",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC2001",
+      "code": "PSC 2001",
+      "title": "Habilidades Clínicas",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSI3201",
+      "code": "PSI 3201",
+      "title": "Medición en Psicología",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1004 || MAT1101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC2201",
+      "code": "PSC 2201",
+      "title": "Psicopatología 1",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI3502 || PSI3502E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI2401",
+      "code": "PSI 2401",
+      "title": "Psicología Social",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC3008",
+      "code": "PSC 3008",
+      "title": "Entrevista Clínica",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC2001 || PSC2001E || PSI2001 || PSI2001E",
+        "PSC2201 || PSC2201E || PSI2201 || PSI2201E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI1001",
+      "code": "PSI 1001",
+      "title": "Fundamentos de Investigación",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC3202",
+      "code": "PSC 3202",
+      "title": "Psicopatología 2",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC2201 || PSC2201E || PSI2201 || PSI2201E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS",
+      "code": "CCSS",
+      "title": "CCSS:HIS/SOC/ANT/POL/REL/EDU",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "CCSS",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ALB0001",
+      "code": "ALB 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ALB",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC3501",
+      "code": "PSC 3501",
+      "title": "Intervención Clínica 1",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC2201 || PSC2201E || PSI2201 || PSI2201E",
+        "PSC3008 || PSC3008E || PSI3008 || PSI3008E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC3401",
+      "code": "PSC 3401",
+      "title": "Psicoterapia 1",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC2201 || PSC2201E || PSI2201 || PSI2201E",
+        "PSC3008 || PSC3008E || PSI3008 || PSI3008E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSI4204",
+      "code": "PSI 4204",
+      "title": "Investigación en Psicología",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "PSI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI1001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4008",
+      "code": "PSC 4008",
+      "title": "Intervención en Crisis",
+      "description": "",
+      "credits": 2,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC3202 || PSC3202E || PSI2202 || PSI2202E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4502",
+      "code": "PSC 4502",
+      "title": "Intervención Clínica 2",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC3501 || PSC3501E || PSI3501 || PSI3501E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4002",
+      "code": "PSC 4002",
+      "title": "Terapia Familiar",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC3501 || PSC3501E || PSI3501 || PSI3501E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC3004",
+      "code": "PSC 3004",
+      "title": "Ética Profesional",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4402",
+      "code": "PSC 4402",
+      "title": "Psicoterapia 2",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC2201 || PSC2201E || PSI2201 || PSI2201E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4101",
+      "code": "PSC 4101",
+      "title": "Observación Clínica Práctica 1",
+      "description": "",
+      "credits": 2,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC4502 || PSC4502E || PSI4502 || PSI4502E",
+        "PSC4008 || PSC4008E || PSI4008 || PSI4008E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4006",
+      "code": "PSC 4006",
+      "title": "Evaluación Personalidad",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSI3201 || PSI3201E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4009",
+      "code": "PSC 4009",
+      "title": "Psicofarmacología",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC2201 || PSC2201E || PSI2201 || PSI2201E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA3",
+      "code": "ELECTIVA 3",
+      "title": "Electiva Libre 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT1",
+      "code": "OPT 1",
+      "title": "Optativa 1/3",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT2",
+      "code": "OPT 2",
+      "title": "Optativa 2/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT3",
+      "code": "OPT 3",
+      "title": "Optativa 3/3",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC5991",
+      "code": "PSC 5991",
+      "title": "Proyecto Integrador PSC CLI",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PSC4000",
+      "code": "PSC 4000",
+      "title": "Prácticas Clínicas",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "PSC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "PSC4101 || PSC4101E || PSI4101 || PSI4101E"
+      ],
+      "alternatives": []
+    }
+  ]
+}

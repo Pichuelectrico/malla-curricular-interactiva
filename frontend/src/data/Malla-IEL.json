@@ -1,0 +1,778 @@
+{
+  "source_file": "Malla-academica-IEL",
+  "Last-Modified": "2026-06-08T21:01:57.323Z",
+  "courses": [
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1201",
+      "code": "MAT 1201",
+      "title": "Cálculo Diferencial + Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE2002",
+      "code": "IEE 2002",
+      "title": "Taller Ingeniería Electrónica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "QUI1003",
+      "code": "QUI 1003",
+      "title": "Química General 1 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "QUI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1202",
+      "code": "MAT 1202",
+      "title": "Cálculo Integral + Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1201 || MAT1301 || MAT1203"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1401",
+      "code": "MAT 1401",
+      "title": "Álgebra Lineal +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2002",
+      "code": "MAT 2002",
+      "title": "Ecuaciones Diferenciales",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIS2701",
+      "code": "FIS 2701",
+      "title": "Física para Ing. 1+Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "FIS",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2203",
+      "code": "MAT 2203",
+      "title": "Cálculo Vectorial",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARTE",
+      "code": "ARTE",
+      "title": "Arte: ART/MUS/DAN/TEA",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARTE",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "CMP1101",
+      "code": "CMP 1101",
+      "title": "Programación en C++ +EJ",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "CMP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "FIS2702",
+      "code": "FIS 2702",
+      "title": "Física para Ing. 2 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "FIS",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2701 || FIS2101 || FIS1201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE2003",
+      "code": "IEE 2003",
+      "title": "Señales y Sistemas +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT2002",
+        "MAT1401"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2008",
+      "code": "MAT 2008",
+      "title": "Probabilidad y Estadística +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE3007",
+      "code": "IEE 3007",
+      "title": "Circuitos Eléctricos +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT2002",
+        "FIS2702"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE3006",
+      "code": "IEE 3006",
+      "title": "Teoría Electromagnética +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2702",
+        "MAT2203"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE3002",
+      "code": "IEE 3002",
+      "title": "Física Semiconductores +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2202 || FIS2702",
+        "MAT2002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/2",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE3009",
+      "code": "IEE 3009",
+      "title": "Teoría de Comunicaciones +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT2008 || IEE3010",
+        "IEE3007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4011",
+      "code": "IEE 4011",
+      "title": "Sistemas Digitales +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE3007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE3081",
+      "code": "IEE 3081",
+      "title": "Electrónica 1 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE3007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE3005",
+      "code": "IEE 3005",
+      "title": "Semiconductores +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE3002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS",
+      "code": "CCSS",
+      "title": "CCSS:HIS/SOC/ANT/POL/REL/PSI",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "CCSS",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4007",
+      "code": "IEE 4007",
+      "title": "Procesamiento Señales Digital",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE2003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4006",
+      "code": "IEE 4006",
+      "title": "Instalaciones Eléctricas",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE3007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4080",
+      "code": "IEE 4080",
+      "title": "Electrónica 2 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE3081 || IEE3081E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4001",
+      "code": "IEE 4001",
+      "title": "Control de Procesos +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE2003",
+        "IEE3007 || INQ3002",
+        "INQ4001 || INQ4001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE5002E",
+      "code": "IEE 5002E",
+      "title": "Programmable Systems +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ENG1001E || ESL0006 || ESL0007",
+        "IEE4011"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4009",
+      "code": "IEE 4009",
+      "title": "Sistemas de Comunicaciones+Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE5002 || IEE5002E",
+        "IEE3009"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4003",
+      "code": "IEE 4003",
+      "title": "Ondas Electromagnéticas +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE3006",
+        "IEE3007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4004",
+      "code": "IEE 4004",
+      "title": "Automatismos Industriales +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE4006"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4010",
+      "code": "IEE 4010",
+      "title": "Electrónica de Potencia + Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IEE4080"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "OPT1",
+      "code": "OPT 1",
+      "title": "Optativa 1/2",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ING0001",
+      "code": "ING 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ING",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE4005E",
+      "code": "IEE 4005E",
+      "title": "Integrated Circuits +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ENG1001E || ESL0006 || ESL0007",
+        "IEE4011",
+        "IEE3005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/2",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPT2",
+      "code": "OPT 2",
+      "title": "Optativa 2/2",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "IEE5991",
+      "code": "IEE 5991",
+      "title": "Proyecto Integrador IEE",
+      "description": "",
+      "credits": 5,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "IEE",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    }
+  ]
+}

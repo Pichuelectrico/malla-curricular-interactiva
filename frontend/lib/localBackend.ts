@@ -76,7 +76,7 @@ export const mockBackendClient = {
 
   user: {
     async getUserInfo(): Promise<UserInfo> {
-      // Return mock user info - in a real app this would come from Clerk
+      // Return mock user info - in a real app this would come from Supabase Auth
       return {
         id: 'local_user',
         email: 'user@local.dev',

@@ -1,0 +1,747 @@
+{
+  "source_file": "Malla-academica-ICV",
+  "Last-Modified": "2026-06-08T21:01:55.304Z",
+  "courses": [
+    {
+      "id": "ICV2003",
+      "code": "ICV 2003",
+      "title": "Taller de Ingeniería Civil",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1201",
+      "code": "MAT 1201",
+      "title": "Cálculo Diferencial + Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "QUI1003",
+      "code": "QUI 1003",
+      "title": "Química General 1 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "QUI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1202",
+      "code": "MAT 1202",
+      "title": "Cálculo Integral + Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1201 || MAT1301 || MAT1203"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1401",
+      "code": "MAT 1401",
+      "title": "Álgebra Lineal +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1002",
+      "code": "ARL 1002",
+      "title": "Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2002",
+      "code": "MAT 2002",
+      "title": "Ecuaciones Diferenciales",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIS2701",
+      "code": "FIS 2701",
+      "title": "Física para Ing. 1+Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "FIS",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2008",
+      "code": "MAT 2008",
+      "title": "Probabilidad y Estadística +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV2002",
+      "code": "ICV 2002",
+      "title": "Topografía +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades LIT/FIL/ESC/ARH",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "FIS2702",
+      "code": "FIS 2702",
+      "title": "Física para Ing. 2 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "FIS",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2701 || FIS2101 || FIS1201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV2004",
+      "code": "ICV 2004",
+      "title": "Diseño Vial + Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV2002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ICV2001",
+      "code": "ICV 2001",
+      "title": "Estática +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2701 || FIS1201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/2",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ICV3001",
+      "code": "ICV 3001",
+      "title": "Mecánica de Fluidos",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV2001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "IME3005",
+      "code": "IME 3005",
+      "title": "Mecánica Materiales +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "IME",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV2001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/2",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS/ART",
+      "code": "CCSS/ART",
+      "title": "Ciencias Sociales/Arte",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "CCSS/ART",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ICV3002",
+      "code": "ICV 3002",
+      "title": "Materiales de Construcción+Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IME3005",
+        "QUI1003 || QUI1001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV3003",
+      "code": "ICV 3003",
+      "title": "Hidráulica +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV3001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4301",
+      "code": "ICV 4301",
+      "title": "Hormigón Armado 1",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IME3005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV3004",
+      "code": "ICV 3004",
+      "title": "Mecánica de Suelos +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IME3005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV3201",
+      "code": "ICV 3201",
+      "title": "Análisis Estructural 1 +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "IME3005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4003",
+      "code": "ICV 4003",
+      "title": "Cimentaciones y Muros",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV3004",
+        "ICV4301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4005",
+      "code": "ICV 4005",
+      "title": "Diseño de Pavimentos + Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV3004",
+        "ICV2004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4401",
+      "code": "ICV 4401",
+      "title": "Estructuras de Acero 1",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV3201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4202",
+      "code": "ICV 4202",
+      "title": "Análisis Estructural 2 +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV3201",
+        "MAT1401"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4004",
+      "code": "ICV 4004",
+      "title": "Costos en la Construcción",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV3002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV5004",
+      "code": "ICV 5004",
+      "title": "Ing. Sismo-Resistente +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV4202",
+        "MAT2002",
+        "ICV4301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4302",
+      "code": "ICV 4302",
+      "title": "Hormigón Armado 2",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV4301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "OPT1",
+      "code": "OPT 1",
+      "title": "Optativa Ing. Civil 1/2",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Semestre 9",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ING0001",
+      "code": "ING 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ING",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4006",
+      "code": "ICV 4006",
+      "title": "Análisis Computacional en ICV",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV4202",
+        "ICV4301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ICV4080",
+      "code": "ICV 4080",
+      "title": "Gerencia de la Construcción",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ICV4004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "OPT2",
+      "code": "OPT 2",
+      "title": "Optativa Ing. Civil 2/2",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ICV5992",
+      "code": "ICV 5992",
+      "title": "Proyecto Integrador ICV",
+      "description": "",
+      "credits": 5,
+      "semester": 10,
+      "block": "Semestre 10",
+      "area": "ICV",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    }
+  ]
+}
