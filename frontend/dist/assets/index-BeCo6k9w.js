@@ -42966,6 +42966,21 @@ const availableCurricula = [
     }
   },
   {
+    id: "mak-usfq",
+    slug: "malla-mak",
+    name: "Marketing",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 124,
+    courses: 48,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-MAK.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-MAK.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "mat-usfq",
     slug: "malla-mat",
     name: "Matemática",
@@ -47176,6 +47191,12 @@ function AlertDescription({
   );
 }
 const DAYS = ["Lun", "Mar", "Mié", "Jue", "Vie"];
+const SEMESTER_PAIRS = {
+  "Lun/Mié": ["Lun", "Mié"],
+  "Mar/Jue": ["Mar", "Jue"]
+};
+const SUMMER_DAYS = ["Lun", "Mar", "Mié", "Jue"];
+const SEMESTER_PAIR_OPTIONS = ["Lun/Mié", "Mar/Jue"];
 const TIME_SLOTS = [
   "07:00",
   "08:30",
@@ -47186,8 +47207,76 @@ const TIME_SLOTS = [
   "16:00",
   "17:30"
 ];
+function expandMainSession(periodType, dayGroup, startTime) {
+  if (periodType === "verano") {
+    return SUMMER_DAYS.map((day) => ({ day, startTime }));
+  }
+  const days = SEMESTER_PAIRS[dayGroup];
+  if (days) {
+    return days.map((day) => ({ day, startTime }));
+  }
+  return [{ day: dayGroup, startTime }];
+}
+function packMainSessions(periodType, sessions) {
+  const byTime = /* @__PURE__ */ new Map();
+  sessions.forEach((s) => {
+    if (!byTime.has(s.startTime)) byTime.set(s.startTime, /* @__PURE__ */ new Set());
+    byTime.get(s.startTime).add(s.day);
+  });
+  const packed = [];
+  byTime.forEach((days, startTime) => {
+    if (periodType === "verano") {
+      if (SUMMER_DAYS.every((d) => days.has(d))) {
+        packed.push({ dayGroup: "Lun-Jue", startTime });
+        SUMMER_DAYS.forEach((d) => days.delete(d));
+      }
+    } else {
+      SEMESTER_PAIR_OPTIONS.forEach((pair) => {
+        const pairDays = SEMESTER_PAIRS[pair];
+        if (pairDays.every((d) => days.has(d))) {
+          packed.push({ dayGroup: pair, startTime });
+          pairDays.forEach((d) => days.delete(d));
+        }
+      });
+    }
+    days.forEach((day) => {
+      packed.push({ dayGroup: day, startTime });
+    });
+  });
+  return packed;
+}
+function convertMainSessionsOnPeriodChange(sessions, from, to) {
+  if (from === to) return sessions;
+  const byTime = /* @__PURE__ */ new Map();
+  sessions.forEach((s) => {
+    if (!byTime.has(s.startTime)) byTime.set(s.startTime, /* @__PURE__ */ new Set());
+    byTime.get(s.startTime).add(s.day);
+  });
+  const converted = [];
+  byTime.forEach((days, startTime) => {
+    if (from === "verano" && to === "semestre") {
+      if (SUMMER_DAYS.every((d) => days.has(d))) {
+        SEMESTER_PAIR_OPTIONS.forEach((pair) => {
+          SEMESTER_PAIRS[pair].forEach((day) => converted.push({ day, startTime }));
+        });
+      } else {
+        days.forEach((day) => converted.push({ day, startTime }));
+      }
+    } else if (from === "semestre" && to === "verano") {
+      const hasLunMie = SEMESTER_PAIRS["Lun/Mié"].every((d) => days.has(d));
+      const hasMarJue = SEMESTER_PAIRS["Mar/Jue"].every((d) => days.has(d));
+      if (hasLunMie && hasMarJue) {
+        SUMMER_DAYS.forEach((day) => converted.push({ day, startTime }));
+      } else {
+        days.forEach((day) => converted.push({ day, startTime }));
+      }
+    }
+  });
+  return converted;
+}
 function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloatingButton }) {
   const [isOpen, setIsOpen] = reactExports.useState(false);
+  const [periodType, setPeriodType] = reactExports.useState("semestre");
   const [schedules, setSchedules] = reactExports.useState([]);
   const [conflicts, setConflicts] = reactExports.useState([]);
   reactExports.useEffect(() => {
@@ -47260,32 +47349,62 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
     );
     setSchedules(updated);
   };
-  const addSession = (courseId) => {
+  const getDefaultMainDayGroup = () => periodType === "verano" ? "Lun-Jue" : "Lun/Mié";
+  const addMainSession = (courseId) => {
+    const dayGroup = getDefaultMainDayGroup();
+    const newSessions = expandMainSession(periodType, dayGroup, "07:00");
     const updated = schedules.map(
-      (s) => s.courseId === courseId ? { ...s, sessions: [...s.sessions, { day: "Lun", startTime: "07:00" }] } : s
+      (s) => s.courseId === courseId ? { ...s, sessions: [...s.sessions, ...newSessions] } : s
     );
     setSchedules(updated);
     checkConflicts(updated);
   };
-  const removeSession = (courseId, sessionIndex) => {
-    const updated = schedules.map(
-      (s) => s.courseId === courseId ? { ...s, sessions: s.sessions.filter((_, i) => i !== sessionIndex) } : s
-    );
-    setSchedules(updated);
-    checkConflicts(updated);
-  };
-  const updateSession = (courseId, sessionIndex, field, value) => {
+  const removeMainSession = (courseId, packedIndex) => {
     const updated = schedules.map((s) => {
-      if (s.courseId === courseId) {
-        const newSessions = [...s.sessions];
-        newSessions[sessionIndex] = {
-          ...newSessions[sessionIndex],
-          [field]: value
-        };
-        return { ...s, sessions: newSessions };
-      }
-      return s;
+      if (s.courseId !== courseId) return s;
+      const packed = packMainSessions(periodType, s.sessions);
+      const toRemove = packed[packedIndex];
+      if (!toRemove) return s;
+      const daysToRemove = new Set(
+        expandMainSession(periodType, toRemove.dayGroup, toRemove.startTime).map((sess) => sess.day)
+      );
+      return {
+        ...s,
+        sessions: s.sessions.filter(
+          (sess) => !(daysToRemove.has(sess.day) && sess.startTime === toRemove.startTime)
+        )
+      };
     });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+  const updateMainSession = (courseId, packedIndex, field, value) => {
+    const updated = schedules.map((s) => {
+      if (s.courseId !== courseId) return s;
+      const packed = packMainSessions(periodType, s.sessions);
+      const current = packed[packedIndex];
+      if (!current) return s;
+      const newDayGroup = field === "dayGroup" ? value : current.dayGroup;
+      const newStartTime = field === "startTime" ? value : current.startTime;
+      const daysToRemove = new Set(
+        expandMainSession(periodType, current.dayGroup, current.startTime).map((sess) => sess.day)
+      );
+      const remaining = s.sessions.filter(
+        (sess) => !(daysToRemove.has(sess.day) && sess.startTime === current.startTime)
+      );
+      const expanded = expandMainSession(periodType, newDayGroup, newStartTime);
+      return { ...s, sessions: [...remaining, ...expanded] };
+    });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+  const handlePeriodTypeChange = (newPeriod) => {
+    if (newPeriod === periodType) return;
+    const updated = schedules.map((s) => ({
+      ...s,
+      sessions: convertMainSessionsOnPeriodChange(s.sessions, periodType, newPeriod)
+    }));
+    setPeriodType(newPeriod);
     setSchedules(updated);
     checkConflicts(updated);
   };
@@ -47480,19 +47599,32 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[90vw] max-w-6xl bg-white dark:bg-gray-800 shadow-xl overflow-y-auto", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Preparación de horario" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              variant: "ghost",
-              size: "sm",
-              onClick: () => setIsOpen(false),
-              className: "dark:hover:bg-gray-700",
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-5 h-5" })
-            }
-          )
-        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center gap-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Preparación de horario" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-gray-600 dark:text-gray-300", children: "Período:" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: periodType, onValueChange: (v) => handlePeriodTypeChange(v), children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 dark:bg-gray-700 dark:border-gray-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "semestre", children: "Semestre" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "verano", children: "Verano" })
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "ghost",
+                size: "sm",
+                onClick: () => setIsOpen(false),
+                className: "dark:hover:bg-gray-700",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-5 h-5" })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-2", children: periodType === "semestre" ? "Clase principal: Lun/Mié o Mar/Jue. EJ y LAB: por día." : "Clase principal: Lun a Jue. EJ y LAB: por día." })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 space-y-6", children: [
           conflicts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert, { variant: "destructive", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "h-4 w-4" }),
@@ -47612,16 +47744,19 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-gray-700 dark:text-gray-300", children: "Clase Principal" }),
-                    schedule.sessions.map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm font-medium text-gray-700 dark:text-gray-300", children: [
+                      "Clase Principal",
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-xs font-normal text-gray-500 dark:text-gray-400", children: periodType === "semestre" ? "(Lun/Mié o Mar/Jue)" : "(Lun a Jue)" })
+                    ] }),
+                    packMainSessions(periodType, schedule.sessions).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsxs(
                         Select,
                         {
-                          value: session.day,
-                          onValueChange: (value) => updateSession(course.id, idx, "day", value),
+                          value: session.dayGroup,
+                          onValueChange: (value) => updateMainSession(course.id, idx, "dayGroup", value),
                           children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: day, children: day }, day)) })
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-32 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: periodType === "semestre" ? SEMESTER_PAIR_OPTIONS.map((pair) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: pair, children: pair }, pair)) : /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Lun-Jue", children: "Lun - Jue" }) })
                           ]
                         }
                       ),
@@ -47629,7 +47764,7 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         Select,
                         {
                           value: session.startTime,
-                          onValueChange: (value) => updateSession(course.id, idx, "startTime", value),
+                          onValueChange: (value) => updateMainSession(course.id, idx, "startTime", value),
                           children: [
                             /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
                             /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
@@ -47642,7 +47777,7 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         {
                           variant: "ghost",
                           size: "sm",
-                          onClick: () => removeSession(course.id, idx),
+                          onClick: () => removeMainSession(course.id, idx),
                           className: "dark:hover:bg-gray-600",
                           children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
                         }
@@ -47653,7 +47788,7 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                       {
                         variant: "outline",
                         size: "sm",
-                        onClick: () => addSession(course.id),
+                        onClick: () => addMainSession(course.id),
                         className: "dark:border-gray-500 dark:hover:bg-gray-600",
                         children: "+ Agregar sesión"
                       }
@@ -48374,11 +48509,42 @@ ${mermaidCode}
     throw error;
   }
 }
+function minSemesterForBlock(courses2, block) {
+  return courses2.filter((c) => c.block === block).reduce((min2, c) => Math.min(min2, c.semester), Number.POSITIVE_INFINITY);
+}
+function coursesInBlock(courses2, block) {
+  return courses2.filter((c) => c.block === block);
+}
+function isVeranoBlock(block, blockCourses) {
+  if (/^verano/i.test(block)) return true;
+  return blockCourses.length > 0 && blockCourses.every((c) => c.area === "PAS");
+}
+function getOrderedBlocks(courses2) {
+  const blocks = [...new Set(courses2.map((c) => c.block))];
+  return blocks.sort((a, b) => {
+    const semA = minSemesterForBlock(courses2, a);
+    const semB = minSemesterForBlock(courses2, b);
+    if (semA !== semB) return semA - semB;
+    return a.localeCompare(b, "es");
+  });
+}
+function getBlockDisplayName(block, blockCourses, allCourses) {
+  if (isVeranoBlock(block, blockCourses)) {
+    return /^verano/i.test(block) ? block : "Verano";
+  }
+  if (!/^Semestre\s+\d+$/i.test(block)) return block;
+  const ordered = getOrderedBlocks(allCourses);
+  const regularBlocks = ordered.filter(
+    (b) => !isVeranoBlock(b, coursesInBlock(allCourses, b))
+  );
+  const index2 = regularBlocks.indexOf(block);
+  return index2 >= 0 ? `Semestre ${index2 + 1}` : block;
+}
 const source_file = "Malla-academica-CMP";
-const courses = /* @__PURE__ */ JSON.parse('[{"id":"ESP1001","code":"ESP 1001","title":"Escritura Académica","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"ESP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"CMP1001","code":"CMP 1001","title":"Taller de Ing. Cs. Computación","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"CMP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT1201","code":"MAT 1201","title":"Cálculo Diferencial + Ej","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"MAT","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ECN1001","code":"ECN 1001","title":"Introducción a la Economía","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"ECN","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT1401","code":"MAT 1401","title":"Álgebra Lineal +Ej","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"MAT","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ESL0001","code":"ESL 0001","title":"Inglés Nivel 1","description":"","credits":0,"semester":1,"block":"Semestre 1","area":"ESL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ESL0002","code":"ESL 0002","title":"Inglés Nivel 2","description":"","credits":0,"semester":1,"block":"Semestre 1","area":"ESL","type":"obligatoria","prerequisites":["ESL0001"],"alternatives":[]},{"id":"CMP1101","code":"CMP 1101","title":"Programación en C++ +EJ","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"CMP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT1202","code":"MAT 1202","title":"Cálculo Integral + Ej","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"MAT","type":"obligatoria","prerequisites":["MAT1201 || MAT1301 || MAT1203"],"alternatives":[]},{"id":"ARL1001","code":"ARL 1001","title":"Autoconocimiento","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"ARL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ARL1002","code":"ARL 1002","title":"Cosmos","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"ARL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"HUM","code":"HUM","title":"Humanidades: LIT/FIL/ARH/ESC","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"HUM","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"ESL0003","code":"ESL 0003","title":"Inglés Nivel 3","description":"","credits":0,"semester":2,"block":"Semestre 2","area":"ESL","type":"obligatoria","prerequisites":["ESL0002"],"alternatives":[]},{"id":"ESL0004","code":"ESL 0004","title":"Inglés Nivel 4","description":"","credits":0,"semester":2,"block":"Semestre 2","area":"ESL","type":"obligatoria","prerequisites":["ESL0003"],"alternatives":[]},{"id":"CMP2102","code":"CMP 2102","title":"Programación Avanzada en C++","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"CMP","type":"obligatoria","prerequisites":["CMP1101 || IEE3080"],"alternatives":[]},{"id":"MAT2004","code":"MAT 2004","title":"Matemáticas Discretas","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"MAT","type":"obligatoria","prerequisites":["MAT1201 || MAT1301"],"alternatives":[]},{"id":"FIS2701","code":"FIS 2701","title":"Física para Ing. 1+Lab/Ej","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"FIS","type":"obligatoria","prerequisites":["MAT1202 || MAT1301"],"alternatives":[]},{"id":"ARL2001","code":"ARL 2001","title":"Ser y Cosmos","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"ARL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT2203","code":"MAT 2203","title":"Cálculo Vectorial","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"MAT","type":"obligatoria","prerequisites":["MAT1202 || MAT1301"],"alternatives":[]},{"id":"ESL0005","code":"ESL 0005","title":"Inglés Nivel 5","description":"","credits":0,"semester":3,"block":"Semestre 3","area":"ESL","type":"obligatoria","prerequisites":["ESL0004"],"alternatives":[]},{"id":"ESL0006","code":"ESL 0006","title":"Inglés Nivel 6","description":"","credits":0,"semester":3,"block":"Semestre 3","area":"ESL","type":"obligatoria","prerequisites":["ESL0005"],"alternatives":[]},{"id":"DEP0010","code":"DEP 0010","title":"Deportes","description":"","credits":1,"semester":4,"block":"Semestre 4","area":"DEP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"CMP2104","code":"CMP 2104","title":"Prog. Asistida de Aplicaciones","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"CMP","type":"obligatoria","prerequisites":["CMP2102"],"alternatives":[]},{"id":"FIS2702","code":"FIS 2702","title":"Física para Ing. 2 +Lab/Ej","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"FIS","type":"obligatoria","prerequisites":["FIS2701 || FIS2101 || FIS1201"],"alternatives":[]},{"id":"PRC2000","code":"PRC 2000","title":"Aprendizaje y Servicio PASEC","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"PRC","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT2008","code":"MAT 2008","title":"Probabilidad y Estadística +Ej","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"MAT","type":"obligatoria","prerequisites":["MAT1202 || MAT1301"],"alternatives":[]},{"id":"ARTE","code":"ARTE","title":"Arte: ART/MUS/DAN/TEA","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"ARTE","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"GST0010","code":"GST 0010","title":"Cultura Gastronómica","description":"","credits":1,"semester":5,"block":"Semestre 5","area":"GST","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"IEE2001","code":"IEE 2001","title":"Electrónica Básica +Lab","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"IEE","type":"obligatoria","prerequisites":["FIS2102 || FIS2702"],"alternatives":[]},{"id":"CMP3002","code":"CMP 3002","title":"Estructuras de Datos","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CMP","type":"obligatoria","prerequisites":["CMP2102"],"alternatives":[]},{"id":"CMP3003","code":"CMP 3003","title":"Diseño de Sistemas","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CMP","type":"obligatoria","prerequisites":["CMP2104 || CMP2103"],"alternatives":[]},{"id":"CMP3005","code":"CMP 3005","title":"Teoría de la Computación","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CMP","type":"obligatoria","prerequisites":["MAT2004 || MAT2004E || MAT3005 || MAT3005E"],"alternatives":[]},{"id":"CCSS","code":"CCSS","title":"CCSS:HIS/SOC/ANT/POL/REL/PSI","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CCSS","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"CMP4004","code":"CMP 4004","title":"Inteligencia Artificial","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"CMP","type":"obligatoria","prerequisites":["CMP3002"],"alternatives":[]},{"id":"CMP3004","code":"CMP 3004","title":"Organización de Computadores","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"CMP","type":"obligatoria","prerequisites":["CMP3002"],"alternatives":[]},{"id":"ADM3002","code":"ADM 3002","title":"Emprendimiento","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"ADM","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAC4002","code":"MAC 4002","title":"Aprendizaje Automático","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"MAC","type":"obligatoria","prerequisites":["MAT2008 || MAT2010 || IEE3010"],"alternatives":[]},{"id":"OPT1","code":"OPT 1","title":"Optativa 1/3","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"OPT","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"CMP4007","code":"CMP 4007","title":"Algoritmos Avanzados","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"CMP","type":"obligatoria","prerequisites":["CMP3002","CMP3005"],"alternatives":[]},{"id":"CMP4005","code":"CMP 4005","title":"Redes +Lab","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"CMP","type":"obligatoria","prerequisites":["CMP3004"],"alternatives":[]},{"id":"CMP4003","code":"CMP 4003","title":"Sistemas Operativos","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"CMP","type":"obligatoria","prerequisites":["CMP3004"],"alternatives":[]},{"id":"ELECTIVA1","code":"ELECTIVA 1","title":"Electiva Libre 1/2","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"ELECTIVA","type":"electiva","prerequisites":[],"alternatives":[]},{"id":"OPT2","code":"OPT 2","title":"Optativa 2/3","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"OPT","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"CMP5006","code":"CMP 5006","title":"Seguridad Informática","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"CMP","type":"obligatoria","prerequisites":["CMP4005 || CMP4005E || CMP4201 || CMP4201E"],"alternatives":[]},{"id":"CMP4002","code":"CMP 4002","title":"Base de Datos","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"CMP","type":"obligatoria","prerequisites":["CMP3002"],"alternatives":[]},{"id":"CMP4008","code":"CMP 4008","title":"Desarrollo de Software Moderno","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"CMP","type":"obligatoria","prerequisites":["CMP3003"],"alternatives":[]},{"id":"ELECTIVA2","code":"ELECTIVA 2","title":"Electiva Libre 2/2","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"ELECTIVA","type":"electiva","prerequisites":[],"alternatives":[]},{"id":"OPT3","code":"OPT 3","title":"Optativa 3/3","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"OPT","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"PAS4000","code":"PAS 4000","title":"Práctica Pre-Profesional PASEM","description":"","credits":5,"semester":9,"block":"Semestre 9","area":"PAS","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ING0001","code":"ING 0001","title":"Coloquios","description":"","credits":1,"semester":10,"block":"Semestre 10","area":"ING","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"CMP5002","code":"CMP 5002","title":"Fund. Ciencia de Datos","description":"","credits":3,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":["MAC4002"],"alternatives":[]},{"id":"CMP5001","code":"CMP 5001","title":"Aplicaciones Distribuidas","description":"","credits":3,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":["CMP4201 || CMP4005","CMP4002"],"alternatives":[]},{"id":"CMP5007","code":"CMP 5007","title":"Hacking Ético","description":"","credits":3,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":["CMP5006"],"alternatives":[]},{"id":"CMP5992","code":"CMP 5992","title":"Proyecto Integrador CMP","description":"","credits":5,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":[],"alternatives":[]}]');
+const courses = /* @__PURE__ */ JSON.parse('[{"id":"ESP1001","code":"ESP 1001","title":"Escritura Académica","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"ESP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"CMP1001","code":"CMP 1001","title":"Taller de Ing. Cs. Computación","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"CMP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT1201","code":"MAT 1201","title":"Cálculo Diferencial + Ej","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"MAT","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ECN1001","code":"ECN 1001","title":"Introducción a la Economía","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"ECN","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT1401","code":"MAT 1401","title":"Álgebra Lineal +Ej","description":"","credits":3,"semester":1,"block":"Semestre 1","area":"MAT","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ESL0001","code":"ESL 0001","title":"Inglés Nivel 1","description":"","credits":0,"semester":1,"block":"Semestre 1","area":"ESL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ESL0002","code":"ESL 0002","title":"Inglés Nivel 2","description":"","credits":0,"semester":1,"block":"Semestre 1","area":"ESL","type":"obligatoria","prerequisites":["ESL0001"],"alternatives":[]},{"id":"CMP1101","code":"CMP 1101","title":"Programación en C++ +EJ","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"CMP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT1202","code":"MAT 1202","title":"Cálculo Integral + Ej","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"MAT","type":"obligatoria","prerequisites":["MAT1201 || MAT1301 || MAT1203"],"alternatives":[]},{"id":"ARL1001","code":"ARL 1001","title":"Autoconocimiento","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"ARL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ARL1002","code":"ARL 1002","title":"Cosmos","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"ARL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"HUM","code":"HUM","title":"Humanidades: LIT/FIL/ARH/ESC","description":"","credits":3,"semester":2,"block":"Semestre 2","area":"HUM","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"ESL0003","code":"ESL 0003","title":"Inglés Nivel 3","description":"","credits":0,"semester":2,"block":"Semestre 2","area":"ESL","type":"obligatoria","prerequisites":["ESL0002"],"alternatives":[]},{"id":"ESL0004","code":"ESL 0004","title":"Inglés Nivel 4","description":"","credits":0,"semester":2,"block":"Semestre 2","area":"ESL","type":"obligatoria","prerequisites":["ESL0003"],"alternatives":[]},{"id":"CMP2102","code":"CMP 2102","title":"Programación Avanzada en C++","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"CMP","type":"obligatoria","prerequisites":["CMP1101 || IEE3080"],"alternatives":[]},{"id":"MAT2004","code":"MAT 2004","title":"Matemáticas Discretas","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"MAT","type":"obligatoria","prerequisites":["MAT1201 || MAT1301"],"alternatives":[]},{"id":"FIS2701","code":"FIS 2701","title":"Física para Ing. 1+Lab/Ej","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"FIS","type":"obligatoria","prerequisites":["MAT1202 || MAT1301"],"alternatives":[]},{"id":"ARL2001","code":"ARL 2001","title":"Ser y Cosmos","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"ARL","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT2203","code":"MAT 2203","title":"Cálculo Vectorial","description":"","credits":3,"semester":3,"block":"Semestre 3","area":"MAT","type":"obligatoria","prerequisites":["MAT1202 || MAT1301"],"alternatives":[]},{"id":"ESL0005","code":"ESL 0005","title":"Inglés Nivel 5","description":"","credits":0,"semester":3,"block":"Semestre 3","area":"ESL","type":"obligatoria","prerequisites":["ESL0004"],"alternatives":[]},{"id":"ESL0006","code":"ESL 0006","title":"Inglés Nivel 6","description":"","credits":0,"semester":3,"block":"Semestre 3","area":"ESL","type":"obligatoria","prerequisites":["ESL0005"],"alternatives":[]},{"id":"DEP0010","code":"DEP 0010","title":"Deportes","description":"","credits":1,"semester":4,"block":"Semestre 4","area":"DEP","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"CMP2104","code":"CMP 2104","title":"Prog. Asistida de Aplicaciones","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"CMP","type":"obligatoria","prerequisites":["CMP2102"],"alternatives":[]},{"id":"FIS2702","code":"FIS 2702","title":"Física para Ing. 2 +Lab/Ej","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"FIS","type":"obligatoria","prerequisites":["FIS2701 || FIS2101 || FIS1201"],"alternatives":[]},{"id":"PRC2000","code":"PRC 2000","title":"Aprendizaje y Servicio PASEC","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"PRC","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAT2008","code":"MAT 2008","title":"Probabilidad y Estadística +Ej","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"MAT","type":"obligatoria","prerequisites":["MAT1202 || MAT1301"],"alternatives":[]},{"id":"ARTE","code":"ARTE","title":"Arte: ART/MUS/DAN/TEA","description":"","credits":3,"semester":4,"block":"Semestre 4","area":"ARTE","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"GST0010","code":"GST 0010","title":"Cultura Gastronómica","description":"","credits":1,"semester":5,"block":"Semestre 5","area":"GST","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"IEE2001","code":"IEE 2001","title":"Electrónica Básica +Lab","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"IEE","type":"obligatoria","prerequisites":["FIS2102 || FIS2702"],"alternatives":[]},{"id":"CMP3002","code":"CMP 3002","title":"Estructuras de Datos","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CMP","type":"obligatoria","prerequisites":["CMP2102"],"alternatives":[]},{"id":"CMP3003","code":"CMP 3003","title":"Diseño de Sistemas","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CMP","type":"obligatoria","prerequisites":["CMP2104 || CMP2103"],"alternatives":[]},{"id":"CMP3005","code":"CMP 3005","title":"Teoría de la Computación","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CMP","type":"obligatoria","prerequisites":["MAT2004 || MAT2004E || MAT3005 || MAT3005E"],"alternatives":[]},{"id":"CCSS","code":"CCSS","title":"CCSS:HIS/SOC/ANT/POL/REL/PSI","description":"","credits":3,"semester":5,"block":"Semestre 5","area":"CCSS","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"CMP4004","code":"CMP 4004","title":"Inteligencia Artificial","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"CMP","type":"obligatoria","prerequisites":["CMP3002"],"alternatives":[]},{"id":"CMP3004","code":"CMP 3004","title":"Organización de Computadores","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"CMP","type":"obligatoria","prerequisites":["CMP3002"],"alternatives":[]},{"id":"ADM3002","code":"ADM 3002","title":"Emprendimiento","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"ADM","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"MAC4002","code":"MAC 4002","title":"Aprendizaje Automático","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"MAC","type":"obligatoria","prerequisites":["MAT2008 || MAT2010 || IEE3010"],"alternatives":[]},{"id":"OPT1","code":"OPT 1","title":"Optativa 1/3","description":"","credits":3,"semester":6,"block":"Semestre 6","area":"OPT","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"CMP4007","code":"CMP 4007","title":"Algoritmos Avanzados","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"CMP","type":"obligatoria","prerequisites":["CMP3002","CMP3005"],"alternatives":[]},{"id":"CMP4005","code":"CMP 4005","title":"Redes +Lab","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"CMP","type":"obligatoria","prerequisites":["CMP3004"],"alternatives":[]},{"id":"CMP4003","code":"CMP 4003","title":"Sistemas Operativos","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"CMP","type":"obligatoria","prerequisites":["CMP3004"],"alternatives":[]},{"id":"ELECTIVA1","code":"ELECTIVA 1","title":"Electiva Libre 1/2","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"ELECTIVA","type":"electiva","prerequisites":[],"alternatives":[]},{"id":"OPT2","code":"OPT 2","title":"Optativa 2/3","description":"","credits":3,"semester":7,"block":"Semestre 7","area":"OPT","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"CMP5006","code":"CMP 5006","title":"Seguridad Informática","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"CMP","type":"obligatoria","prerequisites":["CMP4005 || CMP4005E || CMP4201 || CMP4201E"],"alternatives":[]},{"id":"CMP4002","code":"CMP 4002","title":"Base de Datos","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"CMP","type":"obligatoria","prerequisites":["CMP3002"],"alternatives":[]},{"id":"CMP4008","code":"CMP 4008","title":"Desarrollo de Software Moderno","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"CMP","type":"obligatoria","prerequisites":["CMP3003"],"alternatives":[]},{"id":"ELECTIVA2","code":"ELECTIVA 2","title":"Electiva Libre 2/2","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"ELECTIVA","type":"electiva","prerequisites":[],"alternatives":[]},{"id":"OPT3","code":"OPT 3","title":"Optativa 3/3","description":"","credits":3,"semester":8,"block":"Semestre 8","area":"OPT","type":"optativa","prerequisites":[],"alternatives":[]},{"id":"PAS4000","code":"PAS 4000","title":"Práctica Pre-Profesional PASEM","description":"","credits":5,"semester":9,"block":"Verano","area":"PAS","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"ING0001","code":"ING 0001","title":"Coloquios","description":"","credits":1,"semester":10,"block":"Semestre 10","area":"ING","type":"obligatoria","prerequisites":[],"alternatives":[]},{"id":"CMP5002","code":"CMP 5002","title":"Fund. Ciencia de Datos","description":"","credits":3,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":["MAC4002"],"alternatives":[]},{"id":"CMP5001","code":"CMP 5001","title":"Aplicaciones Distribuidas","description":"","credits":3,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":["CMP4201 || CMP4005","CMP4002"],"alternatives":[]},{"id":"CMP5007","code":"CMP 5007","title":"Hacking Ético","description":"","credits":3,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":["CMP5006"],"alternatives":[]},{"id":"CMP5992","code":"CMP 5992","title":"Proyecto Integrador CMP","description":"","credits":5,"semester":10,"block":"Semestre 10","area":"CMP","type":"obligatoria","prerequisites":[],"alternatives":[]}]');
 const defaultCurriculumData = {
   source_file,
-  "Last-Modified": "2026-06-08T21:00:55.486Z",
+  "Last-Modified": "2026-06-08T21:53:55.236Z",
   courses
 };
 function emptyProgress(curriculumId) {
@@ -48975,18 +49141,7 @@ function CurriculumGrid() {
     acc[course.block].push(course);
     return acc;
   }, {});
-  const blockOrder = [
-    "Semestre 1",
-    "Semestre 2",
-    "Semestre 3",
-    "Semestre 4",
-    "Semestre 5",
-    "Semestre 6",
-    "Semestre 7",
-    "Semestre 8",
-    "Semestre 9",
-    "PASEM"
-  ];
+  const blockOrder = getOrderedBlocks(curriculumData.courses);
   const careerTitle = curriculumData.source_file || "Malla Curricular";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container mx-auto p-4 space-y-6 relative", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-4 left-8 z-40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(USFQIcon, {}) }),
@@ -49133,7 +49288,7 @@ function CurriculumGrid() {
       const blockProgress = blockTotalCredits > 0 ? blockCompletedCredits / blockTotalCredits * 100 : 0;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-800 dark:text-gray-200", children: blockName }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-800 dark:text-gray-200", children: getBlockDisplayName(blockName, blockCourses, curriculumData.courses) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "outline", className: "dark:border-gray-600 dark:text-gray-300", children: [
             blockCompletedCredits,
             "/",

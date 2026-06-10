@@ -12,6 +12,18 @@ import { generateSchedulePDF } from '../utils/pdfGenerator';
 const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'] as const;
 type DayType = typeof DAYS[number];
 
+type PeriodType = 'semestre' | 'verano';
+type SemesterDayPair = 'Lun/Mié' | 'Mar/Jue';
+type SummerDayGroup = 'Lun-Jue';
+
+const SEMESTER_PAIRS: Record<SemesterDayPair, DayType[]> = {
+  'Lun/Mié': ['Lun', 'Mié'],
+  'Mar/Jue': ['Mar', 'Jue'],
+};
+
+const SUMMER_DAYS: DayType[] = ['Lun', 'Mar', 'Mié', 'Jue'];
+const SEMESTER_PAIR_OPTIONS: SemesterDayPair[] = ['Lun/Mié', 'Mar/Jue'];
+
 const TIME_SLOTS = [
   '07:00', '08:30', '10:00', '11:30', '13:00', '14:30', '16:00', '17:30'
 ];
@@ -44,8 +56,95 @@ interface SchedulePlanningDrawerProps {
   hideFloatingButton?: boolean;
 }
 
+interface PackedMainSession {
+  dayGroup: SemesterDayPair | SummerDayGroup | DayType;
+  startTime: string;
+}
+
+function expandMainSession(periodType: PeriodType, dayGroup: string, startTime: string): { day: DayType; startTime: string }[] {
+  if (periodType === 'verano') {
+    return SUMMER_DAYS.map(day => ({ day, startTime }));
+  }
+  const days = SEMESTER_PAIRS[dayGroup as SemesterDayPair];
+  if (days) {
+    return days.map(day => ({ day, startTime }));
+  }
+  return [{ day: dayGroup as DayType, startTime }];
+}
+
+function packMainSessions(periodType: PeriodType, sessions: { day: DayType; startTime: string }[]): PackedMainSession[] {
+  const byTime = new Map<string, Set<DayType>>();
+  sessions.forEach(s => {
+    if (!byTime.has(s.startTime)) byTime.set(s.startTime, new Set());
+    byTime.get(s.startTime)!.add(s.day);
+  });
+
+  const packed: PackedMainSession[] = [];
+
+  byTime.forEach((days, startTime) => {
+    if (periodType === 'verano') {
+      if (SUMMER_DAYS.every(d => days.has(d))) {
+        packed.push({ dayGroup: 'Lun-Jue', startTime });
+        SUMMER_DAYS.forEach(d => days.delete(d));
+      }
+    } else {
+      SEMESTER_PAIR_OPTIONS.forEach(pair => {
+        const pairDays = SEMESTER_PAIRS[pair];
+        if (pairDays.every(d => days.has(d))) {
+          packed.push({ dayGroup: pair, startTime });
+          pairDays.forEach(d => days.delete(d));
+        }
+      });
+    }
+    days.forEach(day => {
+      packed.push({ dayGroup: day, startTime });
+    });
+  });
+
+  return packed;
+}
+
+function convertMainSessionsOnPeriodChange(
+  sessions: { day: DayType; startTime: string }[],
+  from: PeriodType,
+  to: PeriodType
+): { day: DayType; startTime: string }[] {
+  if (from === to) return sessions;
+
+  const byTime = new Map<string, Set<DayType>>();
+  sessions.forEach(s => {
+    if (!byTime.has(s.startTime)) byTime.set(s.startTime, new Set());
+    byTime.get(s.startTime)!.add(s.day);
+  });
+
+  const converted: { day: DayType; startTime: string }[] = [];
+
+  byTime.forEach((days, startTime) => {
+    if (from === 'verano' && to === 'semestre') {
+      if (SUMMER_DAYS.every(d => days.has(d))) {
+        SEMESTER_PAIR_OPTIONS.forEach(pair => {
+          SEMESTER_PAIRS[pair].forEach(day => converted.push({ day, startTime }));
+        });
+      } else {
+        days.forEach(day => converted.push({ day, startTime }));
+      }
+    } else if (from === 'semestre' && to === 'verano') {
+      const hasLunMie = SEMESTER_PAIRS['Lun/Mié'].every(d => days.has(d));
+      const hasMarJue = SEMESTER_PAIRS['Mar/Jue'].every(d => days.has(d));
+      if (hasLunMie && hasMarJue) {
+        SUMMER_DAYS.forEach(day => converted.push({ day, startTime }));
+      } else {
+        days.forEach(day => converted.push({ day, startTime }));
+      }
+    }
+  });
+
+  return converted;
+}
+
 export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloatingButton }: SchedulePlanningDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [periodType, setPeriodType] = useState<PeriodType>('semestre');
   const [schedules, setSchedules] = useState<CourseSchedule[]>([]);
   const [conflicts, setConflicts] = useState<string[]>([]);
 
@@ -123,38 +222,77 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeO
     setSchedules(updated);
   };
 
-  const addSession = (courseId: string) => {
+  const getDefaultMainDayGroup = (): SemesterDayPair | SummerDayGroup =>
+    periodType === 'verano' ? 'Lun-Jue' : 'Lun/Mié';
+
+  const addMainSession = (courseId: string) => {
+    const dayGroup = getDefaultMainDayGroup();
+    const newSessions = expandMainSession(periodType, dayGroup, '07:00');
     const updated = schedules.map(s =>
       s.courseId === courseId
-        ? { ...s, sessions: [...s.sessions, { day: 'Lun' as DayType, startTime: '07:00' }] }
+        ? { ...s, sessions: [...s.sessions, ...newSessions] }
         : s
     );
     setSchedules(updated);
     checkConflicts(updated);
   };
 
-  const removeSession = (courseId: string, sessionIndex: number) => {
-    const updated = schedules.map(s =>
-      s.courseId === courseId
-        ? { ...s, sessions: s.sessions.filter((_, i) => i !== sessionIndex) }
-        : s
-    );
-    setSchedules(updated);
-    checkConflicts(updated);
-  };
-
-  const updateSession = (courseId: string, sessionIndex: number, field: 'day' | 'startTime', value: string) => {
+  const removeMainSession = (courseId: string, packedIndex: number) => {
     const updated = schedules.map(s => {
-      if (s.courseId === courseId) {
-        const newSessions = [...s.sessions];
-        newSessions[sessionIndex] = {
-          ...newSessions[sessionIndex],
-          [field]: value
-        };
-        return { ...s, sessions: newSessions };
-      }
-      return s;
+      if (s.courseId !== courseId) return s;
+      const packed = packMainSessions(periodType, s.sessions);
+      const toRemove = packed[packedIndex];
+      if (!toRemove) return s;
+      const daysToRemove = new Set(
+        expandMainSession(periodType, toRemove.dayGroup, toRemove.startTime).map(sess => sess.day)
+      );
+      return {
+        ...s,
+        sessions: s.sessions.filter(
+          sess => !(daysToRemove.has(sess.day) && sess.startTime === toRemove.startTime)
+        ),
+      };
     });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+
+  const updateMainSession = (
+    courseId: string,
+    packedIndex: number,
+    field: 'dayGroup' | 'startTime',
+    value: string
+  ) => {
+    const updated = schedules.map(s => {
+      if (s.courseId !== courseId) return s;
+      const packed = packMainSessions(periodType, s.sessions);
+      const current = packed[packedIndex];
+      if (!current) return s;
+
+      const newDayGroup = field === 'dayGroup' ? value : current.dayGroup;
+      const newStartTime = field === 'startTime' ? value : current.startTime;
+      const daysToRemove = new Set(
+        expandMainSession(periodType, current.dayGroup, current.startTime).map(sess => sess.day)
+      );
+
+      const remaining = s.sessions.filter(
+        sess => !(daysToRemove.has(sess.day) && sess.startTime === current.startTime)
+      );
+      const expanded = expandMainSession(periodType, newDayGroup, newStartTime);
+
+      return { ...s, sessions: [...remaining, ...expanded] };
+    });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+
+  const handlePeriodTypeChange = (newPeriod: PeriodType) => {
+    if (newPeriod === periodType) return;
+    const updated = schedules.map(s => ({
+      ...s,
+      sessions: convertMainSessionsOnPeriodChange(s.sessions, periodType, newPeriod),
+    }));
+    setPeriodType(newPeriod);
     setSchedules(updated);
     checkConflicts(updated);
   };
@@ -368,10 +506,22 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeO
           />
           <div className="w-[90vw] max-w-6xl bg-white dark:bg-gray-800 shadow-xl overflow-y-auto">
             <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center gap-4">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                   Preparación de horario
                 </h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Período:</span>
+                  <Select value={periodType} onValueChange={(v) => handlePeriodTypeChange(v as PeriodType)}>
+                    <SelectTrigger className="w-36 dark:bg-gray-700 dark:border-gray-600">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="semestre">Semestre</SelectItem>
+                      <SelectItem value="verano">Verano</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -381,6 +531,11 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeO
                   <X className="w-5 h-5" />
                 </Button>
               </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                {periodType === 'semestre'
+                  ? 'Clase principal: Lun/Mié o Mar/Jue. EJ y LAB: por día.'
+                  : 'Clase principal: Lun a Jue. EJ y LAB: por día.'}
+              </p>
             </div>
 
             <div className="p-6 space-y-6">
@@ -515,26 +670,35 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeO
 
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Clase Principal</div>
-                              {schedule.sessions.map((session, idx) => (
+                              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Clase Principal
+                                <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                                  {periodType === 'semestre' ? '(Lun/Mié o Mar/Jue)' : '(Lun a Jue)'}
+                                </span>
+                              </div>
+                              {packMainSessions(periodType, schedule.sessions).map((session, idx) => (
                                 <div key={idx} className="flex gap-2 items-center">
                                   <Select
-                                    value={session.day}
-                                    onValueChange={(value) => updateSession(course.id, idx, 'day', value)}
+                                    value={session.dayGroup}
+                                    onValueChange={(value) => updateMainSession(course.id, idx, 'dayGroup', value)}
                                   >
-                                    <SelectTrigger className="w-28 dark:bg-gray-600 dark:border-gray-500">
+                                    <SelectTrigger className="w-32 dark:bg-gray-600 dark:border-gray-500">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      {DAYS.map(day => (
-                                        <SelectItem key={day} value={day}>{day}</SelectItem>
-                                      ))}
+                                      {periodType === 'semestre' ? (
+                                        SEMESTER_PAIR_OPTIONS.map(pair => (
+                                          <SelectItem key={pair} value={pair}>{pair}</SelectItem>
+                                        ))
+                                      ) : (
+                                        <SelectItem value="Lun-Jue">Lun - Jue</SelectItem>
+                                      )}
                                     </SelectContent>
                                   </Select>
 
                                   <Select
                                     value={session.startTime}
-                                    onValueChange={(value) => updateSession(course.id, idx, 'startTime', value)}
+                                    onValueChange={(value) => updateMainSession(course.id, idx, 'startTime', value)}
                                   >
                                     <SelectTrigger className="w-28 dark:bg-gray-600 dark:border-gray-500">
                                       <SelectValue />
@@ -553,7 +717,7 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeO
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    onClick={() => removeSession(course.id, idx)}
+                                    onClick={() => removeMainSession(course.id, idx)}
                                     className="dark:hover:bg-gray-600"
                                   >
                                     <X className="w-4 h-4" />
@@ -563,7 +727,7 @@ export default function SchedulePlanningDrawer({ plannedCourses, onSave, exposeO
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => addSession(course.id)}
+                                onClick={() => addMainSession(course.id)}
                                 className="dark:border-gray-500 dark:hover:bg-gray-600"
                               >
                                 + Agregar sesión
