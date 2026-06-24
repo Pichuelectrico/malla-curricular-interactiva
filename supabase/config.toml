@@ -1,0 +1,15 @@
+# Supabase project config (push with: bunx supabase config push --project-ref lyneadzlvusjczxmvxuv)
+project_id = "lyneadzlvusjczxmvxuv"
+
+[auth]
+site_url = "https://pichuelectrico.github.io/malla-curricular-interactiva/"
+additional_redirect_urls = [
+  "https://pichuelectrico.github.io/malla-curricular-interactiva/**",
+  "https://pichuelectrico.github.io/malla-curricular-interactiva/",
+  "http://localhost:5173/malla-curricular-interactiva/**",
+  "http://localhost:5173/**",
+]
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
