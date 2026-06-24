@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-BTC",
-  "Last-Modified": "2026-06-08T21:53:52.126Z",
+  "Last-Modified": "2026-06-24T15:46:03.842Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -90,9 +90,7 @@
       "block": "Semestre 1",
       "area": "ESL",
       "type": "obligatoria",
-      "prerequisites": [
-        "ESL0001"
-      ],
+      "prerequisites": ["ESL0001"],
       "alternatives": []
     },
     {
@@ -118,9 +116,7 @@
       "block": "Semestre 2",
       "area": "MAT",
       "type": "obligatoria",
-      "prerequisites": [
-        "MAT1201 || MAT1301 || MAT1203"
-      ],
+      "prerequisites": ["MAT1201 || MAT1301 || MAT1203"],
       "alternatives": []
     },
     {
@@ -172,9 +168,7 @@
       "block": "Semestre 2",
       "area": "ESL",
       "type": "obligatoria",
-      "prerequisites": [
-        "ESL0002"
-      ],
+      "prerequisites": ["ESL0002"],
       "alternatives": []
     },
     {
@@ -187,9 +181,7 @@
       "block": "Semestre 2",
       "area": "ESL",
       "type": "obligatoria",
-      "prerequisites": [
-        "ESL0003"
-      ],
+      "prerequisites": ["ESL0003"],
       "alternatives": []
     },
     {
@@ -202,9 +194,7 @@
       "block": "Semestre 3",
       "area": "QUI",
       "type": "obligatoria",
-      "prerequisites": [
-        "QUI1003 || ODT1201"
-      ],
+      "prerequisites": ["QUI1003 || ODT1201"],
       "alternatives": []
     },
     {
@@ -217,9 +207,7 @@
       "block": "Semestre 3",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BIO1102"
-      ],
+      "prerequisites": ["BIO1102"],
       "alternatives": []
     },
     {
@@ -245,9 +233,7 @@
       "block": "Semestre 3",
       "area": "MAT",
       "type": "obligatoria",
-      "prerequisites": [
-        "MAT1202 || MAT1301"
-      ],
+      "prerequisites": ["MAT1202 || MAT1301"],
       "alternatives": []
     },
     {
@@ -273,9 +259,7 @@
       "block": "Semestre 3",
       "area": "ESL",
       "type": "obligatoria",
-      "prerequisites": [
-        "ESL0004"
-      ],
+      "prerequisites": ["ESL0004"],
       "alternatives": []
     },
     {
@@ -288,9 +272,7 @@
       "block": "Semestre 3",
       "area": "ESL",
       "type": "obligatoria",
-      "prerequisites": [
-        "ESL0005"
-      ],
+      "prerequisites": ["ESL0005"],
       "alternatives": []
     },
     {
@@ -303,9 +285,7 @@
       "block": "Semestre 4",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "QUI1003 || QUI1003E || ODT1201"
-      ],
+      "prerequisites": ["QUI1003 || QUI1003E || ODT1201"],
       "alternatives": []
     },
     {
@@ -318,9 +298,7 @@
       "block": "Semestre 4",
       "area": "ECL",
       "type": "optativa",
-      "prerequisites": [
-        "BIO1102"
-      ],
+      "prerequisites": ["BIO1102"],
       "alternatives": []
     },
     {
@@ -333,9 +311,7 @@
       "block": "Semestre 4",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BIO1102"
-      ],
+      "prerequisites": ["BIO1102"],
       "alternatives": []
     },
     {
@@ -374,10 +350,7 @@
       "block": "Semestre 5",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "QUI1004 || QUI2001",
-        "MAT1202"
-      ],
+      "prerequisites": ["QUI1004 || QUI2001", "MAT1202"],
       "alternatives": []
     },
     {
@@ -390,9 +363,7 @@
       "block": "Semestre 5",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3002"
-      ],
+      "prerequisites": ["BTC3002"],
       "alternatives": []
     },
     {
@@ -418,9 +389,7 @@
       "block": "Semestre 5",
       "area": "BIO",
       "type": "obligatoria",
-      "prerequisites": [
-        "ECL2101 || ECL2002"
-      ],
+      "prerequisites": ["ECL2101 || ECL2002"],
       "alternatives": []
     },
     {
@@ -433,9 +402,7 @@
       "block": "Semestre 5",
       "area": "MCR",
       "type": "obligatoria",
-      "prerequisites": [
-        "BIO1102"
-      ],
+      "prerequisites": ["BIO1102"],
       "alternatives": []
     },
     {
@@ -474,9 +441,7 @@
       "block": "Semestre 6",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3002"
-      ],
+      "prerequisites": ["BTC3002"],
       "alternatives": []
     },
     {
@@ -489,10 +454,7 @@
       "block": "Semestre 6",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3002 || BTC3002E",
-        "BTC2001 || BTC2001E"
-      ],
+      "prerequisites": ["BTC3002 || BTC3002E", "BTC2001 || BTC2001E"],
       "alternatives": []
     },
     {
@@ -531,10 +493,7 @@
       "block": "Semestre 7",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "MCR2001",
-        "INA2101 || BTC5005"
-      ],
+      "prerequisites": ["MCR2001", "INA2101 || BTC5005"],
       "alternatives": []
     },
     {
@@ -547,9 +506,7 @@
       "block": "Semestre 7",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3004"
-      ],
+      "prerequisites": ["BTC3004"],
       "alternatives": []
     },
     {
@@ -562,9 +519,7 @@
       "block": "Semestre 7",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3002"
-      ],
+      "prerequisites": ["BTC3002"],
       "alternatives": []
     },
     {
@@ -577,10 +532,7 @@
       "block": "Semestre 7",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3001",
-        "ESL0006 || ESL0007 || ENG1001E"
-      ],
+      "prerequisites": ["BTC3001", "ESL0006 || ESL0007 || ENG1001E"],
       "alternatives": []
     },
     {
@@ -606,9 +558,7 @@
       "block": "Semestre 8",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC3002 || BTC1001"
-      ],
+      "prerequisites": ["BTC3002 || BTC1001"],
       "alternatives": []
     },
     {
@@ -644,6 +594,19 @@
       "alternatives": []
     },
     {
+      "id": "BTC5002",
+      "code": "BTC 5002",
+      "title": "Ingeniería Genética +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "BTC",
+      "type": "obligatoria",
+      "prerequisites": ["BTC3002 || BTC3002E"],
+      "alternatives": []
+    },
+    {
       "id": "OPT1",
       "code": "OPT1",
       "title": "Optativa 1/2",
@@ -676,7 +639,7 @@
       "description": "",
       "credits": 1,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "DEP",
       "type": "obligatoria",
       "prerequisites": [],
@@ -689,14 +652,10 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "QUI2001 || QUI1004",
-        "FIS1005",
-        "MAT1202"
-      ],
+      "prerequisites": ["QUI2001 || QUI1004", "FIS1005", "MAT1202"],
       "alternatives": []
     },
     {
@@ -706,7 +665,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "IIN",
       "type": "obligatoria",
       "prerequisites": [],
@@ -719,7 +678,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "OPT2",
       "type": "optativa",
       "prerequisites": [],
@@ -732,12 +691,10 @@
       "description": "",
       "credits": 5,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "BTC",
       "type": "obligatoria",
-      "prerequisites": [
-        "BTC5002"
-      ],
+      "prerequisites": ["BTC5002"],
       "alternatives": []
     }
   ]
