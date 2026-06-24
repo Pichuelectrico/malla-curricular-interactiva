@@ -286,8 +286,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     name: "Ingeniería en Biotecnología",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 136,
-    courses: 52,
+    credits: 139,
+    courses: 53,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
       const res = await fetch(`${base}data/Malla-BTC.json`);
