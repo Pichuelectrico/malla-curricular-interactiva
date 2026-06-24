@@ -1,3 +1,15 @@
+.env
+offer-scraper/.env
+offer-scraper/snaps/
+offer-scraper/.browser_profile/
+offer-scraper/.browser_state.json
+offer-scraper/all_courses.json
+offer-scraper/batch_*.sql
+offer-scraper/test_scrape.py
+offer-scraper/.venv/
+offer-scraper/__pycache__/
+offer-scraper/scraped_data.json
+offer-scraper/*.log
 .encore
 encore.gen.go
 encore.gen.cue

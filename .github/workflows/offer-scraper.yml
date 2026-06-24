@@ -1,0 +1,77 @@
+name: USFQ Offer Scraper
+
+on:
+  # Run manually with optional period override
+  workflow_dispatch:
+    inputs:
+      period:
+        description: 'Period label (e.g. "Semestre 2026-2" or "Verano 2026")'
+        required: false
+        default: ''
+
+  # Weekly refresh every Monday at 06:00 UTC (01:00 Quito time)
+  schedule:
+    - cron: '0 6 * * 1'
+
+jobs:
+  scrape:
+    name: Scrape course offer
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      USFQ_USERNAME:        ${{ secrets.USFQ_USERNAME }}
+      USFQ_PASSWORD:        ${{ secrets.USFQ_PASSWORD }}
+      SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      PERIOD:               ${{ github.event.inputs.period || '' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: offer-scraper/requirements.txt
+
+      - name: Install Python dependencies
+        run: pip install -r offer-scraper/requirements.txt
+
+      - name: Install Playwright Chromium browser
+        run: python -m playwright install --with-deps chromium
+
+      - name: Derive period label if not supplied
+        id: period
+        run: |
+          if [ -z "$PERIOD" ]; then
+            # Auto-detect: Jan-Apr = Semestre 1, May-Jul = Verano, Aug-Dec = Semestre 2
+            MONTH=$(date +%-m)
+            YEAR=$(date +%Y)
+            if [ "$MONTH" -ge 1 ] && [ "$MONTH" -le 4 ]; then
+              echo "value=Semestre ${YEAR}-1" >> $GITHUB_OUTPUT
+            elif [ "$MONTH" -ge 5 ] && [ "$MONTH" -le 7 ]; then
+              echo "value=Verano ${YEAR}" >> $GITHUB_OUTPUT
+            else
+              echo "value=Semestre ${YEAR}-2" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "value=$PERIOD" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run offer scraper
+        working-directory: offer-scraper
+        env:
+          PERIOD: ${{ steps.period.outputs.value }}
+        run: python scrape.py
+
+      - name: Upload scraper log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scraper-log
+          path: offer-scraper/*.log
+          if-no-files-found: ignore
+          retention-days: 7
