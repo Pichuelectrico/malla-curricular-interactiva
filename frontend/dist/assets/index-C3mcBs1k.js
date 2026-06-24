@@ -19390,6 +19390,18 @@ function Toaster() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(ToastViewport, {})
   ] });
 }
+function getAuthRedirectUrl() {
+  const base = "/malla-curricular-interactiva/";
+  const normalizedBase = base.startsWith("/") ? base : `/${base}`;
+  const withTrailingSlash = normalizedBase.endsWith("/") ? normalizedBase : `${normalizedBase}/`;
+  return `${window.location.origin}${withTrailingSlash}`;
+}
+function cleanAuthHashFromUrl() {
+  const hash = window.location.hash;
+  if (hash.includes("access_token=") || hash.includes("error=") || hash.includes("error_description=") || hash.includes("type=recovery") || hash.includes("type=signup")) {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+}
 var __assign = function() {
   __assign = Object.assign || function __assign2(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -40289,7 +40301,15 @@ function shouldShowDeprecationWarning() {
 if (shouldShowDeprecationWarning()) console.warn("⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217");
 const supabaseUrl = "https://lyneadzlvusjczxmvxuv.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bmVhZHpsdnVzamN6eG12eHV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjA3NTIsImV4cCI6MjA5NjQ5Njc1Mn0.X38V6zPqnf7olpUHIpBBkldJqSWFdAsPYmDAk6D6zAU";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    detectSessionInUrl: true,
+    persistSession: true,
+    autoRefreshToken: true,
+    // Email confirmation links return tokens in the URL hash (implicit flow).
+    flowType: "implicit"
+  }
+});
 const AuthContext = reactExports.createContext(null);
 function AuthProvider({ children }) {
   const [session, setSession] = reactExports.useState(null);
@@ -40298,12 +40318,16 @@ function AuthProvider({ children }) {
   reactExports.useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      cleanAuthHashFromUrl();
       setIsLoading(false);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       if (event === "PASSWORD_RECOVERY") {
         setIsPasswordRecovery(true);
+      }
+      if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+        cleanAuthHashFromUrl();
       }
     });
     return () => subscription.unsubscribe();
@@ -40314,13 +40338,20 @@ function AuthProvider({ children }) {
     return { error };
   };
   const signUp = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: getAuthRedirectUrl()
+      }
+    });
     const needsConfirmation = !error && !data.session;
     return { error, needsConfirmation };
   };
   const resetPassword = async (email) => {
-    const redirectTo = window.location.origin + window.location.pathname;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: getAuthRedirectUrl()
+    });
     return { error };
   };
   const signOut = async () => {

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
+import { cleanAuthHashFromUrl, getAuthRedirectUrl } from './authRedirect';
 import { supabase } from './supabaseClient';
 
 interface AuthContextValue {
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      cleanAuthHashFromUrl();
       setIsLoading(false);
     });
 
@@ -33,6 +35,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(newSession);
       if (event === 'PASSWORD_RECOVERY') {
         setIsPasswordRecovery(true);
+      }
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        cleanAuthHashFromUrl();
       }
     });
 
@@ -47,14 +52,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string): Promise<{ error: Error | null; needsConfirmation: boolean }> => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: getAuthRedirectUrl(),
+      },
+    });
     const needsConfirmation = !error && !data.session;
     return { error: error as Error | null, needsConfirmation };
   };
 
   const resetPassword = async (email: string): Promise<{ error: Error | null }> => {
-    const redirectTo = window.location.origin + window.location.pathname;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: getAuthRedirectUrl(),
+    });
     return { error: error as Error | null };
   };
 
