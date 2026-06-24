@@ -47557,7 +47557,8 @@ function NrcSuggestions({
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-2", children: [
       "Ningún NRC disponible sin conflicto con tu horario actual (",
       totalOffers,
-      " en oferta)."
+      " ",
+      "en oferta)."
     ] });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 space-y-1", children: [
@@ -47574,7 +47575,8 @@ function NrcSuggestions({
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", children: row.nrc }),
             row.paralelo && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-gray-400 dark:text-gray-500", children: [
-              " · P",
+              " ",
+              "· P",
               row.paralelo
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-[11px] text-gray-500 dark:text-gray-400 truncate", children: formatOfferSchedule(row) }),
@@ -47661,7 +47663,9 @@ function convertMainSessionsOnPeriodChange(sessions, from, to) {
     if (from === "verano" && to === "semestre") {
       if (SUMMER_DAYS.every((d) => days.has(d))) {
         SEMESTER_PAIR_OPTIONS.forEach((pair) => {
-          SEMESTER_PAIRS[pair].forEach((day) => converted.push({ day, startTime }));
+          SEMESTER_PAIRS[pair].forEach(
+            (day) => converted.push({ day, startTime })
+          );
         });
       } else {
         days.forEach((day) => converted.push({ day, startTime }));
@@ -47682,23 +47686,34 @@ function AvailabilityBadge({ row }) {
   if (!row || row.available === null || row.total === null) return null;
   const ratio = row.total > 0 ? row.available / row.total : 0;
   const color = ratio > 0.3 ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : ratio > 0 ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" : "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: `inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${color}`, children: [
-    row.available,
-    "/",
-    row.total,
-    " disponibles"
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "span",
+    {
+      className: `inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${color}`,
+      children: [
+        row.available,
+        "/",
+        row.total,
+        " disponibles"
+      ]
+    }
+  );
 }
-function NrcOfferInfo({ nrc, offerMap }) {
+function NrcOfferInfo({
+  nrc,
+  offerMap
+}) {
   const row = nrc.length >= 4 ? offerMap.get(nrc) : void 0;
   if (!row) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-gray-500 dark:text-gray-400 space-y-0.5 mt-1", children: [
     row.teacher && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      "Profesor: ",
+      "Profesor:",
+      " ",
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium text-gray-700 dark:text-gray-200", children: row.teacher })
     ] }),
     row.days.length > 0 && row.start_time && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      "Horario oferta: ",
+      "Horario oferta:",
+      " ",
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-medium text-gray-700 dark:text-gray-200", children: [
         row.days.join(", "),
         " ",
@@ -47709,13 +47724,24 @@ function NrcOfferInfo({ nrc, offerMap }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(AvailabilityBadge, { row })
   ] });
 }
-function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloatingButton }) {
+function SchedulePlanningDrawer({
+  plannedCourses,
+  onSave,
+  exposeOpen,
+  hideFloatingButton
+}) {
   const [isOpen, setIsOpen] = reactExports.useState(false);
   const [periodType, setPeriodType] = reactExports.useState("semestre");
   const [entryMode, setEntryMode] = reactExports.useState("auto");
   const [schedules, setSchedules] = reactExports.useState([]);
   const [conflicts, setConflicts] = reactExports.useState([]);
-  const { offerMap, isLoading: offerLoading, lastRefreshed, error: offerError, loadFromCache } = useCourseOffer();
+  const {
+    offerMap,
+    isLoading: offerLoading,
+    lastRefreshed,
+    error: offerError,
+    loadFromCache
+  } = useCourseOffer();
   reactExports.useEffect(() => {
     const initialSchedules = plannedCourses.map((course) => ({
       courseId: course.id,
@@ -47798,7 +47824,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       const toRemove = packed[packedIndex];
       if (!toRemove) return s;
       const daysToRemove = new Set(
-        expandMainSession(periodType, toRemove.dayGroup, toRemove.startTime).map((sess) => sess.day)
+        expandMainSession(
+          periodType,
+          toRemove.dayGroup,
+          toRemove.startTime
+        ).map((sess) => sess.day)
       );
       return {
         ...s,
@@ -47819,7 +47849,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       const newDayGroup = field === "dayGroup" ? value : current.dayGroup;
       const newStartTime = field === "startTime" ? value : current.startTime;
       const daysToRemove = new Set(
-        expandMainSession(periodType, current.dayGroup, current.startTime).map((sess) => sess.day)
+        expandMainSession(periodType, current.dayGroup, current.startTime).map(
+          (sess) => sess.day
+        )
       );
       const remaining = s.sessions.filter(
         (sess) => !(daysToRemove.has(sess.day) && sess.startTime === current.startTime)
@@ -47834,15 +47866,32 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
     if (newPeriod === periodType) return;
     const updated = schedules.map((s) => ({
       ...s,
-      sessions: convertMainSessionsOnPeriodChange(s.sessions, periodType, newPeriod)
+      sessions: convertMainSessionsOnPeriodChange(
+        s.sessions,
+        periodType,
+        newPeriod
+      )
     }));
     setPeriodType(newPeriod);
     setSchedules(updated);
     checkConflicts(updated);
   };
   const generateHTMLReport = () => {
-    const DAYS_FULL = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-    const MAP_SHORT = { "Lun": "Lunes", "Mar": "Martes", "Mié": "Miércoles", "Mie": "Miércoles", "Jue": "Jueves", "Vie": "Viernes" };
+    const DAYS_FULL = [
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes"
+    ];
+    const MAP_SHORT = {
+      Lun: "Lunes",
+      Mar: "Martes",
+      Mié: "Miércoles",
+      Mie: "Miércoles",
+      Jue: "Jueves",
+      Vie: "Viernes"
+    };
     const grid = {};
     DAYS_FULL.forEach((d) => {
       grid[d] = {};
@@ -47858,7 +47907,8 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         s.sessions.forEach((sess) => {
           var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime]) grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
+          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
+            grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
         });
       }
       if (s.hasEJ && s.nrcEJ && s.sessionsEJ) {
@@ -47866,7 +47916,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         s.sessionsEJ.forEach((sess) => {
           var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime]) grid[day][sess.startTime].push({ title: `${base} EJ`, nrc: s.nrcEJ });
+          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
+            grid[day][sess.startTime].push({
+              title: `${base} EJ`,
+              nrc: s.nrcEJ
+            });
         });
       }
       if (s.hasLAB && s.nrcLAB && s.sessionsLAB) {
@@ -47874,7 +47928,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         s.sessionsLAB.forEach((sess) => {
           var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime]) grid[day][sess.startTime].push({ title: `${base} LAB`, nrc: s.nrcLAB });
+          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
+            grid[day][sess.startTime].push({
+              title: `${base} LAB`,
+              nrc: s.nrcLAB
+            });
         });
       }
     });
@@ -47888,12 +47946,14 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       const cells = DAYS_FULL.map((day) => {
         const entries = grid[day][time];
         if (!entries.length) return `<td></td>`;
-        const content = entries.map((e) => `
+        const content = entries.map(
+          (e) => `
           <div class="entry">
             <div class="title">${e.title}</div>
             <div class="nrc">NRC: ${e.nrc}</div>
           </div>
-        `).join("");
+        `
+        ).join("");
         return `<td class="filled">${content}</td>`;
       }).join("");
       return `
@@ -47989,7 +48049,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       if (schedule.hasEJ && schedule.sessionsEJ) {
         for (const session of schedule.sessionsEJ) {
           if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find((c) => c.id === schedule.courseId);
+            const course = plannedCourses.find(
+              (c) => c.id === schedule.courseId
+            );
             return course ? { code: course.code, title: course.title, type: "EJ" } : null;
           }
         }
@@ -47997,7 +48059,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       if (schedule.hasLAB && schedule.sessionsLAB) {
         for (const session of schedule.sessionsLAB) {
           if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find((c) => c.id === schedule.courseId);
+            const course = plannedCourses.find(
+              (c) => c.id === schedule.courseId
+            );
             return course ? { code: course.code, title: course.title, type: "LAB" } : null;
           }
         }
@@ -48023,25 +48087,33 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       return day ? { day, startTime: s.startTime } : null;
     }).filter((s) => s !== null);
   };
-  const getOccupiedSlots = reactExports.useCallback((excludeCourseId) => {
-    const occupied = /* @__PURE__ */ new Set();
-    schedules.forEach((s) => {
-      if (excludeCourseId && s.courseId === excludeCourseId) return;
-      const allSessions = [
-        ...s.sessions,
-        ...s.sessionsEJ || [],
-        ...s.sessionsLAB || []
-      ];
-      allSessions.forEach((sess) => occupied.add(slotKey(sess.day, sess.startTime)));
-    });
-    return occupied;
-  }, [schedules]);
-  const filterSuggestions = reactExports.useCallback((offers, excludeCourseId) => {
-    const valid = offers.filter(isValidOfferSchedule);
-    const occupied = getOccupiedSlots(excludeCourseId);
-    const suggestions = valid.filter((row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap)).sort((a, b) => (b.available ?? -999) - (a.available ?? -999));
-    return { suggestions, totalOffers: valid.length };
-  }, [getOccupiedSlots, offerMap]);
+  const getOccupiedSlots = reactExports.useCallback(
+    (excludeCourseId) => {
+      const occupied = /* @__PURE__ */ new Set();
+      schedules.forEach((s) => {
+        if (excludeCourseId && s.courseId === excludeCourseId) return;
+        const allSessions = [
+          ...s.sessions,
+          ...s.sessionsEJ || [],
+          ...s.sessionsLAB || []
+        ];
+        allSessions.forEach(
+          (sess) => occupied.add(slotKey(sess.day, sess.startTime))
+        );
+      });
+      return occupied;
+    },
+    [schedules]
+  );
+  const filterSuggestions = reactExports.useCallback(
+    (offers, excludeCourseId) => {
+      const valid = offers.filter(isValidOfferSchedule);
+      const occupied = getOccupiedSlots(excludeCourseId);
+      const suggestions = valid.filter((row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap)).sort((a, b) => (b.available ?? -999) - (a.available ?? -999));
+      return { suggestions, totalOffers: valid.length };
+    },
+    [getOccupiedSlots, offerMap]
+  );
   const applyAutoFillFromOffer = (current) => {
     if (entryMode !== "auto") return current;
     return current.map((s) => {
@@ -48176,13 +48248,20 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-gray-600 dark:text-gray-300", children: "Período:" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: periodType, onValueChange: (v) => handlePeriodTypeChange(v), children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 dark:bg-gray-700 dark:border-gray-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "semestre", children: "Semestre" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "verano", children: "Verano" })
-                ] })
-              ] })
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Select,
+                {
+                  value: periodType,
+                  onValueChange: (v) => handlePeriodTypeChange(v),
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 dark:bg-gray-700 dark:border-gray-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "semestre", children: "Semestre" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "verano", children: "Verano" })
+                    ] })
+                  ]
+                }
+              )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               Button,
@@ -48210,7 +48289,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Materias planeadas" }),
             plannedCourses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-500 dark:text-gray-400", children: 'No hay materias planeadas. Marca materias como "planeadas" en la malla curricular.' }) : plannedCourses.map((course) => {
-              const schedule = schedules.find((s) => s.courseId === course.id);
+              const schedule = schedules.find(
+                (s) => s.courseId === course.id
+              );
               if (!schedule) return null;
               return /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "p-4 dark:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -48230,16 +48311,23 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       Input,
                       {
-                        placeholder: "ej. IIN-4011",
+                        placeholder: "ej. CMP-4001",
                         value: schedule.offerCourseCode || "",
-                        onChange: (e) => handleOfferCourseCodeChange(course.id, e.target.value),
+                        onChange: (e) => handleOfferCourseCodeChange(
+                          course.id,
+                          e.target.value
+                        ),
                         className: "w-48 dark:bg-gray-600 dark:border-gray-500 uppercase"
                       }
                     ),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-1", children: "Ingresa el código USFQ de la materia que tomarás para ver NRCs disponibles." }),
                     schedule.offerCourseCode && (() => {
-                      const preview = getOfferCoursePreview(offerMap, schedule.offerCourseCode);
-                      if (!preview) return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: "Código no encontrado en la oferta actual." });
+                      const preview = getOfferCoursePreview(
+                        offerMap,
+                        schedule.offerCourseCode
+                      );
+                      if (!preview)
+                        return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: "Código no encontrado en la oferta actual." });
                       return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-300 mt-1", children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: preview.course_code }),
                         " — ",
@@ -48259,14 +48347,25 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         className: "w-40 dark:bg-gray-600 dark:border-gray-500"
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(NrcOfferInfo, { nrc: schedule.nrc, offerMap }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      NrcOfferInfo,
+                      {
+                        nrc: schedule.nrc,
+                        offerMap
+                      }
+                    ),
                     entryMode === "auto" && offerMap.size > 0 && (() => {
                       var _a2;
                       if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
                         return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-400 dark:text-gray-500 mt-2", children: "Ingresa el código de materia para ver sugerencias de NRC." });
                       }
                       const { suggestions, totalOffers } = filterSuggestions(
-                        getOffersForSchedule(offerMap, course, schedule.offerCourseCode, "Teoría"),
+                        getOffersForSchedule(
+                          offerMap,
+                          course,
+                          schedule.offerCourseCode,
+                          "Teoría"
+                        ),
                         course.id
                       );
                       return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48290,7 +48389,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                           checked: schedule.hasEJ,
                           onCheckedChange: (checked) => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id ? { ...s, hasEJ: checked, sessionsEJ: checked ? [] : void 0 } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                hasEJ: checked,
+                                sessionsEJ: checked ? [] : void 0
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
@@ -48314,7 +48417,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                           checked: schedule.hasLAB,
                           onCheckedChange: (checked) => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id ? { ...s, hasLAB: checked, sessionsLAB: checked ? [] : void 0 } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                hasLAB: checked,
+                                sessionsLAB: checked ? [] : void 0
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
@@ -48339,18 +48446,37 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         {
                           placeholder: "NRC Ejercicios (4–6 díg.)",
                           value: schedule.nrcEJ || "",
-                          onChange: (e) => handleNrcEJChange(course.id, e.target.value),
+                          onChange: (e) => handleNrcEJChange(
+                            course.id,
+                            e.target.value
+                          ),
                           inputMode: "numeric",
                           maxLength: 6,
                           className: "w-48 dark:bg-gray-600 dark:border-gray-500"
                         }
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(NrcOfferInfo, { nrc: schedule.nrcEJ || "", offerMap }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        NrcOfferInfo,
+                        {
+                          nrc: schedule.nrcEJ || "",
+                          offerMap
+                        }
+                      ),
                       entryMode === "auto" && offerMap.size > 0 && (() => {
                         var _a2;
-                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) return null;
+                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
+                          return null;
                         const mainRow = schedule.nrc ? offerMap.get(schedule.nrc) : void 0;
-                        const ejOffers = mainRow ? getLinkedOffers(mainRow, offerMap, "Ejercicios") : getOffersForSchedule(offerMap, course, schedule.offerCourseCode, "Ejercicios");
+                        const ejOffers = mainRow ? getLinkedOffers(
+                          mainRow,
+                          offerMap,
+                          "Ejercicios"
+                        ) : getOffersForSchedule(
+                          offerMap,
+                          course,
+                          schedule.offerCourseCode,
+                          "Ejercicios"
+                        );
                         const { suggestions, totalOffers } = filterSuggestions(ejOffers, course.id);
                         return /* @__PURE__ */ jsxRuntimeExports.jsx(
                           NrcSuggestions,
@@ -48373,18 +48499,37 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         {
                           placeholder: "NRC Laboratorio (4–6 díg.)",
                           value: schedule.nrcLAB || "",
-                          onChange: (e) => handleNrcLABChange(course.id, e.target.value),
+                          onChange: (e) => handleNrcLABChange(
+                            course.id,
+                            e.target.value
+                          ),
                           inputMode: "numeric",
                           maxLength: 6,
                           className: "w-48 dark:bg-gray-600 dark:border-gray-500"
                         }
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(NrcOfferInfo, { nrc: schedule.nrcLAB || "", offerMap }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        NrcOfferInfo,
+                        {
+                          nrc: schedule.nrcLAB || "",
+                          offerMap
+                        }
+                      ),
                       entryMode === "auto" && offerMap.size > 0 && (() => {
                         var _a2;
-                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) return null;
+                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
+                          return null;
                         const mainRow = schedule.nrc ? offerMap.get(schedule.nrc) : void 0;
-                        const labOffers = mainRow ? getLinkedOffers(mainRow, offerMap, "Laboratorio") : getOffersForSchedule(offerMap, course, schedule.offerCourseCode, "Laboratorio");
+                        const labOffers = mainRow ? getLinkedOffers(
+                          mainRow,
+                          offerMap,
+                          "Laboratorio"
+                        ) : getOffersForSchedule(
+                          offerMap,
+                          course,
+                          schedule.offerCourseCode,
+                          "Laboratorio"
+                        );
                         const { suggestions, totalOffers } = filterSuggestions(labOffers, course.id);
                         return /* @__PURE__ */ jsxRuntimeExports.jsx(
                           NrcSuggestions,
@@ -48440,41 +48585,70 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                     ) : (
                       /* Manual mode: full day/time editors */
                       /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                        packMainSessions(periodType, schedule.sessions).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
-                          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                            Select,
-                            {
-                              value: session.dayGroup,
-                              onValueChange: (value) => updateMainSession(course.id, idx, "dayGroup", value),
-                              children: [
-                                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-32 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: periodType === "semestre" ? SEMESTER_PAIR_OPTIONS.map((pair) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: pair, children: pair }, pair)) : /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Lun-Jue", children: "Lun - Jue" }) })
-                              ]
-                            }
-                          ),
-                          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                            Select,
-                            {
-                              value: session.startTime,
-                              onValueChange: (value) => updateMainSession(course.id, idx, "startTime", value),
-                              children: [
-                                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
-                              ]
-                            }
-                          ),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx(
-                            Button,
-                            {
-                              variant: "ghost",
-                              size: "sm",
-                              onClick: () => removeMainSession(course.id, idx),
-                              className: "dark:hover:bg-gray-600",
-                              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
-                            }
-                          )
-                        ] }, idx)),
+                        packMainSessions(
+                          periodType,
+                          schedule.sessions
+                        ).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
+                          {
+                            className: "flex gap-2 items-center",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.dayGroup,
+                                  onValueChange: (value) => updateMainSession(
+                                    course.id,
+                                    idx,
+                                    "dayGroup",
+                                    value
+                                  ),
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-32 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: periodType === "semestre" ? SEMESTER_PAIR_OPTIONS.map(
+                                      (pair) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                        SelectItem,
+                                        {
+                                          value: pair,
+                                          children: pair
+                                        },
+                                        pair
+                                      )
+                                    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Lun-Jue", children: "Lun - Jue" }) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.startTime,
+                                  onValueChange: (value) => updateMainSession(
+                                    course.id,
+                                    idx,
+                                    "startTime",
+                                    value
+                                  ),
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                Button,
+                                {
+                                  variant: "ghost",
+                                  size: "sm",
+                                  onClick: () => removeMainSession(course.id, idx),
+                                  className: "dark:hover:bg-gray-600",
+                                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                                }
+                              )
+                            ]
+                          },
+                          idx
+                        )),
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           Button,
                           {
@@ -48496,75 +48670,132 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         "Auto"
                       ] })
                     ] }),
-                    entryMode === "auto" ? (schedule.sessionsEJ || []).length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: (schedule.sessionsEJ || []).map((s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-2.5 py-1.5 rounded-lg", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
-                      s.day,
-                      " · ",
-                      s.startTime
-                    ] }, i)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: (schedule.nrcEJ || "").length >= 4 ? `NRC EJ ${schedule.nrcEJ} no encontrado en la oferta.` : "Ingresa el NRC de Ejercicios (4–6 dígitos) para auto-llenar." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                      (schedule.sessionsEJ || []).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                          Select,
+                    entryMode === "auto" ? (schedule.sessionsEJ || []).length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: (schedule.sessionsEJ || []).map(
+                      (s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "span",
+                        {
+                          className: "inline-flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-2.5 py-1.5 rounded-lg",
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
+                            s.day,
+                            " · ",
+                            s.startTime
+                          ]
+                        },
+                        i
+                      )
+                    ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: (schedule.nrcEJ || "").length >= 4 ? `NRC EJ ${schedule.nrcEJ} no encontrado en la oferta.` : "Ingresa el NRC de Ejercicios (4–6 dígitos) para auto-llenar." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                      (schedule.sessionsEJ || []).map(
+                        (session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
                           {
-                            value: session.day,
-                            onValueChange: (value) => {
-                              const updated = schedules.map((s) => {
-                                if (s.courseId === course.id && s.sessionsEJ) {
-                                  const newSessions = [...s.sessionsEJ];
-                                  newSessions[idx] = { ...newSessions[idx], day: value };
-                                  return { ...s, sessionsEJ: newSessions };
-                                }
-                                return s;
-                              });
-                              setSchedules(updated);
-                              checkConflicts(updated);
-                            },
+                            className: "flex gap-2 items-center",
                             children: [
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: day, children: day }, day)) })
-                            ]
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                          Select,
-                          {
-                            value: session.startTime,
-                            onValueChange: (value) => {
-                              const updated = schedules.map((s) => {
-                                if (s.courseId === course.id && s.sessionsEJ) {
-                                  const newSessions = [...s.sessionsEJ];
-                                  newSessions[idx] = { ...newSessions[idx], startTime: value };
-                                  return { ...s, sessionsEJ: newSessions };
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.day,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsEJ) {
+                                          const newSessions = [
+                                            ...s.sessionsEJ
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            day: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsEJ: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: day,
+                                        children: day
+                                      },
+                                      day
+                                    )) })
+                                  ]
                                 }
-                                return s;
-                              });
-                              setSchedules(updated);
-                              checkConflicts(updated);
-                            },
-                            children: [
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.startTime,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsEJ) {
+                                          const newSessions = [
+                                            ...s.sessionsEJ
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            startTime: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsEJ: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: time,
+                                        children: time
+                                      },
+                                      time
+                                    )) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                Button,
+                                {
+                                  variant: "ghost",
+                                  size: "sm",
+                                  onClick: () => {
+                                    const updated = schedules.map(
+                                      (s) => s.courseId === course.id && s.sessionsEJ ? {
+                                        ...s,
+                                        sessionsEJ: s.sessionsEJ.filter(
+                                          (_, i) => i !== idx
+                                        )
+                                      } : s
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  className: "dark:hover:bg-gray-600",
+                                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                                }
+                              )
                             ]
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          Button,
-                          {
-                            variant: "ghost",
-                            size: "sm",
-                            onClick: () => {
-                              const updated = schedules.map(
-                                (s) => s.courseId === course.id && s.sessionsEJ ? { ...s, sessionsEJ: s.sessionsEJ.filter((_, i) => i !== idx) } : s
-                              );
-                              setSchedules(updated);
-                              checkConflicts(updated);
-                            },
-                            className: "dark:hover:bg-gray-600",
-                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
-                          }
+                          },
+                          idx
                         )
-                      ] }, idx)),
+                      ),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
                         Button,
                         {
@@ -48572,7 +48803,16 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                           size: "sm",
                           onClick: () => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id ? { ...s, sessionsEJ: [...s.sessionsEJ || [], { day: "Lun", startTime: "07:00" }] } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                sessionsEJ: [
+                                  ...s.sessionsEJ || [],
+                                  {
+                                    day: "Lun",
+                                    startTime: "07:00"
+                                  }
+                                ]
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
@@ -48591,75 +48831,132 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                         "Auto"
                       ] })
                     ] }),
-                    entryMode === "auto" ? (schedule.sessionsLAB || []).length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: (schedule.sessionsLAB || []).map((s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 text-xs bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700 px-2.5 py-1.5 rounded-lg", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
-                      s.day,
-                      " · ",
-                      s.startTime
-                    ] }, i)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: (schedule.nrcLAB || "").length >= 4 ? `NRC LAB ${schedule.nrcLAB} no encontrado en la oferta.` : "Ingresa el NRC de Laboratorio (4–6 dígitos) para auto-llenar." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                      (schedule.sessionsLAB || []).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                          Select,
+                    entryMode === "auto" ? (schedule.sessionsLAB || []).length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: (schedule.sessionsLAB || []).map(
+                      (s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "span",
+                        {
+                          className: "inline-flex items-center gap-1.5 text-xs bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700 px-2.5 py-1.5 rounded-lg",
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
+                            s.day,
+                            " · ",
+                            s.startTime
+                          ]
+                        },
+                        i
+                      )
+                    ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: (schedule.nrcLAB || "").length >= 4 ? `NRC LAB ${schedule.nrcLAB} no encontrado en la oferta.` : "Ingresa el NRC de Laboratorio (4–6 dígitos) para auto-llenar." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                      (schedule.sessionsLAB || []).map(
+                        (session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
                           {
-                            value: session.day,
-                            onValueChange: (value) => {
-                              const updated = schedules.map((s) => {
-                                if (s.courseId === course.id && s.sessionsLAB) {
-                                  const newSessions = [...s.sessionsLAB];
-                                  newSessions[idx] = { ...newSessions[idx], day: value };
-                                  return { ...s, sessionsLAB: newSessions };
-                                }
-                                return s;
-                              });
-                              setSchedules(updated);
-                              checkConflicts(updated);
-                            },
+                            className: "flex gap-2 items-center",
                             children: [
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: day, children: day }, day)) })
-                            ]
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                          Select,
-                          {
-                            value: session.startTime,
-                            onValueChange: (value) => {
-                              const updated = schedules.map((s) => {
-                                if (s.courseId === course.id && s.sessionsLAB) {
-                                  const newSessions = [...s.sessionsLAB];
-                                  newSessions[idx] = { ...newSessions[idx], startTime: value };
-                                  return { ...s, sessionsLAB: newSessions };
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.day,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsLAB) {
+                                          const newSessions = [
+                                            ...s.sessionsLAB
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            day: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsLAB: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: day,
+                                        children: day
+                                      },
+                                      day
+                                    )) })
+                                  ]
                                 }
-                                return s;
-                              });
-                              setSchedules(updated);
-                              checkConflicts(updated);
-                            },
-                            children: [
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.startTime,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsLAB) {
+                                          const newSessions = [
+                                            ...s.sessionsLAB
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            startTime: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsLAB: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: time,
+                                        children: time
+                                      },
+                                      time
+                                    )) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                Button,
+                                {
+                                  variant: "ghost",
+                                  size: "sm",
+                                  onClick: () => {
+                                    const updated = schedules.map(
+                                      (s) => s.courseId === course.id && s.sessionsLAB ? {
+                                        ...s,
+                                        sessionsLAB: s.sessionsLAB.filter(
+                                          (_, i) => i !== idx
+                                        )
+                                      } : s
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  className: "dark:hover:bg-gray-600",
+                                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                                }
+                              )
                             ]
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          Button,
-                          {
-                            variant: "ghost",
-                            size: "sm",
-                            onClick: () => {
-                              const updated = schedules.map(
-                                (s) => s.courseId === course.id && s.sessionsLAB ? { ...s, sessionsLAB: s.sessionsLAB.filter((_, i) => i !== idx) } : s
-                              );
-                              setSchedules(updated);
-                              checkConflicts(updated);
-                            },
-                            className: "dark:hover:bg-gray-600",
-                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
-                          }
+                          },
+                          idx
                         )
-                      ] }, idx)),
+                      ),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
                         Button,
                         {
@@ -48667,7 +48964,16 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                           size: "sm",
                           onClick: () => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id ? { ...s, sessionsLAB: [...s.sessionsLAB || [], { day: "Lun", startTime: "07:00" }] } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                sessionsLAB: [
+                                  ...s.sessionsLAB || [],
+                                  {
+                                    day: "Lun",
+                                    startTime: "07:00"
+                                  }
+                                ]
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
@@ -48687,7 +48993,14 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full border-collapse border border-gray-300 dark:border-gray-600", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-100 dark:bg-gray-700", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-semibold", children: "Hora" }),
-                DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-semibold", children: day }, day))
+                DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-semibold",
+                    children: day
+                  },
+                  day
+                ))
               ] }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-medium text-center bg-gray-50 dark:bg-gray-700", children: time }),
