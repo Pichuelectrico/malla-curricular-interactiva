@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSupabaseAuth } from '../lib/auth';
+import { authErrorMessage } from '../lib/authErrors';
 import { supabase } from '../lib/supabaseClient';
 
 export type AuthMode = 'login' | 'signup' | 'forgot' | 'new-password';
@@ -29,19 +30,10 @@ const titles: Record<AuthMode, string> = {
 
 const descriptions: Record<AuthMode, string> = {
   login: 'Ingresa con tu correo y contraseña para guardar tu progreso.',
-  signup: 'Crea una cuenta para sincronizar tu malla en la nube.',
+  signup: 'Crea una cuenta con tu correo y contraseña. Luego podrás iniciar sesión.',
   forgot: 'Te enviaremos un enlace a tu correo para restablecer tu contraseña.',
   'new-password': 'Elige una nueva contraseña para tu cuenta.',
 };
-
-function authErrorMessage(error: Error): string {
-  const msg = error.message.toLowerCase();
-  if (msg.includes('invalid login credentials')) return 'Correo o contraseña incorrectos.';
-  if (msg.includes('user already registered')) return 'Este correo ya está registrado.';
-  if (msg.includes('password')) return 'La contraseña debe tener al menos 6 caracteres.';
-  if (msg.includes('valid email')) return 'Ingresa un correo válido.';
-  return 'Ocurrió un error. Intenta de nuevo.';
-}
 
 export default function AuthModal({ open, onOpenChange, initialMode = 'login' }: AuthModalProps) {
   const { signInWithPassword, signUp, resetPassword, clearPasswordRecovery } = useSupabaseAuth();
@@ -122,6 +114,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'login' }:
       if (updateError) {
         setError(authErrorMessage(updateError));
       } else {
+        clearPasswordRecovery();
         setSuccess('Contraseña actualizada correctamente.');
         setTimeout(() => handleOpenChange(false), 1500);
       }
@@ -140,14 +133,15 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'login' }:
     }
 
     if (mode === 'signup') {
-      const { error: signUpError, needsConfirmation } = await signUp(trimmedEmail, password);
+      const { error: signUpError } = await signUp(trimmedEmail, password);
       setLoading(false);
       if (signUpError) {
         setError(authErrorMessage(signUpError));
-      } else if (needsConfirmation) {
-        setSuccess('Revisa tu correo para confirmar tu cuenta.');
       } else {
-        handleOpenChange(false);
+        setSuccess('Cuenta creada correctamente. Ya puedes iniciar sesión.');
+        setPassword('');
+        setConfirmPassword('');
+        setMode('login');
       }
       return;
     }

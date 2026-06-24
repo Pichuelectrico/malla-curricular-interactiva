@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import { cleanAuthHashFromUrl, getAuthRedirectUrl } from './authRedirect';
+import { cleanAuthHashFromUrl, getPasswordResetRedirectUrl, hasAuthCallbackHash } from './authRedirect';
 import { supabase } from './supabaseClient';
 
 interface AuthContextValue {
@@ -11,7 +11,7 @@ interface AuthContextValue {
   isPasswordRecovery: boolean;
   clearPasswordRecovery: () => void;
   signInWithPassword: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string) => Promise<{ error: Error | null; needsConfirmation: boolean }>;
+  signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   getAccessToken: () => Promise<string | null>;
@@ -25,20 +25,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      cleanAuthHashFromUrl();
-      setIsLoading(false);
-    });
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       if (event === 'PASSWORD_RECOVERY') {
         setIsPasswordRecovery(true);
       }
-      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+      if (
+        event === 'SIGNED_IN' ||
+        event === 'INITIAL_SESSION' ||
+        event === 'PASSWORD_RECOVERY'
+      ) {
         cleanAuthHashFromUrl();
       }
+      if (event === 'INITIAL_SESSION' || event === 'PASSWORD_RECOVERY') {
+        setIsLoading(false);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      if (hasAuthCallbackHash()) {
+        const hash = window.location.hash;
+        if (hash.includes('type=recovery')) {
+          setIsPasswordRecovery(true);
+        }
+      } else {
+        cleanAuthHashFromUrl();
+      }
+      setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -51,21 +65,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: error as Error | null };
   };
 
-  const signUp = async (email: string, password: string): Promise<{ error: Error | null; needsConfirmation: boolean }> => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: getAuthRedirectUrl(),
-      },
-    });
-    const needsConfirmation = !error && !data.session;
-    return { error: error as Error | null, needsConfirmation };
+  const signUp = async (email: string, password: string): Promise<{ error: Error | null }> => {
+    const { data, error } = await supabase.functions.invoke<{ success?: boolean; error?: string }>(
+      'auth-signup',
+      { body: { email, password } },
+    );
+
+    if (data?.error) {
+      return { error: new Error(data.error) };
+    }
+
+    if (!error && data?.success) {
+      return { error: null };
+    }
+
+    if (error) {
+      const ctx = (error as Error & { context?: Response }).context;
+      if (ctx) {
+        try {
+          const body = await ctx.json() as { error?: string };
+          if (body.error) return { error: new Error(body.error) };
+        } catch {
+          // ignore JSON parse errors
+        }
+      }
+      return { error: error as Error };
+    }
+
+    return { error: new Error('No se pudo crear la cuenta') };
   };
 
   const resetPassword = async (email: string): Promise<{ error: Error | null }> => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: getAuthRedirectUrl(),
+      redirectTo: getPasswordResetRedirectUrl(),
     });
     return { error: error as Error | null };
   };

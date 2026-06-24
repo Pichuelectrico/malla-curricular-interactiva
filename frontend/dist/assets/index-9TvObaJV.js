@@ -19390,15 +19390,16 @@ function Toaster() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(ToastViewport, {})
   ] });
 }
-function getAuthRedirectUrl() {
-  const base = "/malla-curricular-interactiva/";
-  const normalizedBase = base.startsWith("/") ? base : `/${base}`;
-  const withTrailingSlash = normalizedBase.endsWith("/") ? normalizedBase : `${normalizedBase}/`;
-  return `${window.location.origin}${withTrailingSlash}`;
+const PRODUCTION_APP_URL = "https://pichuelectrico.github.io/malla-curricular-interactiva/";
+function getPasswordResetRedirectUrl() {
+  return PRODUCTION_APP_URL;
+}
+function hasAuthCallbackHash() {
+  const hash = window.location.hash;
+  return hash.includes("access_token=") || hash.includes("error=") || hash.includes("error_description=") || hash.includes("type=recovery") || hash.includes("type=signup");
 }
 function cleanAuthHashFromUrl() {
-  const hash = window.location.hash;
-  if (hash.includes("access_token=") || hash.includes("error=") || hash.includes("error_description=") || hash.includes("type=recovery") || hash.includes("type=signup")) {
+  if (hasAuthCallbackHash()) {
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 }
@@ -40316,19 +40317,29 @@ function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = reactExports.useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = reactExports.useState(false);
   reactExports.useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      cleanAuthHashFromUrl();
-      setIsLoading(false);
-    });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       if (event === "PASSWORD_RECOVERY") {
         setIsPasswordRecovery(true);
       }
-      if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+      if (event === "SIGNED_IN" || event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY") {
         cleanAuthHashFromUrl();
       }
+      if (event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY") {
+        setIsLoading(false);
+      }
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      if (hasAuthCallbackHash()) {
+        const hash = window.location.hash;
+        if (hash.includes("type=recovery")) {
+          setIsPasswordRecovery(true);
+        }
+      } else {
+        cleanAuthHashFromUrl();
+      }
+      setIsLoading(false);
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -40338,19 +40349,32 @@ function AuthProvider({ children }) {
     return { error };
   };
   const signUp = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: getAuthRedirectUrl()
+    const { data, error } = await supabase.functions.invoke(
+      "auth-signup",
+      { body: { email, password } }
+    );
+    if (data == null ? void 0 : data.error) {
+      return { error: new Error(data.error) };
+    }
+    if (!error && (data == null ? void 0 : data.success)) {
+      return { error: null };
+    }
+    if (error) {
+      const ctx = error.context;
+      if (ctx) {
+        try {
+          const body = await ctx.json();
+          if (body.error) return { error: new Error(body.error) };
+        } catch {
+        }
       }
-    });
-    const needsConfirmation = !error && !data.session;
-    return { error, needsConfirmation };
+      return { error };
+    }
+    return { error: new Error("No se pudo crear la cuenta") };
   };
   const resetPassword = async (email) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: getAuthRedirectUrl()
+      redirectTo: getPasswordResetRedirectUrl()
     });
     return { error };
   };
@@ -50551,6 +50575,44 @@ function Footer() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-gray-600 dark:text-gray-400 font-medium", children: "Made by a Dragon 🐉❤️" })
   ] }) }) });
 }
+function authErrorMessage(error) {
+  const code = (error.code ?? "").toLowerCase();
+  const msg = (error.message ?? "").toLowerCase();
+  if (code === "over_email_send_rate_limit" || code === "over_request_rate_limit" || msg.includes("rate limit")) {
+    return "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
+  }
+  if (code === "user_already_exists" || msg.includes("user already registered")) {
+    return 'Este correo ya está registrado. Inicia sesión o usa "¿Olvidaste tu contraseña?".';
+  }
+  if (code === "email_not_confirmed" || msg.includes("email not confirmed")) {
+    return "Debes confirmar tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.";
+  }
+  if (code === "invalid_credentials" || msg.includes("invalid login credentials")) {
+    return "Correo o contraseña incorrectos.";
+  }
+  if (code === "redirect_uri_mismatch" || msg.includes("redirect") || msg.includes("redirect_to")) {
+    return "Error de configuración al crear la cuenta. Contacta al administrador del sitio.";
+  }
+  if (msg.includes("password") && (msg.includes("short") || msg.includes("least"))) {
+    return "La contraseña debe tener al menos 6 caracteres.";
+  }
+  if (msg.includes("valid email") || code === "validation_failed") {
+    return "Ingresa un correo válido.";
+  }
+  if (msg.includes("signup") && msg.includes("disabled")) {
+    return "El registro de nuevas cuentas está deshabilitado temporalmente.";
+  }
+  if (msg.includes("fetch") || msg.includes("network") || msg.includes("failed to send")) {
+    return "No se pudo conectar con el servidor. Revisa tu conexión e intenta de nuevo.";
+  }
+  if (msg.includes("timeout") || msg.includes("timed out")) {
+    return "La solicitud tardó demasiado. Intenta de nuevo en unos segundos.";
+  }
+  if (msg.includes("already been registered") || msg.includes("already exists")) {
+    return 'Este correo ya está registrado. Inicia sesión o usa "¿Olvidaste tu contraseña?".';
+  }
+  return "Ocurrió un error. Intenta de nuevo.";
+}
 const titles = {
   login: "Iniciar sesión",
   signup: "Crear cuenta",
@@ -50559,18 +50621,10 @@ const titles = {
 };
 const descriptions = {
   login: "Ingresa con tu correo y contraseña para guardar tu progreso.",
-  signup: "Crea una cuenta para sincronizar tu malla en la nube.",
+  signup: "Crea una cuenta con tu correo y contraseña. Luego podrás iniciar sesión.",
   forgot: "Te enviaremos un enlace a tu correo para restablecer tu contraseña.",
   "new-password": "Elige una nueva contraseña para tu cuenta."
 };
-function authErrorMessage(error) {
-  const msg = error.message.toLowerCase();
-  if (msg.includes("invalid login credentials")) return "Correo o contraseña incorrectos.";
-  if (msg.includes("user already registered")) return "Este correo ya está registrado.";
-  if (msg.includes("password")) return "La contraseña debe tener al menos 6 caracteres.";
-  if (msg.includes("valid email")) return "Ingresa un correo válido.";
-  return "Ocurrió un error. Intenta de nuevo.";
-}
 function AuthModal({ open, onOpenChange, initialMode = "login" }) {
   const { signInWithPassword, signUp, resetPassword, clearPasswordRecovery } = useSupabaseAuth();
   const [mode, setMode] = reactExports.useState(initialMode);
@@ -50640,6 +50694,7 @@ function AuthModal({ open, onOpenChange, initialMode = "login" }) {
       if (updateError) {
         setError(authErrorMessage(updateError));
       } else {
+        clearPasswordRecovery();
         setSuccess("Contraseña actualizada correctamente.");
         setTimeout(() => handleOpenChange(false), 1500);
       }
@@ -50656,14 +50711,15 @@ function AuthModal({ open, onOpenChange, initialMode = "login" }) {
       return;
     }
     if (mode === "signup") {
-      const { error: signUpError, needsConfirmation } = await signUp(trimmedEmail, password);
+      const { error: signUpError } = await signUp(trimmedEmail, password);
       setLoading(false);
       if (signUpError) {
         setError(authErrorMessage(signUpError));
-      } else if (needsConfirmation) {
-        setSuccess("Revisa tu correo para confirmar tu cuenta.");
       } else {
-        handleOpenChange(false);
+        setSuccess("Cuenta creada correctamente. Ya puedes iniciar sesión.");
+        setPassword("");
+        setConfirmPassword("");
+        setMode("login");
       }
       return;
     }
