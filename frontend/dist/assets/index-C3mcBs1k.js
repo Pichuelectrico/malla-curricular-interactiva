@@ -15682,7 +15682,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$x = [
+const __iconNode$M = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -15692,14 +15692,14 @@ const __iconNode$x = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$x);
+const BookOpen = createLucideIcon("book-open", __iconNode$M);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$w = [
+const __iconNode$L = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -15711,112 +15711,125 @@ const __iconNode$w = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$w);
+const Calculator = createLucideIcon("calculator", __iconNode$L);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$v = [
+const __iconNode$K = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$v);
+const Calendar = createLucideIcon("calendar", __iconNode$K);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$u = [
+const __iconNode$J = [
+  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
+  ["path", { d: "M18 17V9", key: "2bz60n" }],
+  ["path", { d: "M13 17V5", key: "1frdt8" }],
+  ["path", { d: "M8 17v-3", key: "17ska0" }]
+];
+const ChartColumn = createLucideIcon("chart-column", __iconNode$J);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$I = [
   ["path", { d: "M18 6 7 17l-5-5", key: "116fxf" }],
   ["path", { d: "m22 10-7.5 7.5L13 16", key: "ke71qq" }]
 ];
-const CheckCheck = createLucideIcon("check-check", __iconNode$u);
+const CheckCheck = createLucideIcon("check-check", __iconNode$I);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$t = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$t);
+const __iconNode$H = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$H);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$s = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$s);
+const __iconNode$G = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$G);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$r = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$r);
+const __iconNode$F = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$F);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$q = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$q);
+const __iconNode$E = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$E);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$p = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$p);
+const __iconNode$D = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$D);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$o = [
+const __iconNode$C = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$o);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$C);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [
+const __iconNode$B = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$n);
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$B);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [
+const __iconNode$A = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$m);
+const Clock = createLucideIcon("clock", __iconNode$A);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$z = [
   ["path", { d: "M10 2v2", key: "7u0qdc" }],
   ["path", { d: "M14 2v2", key: "6buw04" }],
   [
@@ -15828,52 +15841,94 @@ const __iconNode$l = [
   ],
   ["path", { d: "M6 2v2", key: "colzsn" }]
 ];
-const Coffee = createLucideIcon("coffee", __iconNode$l);
+const Coffee = createLucideIcon("coffee", __iconNode$z);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$k = [
+const __iconNode$y = [
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
   ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
 ];
-const Download = createLucideIcon("download", __iconNode$k);
+const Download = createLucideIcon("download", __iconNode$y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$x = [
   ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
   ["path", { d: "M10 14 21 3", key: "gplh6r" }],
   ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
 ];
-const ExternalLink = createLucideIcon("external-link", __iconNode$j);
+const ExternalLink = createLucideIcon("external-link", __iconNode$x);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [
+const __iconNode$w = [
+  [
+    "path",
+    {
+      d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",
+      key: "ct8e1f"
+    }
+  ],
+  ["path", { d: "M14.084 14.158a3 3 0 0 1-4.242-4.242", key: "151rxh" }],
+  [
+    "path",
+    {
+      d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",
+      key: "13bj9a"
+    }
+  ],
+  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
+];
+const EyeOff = createLucideIcon("eye-off", __iconNode$w);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$v = [
+  [
+    "path",
+    {
+      d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",
+      key: "1nclc0"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+];
+const Eye = createLucideIcon("eye", __iconNode$v);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$u = [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   ["path", { d: "M10 9H8", key: "b1mrlr" }],
   ["path", { d: "M16 13H8", key: "t4e002" }],
   ["path", { d: "M16 17H8", key: "z1uh3a" }]
 ];
-const FileText = createLucideIcon("file-text", __iconNode$i);
+const FileText = createLucideIcon("file-text", __iconNode$u);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$h = [
+const __iconNode$t = [
   [
     "path",
     {
@@ -15883,14 +15938,14 @@ const __iconNode$h = [
   ],
   ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
 ];
-const Github = createLucideIcon("github", __iconNode$h);
+const Github = createLucideIcon("github", __iconNode$t);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$g = [
+const __iconNode$s = [
   [
     "path",
     {
@@ -15901,26 +15956,26 @@ const __iconNode$g = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$g);
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$s);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
+const __iconNode$r = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 16v-4", key: "1dtifu" }],
   ["path", { d: "M12 8h.01", key: "e9boi3" }]
 ];
-const Info = createLucideIcon("info", __iconNode$f);
+const Info = createLucideIcon("info", __iconNode$r);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [
+const __iconNode$q = [
   ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
   ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
   ["path", { d: "M2 5h12", key: "or177f" }],
@@ -15928,14 +15983,14 @@ const __iconNode$e = [
   ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
   ["path", { d: "M14 18h6", key: "1m8k6r" }]
 ];
-const Languages = createLucideIcon("languages", __iconNode$e);
+const Languages = createLucideIcon("languages", __iconNode$q);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [
+const __iconNode$p = [
   [
     "path",
     {
@@ -15946,14 +16001,14 @@ const __iconNode$d = [
   ["rect", { width: "4", height: "12", x: "2", y: "9", key: "mk3on5" }],
   ["circle", { cx: "4", cy: "4", r: "2", key: "bt5ra8" }]
 ];
-const Linkedin = createLucideIcon("linkedin", __iconNode$d);
+const Linkedin = createLucideIcon("linkedin", __iconNode$p);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$c = [
+const __iconNode$o = [
   ["path", { d: "M12 2v4", key: "3427ic" }],
   ["path", { d: "m16.2 7.8 2.9-2.9", key: "r700ao" }],
   ["path", { d: "M18 12h4", key: "wj9ykh" }],
@@ -15963,47 +16018,108 @@ const __iconNode$c = [
   ["path", { d: "M2 12h4", key: "j09sii" }],
   ["path", { d: "m4.9 4.9 2.9 2.9", key: "giyufr" }]
 ];
-const Loader = createLucideIcon("loader", __iconNode$c);
+const Loader = createLucideIcon("loader", __iconNode$o);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [
+const __iconNode$n = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+];
+const Lock = createLucideIcon("lock", __iconNode$n);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$m = [
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
+  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
+  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$m);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [
   ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
   ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
 ];
-const Mail = createLucideIcon("mail", __iconNode$b);
+const Mail = createLucideIcon("mail", __iconNode$l);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$a = [
+const __iconNode$k = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$k);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [
+  ["path", { d: "M12 20h9", key: "t2du7b" }],
+  [
+    "path",
+    {
+      d: "M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z",
+      key: "1ykcvy"
+    }
+  ]
+];
+const PenLine = createLucideIcon("pen-line", __iconNode$j);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$i = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$a);
+const Plus = createLucideIcon("plus", __iconNode$i);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$9 = [
+const __iconNode$h = [
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+];
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$h);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$g = [
   ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$9);
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$g);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$8 = [
+const __iconNode$f = [
   [
     "path",
     {
@@ -16014,25 +16130,25 @@ const __iconNode$8 = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-const Save = createLucideIcon("save", __iconNode$8);
+const Save = createLucideIcon("save", __iconNode$f);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$7 = [
+const __iconNode$e = [
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
   ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
 ];
-const Search = createLucideIcon("search", __iconNode$7);
+const Search = createLucideIcon("search", __iconNode$e);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$6 = [
+const __iconNode$d = [
   [
     "path",
     {
@@ -16042,7 +16158,100 @@ const __iconNode$6 = [
   ],
   ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
 ];
-const Send = createLucideIcon("send", __iconNode$6);
+const Send = createLucideIcon("send", __iconNode$d);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$c = [
+  [
+    "path",
+    {
+      d: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z",
+      key: "1qme2f"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+];
+const Settings = createLucideIcon("settings", __iconNode$c);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$b = [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ]
+];
+const Shield = createLucideIcon("shield", __iconNode$b);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$a = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
+  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+];
+const Target = createLucideIcon("target", __iconNode$a);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$9 = [
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
+];
+const Trash2 = createLucideIcon("trash-2", __iconNode$9);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$8 = [
+  ["polyline", { points: "22 7 13.5 15.5 8.5 10.5 2 17", key: "126l90" }],
+  ["polyline", { points: "16 7 22 7 22 13", key: "kwv8wd" }]
+];
+const TrendingUp = createLucideIcon("trending-up", __iconNode$8);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$7 = [
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["polyline", { points: "17 8 12 3 7 8", key: "t8dd8p" }],
+  ["line", { x1: "12", x2: "12", y1: "3", y2: "15", key: "widbto" }]
+];
+const Upload = createLucideIcon("upload", __iconNode$7);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$6 = [
+  ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
+  ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
+];
+const User = createLucideIcon("user", __iconNode$6);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16050,11 +16259,12 @@ const Send = createLucideIcon("send", __iconNode$6);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$5 = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
-  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
+  ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
+  ["path", { d: "M16 3.13a4 4 0 0 1 0 7.75", key: "1da9ce" }]
 ];
-const Target = createLucideIcon("target", __iconNode$5);
+const Users = createLucideIcon("users", __iconNode$5);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16062,13 +16272,15 @@ const Target = createLucideIcon("target", __iconNode$5);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$4 = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
+  ["path", { d: "M12 20h.01", key: "zekei9" }],
+  ["path", { d: "M8.5 16.429a5 5 0 0 1 7 0", key: "1bycff" }],
+  ["path", { d: "M5 12.859a10 10 0 0 1 5.17-2.69", key: "1dl1wf" }],
+  ["path", { d: "M19 12.859a10 10 0 0 0-2.007-1.523", key: "4k23kn" }],
+  ["path", { d: "M2 8.82a15 15 0 0 1 4.177-2.643", key: "1grhjp" }],
+  ["path", { d: "M22 8.82a15 15 0 0 0-11.288-3.764", key: "z3jwby" }],
+  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const Trash2 = createLucideIcon("trash-2", __iconNode$4);
+const WifiOff = createLucideIcon("wifi-off", __iconNode$4);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16076,11 +16288,12 @@ const Trash2 = createLucideIcon("trash-2", __iconNode$4);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$3 = [
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["polyline", { points: "17 8 12 3 7 8", key: "t8dd8p" }],
-  ["line", { x1: "12", x2: "12", y1: "3", y2: "15", key: "widbto" }]
+  ["path", { d: "M12 20h.01", key: "zekei9" }],
+  ["path", { d: "M2 8.82a15 15 0 0 1 20 0", key: "dnpr2z" }],
+  ["path", { d: "M5 12.859a10 10 0 0 1 14 0", key: "1x1e6c" }],
+  ["path", { d: "M8.5 16.429a5 5 0 0 1 7 0", key: "1bycff" }]
 ];
-const Upload = createLucideIcon("upload", __iconNode$3);
+const Wifi = createLucideIcon("wifi", __iconNode$3);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16088,19 +16301,6 @@ const Upload = createLucideIcon("upload", __iconNode$3);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$2 = [
-  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
-  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
-  ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
-  ["path", { d: "M16 3.13a4 4 0 0 1 0 7.75", key: "1da9ce" }]
-];
-const Users = createLucideIcon("users", __iconNode$2);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1 = [
   [
     "path",
     {
@@ -16109,7 +16309,18 @@ const __iconNode$1 = [
     }
   ]
 ];
-const Wrench = createLucideIcon("wrench", __iconNode$1);
+const Wrench = createLucideIcon("wrench", __iconNode$2);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1 = [
+  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
+  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+];
+const X = createLucideIcon("x", __iconNode$1);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16117,10 +16328,15 @@ const Wrench = createLucideIcon("wrench", __iconNode$1);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode = [
-  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
-  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+  [
+    "path",
+    {
+      d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
+      key: "1xq2db"
+    }
+  ]
 ];
-const X = createLucideIcon("x", __iconNode);
+const Zap = createLucideIcon("zap", __iconNode);
 const CLASS_PART_SEPARATOR = "-";
 const createClassGroupUtils = (config) => {
   const classMap = createClassMap(config);
@@ -19173,6 +19389,18 @@ function Toaster() {
     }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ToastViewport, {})
   ] });
+}
+function getAuthRedirectUrl() {
+  const base = "/malla-curricular-interactiva/";
+  const normalizedBase = base.startsWith("/") ? base : `/${base}`;
+  const withTrailingSlash = normalizedBase.endsWith("/") ? normalizedBase : `${normalizedBase}/`;
+  return `${window.location.origin}${withTrailingSlash}`;
+}
+function cleanAuthHashFromUrl() {
+  const hash = window.location.hash;
+  if (hash.includes("access_token=") || hash.includes("error=") || hash.includes("error_description=") || hash.includes("type=recovery") || hash.includes("type=signup")) {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
 }
 var __assign = function() {
   __assign = Object.assign || function __assign2(t) {
@@ -31688,7 +31916,7 @@ const AUTO_REFRESH_TICK_DURATION_MS = 30 * 1e3;
 const AUTO_REFRESH_TICK_THRESHOLD = 3;
 const EXPIRY_MARGIN_MS = AUTO_REFRESH_TICK_THRESHOLD * AUTO_REFRESH_TICK_DURATION_MS;
 const GOTRUE_URL = "http://localhost:9999";
-const STORAGE_KEY = "supabase.auth.token";
+const STORAGE_KEY$1 = "supabase.auth.token";
 const DEFAULT_HEADERS$1 = { "X-Client-Info": `gotrue-js/${version$1}` };
 const API_VERSION_HEADER_NAME = "X-Supabase-Api-Version";
 const API_VERSIONS = {
@@ -34292,7 +34520,7 @@ class WebAuthnApi {
 polyfillGlobalThis();
 const DEFAULT_OPTIONS = {
   url: GOTRUE_URL,
-  storageKey: STORAGE_KEY,
+  storageKey: STORAGE_KEY$1,
   autoRefreshToken: true,
   persistSession: true,
   detectSessionInUrl: true,
@@ -40073,7 +40301,15 @@ function shouldShowDeprecationWarning() {
 if (shouldShowDeprecationWarning()) console.warn("⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217");
 const supabaseUrl = "https://lyneadzlvusjczxmvxuv.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bmVhZHpsdnVzamN6eG12eHV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjA3NTIsImV4cCI6MjA5NjQ5Njc1Mn0.X38V6zPqnf7olpUHIpBBkldJqSWFdAsPYmDAk6D6zAU";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    detectSessionInUrl: true,
+    persistSession: true,
+    autoRefreshToken: true,
+    // Email confirmation links return tokens in the URL hash (implicit flow).
+    flowType: "implicit"
+  }
+});
 const AuthContext = reactExports.createContext(null);
 function AuthProvider({ children }) {
   const [session, setSession] = reactExports.useState(null);
@@ -40082,12 +40318,16 @@ function AuthProvider({ children }) {
   reactExports.useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      cleanAuthHashFromUrl();
       setIsLoading(false);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       if (event === "PASSWORD_RECOVERY") {
         setIsPasswordRecovery(true);
+      }
+      if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+        cleanAuthHashFromUrl();
       }
     });
     return () => subscription.unsubscribe();
@@ -40098,13 +40338,20 @@ function AuthProvider({ children }) {
     return { error };
   };
   const signUp = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: getAuthRedirectUrl()
+      }
+    });
     const needsConfirmation = !error && !data.session;
     return { error, needsConfirmation };
   };
   const resetPassword = async (email) => {
-    const redirectTo = window.location.origin + window.location.pathname;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: getAuthRedirectUrl()
+    });
     return { error };
   };
   const signOut = async () => {
@@ -47190,7 +47437,197 @@ function AlertDescription({
     }
   );
 }
+function useCourseOffer() {
+  const [offerMap, setOfferMap] = reactExports.useState(/* @__PURE__ */ new Map());
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  const [lastRefreshed, setLastRefreshed] = reactExports.useState(null);
+  const [error, setError] = reactExports.useState(null);
+  const loadFromCache = reactExports.useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data, error: dbError } = await supabase.from("course_offer").select("*").order("course_code");
+      if (dbError) throw new Error(dbError.message);
+      const map = /* @__PURE__ */ new Map();
+      (data ?? []).forEach((row) => {
+        map.set(row.nrc, row);
+      });
+      setOfferMap(map);
+      setLastRefreshed(/* @__PURE__ */ new Date());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cargar la oferta");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+  return { offerMap, isLoading, lastRefreshed, error, loadFromCache };
+}
+const DAY_FULL_TO_SHORT = {
+  Lunes: "Lun",
+  Martes: "Mar",
+  Miércoles: "Mié",
+  Miercoles: "Mié",
+  Jueves: "Jue",
+  Viernes: "Vie"
+};
+const SHORT_DAYS = /* @__PURE__ */ new Set(["Lun", "Mar", "Mié", "Jue", "Vie"]);
+function normalizeCurriculumCode(code) {
+  return code.trim().toUpperCase().replace(/\s+/g, "-");
+}
+function hasSpecificCourseCode(course) {
+  const normalized = normalizeCurriculumCode(course.code);
+  return /^[A-Z]{2,5}-\d/.test(normalized);
+}
+function isOpenElectiveCourse(course) {
+  return !hasSpecificCourseCode(course);
+}
+function normalizeOfferCourseCodeInput(raw) {
+  return raw.toUpperCase().replace(/\s+/g, "-").replace(/[^A-Z0-9-]/g, "");
+}
+function getElectivePrefixes(course) {
+  var _a2;
+  const normalized = normalizeCurriculumCode(course.code);
+  if (/^[A-Z]{2,5}-\d/.test(normalized)) return null;
+  const colonMatch = course.title.match(/:\s*([A-Z/]+)/i);
+  if (colonMatch) {
+    return colonMatch[1].split("/").map((p) => `${p.trim().toUpperCase()}-`);
+  }
+  if (!/\d/.test(normalized)) {
+    const area = (_a2 = course.area) == null ? void 0 : _a2.toUpperCase();
+    if (area && area.length >= 2) return [`${area}-`];
+  }
+  return null;
+}
+function courseMatchesOffer(course, row) {
+  const normalizedCode = normalizeCurriculumCode(course.code);
+  const offerCode = row.course_code.toUpperCase();
+  if (offerCode === normalizedCode) return true;
+  if (offerCode === normalizeCurriculumCode(course.id)) return true;
+  const prefixes = getElectivePrefixes(course);
+  if (prefixes) {
+    return prefixes.some((p) => offerCode.startsWith(p));
+  }
+  return false;
+}
+function isValidOfferSchedule(row) {
+  var _a2;
+  if (!row.start_time || row.days.length === 0) return false;
+  if (row.start_time.startsWith("00:00") && ((_a2 = row.end_time) == null ? void 0 : _a2.startsWith("00:0"))) return false;
+  return sessionsFromOfferRow(row).length > 0;
+}
+function normalizeOfferDay$1(day) {
+  if (SHORT_DAYS.has(day)) return day;
+  return DAY_FULL_TO_SHORT[day] ?? null;
+}
+function normalizeOfferTime(time) {
+  return time.slice(0, 5);
+}
+function sessionsFromOfferRow(row) {
+  if (!row.start_time) return [];
+  const startTime = normalizeOfferTime(row.start_time);
+  return row.days.map(normalizeOfferDay$1).filter((d) => d !== null).map((day) => ({ day, startTime }));
+}
+function sessionsFromOfferNrc(nrc, offerMap) {
+  const row = offerMap.get(nrc);
+  if (!row) return [];
+  return sessionsFromOfferRow(row);
+}
+function getOffersForCourse(offerMap, course, type = "Teoría") {
+  return [...offerMap.values()].filter(
+    (row) => row.type === type && courseMatchesOffer(course, row)
+  );
+}
+function getOffersForExplicitCode(offerMap, explicitCode, type = "Teoría") {
+  const normalized = normalizeCurriculumCode(explicitCode);
+  if (!normalized) return [];
+  return [...offerMap.values()].filter(
+    (row) => row.type === type && row.course_code.toUpperCase() === normalized
+  );
+}
+function getOffersForSchedule(offerMap, course, explicitCode, type = "Teoría") {
+  const trimmed = explicitCode == null ? void 0 : explicitCode.trim();
+  if (trimmed) return getOffersForExplicitCode(offerMap, trimmed, type);
+  if (isOpenElectiveCourse(course)) return [];
+  return getOffersForCourse(offerMap, course, type);
+}
+function getOfferCoursePreview(offerMap, explicitCode) {
+  return getOffersForExplicitCode(offerMap, explicitCode, "Teoría")[0];
+}
+function getLinkedOffers(mainRow, offerMap, type) {
+  const letters = new Set(mainRow.group_letters);
+  return [...offerMap.values()].filter((row) => {
+    if (row.course_code !== mainRow.course_code || row.type !== type) return false;
+    if (letters.size === 0) return true;
+    return row.group_letters.some((l) => letters.has(l));
+  });
+}
+function slotKey(day, startTime) {
+  return `${day}-${startTime}`;
+}
+function nrcConflictsWithSlots(nrc, occupied, offerMap) {
+  return sessionsFromOfferNrc(nrc, offerMap).some((s) => occupied.has(slotKey(s.day, s.startTime)));
+}
+function formatOfferSchedule(row) {
+  if (row.days.length === 0 || !row.start_time) return "Sin horario";
+  const time = `${normalizeOfferTime(row.start_time)}${row.end_time ? `–${normalizeOfferTime(row.end_time)}` : ""}`;
+  const days = row.days.map((d) => normalizeOfferDay$1(d) ?? d).join(", ");
+  return `${days} ${time}`;
+}
 const DAYS = ["Lun", "Mar", "Mié", "Jue", "Vie"];
+function NrcSuggestions({
+  label,
+  suggestions,
+  selectedNrc,
+  totalOffers,
+  onSelect
+}) {
+  if (totalOffers === 0) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-400 dark:text-gray-500 mt-2", children: "Sin ofertas para este curso en la base de datos." });
+  }
+  if (suggestions.length === 0) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-2", children: [
+      "Ningún NRC disponible sin conflicto con tu horario actual (",
+      totalOffers,
+      " ",
+      "en oferta)."
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 space-y-1", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-gray-500 dark:text-gray-400", children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5", children: suggestions.map((row) => {
+      const isSelected = selectedNrc === row.nrc;
+      const avail = row.available !== null && row.total !== null ? `${row.available}/${row.total}` : null;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => onSelect(row.nrc),
+          className: `text-left text-xs rounded-lg border px-2.5 py-1.5 transition-colors max-w-full ${isSelected ? "border-blue-500 bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500" : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-600/50 text-gray-700 dark:text-gray-200 hover:border-blue-300 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"}`,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", children: row.nrc }),
+            row.paralelo && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-gray-400 dark:text-gray-500", children: [
+              " ",
+              "· P",
+              row.paralelo
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-[11px] text-gray-500 dark:text-gray-400 truncate", children: formatOfferSchedule(row) }),
+            row.teacher && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-[11px] text-gray-400 dark:text-gray-500 truncate", children: row.teacher }),
+            avail && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "block text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5", children: [
+              avail,
+              " disp."
+            ] })
+          ]
+        },
+        row.nrc
+      );
+    }) })
+  ] });
+}
+function normalizeOfferDay(day) {
+  const short = normalizeOfferDay$1(day);
+  if (!short || !DAYS.includes(short)) return null;
+  return short;
+}
 const SEMESTER_PAIRS = {
   "Lun/Mié": ["Lun", "Mié"],
   "Mar/Jue": ["Mar", "Jue"]
@@ -47257,7 +47694,9 @@ function convertMainSessionsOnPeriodChange(sessions, from, to) {
     if (from === "verano" && to === "semestre") {
       if (SUMMER_DAYS.every((d) => days.has(d))) {
         SEMESTER_PAIR_OPTIONS.forEach((pair) => {
-          SEMESTER_PAIRS[pair].forEach((day) => converted.push({ day, startTime }));
+          SEMESTER_PAIRS[pair].forEach(
+            (day) => converted.push({ day, startTime })
+          );
         });
       } else {
         days.forEach((day) => converted.push({ day, startTime }));
@@ -47274,14 +47713,70 @@ function convertMainSessionsOnPeriodChange(sessions, from, to) {
   });
   return converted;
 }
-function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloatingButton }) {
+function AvailabilityBadge({ row }) {
+  if (!row || row.available === null || row.total === null) return null;
+  const ratio = row.total > 0 ? row.available / row.total : 0;
+  const color = ratio > 0.3 ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : ratio > 0 ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" : "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "span",
+    {
+      className: `inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${color}`,
+      children: [
+        row.available,
+        "/",
+        row.total,
+        " disponibles"
+      ]
+    }
+  );
+}
+function NrcOfferInfo({
+  nrc,
+  offerMap
+}) {
+  const row = nrc.length >= 4 ? offerMap.get(nrc) : void 0;
+  if (!row) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-gray-500 dark:text-gray-400 space-y-0.5 mt-1", children: [
+    row.teacher && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      "Profesor:",
+      " ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium text-gray-700 dark:text-gray-200", children: row.teacher })
+    ] }),
+    row.days.length > 0 && row.start_time && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      "Horario oferta:",
+      " ",
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-medium text-gray-700 dark:text-gray-200", children: [
+        row.days.join(", "),
+        " ",
+        row.start_time,
+        row.end_time ? `–${row.end_time}` : ""
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AvailabilityBadge, { row })
+  ] });
+}
+function SchedulePlanningDrawer({
+  plannedCourses,
+  onSave,
+  exposeOpen,
+  hideFloatingButton
+}) {
   const [isOpen, setIsOpen] = reactExports.useState(false);
   const [periodType, setPeriodType] = reactExports.useState("semestre");
+  const [entryMode, setEntryMode] = reactExports.useState("auto");
   const [schedules, setSchedules] = reactExports.useState([]);
   const [conflicts, setConflicts] = reactExports.useState([]);
+  const {
+    offerMap,
+    isLoading: offerLoading,
+    lastRefreshed,
+    error: offerError,
+    loadFromCache
+  } = useCourseOffer();
   reactExports.useEffect(() => {
     const initialSchedules = plannedCourses.map((course) => ({
       courseId: course.id,
+      offerCourseCode: "",
       nrc: "",
       hasEJ: false,
       hasLAB: false,
@@ -47343,12 +47838,6 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
     setConflicts(conflictList);
     return conflictList.length === 0;
   };
-  const updateNRC = (courseId, nrc) => {
-    const updated = schedules.map(
-      (s) => s.courseId === courseId ? { ...s, nrc } : s
-    );
-    setSchedules(updated);
-  };
   const getDefaultMainDayGroup = () => periodType === "verano" ? "Lun-Jue" : "Lun/Mié";
   const addMainSession = (courseId) => {
     const dayGroup = getDefaultMainDayGroup();
@@ -47366,7 +47855,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       const toRemove = packed[packedIndex];
       if (!toRemove) return s;
       const daysToRemove = new Set(
-        expandMainSession(periodType, toRemove.dayGroup, toRemove.startTime).map((sess) => sess.day)
+        expandMainSession(
+          periodType,
+          toRemove.dayGroup,
+          toRemove.startTime
+        ).map((sess) => sess.day)
       );
       return {
         ...s,
@@ -47387,7 +47880,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       const newDayGroup = field === "dayGroup" ? value : current.dayGroup;
       const newStartTime = field === "startTime" ? value : current.startTime;
       const daysToRemove = new Set(
-        expandMainSession(periodType, current.dayGroup, current.startTime).map((sess) => sess.day)
+        expandMainSession(periodType, current.dayGroup, current.startTime).map(
+          (sess) => sess.day
+        )
       );
       const remaining = s.sessions.filter(
         (sess) => !(daysToRemove.has(sess.day) && sess.startTime === current.startTime)
@@ -47402,15 +47897,32 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
     if (newPeriod === periodType) return;
     const updated = schedules.map((s) => ({
       ...s,
-      sessions: convertMainSessionsOnPeriodChange(s.sessions, periodType, newPeriod)
+      sessions: convertMainSessionsOnPeriodChange(
+        s.sessions,
+        periodType,
+        newPeriod
+      )
     }));
     setPeriodType(newPeriod);
     setSchedules(updated);
     checkConflicts(updated);
   };
   const generateHTMLReport = () => {
-    const DAYS_FULL = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-    const MAP_SHORT = { "Lun": "Lunes", "Mar": "Martes", "Mié": "Miércoles", "Mie": "Miércoles", "Jue": "Jueves", "Vie": "Viernes" };
+    const DAYS_FULL = [
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes"
+    ];
+    const MAP_SHORT = {
+      Lun: "Lunes",
+      Mar: "Martes",
+      Mié: "Miércoles",
+      Mie: "Miércoles",
+      Jue: "Jueves",
+      Vie: "Viernes"
+    };
     const grid = {};
     DAYS_FULL.forEach((d) => {
       grid[d] = {};
@@ -47426,7 +47938,8 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         s.sessions.forEach((sess) => {
           var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime]) grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
+          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
+            grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
         });
       }
       if (s.hasEJ && s.nrcEJ && s.sessionsEJ) {
@@ -47434,7 +47947,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         s.sessionsEJ.forEach((sess) => {
           var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime]) grid[day][sess.startTime].push({ title: `${base} EJ`, nrc: s.nrcEJ });
+          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
+            grid[day][sess.startTime].push({
+              title: `${base} EJ`,
+              nrc: s.nrcEJ
+            });
         });
       }
       if (s.hasLAB && s.nrcLAB && s.sessionsLAB) {
@@ -47442,7 +47959,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
         s.sessionsLAB.forEach((sess) => {
           var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime]) grid[day][sess.startTime].push({ title: `${base} LAB`, nrc: s.nrcLAB });
+          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
+            grid[day][sess.startTime].push({
+              title: `${base} LAB`,
+              nrc: s.nrcLAB
+            });
         });
       }
     });
@@ -47456,12 +47977,14 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       const cells = DAYS_FULL.map((day) => {
         const entries = grid[day][time];
         if (!entries.length) return `<td></td>`;
-        const content = entries.map((e) => `
+        const content = entries.map(
+          (e) => `
           <div class="entry">
             <div class="title">${e.title}</div>
             <div class="nrc">NRC: ${e.nrc}</div>
           </div>
-        `).join("");
+        `
+        ).join("");
         return `<td class="filled">${content}</td>`;
       }).join("");
       return `
@@ -47533,6 +48056,7 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
   const handleClear = () => {
     const cleared = schedules.map((s) => ({
       ...s,
+      offerCourseCode: "",
       nrc: "",
       hasEJ: false,
       hasLAB: false,
@@ -47556,7 +48080,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       if (schedule.hasEJ && schedule.sessionsEJ) {
         for (const session of schedule.sessionsEJ) {
           if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find((c) => c.id === schedule.courseId);
+            const course = plannedCourses.find(
+              (c) => c.id === schedule.courseId
+            );
             return course ? { code: course.code, title: course.title, type: "EJ" } : null;
           }
         }
@@ -47564,7 +48090,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       if (schedule.hasLAB && schedule.sessionsLAB) {
         for (const session of schedule.sessionsLAB) {
           if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find((c) => c.id === schedule.courseId);
+            const course = plannedCourses.find(
+              (c) => c.id === schedule.courseId
+            );
             return course ? { code: course.code, title: course.title, type: "LAB" } : null;
           }
         }
@@ -47577,6 +48105,129 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       exposeOpen(() => setIsOpen(true));
     }
   }, []);
+  reactExports.useEffect(() => {
+    if (isOpen && offerMap.size === 0) {
+      loadFromCache();
+    }
+  }, [isOpen]);
+  const sessionsFromOffer = (nrc) => {
+    const row = offerMap.get(nrc);
+    if (!row) return [];
+    return sessionsFromOfferRow(row).map((s) => {
+      const day = normalizeOfferDay(s.day);
+      return day ? { day, startTime: s.startTime } : null;
+    }).filter((s) => s !== null);
+  };
+  const getOccupiedSlots = reactExports.useCallback(
+    (excludeCourseId) => {
+      const occupied = /* @__PURE__ */ new Set();
+      schedules.forEach((s) => {
+        if (excludeCourseId && s.courseId === excludeCourseId) return;
+        const allSessions = [
+          ...s.sessions,
+          ...s.sessionsEJ || [],
+          ...s.sessionsLAB || []
+        ];
+        allSessions.forEach(
+          (sess) => occupied.add(slotKey(sess.day, sess.startTime))
+        );
+      });
+      return occupied;
+    },
+    [schedules]
+  );
+  const filterSuggestions = reactExports.useCallback(
+    (offers, excludeCourseId) => {
+      const valid = offers.filter(isValidOfferSchedule);
+      const occupied = getOccupiedSlots(excludeCourseId);
+      const suggestions = valid.filter((row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap)).sort((a, b) => (b.available ?? -999) - (a.available ?? -999));
+      return { suggestions, totalOffers: valid.length };
+    },
+    [getOccupiedSlots, offerMap]
+  );
+  const applyAutoFillFromOffer = (current) => {
+    if (entryMode !== "auto") return current;
+    return current.map((s) => {
+      const next = { ...s };
+      if (s.nrc && offerMap.has(s.nrc)) {
+        next.sessions = sessionsFromOffer(s.nrc);
+      }
+      if (s.hasEJ && s.nrcEJ && offerMap.has(s.nrcEJ)) {
+        next.sessionsEJ = sessionsFromOffer(s.nrcEJ);
+      }
+      if (s.hasLAB && s.nrcLAB && offerMap.has(s.nrcLAB)) {
+        next.sessionsLAB = sessionsFromOffer(s.nrcLAB);
+      }
+      return next;
+    });
+  };
+  reactExports.useEffect(() => {
+    if (!isOpen || entryMode !== "auto" || offerMap.size === 0) return;
+    setSchedules((prev) => {
+      const updated = applyAutoFillFromOffer(prev);
+      checkConflicts(updated);
+      return updated;
+    });
+  }, [isOpen, entryMode, offerMap]);
+  const handleOfferCourseCodeChange = (courseId, raw) => {
+    const offerCourseCode = normalizeOfferCourseCodeInput(raw);
+    const updated = schedules.map((s) => {
+      if (s.courseId !== courseId) return s;
+      return {
+        ...s,
+        offerCourseCode,
+        nrc: "",
+        sessions: [],
+        nrcEJ: "",
+        sessionsEJ: void 0,
+        nrcLAB: "",
+        sessionsLAB: void 0,
+        hasEJ: false,
+        hasLAB: false
+      };
+    });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+  const handleNrcChange = (courseId, raw) => {
+    const nrc = raw.replace(/\D/g, "").slice(0, 6);
+    const updated = schedules.map((s) => {
+      if (s.courseId !== courseId) return s;
+      const next = { ...s, nrc };
+      if (entryMode === "auto" && offerMap.has(nrc)) {
+        next.sessions = sessionsFromOffer(nrc);
+      }
+      return next;
+    });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+  const handleNrcEJChange = (courseId, raw) => {
+    const nrcEJ = raw.replace(/\D/g, "").slice(0, 6);
+    const updated = schedules.map((s) => {
+      if (s.courseId !== courseId) return s;
+      const next = { ...s, nrcEJ };
+      if (entryMode === "auto" && offerMap.has(nrcEJ)) {
+        next.sessionsEJ = sessionsFromOffer(nrcEJ);
+      }
+      return next;
+    });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
+  const handleNrcLABChange = (courseId, raw) => {
+    const nrcLAB = raw.replace(/\D/g, "").slice(0, 6);
+    const updated = schedules.map((s) => {
+      if (s.courseId !== courseId) return s;
+      const next = { ...s, nrcLAB };
+      if (entryMode === "auto" && offerMap.has(nrcLAB)) {
+        next.sessionsLAB = sessionsFromOffer(nrcLAB);
+      }
+      return next;
+    });
+    setSchedules(updated);
+    checkConflicts(updated);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     !hideFloatingButton && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed bottom-4 right-4 z-30", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 p-0 py-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Button,
@@ -47600,17 +48251,48 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[90vw] max-w-6xl bg-white dark:bg-gray-800 shadow-xl overflow-y-auto", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center gap-4 flex-wrap", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Preparación de horario" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5 gap-0.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: () => setEntryMode("auto"),
+                  className: `flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${entryMode === "auto" ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-3.5 h-3.5" }),
+                    "Automático"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: () => setEntryMode("manual"),
+                  className: `flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${entryMode === "manual" ? "bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-100 shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(PenLine, { className: "w-3.5 h-3.5" }),
+                    "Manual"
+                  ]
+                }
+              )
+            ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-gray-600 dark:text-gray-300", children: "Período:" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: periodType, onValueChange: (v) => handlePeriodTypeChange(v), children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 dark:bg-gray-700 dark:border-gray-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "semestre", children: "Semestre" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "verano", children: "Verano" })
-                ] })
-              ] })
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Select,
+                {
+                  value: periodType,
+                  onValueChange: (v) => handlePeriodTypeChange(v),
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 dark:bg-gray-700 dark:border-gray-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "semestre", children: "Semestre" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "verano", children: "Verano" })
+                    ] })
+                  ]
+                }
+              )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               Button,
@@ -47623,7 +48305,12 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-2", children: periodType === "semestre" ? "Clase principal: Lun/Mié o Mar/Jue. EJ y LAB: por día." : "Clase principal: Lun a Jue. EJ y LAB: por día." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-2", children: entryMode === "auto" ? "Modo automático: ingresa el NRC y el horario se llena desde la oferta de cursos." : periodType === "semestre" ? "Modo manual · Clase principal: Lun/Mié o Mar/Jue. EJ y LAB: por día." : "Modo manual · Clase principal: Lun a Jue. EJ y LAB: por día." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700", children: [
+            offerMap.size > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Wifi, { className: "w-3.5 h-3.5 text-green-500 shrink-0" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(WifiOff, { className: "w-3.5 h-3.5 text-gray-400 shrink-0" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-500 dark:text-gray-400", children: offerLoading ? "Cargando oferta…" : offerMap.size > 0 ? `${offerMap.size} NRCs disponibles${lastRefreshed ? ` · actualizado ${lastRefreshed.toLocaleDateString()}` : ""}` : "Sin datos de oferta" }),
+            offerError && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-red-500 ml-auto", children: offerError })
+          ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 space-y-6", children: [
           conflicts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert, { variant: "destructive", children: [
@@ -47633,7 +48320,9 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Materias planeadas" }),
             plannedCourses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-500 dark:text-gray-400", children: 'No hay materias planeadas. Marca materias como "planeadas" en la malla curricular.' }) : plannedCourses.map((course) => {
-              const schedule = schedules.find((s) => s.courseId === course.id);
+              const schedule = schedules.find(
+                (s) => s.courseId === course.id
+              );
               if (!schedule) return null;
               return /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "p-4 dark:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -47648,15 +48337,80 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                   ] })
                 ] }) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2 items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    Input,
-                    {
-                      placeholder: "NRC",
-                      value: schedule.nrc,
-                      onChange: (e) => updateNRC(course.id, e.target.value),
-                      className: "w-32 dark:bg-gray-600 dark:border-gray-500"
-                    }
-                  ) }),
+                  isOpenElectiveCourse(course) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1", children: "Código de materia" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Input,
+                      {
+                        placeholder: "ej. CMP-4001",
+                        value: schedule.offerCourseCode || "",
+                        onChange: (e) => handleOfferCourseCodeChange(
+                          course.id,
+                          e.target.value
+                        ),
+                        className: "w-48 dark:bg-gray-600 dark:border-gray-500 uppercase"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-1", children: "Ingresa el código USFQ de la materia que tomarás para ver NRCs disponibles." }),
+                    schedule.offerCourseCode && (() => {
+                      const preview = getOfferCoursePreview(
+                        offerMap,
+                        schedule.offerCourseCode
+                      );
+                      if (!preview)
+                        return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: "Código no encontrado en la oferta actual." });
+                      return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-300 mt-1", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: preview.course_code }),
+                        " — ",
+                        preview.title
+                      ] });
+                    })()
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2 items-start", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Input,
+                      {
+                        placeholder: "NRC (4–6 díg.)",
+                        value: schedule.nrc,
+                        onChange: (e) => handleNrcChange(course.id, e.target.value),
+                        inputMode: "numeric",
+                        maxLength: 6,
+                        className: "w-40 dark:bg-gray-600 dark:border-gray-500"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      NrcOfferInfo,
+                      {
+                        nrc: schedule.nrc,
+                        offerMap
+                      }
+                    ),
+                    entryMode === "auto" && offerMap.size > 0 && (() => {
+                      var _a2;
+                      if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
+                        return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-400 dark:text-gray-500 mt-2", children: "Ingresa el código de materia para ver sugerencias de NRC." });
+                      }
+                      const { suggestions, totalOffers } = filterSuggestions(
+                        getOffersForSchedule(
+                          offerMap,
+                          course,
+                          schedule.offerCourseCode,
+                          "Teoría"
+                        ),
+                        course.id
+                      );
+                      return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        NrcSuggestions,
+                        {
+                          label: `Sugerencias (${suggestions.length}${totalOffers > suggestions.length ? ` de ${totalOffers}` : ""})`,
+                          suggestions,
+                          selectedNrc: schedule.nrc,
+                          totalOffers,
+                          onSelect: (nrc) => handleNrcChange(course.id, nrc)
+                        }
+                      );
+                    })()
+                  ] }) }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-2", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47666,7 +48420,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                           checked: schedule.hasEJ,
                           onCheckedChange: (checked) => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id ? { ...s, hasEJ: checked, sessionsEJ: checked ? [] : void 0 } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                hasEJ: checked,
+                                sessionsEJ: checked ? [] : void 0
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
@@ -47690,7 +48448,11 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                           checked: schedule.hasLAB,
                           onCheckedChange: (checked) => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id ? { ...s, hasLAB: checked, sessionsLAB: checked ? [] : void 0 } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                hasLAB: checked,
+                                sessionsLAB: checked ? [] : void 0
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
@@ -47707,256 +48469,551 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
                       )
                     ] })
                   ] }),
-                  schedule.hasEJ && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center pl-4 border-l-2 border-blue-500", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-blue-600 dark:text-blue-400", children: "EJ:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Input,
-                      {
-                        placeholder: "NRC Ejercicios",
-                        value: schedule.nrcEJ || "",
-                        onChange: (e) => {
-                          const updated = schedules.map(
-                            (s) => s.courseId === course.id ? { ...s, nrcEJ: e.target.value } : s
-                          );
-                          setSchedules(updated);
-                        },
-                        className: "w-40 dark:bg-gray-600 dark:border-gray-500"
-                      }
-                    )
+                  schedule.hasEJ && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-start pl-4 border-l-2 border-blue-500", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-blue-600 dark:text-blue-400 pt-2", children: "EJ:" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Input,
+                        {
+                          placeholder: "NRC Ejercicios (4–6 díg.)",
+                          value: schedule.nrcEJ || "",
+                          onChange: (e) => handleNrcEJChange(
+                            course.id,
+                            e.target.value
+                          ),
+                          inputMode: "numeric",
+                          maxLength: 6,
+                          className: "w-48 dark:bg-gray-600 dark:border-gray-500"
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        NrcOfferInfo,
+                        {
+                          nrc: schedule.nrcEJ || "",
+                          offerMap
+                        }
+                      ),
+                      entryMode === "auto" && offerMap.size > 0 && (() => {
+                        var _a2;
+                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
+                          return null;
+                        const mainRow = schedule.nrc ? offerMap.get(schedule.nrc) : void 0;
+                        const ejOffers = mainRow ? getLinkedOffers(
+                          mainRow,
+                          offerMap,
+                          "Ejercicios"
+                        ) : getOffersForSchedule(
+                          offerMap,
+                          course,
+                          schedule.offerCourseCode,
+                          "Ejercicios"
+                        );
+                        const { suggestions, totalOffers } = filterSuggestions(ejOffers, course.id);
+                        return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          NrcSuggestions,
+                          {
+                            label: `Sugerencias EJ (${suggestions.length}${totalOffers > suggestions.length ? ` de ${totalOffers}` : ""})`,
+                            suggestions,
+                            selectedNrc: schedule.nrcEJ || "",
+                            totalOffers,
+                            onSelect: (nrc) => handleNrcEJChange(course.id, nrc)
+                          }
+                        );
+                      })()
+                    ] })
                   ] }),
-                  schedule.hasLAB && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center pl-4 border-l-2 border-green-500", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-green-600 dark:text-green-400", children: "LAB:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Input,
-                      {
-                        placeholder: "NRC Laboratorio",
-                        value: schedule.nrcLAB || "",
-                        onChange: (e) => {
-                          const updated = schedules.map(
-                            (s) => s.courseId === course.id ? { ...s, nrcLAB: e.target.value } : s
-                          );
-                          setSchedules(updated);
-                        },
-                        className: "w-40 dark:bg-gray-600 dark:border-gray-500"
-                      }
-                    )
+                  schedule.hasLAB && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-start pl-4 border-l-2 border-green-500", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-green-600 dark:text-green-400 pt-2", children: "LAB:" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Input,
+                        {
+                          placeholder: "NRC Laboratorio (4–6 díg.)",
+                          value: schedule.nrcLAB || "",
+                          onChange: (e) => handleNrcLABChange(
+                            course.id,
+                            e.target.value
+                          ),
+                          inputMode: "numeric",
+                          maxLength: 6,
+                          className: "w-48 dark:bg-gray-600 dark:border-gray-500"
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        NrcOfferInfo,
+                        {
+                          nrc: schedule.nrcLAB || "",
+                          offerMap
+                        }
+                      ),
+                      entryMode === "auto" && offerMap.size > 0 && (() => {
+                        var _a2;
+                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
+                          return null;
+                        const mainRow = schedule.nrc ? offerMap.get(schedule.nrc) : void 0;
+                        const labOffers = mainRow ? getLinkedOffers(
+                          mainRow,
+                          offerMap,
+                          "Laboratorio"
+                        ) : getOffersForSchedule(
+                          offerMap,
+                          course,
+                          schedule.offerCourseCode,
+                          "Laboratorio"
+                        );
+                        const { suggestions, totalOffers } = filterSuggestions(labOffers, course.id);
+                        return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          NrcSuggestions,
+                          {
+                            label: `Sugerencias LAB (${suggestions.length}${totalOffers > suggestions.length ? ` de ${totalOffers}` : ""})`,
+                            suggestions,
+                            selectedNrc: schedule.nrcLAB || "",
+                            totalOffers,
+                            onSelect: (nrc) => handleNrcLABChange(course.id, nrc)
+                          }
+                        );
+                      })()
+                    ] })
                   ] })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm font-medium text-gray-700 dark:text-gray-300", children: [
-                      "Clase Principal",
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-xs font-normal text-gray-500 dark:text-gray-400", children: periodType === "semestre" ? "(Lun/Mié o Mar/Jue)" : "(Lun a Jue)" })
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-gray-700 dark:text-gray-300", children: "Clase Principal" }),
+                      entryMode === "auto" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-3 h-3" }),
+                        "Auto"
+                      ] })
                     ] }),
-                    packMainSessions(periodType, schedule.sessions).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        Select,
-                        {
-                          value: session.dayGroup,
-                          onValueChange: (value) => updateMainSession(course.id, idx, "dayGroup", value),
-                          children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-32 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: periodType === "semestre" ? SEMESTER_PAIR_OPTIONS.map((pair) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: pair, children: pair }, pair)) : /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Lun-Jue", children: "Lun - Jue" }) })
-                          ]
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        Select,
-                        {
-                          value: session.startTime,
-                          onValueChange: (value) => updateMainSession(course.id, idx, "startTime", value),
-                          children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
-                          ]
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        Button,
-                        {
-                          variant: "ghost",
-                          size: "sm",
-                          onClick: () => removeMainSession(course.id, idx),
-                          className: "dark:hover:bg-gray-600",
-                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
-                        }
-                      )
-                    ] }, idx)),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Button,
-                      {
-                        variant: "outline",
-                        size: "sm",
-                        onClick: () => addMainSession(course.id),
-                        className: "dark:border-gray-500 dark:hover:bg-gray-600",
-                        children: "+ Agregar sesión"
-                      }
+                    entryMode === "auto" ? (
+                      /* Auto mode: show read-only chips from offer data */
+                      schedule.sessions.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
+                        schedule.sessions.map((s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "span",
+                          {
+                            className: "inline-flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-2.5 py-1.5 rounded-lg",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
+                              s.day,
+                              " · ",
+                              s.startTime
+                            ]
+                          },
+                          i
+                        )),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            onClick: () => setEntryMode("manual"),
+                            className: "text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 underline underline-offset-2",
+                            children: "Editar manualmente"
+                          }
+                        )
+                      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-3.5 h-3.5 flex-shrink-0" }),
+                        schedule.nrc.length >= 4 ? offerMap.has(schedule.nrc) ? `NRC ${schedule.nrc} encontrado pero el horario no se pudo interpretar — cambia a manual.` : `NRC ${schedule.nrc} no encontrado en la oferta — prueba refrescar o cambia a manual.` : "Ingresa el NRC (4–6 dígitos) para cargar el horario automáticamente."
+                      ] })
+                    ) : (
+                      /* Manual mode: full day/time editors */
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                        packMainSessions(
+                          periodType,
+                          schedule.sessions
+                        ).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
+                          {
+                            className: "flex gap-2 items-center",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.dayGroup,
+                                  onValueChange: (value) => updateMainSession(
+                                    course.id,
+                                    idx,
+                                    "dayGroup",
+                                    value
+                                  ),
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-32 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: periodType === "semestre" ? SEMESTER_PAIR_OPTIONS.map(
+                                      (pair) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                        SelectItem,
+                                        {
+                                          value: pair,
+                                          children: pair
+                                        },
+                                        pair
+                                      )
+                                    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Lun-Jue", children: "Lun - Jue" }) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.startTime,
+                                  onValueChange: (value) => updateMainSession(
+                                    course.id,
+                                    idx,
+                                    "startTime",
+                                    value
+                                  ),
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                Button,
+                                {
+                                  variant: "ghost",
+                                  size: "sm",
+                                  onClick: () => removeMainSession(course.id, idx),
+                                  className: "dark:hover:bg-gray-600",
+                                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                                }
+                              )
+                            ]
+                          },
+                          idx
+                        )),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          Button,
+                          {
+                            variant: "outline",
+                            size: "sm",
+                            onClick: () => addMainSession(course.id),
+                            className: "dark:border-gray-500 dark:hover:bg-gray-600",
+                            children: "+ Agregar sesión"
+                          }
+                        )
+                      ] })
                     )
                   ] }),
                   schedule.hasEJ && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 pl-4 border-l-2 border-blue-500", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-blue-600 dark:text-blue-400", children: "Ejercicios (EJ)" }),
-                    (schedule.sessionsEJ || []).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        Select,
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-blue-600 dark:text-blue-400", children: "Ejercicios (EJ)" }),
+                      entryMode === "auto" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded-full", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-2.5 h-2.5" }),
+                        "Auto"
+                      ] })
+                    ] }),
+                    entryMode === "auto" ? (schedule.sessionsEJ || []).length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: (schedule.sessionsEJ || []).map(
+                      (s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "span",
                         {
-                          value: session.day,
-                          onValueChange: (value) => {
-                            const updated = schedules.map((s) => {
-                              if (s.courseId === course.id && s.sessionsEJ) {
-                                const newSessions = [...s.sessionsEJ];
-                                newSessions[idx] = { ...newSessions[idx], day: value };
-                                return { ...s, sessionsEJ: newSessions };
-                              }
-                              return s;
-                            });
-                            setSchedules(updated);
-                            checkConflicts(updated);
-                          },
+                          className: "inline-flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-2.5 py-1.5 rounded-lg",
                           children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: day, children: day }, day)) })
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
+                            s.day,
+                            " · ",
+                            s.startTime
                           ]
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        Select,
-                        {
-                          value: session.startTime,
-                          onValueChange: (value) => {
-                            const updated = schedules.map((s) => {
-                              if (s.courseId === course.id && s.sessionsEJ) {
-                                const newSessions = [...s.sessionsEJ];
-                                newSessions[idx] = { ...newSessions[idx], startTime: value };
-                                return { ...s, sessionsEJ: newSessions };
-                              }
-                              return s;
-                            });
-                            setSchedules(updated);
-                            checkConflicts(updated);
+                        },
+                        i
+                      )
+                    ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: (schedule.nrcEJ || "").length >= 4 ? `NRC EJ ${schedule.nrcEJ} no encontrado en la oferta.` : "Ingresa el NRC de Ejercicios (4–6 dígitos) para auto-llenar." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                      (schedule.sessionsEJ || []).map(
+                        (session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
+                          {
+                            className: "flex gap-2 items-center",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.day,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsEJ) {
+                                          const newSessions = [
+                                            ...s.sessionsEJ
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            day: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsEJ: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: day,
+                                        children: day
+                                      },
+                                      day
+                                    )) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.startTime,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsEJ) {
+                                          const newSessions = [
+                                            ...s.sessionsEJ
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            startTime: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsEJ: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: time,
+                                        children: time
+                                      },
+                                      time
+                                    )) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                Button,
+                                {
+                                  variant: "ghost",
+                                  size: "sm",
+                                  onClick: () => {
+                                    const updated = schedules.map(
+                                      (s) => s.courseId === course.id && s.sessionsEJ ? {
+                                        ...s,
+                                        sessionsEJ: s.sessionsEJ.filter(
+                                          (_, i) => i !== idx
+                                        )
+                                      } : s
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  className: "dark:hover:bg-gray-600",
+                                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                                }
+                              )
+                            ]
                           },
-                          children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
-                          ]
-                        }
+                          idx
+                        )
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
                         Button,
                         {
-                          variant: "ghost",
+                          variant: "outline",
                           size: "sm",
                           onClick: () => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id && s.sessionsEJ ? { ...s, sessionsEJ: s.sessionsEJ.filter((_, i) => i !== idx) } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                sessionsEJ: [
+                                  ...s.sessionsEJ || [],
+                                  {
+                                    day: "Lun",
+                                    startTime: "07:00"
+                                  }
+                                ]
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
                           },
-                          className: "dark:hover:bg-gray-600",
-                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                          className: "dark:border-gray-500 dark:hover:bg-gray-600",
+                          children: "+ Agregar sesión EJ"
                         }
                       )
-                    ] }, idx)),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Button,
-                      {
-                        variant: "outline",
-                        size: "sm",
-                        onClick: () => {
-                          const updated = schedules.map(
-                            (s) => s.courseId === course.id ? { ...s, sessionsEJ: [...s.sessionsEJ || [], { day: "Lun", startTime: "07:00" }] } : s
-                          );
-                          setSchedules(updated);
-                          checkConflicts(updated);
-                        },
-                        className: "dark:border-gray-500 dark:hover:bg-gray-600",
-                        children: "+ Agregar sesión EJ"
-                      }
-                    )
+                    ] })
                   ] }),
                   schedule.hasLAB && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 pl-4 border-l-2 border-green-500", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-green-600 dark:text-green-400", children: "Laboratorio (LAB)" }),
-                    (schedule.sessionsLAB || []).map((session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 items-center", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        Select,
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-green-600 dark:text-green-400", children: "Laboratorio (LAB)" }),
+                      entryMode === "auto" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-2.5 h-2.5" }),
+                        "Auto"
+                      ] })
+                    ] }),
+                    entryMode === "auto" ? (schedule.sessionsLAB || []).length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: (schedule.sessionsLAB || []).map(
+                      (s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "span",
                         {
-                          value: session.day,
-                          onValueChange: (value) => {
-                            const updated = schedules.map((s) => {
-                              if (s.courseId === course.id && s.sessionsLAB) {
-                                const newSessions = [...s.sessionsLAB];
-                                newSessions[idx] = { ...newSessions[idx], day: value };
-                                return { ...s, sessionsLAB: newSessions };
-                              }
-                              return s;
-                            });
-                            setSchedules(updated);
-                            checkConflicts(updated);
-                          },
+                          className: "inline-flex items-center gap-1.5 text-xs bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700 px-2.5 py-1.5 rounded-lg",
                           children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: day, children: day }, day)) })
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
+                            s.day,
+                            " · ",
+                            s.startTime
                           ]
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        Select,
-                        {
-                          value: session.startTime,
-                          onValueChange: (value) => {
-                            const updated = schedules.map((s) => {
-                              if (s.courseId === course.id && s.sessionsLAB) {
-                                const newSessions = [...s.sessionsLAB];
-                                newSessions[idx] = { ...newSessions[idx], startTime: value };
-                                return { ...s, sessionsLAB: newSessions };
-                              }
-                              return s;
-                            });
-                            setSchedules(updated);
-                            checkConflicts(updated);
+                        },
+                        i
+                      )
+                    ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2", children: (schedule.nrcLAB || "").length >= 4 ? `NRC LAB ${schedule.nrcLAB} no encontrado en la oferta.` : "Ingresa el NRC de Laboratorio (4–6 dígitos) para auto-llenar." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                      (schedule.sessionsLAB || []).map(
+                        (session, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
+                          {
+                            className: "flex gap-2 items-center",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.day,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsLAB) {
+                                          const newSessions = [
+                                            ...s.sessionsLAB
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            day: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsLAB: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: day,
+                                        children: day
+                                      },
+                                      day
+                                    )) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                                Select,
+                                {
+                                  value: session.startTime,
+                                  onValueChange: (value) => {
+                                    const updated = schedules.map(
+                                      (s) => {
+                                        if (s.courseId === course.id && s.sessionsLAB) {
+                                          const newSessions = [
+                                            ...s.sessionsLAB
+                                          ];
+                                          newSessions[idx] = {
+                                            ...newSessions[idx],
+                                            startTime: value
+                                          };
+                                          return {
+                                            ...s,
+                                            sessionsLAB: newSessions
+                                          };
+                                        }
+                                        return s;
+                                      }
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  children: [
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                      SelectItem,
+                                      {
+                                        value: time,
+                                        children: time
+                                      },
+                                      time
+                                    )) })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                Button,
+                                {
+                                  variant: "ghost",
+                                  size: "sm",
+                                  onClick: () => {
+                                    const updated = schedules.map(
+                                      (s) => s.courseId === course.id && s.sessionsLAB ? {
+                                        ...s,
+                                        sessionsLAB: s.sessionsLAB.filter(
+                                          (_, i) => i !== idx
+                                        )
+                                      } : s
+                                    );
+                                    setSchedules(updated);
+                                    checkConflicts(updated);
+                                  },
+                                  className: "dark:hover:bg-gray-600",
+                                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                                }
+                              )
+                            ]
                           },
-                          children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-28 dark:bg-gray-600 dark:border-gray-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: time, children: time }, time)) })
-                          ]
-                        }
+                          idx
+                        )
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-600 dark:text-gray-400", children: "(1h30min)" }),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
                         Button,
                         {
-                          variant: "ghost",
+                          variant: "outline",
                           size: "sm",
                           onClick: () => {
                             const updated = schedules.map(
-                              (s) => s.courseId === course.id && s.sessionsLAB ? { ...s, sessionsLAB: s.sessionsLAB.filter((_, i) => i !== idx) } : s
+                              (s) => s.courseId === course.id ? {
+                                ...s,
+                                sessionsLAB: [
+                                  ...s.sessionsLAB || [],
+                                  {
+                                    day: "Lun",
+                                    startTime: "07:00"
+                                  }
+                                ]
+                              } : s
                             );
                             setSchedules(updated);
                             checkConflicts(updated);
                           },
-                          className: "dark:hover:bg-gray-600",
-                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+                          className: "dark:border-gray-500 dark:hover:bg-gray-600",
+                          children: "+ Agregar sesión LAB"
                         }
                       )
-                    ] }, idx)),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Button,
-                      {
-                        variant: "outline",
-                        size: "sm",
-                        onClick: () => {
-                          const updated = schedules.map(
-                            (s) => s.courseId === course.id ? { ...s, sessionsLAB: [...s.sessionsLAB || [], { day: "Lun", startTime: "07:00" }] } : s
-                          );
-                          setSchedules(updated);
-                          checkConflicts(updated);
-                        },
-                        className: "dark:border-gray-500 dark:hover:bg-gray-600",
-                        children: "+ Agregar sesión LAB"
-                      }
-                    )
+                    ] })
                   ] })
                 ] })
               ] }) }, course.id);
@@ -47967,7 +49024,14 @@ function SchedulePlanningDrawer({ plannedCourses, onSave, exposeOpen, hideFloati
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full border-collapse border border-gray-300 dark:border-gray-600", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-100 dark:bg-gray-700", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-semibold", children: "Hora" }),
-                DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-semibold", children: day }, day))
+                DAYS.map((day) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-semibold",
+                    children: day
+                  },
+                  day
+                ))
               ] }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-medium text-center bg-gray-50 dark:bg-gray-700", children: time }),
@@ -49718,9 +50782,529 @@ function AuthModal({ open, onOpenChange, initialMode = "login" }) {
     ] })
   ] }) });
 }
+const STORAGE_KEY = "usfq_credentials";
+function getUSFQCredentials() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function SettingsModal({ open, onOpenChange }) {
+  const [username, setUsername] = reactExports.useState("");
+  const [password, setPassword] = reactExports.useState("");
+  const [showPassword, setShowPassword] = reactExports.useState(false);
+  const [saved, setSaved] = reactExports.useState(false);
+  const [hasCredentials, setHasCredentials] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    if (open) {
+      const creds = getUSFQCredentials();
+      if (creds) {
+        setUsername(creds.username);
+        setPassword(creds.password);
+        setHasCredentials(true);
+      } else {
+        setUsername("");
+        setPassword("");
+        setHasCredentials(false);
+      }
+      setSaved(false);
+    }
+  }, [open]);
+  if (!open) return null;
+  const handleSave = () => {
+    if (!username.trim() || !password.trim()) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ username: username.trim(), password }));
+    setHasCredentials(true);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  };
+  const handleDelete = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setUsername("");
+    setPassword("");
+    setHasCredentials(false);
+    setSaved(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-black/50", onClick: () => onOpenChange(false) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "w-5 h-5 text-gray-600 dark:text-gray-400" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Configuración" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => onOpenChange(false),
+            className: "text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-5 h-5" })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 space-y-5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { className: "w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm text-blue-800 dark:text-blue-200 space-y-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium", children: "Tu privacidad está protegida" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-blue-700 dark:text-blue-300", children: [
+              "Tus credenciales se almacenan ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "únicamente en tu navegador" }),
+              " y se usan solo para consultar la oferta de cursos de la USFQ. No se envían a ningún servidor externo ni se comparten con nadie."
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3", children: "Credenciales USFQ" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mb-3", children: "Ingresa tus credenciales del portal USFQ para que el planificador pueda consultar la disponibilidad de cursos en el catálogo de oferta." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-medium text-gray-600 dark:text-gray-400 block mb-1", children: "Usuario / Correo USFQ" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  type: "text",
+                  placeholder: "usuario@usfq.edu.ec",
+                  value: username,
+                  onChange: (e) => setUsername(e.target.value),
+                  autoComplete: "username",
+                  className: "dark:bg-gray-700 dark:border-gray-600"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-medium text-gray-600 dark:text-gray-400 block mb-1", children: "Contraseña USFQ" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    type: showPassword ? "text" : "password",
+                    placeholder: "Tu contraseña del portal",
+                    value: password,
+                    onChange: (e) => setPassword(e.target.value),
+                    autoComplete: "current-password",
+                    className: "pr-10 dark:bg-gray-700 dark:border-gray-600"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => setShowPassword(!showPassword),
+                    className: "absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200",
+                    children: showPassword ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { className: "w-4 h-4" })
+                  }
+                )
+              ] })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              onClick: handleSave,
+              disabled: !username.trim() || !password.trim(),
+              className: "flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white",
+              children: saved ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { className: "w-4 h-4" }),
+                "Guardado"
+              ] }) : "Guardar credenciales"
+            }
+          ),
+          hasCredentials && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              onClick: handleDelete,
+              className: "gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-4 h-4" }),
+                "Borrar"
+              ]
+            }
+          )
+        ] }),
+        hasCredentials && !saved && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-green-600 dark:text-green-400 flex items-center gap-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { className: "w-3.5 h-3.5" }),
+          "Credenciales guardadas en este dispositivo"
+        ] })
+      ] })
+    ] })
+  ] });
+}
+function computePrediction(planned, avgHistorical) {
+  const demandSections = planned / 15;
+  const predicted = avgHistorical * 0.6 + demandSections * 0.4;
+  return Math.max(1, Math.round(predicted));
+}
+function trend(planned, avgHistorical) {
+  if (avgHistorical === 0) return "new";
+  const demandSections = planned / 15;
+  const ratio = demandSections / avgHistorical;
+  if (ratio > 1.15) return "up";
+  if (ratio < 0.85) return "down";
+  return "stable";
+}
+function StatCard({ label, value, icon }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-4 dark:bg-gray-800 flex items-center gap-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2.5 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400", children: icon }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold text-gray-900 dark:text-white", children: value }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: label })
+    ] })
+  ] });
+}
+function TrendIcon({ t }) {
+  if (t === "up") return /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronUp, { className: "w-4 h-4 text-green-500" });
+  if (t === "down") return /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "w-4 h-4 text-red-400" });
+  if (t === "new") return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold text-blue-500 px-1.5 py-0.5 bg-blue-50 dark:bg-blue-900/30 rounded", children: "Nuevo" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "w-4 h-4 text-gray-400" });
+}
+function DemandBar({ planned, maxPlanned }) {
+  const pct = maxPlanned > 0 ? Math.round(planned / maxPlanned * 100) : 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 w-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "h-2 rounded-full bg-blue-500 dark:bg-blue-400 transition-all duration-500",
+        style: { width: `${pct}%` }
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-gray-600 dark:text-gray-300 w-8 text-right", children: planned })
+  ] });
+}
+function TeacherDashboard({ profile }) {
+  const [demand, setDemand] = reactExports.useState([]);
+  const [history, setHistory] = reactExports.useState(/* @__PURE__ */ new Map());
+  const [predictions, setPredictions] = reactExports.useState([]);
+  const [isLoading, setIsLoading] = reactExports.useState(true);
+  const [error, setError] = reactExports.useState(null);
+  const [lastLoaded, setLastLoaded] = reactExports.useState(null);
+  const [sortBy, setSortBy] = reactExports.useState("planned");
+  const load = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data: demandData, error: demandErr } = await supabase.rpc("get_faculty_demand", {
+        p_faculty: profile.faculty
+      });
+      if (demandErr) throw new Error(demandErr.message);
+      const demandRows = (demandData ?? []).map((r2) => ({
+        course_id: r2.course_id,
+        planned_count: Number(r2.planned_count)
+      }));
+      const courseCodes = demandRows.map((r2) => r2.course_id);
+      let histAgg = [];
+      if (courseCodes.length > 0) {
+        const { data: histData, error: histErr } = await supabase.from("course_offer_history").select("course_code, total, period").in("course_code", courseCodes).eq("type", "Teoría");
+        if (histErr) throw new Error(histErr.message);
+        const perPeriod = /* @__PURE__ */ new Map();
+        (histData ?? []).forEach((r2) => {
+          if (!perPeriod.has(r2.course_code)) perPeriod.set(r2.course_code, /* @__PURE__ */ new Map());
+          const byPeriod = perPeriod.get(r2.course_code);
+          byPeriod.set(r2.period, Math.max(byPeriod.get(r2.period) ?? 0, r2.total ?? 0));
+        });
+        histAgg = [...perPeriod.entries()].map(([code, byPeriod]) => {
+          const totals = [...byPeriod.values()];
+          const avg = totals.reduce((a, b) => a + b, 0) / totals.length;
+          return {
+            course_code: code,
+            avg_total: avg,
+            max_total: Math.max(...totals),
+            num_periods: totals.length
+          };
+        });
+      }
+      const histMap = new Map(histAgg.map((h) => [h.course_code, h]));
+      const preds = demandRows.map((row) => {
+        const hist = histMap.get(row.course_id);
+        const avgHist = (hist == null ? void 0 : hist.avg_total) ?? 0;
+        return {
+          course_id: row.course_id,
+          planned_count: row.planned_count,
+          avg_historical: avgHist,
+          max_historical: (hist == null ? void 0 : hist.max_total) ?? 0,
+          num_periods: (hist == null ? void 0 : hist.num_periods) ?? 0,
+          predicted_sections: computePrediction(row.planned_count, avgHist),
+          trend: trend(row.planned_count, avgHist)
+        };
+      });
+      setDemand(demandRows);
+      setHistory(histMap);
+      setPredictions(preds);
+      setLastLoaded(/* @__PURE__ */ new Date());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cargar los datos");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  reactExports.useEffect(() => {
+    load();
+  }, []);
+  const sortedPredictions = [...predictions].sort((a, b) => {
+    if (sortBy === "planned") return b.planned_count - a.planned_count;
+    if (sortBy === "predicted") return b.predicted_sections - a.predicted_sections;
+    const order = { up: 3, stable: 2, new: 1, down: 0 };
+    return order[b.trend] - order[a.trend];
+  });
+  const maxPlanned = Math.max(...predictions.map((p) => p.planned_count), 1);
+  const totalPlanned = predictions.reduce((s, p) => s + p.planned_count, 0);
+  const upTrend = predictions.filter((p) => p.trend === "up").length;
+  const newCourses = predictions.filter((p) => p.trend === "new").length;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto px-4 py-8 space-y-8", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(GraduationCap, { className: "w-6 h-6 text-blue-600 dark:text-blue-400" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-gray-900 dark:text-white", children: "Dashboard Docente" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: [
+          profile.name && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-medium text-gray-700 dark:text-gray-300", children: [
+            profile.name,
+            " · "
+          ] }),
+          "Facultad ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-blue-600 dark:text-blue-400", children: profile.faculty })
+        ] }),
+        lastLoaded && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-400", children: [
+          "Actualizado: ",
+          lastLoaded.toLocaleTimeString()
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          variant: "outline",
+          onClick: load,
+          disabled: isLoading,
+          className: "gap-2 dark:border-gray-600 dark:hover:bg-gray-700 self-start sm:self-auto",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${isLoading ? "animate-spin" : ""}` }),
+            "Actualizar"
+          ]
+        }
+      )
+    ] }),
+    error && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 text-sm text-red-700 dark:text-red-400", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4 flex-shrink-0 mt-0.5" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium", children: "Error al cargar datos" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: error })
+      ] })
+    ] }),
+    !isLoading && predictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        StatCard,
+        {
+          label: "Materias con demanda",
+          value: predictions.length,
+          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        StatCard,
+        {
+          label: "Estudiantes planeando",
+          value: totalPlanned,
+          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-5 h-5" })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        StatCard,
+        {
+          label: "Con tendencia al alza",
+          value: upTrend,
+          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5" })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        StatCard,
+        {
+          label: "Materias nuevas (sin historial)",
+          value: newCourses,
+          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-5 h-5" })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "dark:bg-gray-800 overflow-hidden", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-semibold text-gray-900 dark:text-white", children: [
+          "Predicción de demanda — ",
+          profile.faculty
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Ordenar por:" }),
+          ["planned", "predicted", "trend"].map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setSortBy(opt),
+              className: `text-xs px-2.5 py-1 rounded-md transition-colors ${sortBy === opt ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`,
+              children: opt === "planned" ? "Planeados" : opt === "predicted" ? "Predicción" : "Tendencia"
+            },
+            opt
+          ))
+        ] })
+      ] }),
+      isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-12 text-center text-gray-500 dark:text-gray-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "w-6 h-6 animate-spin mx-auto mb-3" }),
+        "Cargando datos de demanda…"
+      ] }) : sortedPredictions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-12 text-center text-gray-500 dark:text-gray-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-10 h-10 mx-auto mb-3 opacity-30" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+          "Aún no hay estudiantes que hayan marcado materias de ",
+          profile.faculty,
+          " como planeadas."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm mt-1", children: "Los datos aparecerán aquí cuando los estudiantes usen la malla interactiva." })
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-50 dark:bg-gray-700/50 text-left", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-36", children: "Código" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Demanda planeada" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center", children: "Historial" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center", children: "Secciones sugeridas" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", children: "Tendencia" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "divide-y divide-gray-100 dark:divide-gray-700", children: sortedPredictions.map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "tr",
+          {
+            className: "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded", children: row.course_id }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { planned: row.planned_count, maxPlanned }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4 text-center", children: row.num_periods > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-medium text-gray-800 dark:text-gray-200", children: [
+                  row.avg_historical.toFixed(1),
+                  " secc."
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-gray-400", children: [
+                  row.num_periods,
+                  " período",
+                  row.num_periods !== 1 ? "s" : ""
+                ] })
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "Sin datos" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4 text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-lg font-bold ${row.predicted_sections >= (row.avg_historical || 1) ? "text-green-600 dark:text-green-400" : "text-orange-500 dark:text-orange-400"}`, children: row.predicted_sections }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendIcon, { t: row.trend }) }) })
+            ]
+          },
+          row.course_id
+        )) })
+      ] }) }),
+      !isLoading && sortedPredictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Metodología:" }),
+        ' Secciones sugeridas = (promedio histórico × 60%) + (estudiantes planeados ÷ 15 × 40%). Los datos de demanda provienen de los estudiantes que marcaron materias como "planeadas" en la malla interactiva.'
+      ] }) })
+    ] }),
+    !isLoading && history.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "dark:bg-gray-800 overflow-hidden", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-4 border-b border-gray-100 dark:border-gray-700", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-gray-900 dark:text-white", children: "Historial de oferta por período" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-0.5", children: "Datos históricos de secciones abiertas por materia, extraídos del catálogo de cursos." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-50 dark:bg-gray-700/50 text-left", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Código" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 text-center", children: "Prom. secciones" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 text-center", children: "Máx. secciones" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 text-center", children: "Períodos con datos" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "divide-y divide-gray-100 dark:divide-gray-700", children: [...history.values()].sort((a, b) => b.avg_total - a.avg_total).map((h) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-semibold text-gray-700 dark:text-gray-300", children: h.course_code }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3 text-center font-medium text-gray-800 dark:text-gray-200", children: h.avg_total.toFixed(1) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3 text-center text-gray-600 dark:text-gray-400", children: h.max_total }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3 text-center text-gray-500 dark:text-gray-400", children: h.num_periods })
+        ] }, h.course_code)) })
+      ] }) })
+    ] })
+  ] });
+}
+function useTeacherProfile(email) {
+  const [teacherProfile, setTeacherProfile] = reactExports.useState(null);
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    if (!email) {
+      setTeacherProfile(null);
+      return;
+    }
+    setIsLoading(true);
+    supabase.from("teacher_profiles").select("id, email, name, faculty").eq("email", email).maybeSingle().then(({ data }) => {
+      setTeacherProfile(data ?? null);
+      setIsLoading(false);
+    }).catch(() => {
+      setTeacherProfile(null);
+      setIsLoading(false);
+    });
+  }, [email]);
+  return { teacherProfile, isLoading };
+}
 const queryClient = new QueryClient();
+function UserMenu() {
+  const { user, signOut } = useSupabaseAuth();
+  const [open, setOpen] = reactExports.useState(false);
+  const [settingsOpen, setSettingsOpen] = reactExports.useState(false);
+  const ref = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", ref, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        onClick: () => setOpen(!open),
+        className: "flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "w-4 h-4 flex-shrink-0" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline truncate max-w-[160px]", children: user == null ? void 0 : user.email }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: `w-3.5 h-3.5 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}` })
+        ]
+      }
+    ),
+    open && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute right-0 mt-1.5 w-52 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3 py-2.5 border-b border-gray-100 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 truncate", children: user == null ? void 0 : user.email }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => {
+              setOpen(false);
+              setSettingsOpen(true);
+            },
+            className: "w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "w-4 h-4 text-gray-500 dark:text-gray-400" }),
+              "Configuración"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => {
+              setOpen(false);
+              signOut();
+            },
+            className: "w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(LogOut, { className: "w-4 h-4" }),
+              "Cerrar sesión"
+            ]
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsModal, { open: settingsOpen, onOpenChange: setSettingsOpen })
+  ] });
+}
 function AuthButton() {
-  const { isSignedIn, isLoading, user, signOut, isPasswordRecovery } = useSupabaseAuth();
+  const { isSignedIn, isLoading, isPasswordRecovery } = useSupabaseAuth();
   const [modalOpen, setModalOpen] = reactExports.useState(false);
   const [authMode, setAuthMode] = reactExports.useState("login");
   const openAuth = (mode) => {
@@ -49734,21 +51318,11 @@ function AuthButton() {
     }
   }, [isPasswordRecovery]);
   if (isLoading) return null;
-  if (isSignedIn && !isPasswordRecovery) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-gray-700 dark:text-gray-300 hidden sm:inline truncate max-w-[180px]", children: user == null ? void 0 : user.email }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: signOut,
-          className: "px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors",
-          children: "Salir"
-        }
-      )
-    ] });
-  }
   if (isPasswordRecovery) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(AuthModal, { open: true, onOpenChange: setModalOpen, initialMode: "new-password" });
+  }
+  if (isSignedIn) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(UserMenu, {});
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
@@ -49773,12 +51347,17 @@ function AuthButton() {
   ] });
 }
 function AppInner() {
+  const { isSignedIn, user } = useSupabaseAuth();
+  const { teacherProfile, isLoading: isTeacherLoading } = useTeacherProfile(
+    isSignedIn ? (user == null ? void 0 : user.email) ?? null : null
+  );
+  const showTeacherDashboard = isSignedIn && !isTeacherLoading && teacherProfile !== null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Malla Curricular Interactiva" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthButton, {}) })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CurriculumGrid, {}) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: showTeacherDashboard ? /* @__PURE__ */ jsxRuntimeExports.jsx(TeacherDashboard, { profile: teacherProfile }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CurriculumGrid, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeToggle, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, {})

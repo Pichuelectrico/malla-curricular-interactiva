@@ -45,12 +45,12 @@ Los JSON se guardan en `scraper/output/Malla-{CODIGO}.json`.
 
 ## Problemas comunes
 
-| Error | Solución |
-|-------|----------|
-| `Script not found` / `Cannot find module` | Ejecuta `bun run setup` dentro de `scraper/` |
-| `Playwright browsers not found` | Ejecuta `bun run install-browsers` |
-| `Failed to fetch` / timeout | El sitio USFQ está lento o caído; reintenta más tarde |
-| `No career found with code` | Usa el código corto (ej. `CMP`, `ADM`), no el slug completo |
+| Error                                     | Solución                                                    |
+| ----------------------------------------- | ----------------------------------------------------------- |
+| `Script not found` / `Cannot find module` | Ejecuta `bun run setup` dentro de `scraper/`                |
+| `Playwright browsers not found`           | Ejecuta `bun run install-browsers`                          |
+| `Failed to fetch` / timeout               | El sitio USFQ está lento o caído; reintenta más tarde       |
+| `No career found with code`               | Usa el código corto (ej. `CMP`, `ADM`), no el slug completo |
 
 ## Códigos de carrera disponibles
 
