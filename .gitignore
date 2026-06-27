@@ -2,13 +2,17 @@
 offer-scraper/.env
 offer-scraper/snaps/
 offer-scraper/.browser_profile/
+predictor/output/
 offer-scraper/.browser_state.json
 offer-scraper/all_courses.json
 offer-scraper/batch_*.sql
 offer-scraper/test_scrape.py
 offer-scraper/.venv/
+__pycache__/
+*.pyc
 offer-scraper/__pycache__/
 offer-scraper/scraped_data.json
+offer-scraper/scraped_*.json
 offer-scraper/*.log
 .encore
 encore.gen.go

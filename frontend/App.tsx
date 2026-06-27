@@ -7,13 +7,19 @@ import Footer from './components/Footer';
 import AuthModal, { type AuthMode } from './components/AuthModal';
 import SettingsModal from './components/SettingsModal';
 import TeacherDashboard from './components/TeacherDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import { AuthProvider, useSupabaseAuth } from './lib/auth';
 import { useTeacherProfile } from './lib/useTeacherProfile';
+import { useAdminProfile } from './lib/useAdminProfile';
 import { Settings, LogOut, ChevronDown, User } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
-function UserMenu() {
+interface UserMenuProps {
+  onOpenPasswordReset: () => void;
+}
+
+function UserMenu({ onOpenPasswordReset }: UserMenuProps) {
   const { user, signOut } = useSupabaseAuth();
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -62,66 +68,83 @@ function UserMenu() {
         </div>
       )}
 
-      <SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <SettingsModal
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        onOpenPasswordReset={onOpenPasswordReset}
+      />
     </div>
   );
 }
 
-function AuthButton() {
+interface AuthButtonProps {
+  onOpenAuth: (mode: AuthMode) => void;
+  onOpenPasswordReset: () => void;
+}
+
+function AuthButton({ onOpenAuth, onOpenPasswordReset }: AuthButtonProps) {
   const { isSignedIn, isLoading, isPasswordRecovery } = useSupabaseAuth();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
-
-  const openAuth = (mode: AuthMode) => {
-    setAuthMode(mode);
-    setModalOpen(true);
-  };
-
-  React.useEffect(() => {
-    if (isPasswordRecovery) {
-      setAuthMode('new-password');
-      setModalOpen(true);
-    }
-  }, [isPasswordRecovery]);
 
   if (isLoading) return null;
 
   if (isPasswordRecovery) {
-    return <AuthModal open onOpenChange={setModalOpen} initialMode="new-password" />;
+    return null;
   }
 
   if (isSignedIn) {
-    return <UserMenu />;
+    return <UserMenu onOpenPasswordReset={onOpenPasswordReset} />;
   }
 
   return (
-    <>
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => openAuth('login')}
-          className="px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-        >
-          Iniciar sesión
-        </button>
-        <button
-          onClick={() => openAuth('signup')}
-          className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Crear cuenta
-        </button>
-      </div>
-      <AuthModal open={modalOpen} onOpenChange={setModalOpen} initialMode={authMode} />
-    </>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => onOpenAuth('login')}
+        className="px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+      >
+        Iniciar sesión
+      </button>
+      <button
+        onClick={() => onOpenAuth('signup')}
+        className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Crear cuenta
+      </button>
+    </div>
   );
 }
 
 function AppInner() {
-  const { isSignedIn, user } = useSupabaseAuth();
+  const { isSignedIn, user, isPasswordRecovery } = useSupabaseAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
+
+  const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
+    isSignedIn ? user?.email ?? null : null,
+  );
   const { teacherProfile, isLoading: isTeacherLoading } = useTeacherProfile(
-    isSignedIn ? user?.email ?? null : null
+    isSignedIn && !adminProfile ? user?.email ?? null : null,
   );
 
-  const showTeacherDashboard = isSignedIn && !isTeacherLoading && teacherProfile !== null;
+  const openAuth = (mode: AuthMode) => {
+    setAuthMode(mode);
+    setAuthModalOpen(true);
+  };
+
+  const openPasswordReset = () => {
+    setAuthMode('forgot');
+    setAuthModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (isPasswordRecovery) {
+      setAuthMode('new-password');
+      setAuthModalOpen(true);
+    }
+  }, [isPasswordRecovery]);
+
+  const isRoleLoading = isSignedIn && (isAdminLoading || (!adminProfile && isTeacherLoading));
+  const showAdmin = isSignedIn && !isAdminLoading && adminProfile !== null;
+  const showTeacher = isSignedIn && !showAdmin && !isTeacherLoading && teacherProfile !== null;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
@@ -129,12 +152,16 @@ function AppInner() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Malla Curricular Interactiva</h1>
           <div className="flex items-center gap-4">
-            <AuthButton />
+            <AuthButton onOpenAuth={openAuth} onOpenPasswordReset={openPasswordReset} />
           </div>
         </div>
       </header>
       <div className="flex-1">
-        {showTeacherDashboard ? (
+        {isRoleLoading ? (
+          <div className="flex items-center justify-center py-24 text-gray-500">Cargando…</div>
+        ) : showAdmin ? (
+          <AdminDashboard profile={adminProfile!} />
+        ) : showTeacher ? (
           <TeacherDashboard profile={teacherProfile!} />
         ) : (
           <CurriculumGrid />
@@ -143,6 +170,11 @@ function AppInner() {
       <Footer />
       <ThemeToggle />
       <Toaster />
+      <AuthModal
+        open={authModalOpen || isPasswordRecovery}
+        onOpenChange={setAuthModalOpen}
+        initialMode={authMode}
+      />
     </div>
   );
 }

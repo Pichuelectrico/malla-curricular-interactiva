@@ -13,6 +13,8 @@
     "scraper": "bun run --filter usfq-scraper scrape",
     "scraper:career": "bun run --filter usfq-scraper scrape:career",
     "join": "python3 joiner/join.py",
-    "join:dry": "python3 joiner/join.py --dry-run"
+    "join:dry": "python3 joiner/join.py --dry-run",
+    "predict": "cd predictor && python3 predict.py",
+    "predict:train": "cd predictor && python3 train.py"
   }
 }
