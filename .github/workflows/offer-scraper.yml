@@ -5,7 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       period:
-        description: 'Period label (e.g. "Semestre 2026-2" or "Verano 2026")'
+        description: 'Period label (e.g. "Segundo Semestre 2025/2026")'
+        required: false
+        default: ''
+      period_code:
+        description: 'Period code (e.g. 202530)'
         required: false
         default: ''
 
@@ -25,6 +29,7 @@ jobs:
       SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       PERIOD:               ${{ github.event.inputs.period || '' }}
+      PERIOD_CODE:          ${{ github.event.inputs.period_code || '' }}
 
     steps:
       - name: Checkout repository
@@ -43,29 +48,41 @@ jobs:
       - name: Install Playwright Chromium browser
         run: python -m playwright install --with-deps chromium
 
-      - name: Derive period label if not supplied
+      - name: Derive period label and code if not supplied
         id: period
         run: |
           if [ -z "$PERIOD" ]; then
-            # Auto-detect: Jan-Apr = Semestre 1, May-Jul = Verano, Aug-Dec = Semestre 2
             MONTH=$(date +%-m)
             YEAR=$(date +%Y)
             if [ "$MONTH" -ge 1 ] && [ "$MONTH" -le 4 ]; then
-              echo "value=Semestre ${YEAR}-1" >> $GITHUB_OUTPUT
+              echo "value=Primer Semestre ${YEAR}/$((YEAR+1))" >> $GITHUB_OUTPUT
+              echo "code=${YEAR}10" >> $GITHUB_OUTPUT
             elif [ "$MONTH" -ge 5 ] && [ "$MONTH" -le 7 ]; then
-              echo "value=Verano ${YEAR}" >> $GITHUB_OUTPUT
+              echo "value=Verano ${YEAR}/$((YEAR+1))" >> $GITHUB_OUTPUT
+              echo "code=${YEAR}30" >> $GITHUB_OUTPUT
             else
-              echo "value=Semestre ${YEAR}-2" >> $GITHUB_OUTPUT
+              echo "value=Segundo Semestre ${YEAR}/$((YEAR+1))" >> $GITHUB_OUTPUT
+              echo "code=${YEAR}20" >> $GITHUB_OUTPUT
             fi
           else
             echo "value=$PERIOD" >> $GITHUB_OUTPUT
+            if [ -n "$PERIOD_CODE" ]; then
+              echo "code=$PERIOD_CODE" >> $GITHUB_OUTPUT
+            else
+              echo "code=202530" >> $GITHUB_OUTPUT
+            fi
+          fi
+          if [ -n "$PERIOD_CODE" ] && [ -z "$PERIOD" ]; then
+            echo "code=$PERIOD_CODE" >> $GITHUB_OUTPUT
           fi
 
       - name: Run offer scraper
         working-directory: offer-scraper
         env:
           PERIOD: ${{ steps.period.outputs.value }}
-        run: python scrape.py
+          PERIOD_CODE: ${{ steps.period.outputs.code }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scrape.py scrape
 
       - name: Upload scraper log on failure
         if: failure()

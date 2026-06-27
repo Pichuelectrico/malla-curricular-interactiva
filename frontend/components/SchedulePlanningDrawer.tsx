@@ -789,12 +789,18 @@ export default function SchedulePlanningDrawer({
       offers: CourseOfferRow[],
       excludeCourseId: string,
     ): { suggestions: CourseOfferRow[]; totalOffers: number } => {
-      const valid = offers.filter(isValidOfferSchedule);
       const occupied = getOccupiedSlots(excludeCourseId);
-      const suggestions = valid
-        .filter((row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap))
-        .sort((a, b) => (b.available ?? -999) - (a.available ?? -999));
-      return { suggestions, totalOffers: valid.length };
+      const withoutConflict = offers.filter(
+        (row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap),
+      );
+      const withSchedule = withoutConflict.filter(isValidOfferSchedule);
+      const withoutSchedule = withoutConflict.filter(
+        (row) => !isValidOfferSchedule(row),
+      );
+      const suggestions = [...withSchedule, ...withoutSchedule].sort(
+        (a, b) => (b.available ?? -999) - (a.available ?? -999),
+      );
+      return { suggestions, totalOffers: offers.length };
     },
     [getOccupiedSlots, offerMap],
   );

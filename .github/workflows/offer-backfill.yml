@@ -1,0 +1,50 @@
+name: USFQ Offer Backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Comma-separated period codes (e.g. 202510,202420) or empty for all'
+        required: false
+        default: '202510,202420'
+
+jobs:
+  backfill:
+    name: Backfill course offer history
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    env:
+      USFQ_USERNAME:        ${{ secrets.USFQ_USERNAME }}
+      USFQ_PASSWORD:        ${{ secrets.USFQ_PASSWORD }}
+      SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: offer-scraper/requirements.txt
+
+      - name: Install Python dependencies
+        run: pip install -r offer-scraper/requirements.txt
+
+      - name: Install Playwright Chromium browser
+        run: python -m playwright install --with-deps chromium
+
+      - name: Run historical backfill
+        working-directory: offer-scraper
+        env:
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          python scrape.py login || true
+          ARGS="backfill --periods periods.json"
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            ARGS="$ARGS --only ${{ github.event.inputs.only }}"
+          fi
+          python scrape.py $ARGS

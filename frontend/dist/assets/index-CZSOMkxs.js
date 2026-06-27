@@ -15682,7 +15682,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$M = [
+const __iconNode$O = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -15692,14 +15692,14 @@ const __iconNode$M = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$M);
+const BookOpen = createLucideIcon("book-open", __iconNode$O);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$L = [
+const __iconNode$N = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -15711,7 +15711,33 @@ const __iconNode$L = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$L);
+const Calculator = createLucideIcon("calculator", __iconNode$N);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$M = [
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }]
+];
+const Calendar = createLucideIcon("calendar", __iconNode$M);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$L = [
+  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
+  ["path", { d: "M18 17V9", key: "2bz60n" }],
+  ["path", { d: "M13 17V5", key: "1frdt8" }],
+  ["path", { d: "M8 17v-3", key: "17ska0" }]
+];
+const ChartColumn = createLucideIcon("chart-column", __iconNode$L);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15719,76 +15745,73 @@ const Calculator = createLucideIcon("calculator", __iconNode$L);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$K = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }]
-];
-const Calendar = createLucideIcon("calendar", __iconNode$K);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$J = [
-  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
-  ["path", { d: "M18 17V9", key: "2bz60n" }],
-  ["path", { d: "M13 17V5", key: "1frdt8" }],
-  ["path", { d: "M8 17v-3", key: "17ska0" }]
-];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$J);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$I = [
   ["path", { d: "M18 6 7 17l-5-5", key: "116fxf" }],
   ["path", { d: "m22 10-7.5 7.5L13 16", key: "ke71qq" }]
 ];
-const CheckCheck = createLucideIcon("check-check", __iconNode$I);
+const CheckCheck = createLucideIcon("check-check", __iconNode$K);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$H = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$H);
+const __iconNode$J = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$J);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$G = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$G);
+const __iconNode$I = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$I);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$F = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$F);
+const __iconNode$H = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$H);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$E = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$E);
+const __iconNode$G = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$G);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$D = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$D);
+const __iconNode$F = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$F);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$E = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+];
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$E);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$D = [
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$D);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15797,10 +15820,9 @@ const ChevronUp = createLucideIcon("chevron-up", __iconNode$D);
  */
 const __iconNode$C = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$C);
+const Clock = createLucideIcon("clock", __iconNode$C);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15808,28 +15830,6 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$C);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$B = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
-];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$B);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$A = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
-];
-const Clock = createLucideIcon("clock", __iconNode$A);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$z = [
   ["path", { d: "M10 2v2", key: "7u0qdc" }],
   ["path", { d: "M14 2v2", key: "6buw04" }],
   [
@@ -15841,7 +15841,31 @@ const __iconNode$z = [
   ],
   ["path", { d: "M6 2v2", key: "colzsn" }]
 ];
-const Coffee = createLucideIcon("coffee", __iconNode$z);
+const Coffee = createLucideIcon("coffee", __iconNode$B);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$A = [
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
+  ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
+];
+const Download = createLucideIcon("download", __iconNode$A);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$z = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+];
+const ExternalLink = createLucideIcon("external-link", __iconNode$z);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15849,11 +15873,13 @@ const Coffee = createLucideIcon("coffee", __iconNode$z);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$y = [
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
-  ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M10 9H8", key: "b1mrlr" }],
+  ["path", { d: "M16 13H8", key: "t4e002" }],
+  ["path", { d: "M16 17H8", key: "z1uh3a" }]
 ];
-const Download = createLucideIcon("download", __iconNode$y);
+const FileText = createLucideIcon("file-text", __iconNode$y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15861,11 +15887,16 @@ const Download = createLucideIcon("download", __iconNode$y);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$x = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+  [
+    "path",
+    {
+      d: "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
+      key: "tonef"
+    }
+  ],
+  ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
 ];
-const ExternalLink = createLucideIcon("external-link", __iconNode$x);
+const Github = createLucideIcon("github", __iconNode$x);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15876,21 +15907,14 @@ const __iconNode$w = [
   [
     "path",
     {
-      d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",
-      key: "ct8e1f"
+      d: "M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z",
+      key: "j76jl0"
     }
   ],
-  ["path", { d: "M14.084 14.158a3 3 0 0 1-4.242-4.242", key: "151rxh" }],
-  [
-    "path",
-    {
-      d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",
-      key: "13bj9a"
-    }
-  ],
-  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
+  ["path", { d: "M22 10v6", key: "1lu8f3" }],
+  ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$w);
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$w);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15898,16 +15922,11 @@ const EyeOff = createLucideIcon("eye-off", __iconNode$w);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$v = [
-  [
-    "path",
-    {
-      d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",
-      key: "1nclc0"
-    }
-  ],
-  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 16v-4", key: "1dtifu" }],
+  ["path", { d: "M12 8h.01", key: "e9boi3" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$v);
+const Info = createLucideIcon("info", __iconNode$v);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15915,13 +15934,16 @@ const Eye = createLucideIcon("eye", __iconNode$v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$u = [
-  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M10 9H8", key: "b1mrlr" }],
-  ["path", { d: "M16 13H8", key: "t4e002" }],
-  ["path", { d: "M16 17H8", key: "z1uh3a" }]
+  [
+    "path",
+    {
+      d: "M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z",
+      key: "1s6t7t"
+    }
+  ],
+  ["circle", { cx: "16.5", cy: "7.5", r: ".5", fill: "currentColor", key: "w0ekpg" }]
 ];
-const FileText = createLucideIcon("file-text", __iconNode$u);
+const KeyRound = createLucideIcon("key-round", __iconNode$u);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15929,16 +15951,14 @@ const FileText = createLucideIcon("file-text", __iconNode$u);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$t = [
-  [
-    "path",
-    {
-      d: "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
-      key: "tonef"
-    }
-  ],
-  ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
+  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
+  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
+  ["path", { d: "M2 5h12", key: "or177f" }],
+  ["path", { d: "M7 2h1", key: "1t2jsx" }],
+  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
+  ["path", { d: "M14 18h6", key: "1m8k6r" }]
 ];
-const Github = createLucideIcon("github", __iconNode$t);
+const Languages = createLucideIcon("languages", __iconNode$t);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15949,51 +15969,6 @@ const __iconNode$s = [
   [
     "path",
     {
-      d: "M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z",
-      key: "j76jl0"
-    }
-  ],
-  ["path", { d: "M22 10v6", key: "1lu8f3" }],
-  ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
-];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$s);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$r = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 16v-4", key: "1dtifu" }],
-  ["path", { d: "M12 8h.01", key: "e9boi3" }]
-];
-const Info = createLucideIcon("info", __iconNode$r);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$q = [
-  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
-  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
-  ["path", { d: "M2 5h12", key: "or177f" }],
-  ["path", { d: "M7 2h1", key: "1t2jsx" }],
-  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
-  ["path", { d: "M14 18h6", key: "1m8k6r" }]
-];
-const Languages = createLucideIcon("languages", __iconNode$q);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$p = [
-  [
-    "path",
-    {
       d: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z",
       key: "c2jq9f"
     }
@@ -16001,14 +15976,22 @@ const __iconNode$p = [
   ["rect", { width: "4", height: "12", x: "2", y: "9", key: "mk3on5" }],
   ["circle", { cx: "4", cy: "4", r: "2", key: "bt5ra8" }]
 ];
-const Linkedin = createLucideIcon("linkedin", __iconNode$p);
+const Linkedin = createLucideIcon("linkedin", __iconNode$s);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$o = [
+const __iconNode$r = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$r);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$q = [
   ["path", { d: "M12 2v4", key: "3427ic" }],
   ["path", { d: "m16.2 7.8 2.9-2.9", key: "r700ao" }],
   ["path", { d: "M18 12h4", key: "wj9ykh" }],
@@ -16018,7 +16001,30 @@ const __iconNode$o = [
   ["path", { d: "M2 12h4", key: "j09sii" }],
   ["path", { d: "m4.9 4.9 2.9 2.9", key: "giyufr" }]
 ];
-const Loader = createLucideIcon("loader", __iconNode$o);
+const Loader = createLucideIcon("loader", __iconNode$q);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$p = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+];
+const Lock = createLucideIcon("lock", __iconNode$p);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$o = [
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
+  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
+  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$o);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16026,22 +16032,18 @@ const Loader = createLucideIcon("loader", __iconNode$o);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$n = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
+  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$n);
+const Mail = createLucideIcon("mail", __iconNode$n);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
-  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
-  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
-];
-const LogOut = createLucideIcon("log-out", __iconNode$m);
+const __iconNode$m = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$m);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16049,25 +16051,6 @@ const LogOut = createLucideIcon("log-out", __iconNode$m);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$l = [
-  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
-  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
-];
-const Mail = createLucideIcon("mail", __iconNode$l);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$k = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$k);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$j = [
   ["path", { d: "M12 20h9", key: "t2du7b" }],
   [
     "path",
@@ -16077,7 +16060,35 @@ const __iconNode$j = [
     }
   ]
 ];
-const PenLine = createLucideIcon("pen-line", __iconNode$j);
+const PenLine = createLucideIcon("pen-line", __iconNode$l);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$k = [
+  [
+    "path",
+    {
+      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+      key: "1a8usu"
+    }
+  ],
+  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+];
+const Pencil = createLucideIcon("pencil", __iconNode$k);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$j);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16085,10 +16096,12 @@ const PenLine = createLucideIcon("pen-line", __iconNode$j);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$i = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$i);
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$i);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16096,12 +16109,10 @@ const Plus = createLucideIcon("plus", __iconNode$i);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$h = [
-  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
-  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
-  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
-  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const RefreshCw = createLucideIcon("refresh-cw", __iconNode$h);
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$h);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16109,17 +16120,6 @@ const RefreshCw = createLucideIcon("refresh-cw", __iconNode$h);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$g = [
-  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
-];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$g);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$f = [
   [
     "path",
     {
@@ -16130,7 +16130,18 @@ const __iconNode$f = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-const Save = createLucideIcon("save", __iconNode$f);
+const Save = createLucideIcon("save", __iconNode$g);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$f = [
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
+];
+const Search = createLucideIcon("search", __iconNode$f);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16138,10 +16149,16 @@ const Save = createLucideIcon("save", __iconNode$f);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$e = [
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
-  ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
+  [
+    "path",
+    {
+      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+      key: "1ffxy3"
+    }
+  ],
+  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
 ];
-const Search = createLucideIcon("search", __iconNode$e);
+const Send = createLucideIcon("send", __iconNode$e);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16152,13 +16169,13 @@ const __iconNode$d = [
   [
     "path",
     {
-      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
-      key: "1ffxy3"
+      d: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z",
+      key: "1qme2f"
     }
   ],
-  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Send = createLucideIcon("send", __iconNode$d);
+const Settings = createLucideIcon("settings", __iconNode$d);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16166,16 +16183,11 @@ const Send = createLucideIcon("send", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  [
-    "path",
-    {
-      d: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z",
-      key: "1qme2f"
-    }
-  ],
-  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
+  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
 ];
-const Settings = createLucideIcon("settings", __iconNode$c);
+const Target = createLucideIcon("target", __iconNode$c);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16183,15 +16195,10 @@ const Settings = createLucideIcon("settings", __iconNode$c);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$b = [
-  [
-    "path",
-    {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
-    }
-  ]
+  ["polyline", { points: "4 17 10 11 4 5", key: "akl6gq" }],
+  ["line", { x1: "12", x2: "20", y1: "19", y2: "19", key: "q2wloq" }]
 ];
-const Shield = createLucideIcon("shield", __iconNode$b);
+const Terminal = createLucideIcon("terminal", __iconNode$b);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16199,11 +16206,13 @@ const Shield = createLucideIcon("shield", __iconNode$b);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$a = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
-  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-const Target = createLucideIcon("target", __iconNode$a);
+const Trash2 = createLucideIcon("trash-2", __iconNode$a);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16211,13 +16220,17 @@ const Target = createLucideIcon("target", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
+  [
+    "path",
+    {
+      d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
+      key: "wmoenq"
+    }
+  ],
+  ["path", { d: "M12 9v4", key: "juzpu7" }],
+  ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const Trash2 = createLucideIcon("trash-2", __iconNode$9);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$9);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -31917,7 +31930,7 @@ const AUTO_REFRESH_TICK_DURATION_MS = 30 * 1e3;
 const AUTO_REFRESH_TICK_THRESHOLD = 3;
 const EXPIRY_MARGIN_MS = AUTO_REFRESH_TICK_THRESHOLD * AUTO_REFRESH_TICK_DURATION_MS;
 const GOTRUE_URL = "http://localhost:9999";
-const STORAGE_KEY$1 = "supabase.auth.token";
+const STORAGE_KEY = "supabase.auth.token";
 const DEFAULT_HEADERS$1 = { "X-Client-Info": `gotrue-js/${version$1}` };
 const API_VERSION_HEADER_NAME = "X-Supabase-Api-Version";
 const API_VERSIONS = {
@@ -34521,7 +34534,7 @@ class WebAuthnApi {
 polyfillGlobalThis();
 const DEFAULT_OPTIONS = {
   url: GOTRUE_URL,
-  storageKey: STORAGE_KEY$1,
+  storageKey: STORAGE_KEY,
   autoRefreshToken: true,
   persistSession: true,
   detectSessionInUrl: true,
@@ -47465,18 +47478,34 @@ function useCourseOffer() {
   const [offerMap, setOfferMap] = reactExports.useState(/* @__PURE__ */ new Map());
   const [isLoading, setIsLoading] = reactExports.useState(false);
   const [lastRefreshed, setLastRefreshed] = reactExports.useState(null);
+  const [period, setPeriod] = reactExports.useState(null);
+  const [periodCode, setPeriodCode] = reactExports.useState(null);
+  const [lastUpdated, setLastUpdated] = reactExports.useState(null);
   const [error, setError] = reactExports.useState(null);
   const loadFromCache = reactExports.useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const { data, error: dbError } = await supabase.from("course_offer").select("*").order("course_code");
-      if (dbError) throw new Error(dbError.message);
+      const PAGE_SIZE = 1e3;
+      const allRows = [];
+      let from = 0;
+      while (true) {
+        const { data, error: dbError } = await supabase.from("course_offer").select("*").order("course_code").range(from, from + PAGE_SIZE - 1);
+        if (dbError) throw new Error(dbError.message);
+        if (!(data == null ? void 0 : data.length)) break;
+        allRows.push(...data);
+        if (data.length < PAGE_SIZE) break;
+        from += PAGE_SIZE;
+      }
       const map = /* @__PURE__ */ new Map();
-      (data ?? []).forEach((row) => {
+      allRows.forEach((row) => {
         map.set(row.nrc, row);
       });
       setOfferMap(map);
+      const first = allRows[0];
+      setPeriod((first == null ? void 0 : first.period) ?? null);
+      setPeriodCode((first == null ? void 0 : first.period_code) ?? null);
+      setLastUpdated((first == null ? void 0 : first.last_updated) ?? null);
       setLastRefreshed(/* @__PURE__ */ new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cargar la oferta");
@@ -47484,7 +47513,7 @@ function useCourseOffer() {
       setIsLoading(false);
     }
   }, []);
-  return { offerMap, isLoading, lastRefreshed, error, loadFromCache };
+  return { offerMap, isLoading, lastRefreshed, period, periodCode, lastUpdated, error, loadFromCache };
 }
 const DAY_FULL_TO_SHORT = {
   Lunes: "Lun",
@@ -48162,10 +48191,18 @@ function SchedulePlanningDrawer({
   );
   const filterSuggestions = reactExports.useCallback(
     (offers, excludeCourseId) => {
-      const valid = offers.filter(isValidOfferSchedule);
       const occupied = getOccupiedSlots(excludeCourseId);
-      const suggestions = valid.filter((row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap)).sort((a, b) => (b.available ?? -999) - (a.available ?? -999));
-      return { suggestions, totalOffers: valid.length };
+      const withoutConflict = offers.filter(
+        (row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap)
+      );
+      const withSchedule = withoutConflict.filter(isValidOfferSchedule);
+      const withoutSchedule = withoutConflict.filter(
+        (row) => !isValidOfferSchedule(row)
+      );
+      const suggestions = [...withSchedule, ...withoutSchedule].sort(
+        (a, b) => (b.available ?? -999) - (a.available ?? -999)
+      );
+      return { suggestions, totalOffers: offers.length };
     },
     [getOccupiedSlots, offerMap]
   );
@@ -50838,53 +50875,79 @@ function AuthModal({ open, onOpenChange, initialMode = "login" }) {
     ] })
   ] }) });
 }
-const STORAGE_KEY = "usfq_credentials";
-function getUSFQCredentials() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-function SettingsModal({ open, onOpenChange }) {
-  const [username, setUsername] = reactExports.useState("");
-  const [password, setPassword] = reactExports.useState("");
-  const [showPassword, setShowPassword] = reactExports.useState(false);
-  const [saved, setSaved] = reactExports.useState(false);
-  const [hasCredentials, setHasCredentials] = reactExports.useState(false);
-  reactExports.useEffect(() => {
-    if (open) {
-      const creds = getUSFQCredentials();
-      if (creds) {
-        setUsername(creds.username);
-        setPassword(creds.password);
-        setHasCredentials(true);
-      } else {
-        setUsername("");
-        setPassword("");
-        setHasCredentials(false);
-      }
-      setSaved(false);
+function useOfferMetadata() {
+  const [metadata, setMetadata] = reactExports.useState(null);
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  const [error, setError] = reactExports.useState(null);
+  const load = reactExports.useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data, error: dbError } = await supabase.from("offer_metadata").select("current_period_code, current_period_label, last_scraped_at, last_rollover_at, updated_at").eq("id", 1).maybeSingle();
+      if (dbError) throw new Error(dbError.message);
+      setMetadata(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cargar metadata");
+    } finally {
+      setIsLoading(false);
     }
-  }, [open]);
+  }, []);
+  reactExports.useEffect(() => {
+    load();
+  }, [load]);
+  return { metadata, isLoading, error, reload: load };
+}
+function formatDate$1(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("es-EC", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+function SettingsModal({
+  open,
+  onOpenChange,
+  onOpenPasswordReset
+}) {
+  const { user, signOut } = useSupabaseAuth();
+  const { metadata, isLoading: metaLoading } = useOfferMetadata();
+  const [deleteStep, setDeleteStep] = reactExports.useState(0);
+  const [deleting, setDeleting] = reactExports.useState(false);
+  const [deleteError, setDeleteError] = reactExports.useState(null);
   if (!open) return null;
-  const handleSave = () => {
-    if (!username.trim() || !password.trim()) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ username: username.trim(), password }));
-    setHasCredentials(true);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+  const handlePasswordReset = () => {
+    onOpenChange(false);
+    onOpenPasswordReset();
   };
-  const handleDelete = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setUsername("");
-    setPassword("");
-    setHasCredentials(false);
-    setSaved(false);
+  const handleDeleteAccount = async () => {
+    if (deleteStep === 0) {
+      setDeleteStep(1);
+      return;
+    }
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "auth-delete-account"
+      );
+      if (error) throw new Error(error.message);
+      if (data == null ? void 0 : data.error) throw new Error(data.error);
+      await signOut();
+      onOpenChange(false);
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "No se pudo eliminar la cuenta");
+    } finally {
+      setDeleting(false);
+      setDeleteStep(0);
+    }
+  };
+  const handleClose = () => {
+    setDeleteStep(0);
+    setDeleteError(null);
+    onOpenChange(false);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-black/50", onClick: () => onOpenChange(false) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-black/50", onClick: handleClose }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
@@ -50894,100 +50957,72 @@ function SettingsModal({ open, onOpenChange }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
-            onClick: () => onOpenChange(false),
+            onClick: handleClose,
             className: "text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors",
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-5 h-5" })
           }
         )
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 space-y-5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { className: "w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm text-blue-800 dark:text-blue-200 space-y-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium", children: "Tu privacidad está protegida" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-blue-700 dark:text-blue-300", children: [
-              "Tus credenciales se almacenan ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "únicamente en tu navegador" }),
-              " y se usan solo para consultar la oferta de cursos de la USFQ. No se envían a ningún servidor externo ni se comparten con nadie."
-            ] })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3", children: "Credenciales USFQ" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mb-3", children: "Ingresa tus credenciales del portal USFQ para que el planificador pueda consultar la disponibilidad de cursos en el catálogo de oferta." })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-medium text-gray-600 dark:text-gray-400 block mb-1", children: "Usuario / Correo USFQ" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  type: "text",
-                  placeholder: "usuario@usfq.edu.ec",
-                  value: username,
-                  onChange: (e) => setUsername(e.target.value),
-                  autoComplete: "username",
-                  className: "dark:bg-gray-700 dark:border-gray-600"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-medium text-gray-600 dark:text-gray-400 block mb-1", children: "Contraseña USFQ" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Input,
-                  {
-                    type: showPassword ? "text" : "password",
-                    placeholder: "Tu contraseña del portal",
-                    value: password,
-                    onChange: (e) => setPassword(e.target.value),
-                    autoComplete: "current-password",
-                    className: "pr-10 dark:bg-gray-700 dark:border-gray-600"
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "button",
-                  {
-                    type: "button",
-                    onClick: () => setShowPassword(!showPassword),
-                    className: "absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200",
-                    children: showPassword ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { className: "w-4 h-4" })
-                  }
-                )
-              ] })
-            ] })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              onClick: handleSave,
-              disabled: !username.trim() || !password.trim(),
-              className: "flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white",
-              children: saved ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { className: "w-4 h-4" }),
-                "Guardado"
-              ] }) : "Guardar credenciales"
-            }
-          ),
-          hasCredentials && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 space-y-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300", children: "Cuenta" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-600 dark:text-gray-400", children: user == null ? void 0 : user.email }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Button,
             {
               variant: "outline",
-              onClick: handleDelete,
-              className: "gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20",
+              onClick: handlePasswordReset,
+              className: "w-full gap-2 justify-start",
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-4 h-4" }),
-                "Borrar"
+                /* @__PURE__ */ jsxRuntimeExports.jsx(KeyRound, { className: "w-4 h-4" }),
+                "Restablecer contraseña"
               ]
             }
           )
         ] }),
-        hasCredentials && !saved && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-green-600 dark:text-green-400 flex items-center gap-1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { className: "w-3.5 h-3.5" }),
-          "Credenciales guardadas en este dispositivo"
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-4 h-4" }),
+            "Oferta académica"
+          ] }),
+          metaLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-gray-500", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-4 h-4 animate-spin" }),
+            "Cargando…"
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("dl", { className: "text-sm space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Periodo" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-gray-900 dark:text-white text-right", children: (metadata == null ? void 0 : metadata.current_period_label) ?? "—" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Código" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-gray-900 dark:text-white font-mono", children: (metadata == null ? void 0 : metadata.current_period_code) ?? "—" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Última actualización" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-gray-900 dark:text-white text-right text-xs", children: formatDate$1(metadata == null ? void 0 : metadata.last_scraped_at) })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3 pt-2 border-t border-gray-200 dark:border-gray-700", children: [
+          deleteStep === 1 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 text-sm text-amber-800 dark:text-amber-200", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "w-4 h-4 flex-shrink-0 mt-0.5" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Esta acción es irreversible. Se eliminará tu progreso y tu cuenta." })
+          ] }),
+          deleteError && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-red-600 dark:text-red-400", children: deleteError }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              onClick: handleDeleteAccount,
+              disabled: deleting,
+              className: "w-full gap-2 justify-start text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20",
+              children: [
+                deleting ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-4 h-4 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-4 h-4" }),
+                deleteStep === 1 ? "Confirmar eliminación" : "Eliminar mi cuenta"
+              ]
+            }
+          ),
+          deleteStep === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: () => setDeleteStep(0), className: "w-full", children: "Cancelar" })
         ] })
       ] })
     ] })
@@ -51278,6 +51313,418 @@ function TeacherDashboard({ profile }) {
     ] })
   ] });
 }
+const FACULTIES = [
+  "CMP",
+  "MAT",
+  "MAC",
+  "LIT",
+  "ECN",
+  "FIS",
+  "ADM",
+  "JUR",
+  "MED",
+  "PSI",
+  "ARQ",
+  "COM",
+  "FIN",
+  "EDU",
+  "POL",
+  "NUT",
+  "VET",
+  "ODT"
+];
+const MAILTO_BCC_LIMIT = 50;
+async function invokeAdmin(body) {
+  const { data, error } = await supabase.functions.invoke("admin-teachers", { body });
+  if (error) throw new Error(error.message);
+  if (data && typeof data === "object" && "error" in data && data.error) {
+    throw new Error(String(data.error));
+  }
+  return data;
+}
+function formatDate(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("es-EC", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+function AdminDashboard({ profile }) {
+  const [tab, setTab] = reactExports.useState("teachers");
+  const { metadata, isLoading: metaLoading, reload: reloadMeta } = useOfferMetadata();
+  const [teachers, setTeachers] = reactExports.useState([]);
+  const [loadingTeachers, setLoadingTeachers] = reactExports.useState(false);
+  const [teacherError, setTeacherError] = reactExports.useState(null);
+  const [formOpen, setFormOpen] = reactExports.useState(false);
+  const [editing, setEditing] = reactExports.useState(null);
+  const [formEmail, setFormEmail] = reactExports.useState("");
+  const [formName, setFormName] = reactExports.useState("");
+  const [formFaculty, setFormFaculty] = reactExports.useState("CMP");
+  const [formDepartments, setFormDepartments] = reactExports.useState("");
+  const [msgFaculty, setMsgFaculty] = reactExports.useState("");
+  const [msgSubject, setMsgSubject] = reactExports.useState("");
+  const [msgBody, setMsgBody] = reactExports.useState("");
+  const [studentEmails, setStudentEmails] = reactExports.useState([]);
+  const [selectedEmails, setSelectedEmails] = reactExports.useState(/* @__PURE__ */ new Set());
+  const [loadingStudents, setLoadingStudents] = reactExports.useState(false);
+  const [studentError, setStudentError] = reactExports.useState(null);
+  const loadTeachers = reactExports.useCallback(async () => {
+    setLoadingTeachers(true);
+    setTeacherError(null);
+    try {
+      const data = await invokeAdmin({ action: "list" });
+      setTeachers(data.teachers ?? []);
+    } catch (err) {
+      setTeacherError(err instanceof Error ? err.message : "Error al cargar profesores");
+    } finally {
+      setLoadingTeachers(false);
+    }
+  }, []);
+  reactExports.useEffect(() => {
+    loadTeachers();
+  }, [loadTeachers]);
+  const openCreate = () => {
+    setEditing(null);
+    setFormEmail("");
+    setFormName("");
+    setFormFaculty("CMP");
+    setFormDepartments("");
+    setFormOpen(true);
+  };
+  const openEdit = (t) => {
+    setEditing(t);
+    setFormEmail(t.email);
+    setFormName(t.name ?? "");
+    setFormFaculty(t.faculty);
+    setFormDepartments((t.departments ?? []).join(", "));
+    setFormOpen(true);
+  };
+  const saveTeacher = async () => {
+    const departments = formDepartments.split(",").map((d) => d.trim().toUpperCase()).filter(Boolean);
+    try {
+      if (editing) {
+        await invokeAdmin({
+          action: "update",
+          id: editing.id,
+          email: formEmail.trim(),
+          name: formName.trim() || null,
+          faculty: formFaculty,
+          departments
+        });
+      } else {
+        await invokeAdmin({
+          action: "create",
+          email: formEmail.trim(),
+          name: formName.trim() || null,
+          faculty: formFaculty,
+          departments
+        });
+      }
+      setFormOpen(false);
+      await loadTeachers();
+    } catch (err) {
+      setTeacherError(err instanceof Error ? err.message : "Error al guardar");
+    }
+  };
+  const deleteTeacher = async (id) => {
+    if (!confirm("¿Eliminar este perfil de profesor?")) return;
+    try {
+      await invokeAdmin({ action: "delete", id });
+      await loadTeachers();
+    } catch (err) {
+      setTeacherError(err instanceof Error ? err.message : "Error al eliminar");
+    }
+  };
+  const loadStudents = async () => {
+    setLoadingStudents(true);
+    setStudentError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "admin-list-students",
+        { body: msgFaculty ? { faculty: msgFaculty } : {} }
+      );
+      if (error) throw new Error(error.message);
+      if (data && "error" in data) throw new Error(String(data.error));
+      const emails = (data == null ? void 0 : data.emails) ?? [];
+      setStudentEmails(emails);
+      setSelectedEmails(/* @__PURE__ */ new Set());
+    } catch (err) {
+      setStudentError(err instanceof Error ? err.message : "Error al cargar alumnos");
+      setStudentEmails([]);
+      setSelectedEmails(/* @__PURE__ */ new Set());
+    } finally {
+      setLoadingStudents(false);
+    }
+  };
+  const toggleEmail = (email) => {
+    setSelectedEmails((prev) => {
+      const next = new Set(prev);
+      if (next.has(email)) next.delete(email);
+      else next.add(email);
+      return next;
+    });
+  };
+  const selectAllStudents = () => setSelectedEmails(new Set(studentEmails));
+  const deselectAllStudents = () => setSelectedEmails(/* @__PURE__ */ new Set());
+  const openMailto = () => {
+    const recipients = studentEmails.filter((e) => selectedEmails.has(e));
+    if (recipients.length === 0) {
+      setStudentError("Selecciona al menos un destinatario de la lista.");
+      return;
+    }
+    const bcc = recipients.slice(0, MAILTO_BCC_LIMIT).join(",");
+    const params = new URLSearchParams();
+    if (bcc) params.set("bcc", bcc);
+    if (msgSubject.trim()) params.set("subject", msgSubject.trim());
+    if (msgBody.trim()) params.set("body", msgBody.trim());
+    window.open(`mailto:?${params.toString()}`, "_blank");
+  };
+  const tabs = [
+    { id: "teachers", label: "Profesores", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-4 h-4" }) },
+    { id: "messages", label: "Mensajes", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-4 h-4" }) },
+    { id: "offer", label: "Oferta", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-4 h-4" }) }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-gray-900 dark:text-white", children: "Panel de administración" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400 mt-1", children: profile.name ?? profile.email })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2 flex-wrap", children: tabs.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          variant: tab === t.id ? "default" : "outline",
+          size: "sm",
+          onClick: () => setTab(t.id),
+          className: "gap-1.5",
+          children: [
+            t.icon,
+            t.label
+          ]
+        },
+        t.id
+      )) })
+    ] }),
+    tab === "teachers" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Profesores" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", size: "sm", onClick: loadTeachers, disabled: loadingTeachers, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${loadingTeachers ? "animate-spin" : ""}` }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { size: "sm", onClick: openCreate, className: "gap-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "w-4 h-4" }),
+            "Agregar"
+          ] })
+        ] })
+      ] }),
+      teacherError && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-red-600 dark:text-red-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4" }),
+        teacherError
+      ] }),
+      formOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-4 dark:bg-gray-800 space-y-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-medium text-gray-900 dark:text-white", children: editing ? "Editar profesor" : "Nuevo profesor" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-2 gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Correo" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: formEmail, onChange: (e) => setFormEmail(e.target.value) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Nombre" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: formName, onChange: (e) => setFormName(e.target.value) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Facultad principal" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                value: formFaculty,
+                onChange: (e) => setFormFaculty(e.target.value),
+                className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm",
+                children: FACULTIES.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f, children: f }, f))
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Departamentos (separados por coma)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                placeholder: "CMP, MAT",
+                value: formDepartments,
+                onChange: (e) => setFormDepartments(e.target.value)
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", onClick: saveTeacher, children: "Guardar" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", variant: "outline", onClick: () => setFormOpen(false), children: "Cancelar" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "overflow-hidden dark:bg-gray-800", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-gray-200 dark:border-gray-700 text-left text-gray-500", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Correo" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Nombre" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Facultad" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Departamentos" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium w-24" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("tbody", { children: [
+          teachers.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-gray-100 dark:border-gray-700/50", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-900 dark:text-white", children: t.email }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-600 dark:text-gray-300", children: t.name ?? "—" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: t.faculty }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-600 dark:text-gray-300", children: (t.departments ?? []).join(", ") || "—" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => openEdit(t), className: "p-1.5 text-gray-500 hover:text-blue-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "w-4 h-4" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => deleteTeacher(t.id), className: "p-1.5 text-gray-500 hover:text-red-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-4 h-4" }) })
+            ] }) })
+          ] }, t.id)),
+          teachers.length === 0 && !loadingTeachers && /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: 5, className: "px-4 py-8 text-center text-gray-500", children: "No hay profesores registrados." }) })
+        ] })
+      ] }) }) })
+    ] }),
+    tab === "messages" && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-5 dark:bg-gray-800 space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Mensaje a alumnos" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: [
+        "Carga la lista, marca los alumnos que recibirán el correo y luego abre mailto. Solo los seleccionados irán en BCC (máx. ",
+        MAILTO_BCC_LIMIT,
+        ")."
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-2 gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Filtrar por facultad (opcional)" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "select",
+            {
+              value: msgFaculty,
+              onChange: (e) => {
+                setMsgFaculty(e.target.value);
+                setStudentEmails([]);
+                setSelectedEmails(/* @__PURE__ */ new Set());
+              },
+              className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "Todos los alumnos registrados" }),
+                FACULTIES.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f, children: f }, f))
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-end", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: loadStudents, disabled: loadingStudents, className: "gap-1.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${loadingStudents ? "animate-spin" : ""}` }),
+          "Cargar destinatarios"
+        ] }) })
+      ] }),
+      studentError && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-red-600 dark:text-red-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4" }),
+        studentError
+      ] }),
+      studentEmails.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-600 dark:text-gray-300", children: [
+            selectedEmails.size,
+            " de ",
+            studentEmails.length,
+            " seleccionado(s)",
+            selectedEmails.size > MAILTO_BCC_LIMIT && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-amber-600 dark:text-amber-400", children: [
+              " ",
+              "— solo los primeros ",
+              MAILTO_BCC_LIMIT,
+              " irán en BCC"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: selectAllStudents, children: "Seleccionar todos" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: deselectAllStudents, children: "Quitar selección" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-h-48 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700", children: studentEmails.map((email) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "label",
+          {
+            className: "flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "checkbox",
+                  checked: selectedEmails.has(email),
+                  onChange: () => toggleEmail(email),
+                  className: "rounded border-gray-300"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-800 dark:text-gray-200 truncate", children: email })
+            ]
+          },
+          email
+        )) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Asunto" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: msgSubject, onChange: (e) => setMsgSubject(e.target.value) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Mensaje" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "textarea",
+          {
+            value: msgBody,
+            onChange: (e) => setMsgBody(e.target.value),
+            rows: 5,
+            className: "w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          onClick: openMailto,
+          className: "gap-1.5",
+          disabled: selectedEmails.size === 0,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-4 h-4" }),
+            "Abrir correo (mailto)"
+          ]
+        }
+      )
+    ] }),
+    tab === "offer" && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-5 dark:bg-gray-800 space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Oferta académica" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", size: "sm", onClick: reloadMeta, disabled: metaLoading, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${metaLoading ? "animate-spin" : ""}` }) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("dl", { className: "grid sm:grid-cols-2 gap-4 text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Periodo actual" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "font-medium text-gray-900 dark:text-white", children: (metadata == null ? void 0 : metadata.current_period_label) ?? "—" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Código de periodo" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "font-medium text-gray-900 dark:text-white font-mono", children: (metadata == null ? void 0 : metadata.current_period_code) ?? "—" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Última actualización" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "font-medium text-gray-900 dark:text-white", children: formatDate(metadata == null ? void 0 : metadata.last_scraped_at) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-gray-500", children: "Último rollover" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "font-medium text-gray-900 dark:text-white", children: formatDate(metadata == null ? void 0 : metadata.last_rollover_at) })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { className: "w-4 h-4" }),
+          "Comandos locales (offer-scraper)"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("pre", { className: "text-xs text-gray-600 dark:text-gray-400 overflow-x-auto whitespace-pre-wrap", children: `# Backfill periodos históricos
+python scrape.py backfill --only 202510,202420
+
+# Rollover al nuevo semestre (dry-run primero)
+python scrape.py rollover --period-code 202520 --period "Segundo Semestre 2025/2026"
+python scrape.py rollover --period-code 202520 --period "Segundo Semestre 2025/2026" --yes` })
+      ] })
+    ] })
+  ] });
+}
 function useTeacherProfile(email) {
   const [teacherProfile, setTeacherProfile] = reactExports.useState(null);
   const [isLoading, setIsLoading] = reactExports.useState(false);
@@ -51297,8 +51744,27 @@ function useTeacherProfile(email) {
   }, [email]);
   return { teacherProfile, isLoading };
 }
+function useAdminProfile(email) {
+  const [adminProfile, setAdminProfile] = reactExports.useState(null);
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    if (!email) {
+      setAdminProfile(null);
+      return;
+    }
+    setIsLoading(true);
+    supabase.from("admin_profiles").select("id, email, name").eq("email", email).maybeSingle().then(({ data }) => {
+      setAdminProfile(data ?? null);
+      setIsLoading(false);
+    }).catch(() => {
+      setAdminProfile(null);
+      setIsLoading(false);
+    });
+  }, [email]);
+  return { adminProfile, isLoading };
+}
 const queryClient = new QueryClient();
-function UserMenu() {
+function UserMenu({ onOpenPasswordReset }) {
   const { user, signOut } = useSupabaseAuth();
   const [open, setOpen] = reactExports.useState(false);
   const [settingsOpen, setSettingsOpen] = reactExports.useState(false);
@@ -51356,67 +51822,88 @@ function UserMenu() {
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsModal, { open: settingsOpen, onOpenChange: setSettingsOpen })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      SettingsModal,
+      {
+        open: settingsOpen,
+        onOpenChange: setSettingsOpen,
+        onOpenPasswordReset
+      }
+    )
   ] });
 }
-function AuthButton() {
+function AuthButton({ onOpenAuth, onOpenPasswordReset }) {
   const { isSignedIn, isLoading, isPasswordRecovery } = useSupabaseAuth();
-  const [modalOpen, setModalOpen] = reactExports.useState(false);
-  const [authMode, setAuthMode] = reactExports.useState("login");
-  const openAuth = (mode) => {
-    setAuthMode(mode);
-    setModalOpen(true);
-  };
-  React.useEffect(() => {
-    if (isPasswordRecovery) {
-      setAuthMode("new-password");
-      setModalOpen(true);
-    }
-  }, [isPasswordRecovery]);
   if (isLoading) return null;
   if (isPasswordRecovery) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(AuthModal, { open: true, onOpenChange: setModalOpen, initialMode: "new-password" });
+    return null;
   }
   if (isSignedIn) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(UserMenu, {});
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(UserMenu, { onOpenPasswordReset });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: () => openAuth("login"),
-          className: "px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors",
-          children: "Iniciar sesión"
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: () => openAuth("signup"),
-          className: "px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors",
-          children: "Crear cuenta"
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(AuthModal, { open: modalOpen, onOpenChange: setModalOpen, initialMode: authMode })
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: () => onOpenAuth("login"),
+        className: "px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors",
+        children: "Iniciar sesión"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: () => onOpenAuth("signup"),
+        className: "px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors",
+        children: "Crear cuenta"
+      }
+    )
   ] });
 }
 function AppInner() {
-  const { isSignedIn, user } = useSupabaseAuth();
-  const { teacherProfile, isLoading: isTeacherLoading } = useTeacherProfile(
+  const { isSignedIn, user, isPasswordRecovery } = useSupabaseAuth();
+  const [authModalOpen, setAuthModalOpen] = reactExports.useState(false);
+  const [authMode, setAuthMode] = reactExports.useState("login");
+  const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
     isSignedIn ? (user == null ? void 0 : user.email) ?? null : null
   );
-  const showTeacherDashboard = isSignedIn && !isTeacherLoading && teacherProfile !== null;
+  const { teacherProfile, isLoading: isTeacherLoading } = useTeacherProfile(
+    isSignedIn && !adminProfile ? (user == null ? void 0 : user.email) ?? null : null
+  );
+  const openAuth = (mode) => {
+    setAuthMode(mode);
+    setAuthModalOpen(true);
+  };
+  const openPasswordReset = () => {
+    setAuthMode("forgot");
+    setAuthModalOpen(true);
+  };
+  reactExports.useEffect(() => {
+    if (isPasswordRecovery) {
+      setAuthMode("new-password");
+      setAuthModalOpen(true);
+    }
+  }, [isPasswordRecovery]);
+  const isRoleLoading = isSignedIn && (isAdminLoading || !adminProfile && isTeacherLoading);
+  const showAdmin = isSignedIn && !isAdminLoading && adminProfile !== null;
+  const showTeacher = isSignedIn && !showAdmin && !isTeacherLoading && teacherProfile !== null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Malla Curricular Interactiva" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthButton, {}) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthButton, { onOpenAuth: openAuth, onOpenPasswordReset: openPasswordReset }) })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: showTeacherDashboard ? /* @__PURE__ */ jsxRuntimeExports.jsx(TeacherDashboard, { profile: teacherProfile }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CurriculumGrid, {}) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: isRoleLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-24 text-gray-500", children: "Cargando…" }) : showAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboard, { profile: adminProfile }) : showTeacher ? /* @__PURE__ */ jsxRuntimeExports.jsx(TeacherDashboard, { profile: teacherProfile }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CurriculumGrid, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeToggle, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, {})
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AuthModal,
+      {
+        open: authModalOpen || isPasswordRecovery,
+        onOpenChange: setAuthModalOpen,
+        initialMode: authMode
+      }
+    )
   ] });
 }
 function App() {
