@@ -1,6 +1,10 @@
 import type { Course } from '../types/curriculum';
 import type { CourseHistoryStats } from './offerHistory';
 import { normalizeOfferCourseCode } from './offerMatching';
+import {
+  classifyEdgeType,
+  type TransitionRateTable,
+} from './transitionRates';
 
 /** Probability that students continue to the next course in the same area/semester chain. */
 export const P_SEQUENTIAL = 0.8;
@@ -46,7 +50,7 @@ export function buildCurriculumGraph(courses: Course[]): CurriculumGraph {
   return { nodes, successors };
 }
 
-function isDirectPrerequisite(graph: CurriculumGraph, fromId: string, toId: string): boolean {
+export function isDirectPrerequisite(graph: CurriculumGraph, fromId: string, toId: string): boolean {
   const to = graph.nodes.get(toId);
   if (!to) return false;
   for (const expr of to.prerequisites ?? []) {
@@ -55,7 +59,7 @@ function isDirectPrerequisite(graph: CurriculumGraph, fromId: string, toId: stri
   return false;
 }
 
-function isPrimarySuccessor(graph: CurriculumGraph, fromId: string, toId: string): boolean {
+export function isPrimarySuccessor(graph: CurriculumGraph, fromId: string, toId: string): boolean {
   const from = graph.nodes.get(fromId);
   const to = graph.nodes.get(toId);
   if (!from || !to) return false;
@@ -70,15 +74,38 @@ function isPrimarySuccessor(graph: CurriculumGraph, fromId: string, toId: string
   return sameAreaNext.includes(toId);
 }
 
-export function transitionProbability(graph: CurriculumGraph, fromId: string, toId: string): number {
+export function defaultTransitionProbability(
+  graph: CurriculumGraph,
+  fromId: string,
+  toId: string,
+): number {
   const from = graph.nodes.get(fromId);
   const to = graph.nodes.get(toId);
   if (!from || !to) return P_OTHER;
   if (isPrimarySuccessor(graph, fromId, toId)) return P_SEQUENTIAL;
-  // Direct prerequisite edges keep cohort even across areas (MAT/IEE → MAC).
   if (isDirectPrerequisite(graph, fromId, toId)) return P_SAME_AREA;
   if (from.area === to.area) return P_SAME_AREA;
   return P_OTHER;
+}
+
+export function transitionProbability(
+  graph: CurriculumGraph,
+  fromId: string,
+  toId: string,
+  rates?: TransitionRateTable | null,
+): number {
+  if (rates) {
+    const et = classifyEdgeType(
+      graph,
+      fromId,
+      toId,
+      (f, t) => isDirectPrerequisite(graph, f, t),
+      (f, t) => isPrimarySuccessor(graph, f, t),
+    );
+    const calibrated = rates.lookup(fromId, toId, et);
+    if (calibrated !== null) return calibrated;
+  }
+  return defaultTransitionProbability(graph, fromId, toId);
 }
 
 /** Offer codes needed to seed DAG propagation (full malla, not only faculty prefix). */
@@ -86,14 +113,11 @@ export function collectDagHistoryOfferCodes(courses: Course[]): string[] {
   return [...new Set(courses.map((c) => normalizeOfferCourseCode(c.id)))];
 }
 
-/**
- * Forward-propagate cohort size along the DAG.
- * First hop uses OR (||) groups in prerequisites so alternate prereqs are not summed.
- */
 function propagateInflow(
   graph: CurriculumGraph,
   seedsByCourseId: Map<string, number>,
   maxHops = 5,
+  rates?: TransitionRateTable | null,
 ): Map<string, number> {
   const inflow = new Map<string, number>();
   const queue: { id: string; students: number; depth: number }[] = [];
@@ -111,7 +135,7 @@ function propagateInflow(
         if (seed <= 0) continue;
         groupMax = Math.max(
           groupMax,
-          seed * transitionProbability(graph, prereqId, course.id),
+          seed * transitionProbability(graph, prereqId, course.id, rates),
         );
       }
       directTotal += groupMax;
@@ -127,7 +151,7 @@ function propagateInflow(
     if (depth >= maxHops) continue;
 
     for (const succId of graph.successors.get(id) ?? []) {
-      const transferred = students * transitionProbability(graph, id, succId);
+      const transferred = students * transitionProbability(graph, id, succId, rates);
       if (transferred < 0.25) continue;
       inflow.set(succId, (inflow.get(succId) ?? 0) + transferred);
       queue.push({ id: succId, students: transferred, depth: depth + 1 });
@@ -137,7 +161,7 @@ function propagateInflow(
   return inflow;
 }
 
-/** Seeds from last regular semester cupo — proxy for “who passed this course last term”. */
+/** Seeds from period-anchored cupo — proxy for “who passed this course last term”. */
 export function buildHistoricalSeeds(
   courses: Course[],
   historyByOfferCode: Map<string, CourseHistoryStats>,
@@ -158,9 +182,10 @@ export function propagateDemandFromSources(
   historySeeds: Map<string, number>,
   cursandoSeeds: Map<string, number>,
   maxHops = 5,
+  rates?: TransitionRateTable | null,
 ): PropagationResult {
-  const inflowFromHistory = propagateInflow(graph, historySeeds, maxHops);
-  const inflowFromCursando = propagateInflow(graph, cursandoSeeds, maxHops);
+  const inflowFromHistory = propagateInflow(graph, historySeeds, maxHops, rates);
+  const inflowFromCursando = propagateInflow(graph, cursandoSeeds, maxHops, rates);
 
   const totalInflow = new Map<string, number>();
   const allIds = new Set([

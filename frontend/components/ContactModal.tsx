@@ -75,17 +75,19 @@ export default function ContactModal({ onClose }: ContactModalProps) {
         `Solicitud de Malla Curricular - ${formData.career}`,
       );
       form.append("_captcha", "false");
-      form.append("_next", window.location.origin + "/?submitted=true");
 
       const response = await fetch(
-        "https://formsubmit.co/pichuelectrico@gmail.com",
+        "https://formsubmit.co/ajax/pichuelectrico@gmail.com",
         {
           method: "POST",
+          headers: { Accept: "application/json" },
           body: form,
         },
       );
 
-      if (response.ok) {
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data?.success) {
         toast({
           title: "¡Solicitud enviada! 📧",
           description:
@@ -93,7 +95,10 @@ export default function ContactModal({ onClose }: ContactModalProps) {
         });
         onClose();
       } else {
-        throw new Error("Error en el envío");
+        throw new Error(
+          (data && typeof data.message === "string" ? data.message : null) ??
+            "Error en el envío",
+        );
       }
     } catch (error) {
       console.error("Error sending form:", error);

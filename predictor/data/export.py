@@ -41,6 +41,20 @@ def fetch_table(table: str, select: str = "*") -> list[dict]:
     return rows
 
 
+def fetch_offer_metadata() -> dict:
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return {}
+    resp = requests.get(
+        f"{SUPABASE_URL}/rest/v1/offer_metadata",
+        headers=_headers(),
+        params={"select": "*", "id": "eq.1"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    rows = resp.json()
+    return rows[0] if rows else {}
+
+
 def export_all(out_dir: Path | None = None) -> dict[str, Path]:
     dest = out_dir or OUTPUT_DIR
     dest.mkdir(exist_ok=True)
@@ -54,7 +68,22 @@ def export_all(out_dir: Path | None = None) -> dict[str, Path]:
         paths[table] = path
         print(f"Exported {len(data)} rows → {path}")
 
+    meta = fetch_offer_metadata()
+    meta_path = dest / "offer_metadata.json"
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2, default=str)
+    paths["offer_metadata"] = meta_path
+    print(f"Exported offer_metadata → {meta_path}")
+
     return paths
+
+
+def load_offer_metadata(path: Path | None = None) -> dict:
+    p = path or OUTPUT_DIR / "offer_metadata.json"
+    if not p.exists():
+        return {}
+    with open(p, encoding="utf-8") as f:
+        return json.load(f)
 
 
 if __name__ == "__main__":

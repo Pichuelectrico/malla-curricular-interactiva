@@ -24,7 +24,9 @@ export function isStableOffering(
   trend: DemandTrend,
 ): boolean {
   if (trend === 'down' || trend === 'new') return false;
-  const regular = history.periods.filter((p) => !p.isSummer);
+  const regular = history.periods.filter(
+    (p) => p.periodKind === 'regular_10' || p.periodKind === 'regular_20',
+  );
   if (regular.length < 2) return false;
   const last = regular[regular.length - 1].totalStudents;
   const prev = regular[regular.length - 2].totalStudents;
@@ -77,7 +79,9 @@ function computeTrend(
   estimate: number,
   dagInflow: number,
 ): DemandTrend {
-  const regular = history.periods.filter((p) => !p.isSummer);
+  const regular = history.periods.filter(
+    (p) => p.periodKind === 'regular_10' || p.periodKind === 'regular_20',
+  );
   if (regular.length < 2 && dagInflow <= 0) return 'stable';
 
   const last = regular[regular.length - 1]?.totalStudents ?? 0;
