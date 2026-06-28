@@ -101,6 +101,21 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
   },
   {
+    id: "cmc-usfq",
+    slug: "malla-cmc",
+    name: "Composición para Medios Contemporáneos",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 125,
+    courses: 61,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-CMC.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-CMC.json');
+      return { default: await res.json() };
+    },
+  },
+  {
     id: "com-usfq",
     slug: "malla-com",
     name: "Comunicación",
@@ -172,6 +187,21 @@ export const availableCurricula: AvailableCurriculum[] = [
       const base = (import.meta as any).env?.BASE_URL || '/';
       const res = await fetch(`${base}data/Malla-EDU.json`);
       if (!res.ok) throw new Error('No se pudo cargar /data/Malla-EDU.json');
+      return { default: await res.json() };
+    },
+  },
+  {
+    id: "emc-usfq",
+    slug: "malla-emc",
+    name: "Ejecución de Música Contemporánea",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 126,
+    courses: 63,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-EMC.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-EMC.json');
       return { default: await res.json() };
     },
   },

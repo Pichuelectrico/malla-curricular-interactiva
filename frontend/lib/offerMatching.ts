@@ -16,6 +16,16 @@ export function normalizeCurriculumCode(code: string): string {
   return code.trim().toUpperCase().replace(/\s+/g, '-');
 }
 
+/** USFQ offer code: CMP 1001 / CMP1001 / CMP-1001 → CMP-1001 */
+export function normalizeOfferCourseCode(code: string): string {
+  const raw = code.trim().toUpperCase().replace(/\s+/g, '-');
+  if (/^[A-Z]{2,5}-\d/.test(raw)) return raw;
+  const bare = raw.replace(/-/g, '');
+  const match = bare.match(/^([A-Z]{2,5})(\d.*)$/);
+  if (match) return `${match[1]}-${match[2]}`;
+  return raw;
+}
+
 /** Curriculum slots without a fixed USFQ code (ARTE, HUM, ELECTIVA, etc.) */
 export function hasSpecificCourseCode(course: Course): boolean {
   const normalized = normalizeCurriculumCode(course.code);
@@ -52,7 +62,7 @@ export function courseMatchesOffer(course: Course, row: CourseOfferRow): boolean
   const offerCode = row.course_code.toUpperCase();
 
   if (offerCode === normalizedCode) return true;
-  if (offerCode === normalizeCurriculumCode(course.id)) return true;
+  if (offerCode === normalizeOfferCourseCode(course.id)) return true;
 
   const prefixes = getElectivePrefixes(course);
   if (prefixes) {
@@ -73,17 +83,94 @@ export function normalizeOfferDay(day: string): string | null {
   return DAY_FULL_TO_SHORT[day] ?? null;
 }
 
-export function normalizeOfferTime(time: string): string {
+export function normalizeOfferTime(time: string | null | undefined): string {
+  if (!time) return "00:00";
   return time.slice(0, 5);
 }
 
-export function sessionsFromOfferRow(row: CourseOfferRow): { day: string; startTime: string }[] {
+export function timeToMinutes(time: string): number {
+  const [h, m] = normalizeOfferTime(time).split(':').map(Number);
+  return h * 60 + m;
+}
+
+export function minutesToTime(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+/** Grid rows are spaced 90 min apart; each row represents a 1h30 block. */
+export const GRID_SLOT_DURATION_MINUTES = 90;
+
+export const GRID_TIME_SLOTS = [
+  '07:00', '08:30', '10:00', '11:30', '13:00', '14:30', '16:00', '17:30',
+] as const;
+
+export interface ScheduleSessionSlot {
+  day: string;
+  startTime: string;
+  endTime?: string;
+}
+
+export function expandSessionToGridSlots(
+  startTime: string | null | undefined,
+  endTime?: string | null
+): string[] {
+  if (!startTime) return [];
+  const start = timeToMinutes(startTime);
+  const end = endTime
+    ? timeToMinutes(endTime)
+    : start + GRID_SLOT_DURATION_MINUTES;
+  if (end <= start) return [normalizeOfferTime(startTime)];
+
+  const slots: string[] = [];
+  let t = start;
+  while (t < end) {
+    slots.push(minutesToTime(t));
+    t += GRID_SLOT_DURATION_MINUTES;
+  }
+  return slots;
+}
+
+export function sessionOccupiesGridSlot(
+  session: ScheduleSessionSlot,
+  day: string,
+  slotTime: string
+): boolean {
+  if (session.day !== day) return false;
+  return expandSessionToGridSlots(session.startTime, session.endTime).includes(
+    normalizeOfferTime(slotTime)
+  );
+}
+
+export function collectCalendarTimeSlots(
+  sessions: ScheduleSessionSlot[]
+): string[] {
+  const slotSet = new Set<string>(GRID_TIME_SLOTS);
+  sessions.forEach((sess) => {
+    if (!sess.startTime) return;
+    expandSessionToGridSlots(sess.startTime, sess.endTime).forEach((t) =>
+      slotSet.add(t)
+    );
+  });
+  return [...slotSet].sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+}
+
+export function sessionsFromOfferRow(row: CourseOfferRow): ScheduleSessionSlot[] {
   if (!row.start_time) return [];
   const startTime = normalizeOfferTime(row.start_time);
+  const endTime = row.end_time ? normalizeOfferTime(row.end_time) : undefined;
   return row.days
     .map(normalizeOfferDay)
     .filter((d): d is string => d !== null)
-    .map(day => ({ day, startTime }));
+    .map((day) => ({ day, startTime, endTime }));
+}
+
+export function formatSessionTimeRange(session: ScheduleSessionSlot): string {
+  if (session.endTime && session.endTime !== session.startTime) {
+    return `${session.startTime}–${session.endTime}`;
+  }
+  return session.startTime;
 }
 
 export function sessionsFromOfferNrc(
@@ -138,6 +225,39 @@ export function getOfferCoursePreview(
   return getOffersForExplicitCode(offerMap, explicitCode, 'Teoría')[0];
 }
 
+export function getScheduleDisplayLabels(
+  course: Course,
+  schedule: {
+    offerCourseCode?: string;
+    nrc: string;
+    nrcEJ?: string;
+    nrcLAB?: string;
+  },
+  offerMap: Map<string, CourseOfferRow>,
+  part: 'main' | 'ej' | 'lab' = 'main'
+): { code: string; title: string } {
+  const nrc =
+    part === 'main'
+      ? schedule.nrc
+      : part === 'ej'
+        ? schedule.nrcEJ
+        : schedule.nrcLAB;
+
+  if (nrc) {
+    const row = offerMap.get(nrc);
+    if (row) return { code: row.course_code, title: row.title };
+  }
+
+  if (isOpenElectiveCourse(course) && schedule.offerCourseCode?.trim()) {
+    const preview = getOfferCoursePreview(offerMap, schedule.offerCourseCode);
+    if (preview) return { code: preview.course_code, title: preview.title };
+    const code = normalizeOfferCourseCode(schedule.offerCourseCode);
+    return { code, title: code };
+  }
+
+  return { code: course.code, title: course.title };
+}
+
 export function getLinkedOffers(
   mainRow: CourseOfferRow,
   offerMap: Map<string, CourseOfferRow>,
@@ -160,7 +280,13 @@ export function nrcConflictsWithSlots(
   occupied: Set<string>,
   offerMap: Map<string, CourseOfferRow>
 ): boolean {
-  return sessionsFromOfferNrc(nrc, offerMap).some(s => occupied.has(slotKey(s.day, s.startTime)));
+  const row = offerMap.get(nrc);
+  if (!row) return false;
+  return sessionsFromOfferRow(row).some((sess) =>
+    expandSessionToGridSlots(sess.startTime, sess.endTime).some((slot) =>
+      occupied.has(slotKey(sess.day, slot))
+    )
+  );
 }
 
 export function formatOfferSchedule(row: CourseOfferRow): string {

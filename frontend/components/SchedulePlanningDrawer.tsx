@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Calendar,
   X,
   Save,
   Trash2,
   AlertCircle,
+  TriangleAlert,
   Download,
   Wifi,
   WifiOff,
@@ -22,21 +23,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Course } from "../types/curriculum";
 import { generateSchedulePDF } from "../utils/pdfGenerator";
 import { useCourseOffer, type CourseOfferRow } from "../lib/useCourseOffer";
 import {
+  collectCalendarTimeSlots,
+  expandSessionToGridSlots,
   formatOfferSchedule,
+  formatSessionTimeRange,
   getLinkedOffers,
   getOfferCoursePreview,
   getOffersForSchedule,
+  getScheduleDisplayLabels,
   isOpenElectiveCourse,
   isValidOfferSchedule,
   nrcConflictsWithSlots,
   normalizeOfferCourseCodeInput,
   normalizeOfferDay as normalizeOfferDayLib,
+  sessionOccupiesGridSlot,
   sessionsFromOfferRow,
   slotKey,
 } from "../lib/offerMatching";
@@ -153,6 +159,12 @@ const TIME_SLOTS = [
   "17:30",
 ];
 
+interface ScheduleSession {
+  day: DayType;
+  startTime: string;
+  endTime?: string;
+}
+
 interface CourseSchedule {
   courseId: string;
   /** USFQ code chosen for open electives (e.g. IIN-4011) */
@@ -162,18 +174,67 @@ interface CourseSchedule {
   hasLAB: boolean;
   nrcEJ?: string;
   nrcLAB?: string;
-  sessions: {
-    day: DayType;
-    startTime: string;
-  }[];
-  sessionsEJ?: {
-    day: DayType;
-    startTime: string;
-  }[];
-  sessionsLAB?: {
-    day: DayType;
-    startTime: string;
-  }[];
+  sessions: ScheduleSession[];
+  sessionsEJ?: ScheduleSession[];
+  sessionsLAB?: ScheduleSession[];
+}
+
+function occupyExpandedSlots(
+  sessions: ScheduleSession[],
+  courseId: string,
+  occupied: Record<string, string>,
+  conflictList: string[],
+  plannedCourses: Course[],
+  schedules: CourseSchedule[],
+  offerMap: Map<string, CourseOfferRow>,
+  labelSuffix = "",
+) {
+  sessions.forEach((session) => {
+    expandSessionToGridSlots(session.startTime, session.endTime).forEach(
+      (slot) => {
+        const key = `${session.day}-${slot}`;
+        if (occupied[key]) {
+          const otherSchedule = schedules.find(
+            (s) => s.courseId === occupied[key],
+          );
+          const otherCourse = plannedCourses.find(
+            (c) => c.id === occupied[key],
+          );
+          const thisCourse = plannedCourses.find((c) => c.id === courseId);
+          const course1 = otherSchedule && otherCourse
+            ? getScheduleDisplayLabels(
+                otherCourse,
+                otherSchedule,
+                offerMap,
+                "main",
+              ).code
+            : occupied[key];
+          const course2 = thisCourse
+            ? getScheduleDisplayLabels(
+                thisCourse,
+                schedules.find((s) => s.courseId === courseId)!,
+                offerMap,
+                "main",
+              ).code
+            : courseId;
+          const conflictMsg = `Conflicto: ${course1}${labelSuffix ? ` (${labelSuffix})` : ""} y ${course2} en ${session.day} a las ${slot}`;
+          if (!conflictList.includes(conflictMsg)) {
+            conflictList.push(conflictMsg);
+          }
+        } else {
+          occupied[key] = courseId;
+        }
+      },
+    );
+  });
+}
+
+function allScheduleSessions(schedules: CourseSchedule[]): ScheduleSession[] {
+  return schedules.flatMap((s) => [
+    ...s.sessions,
+    ...(s.sessionsEJ ?? []),
+    ...(s.sessionsLAB ?? []),
+  ]);
 }
 
 interface SchedulePlanningDrawerProps {
@@ -348,6 +409,11 @@ export default function SchedulePlanningDrawer({
     loadFromCache,
   } = useCourseOffer();
 
+  const plannedCourseIds = useMemo(
+    () => plannedCourses.map((c) => c.id).sort().join(","),
+    [plannedCourses],
+  );
+
   useEffect(() => {
     const initialSchedules: CourseSchedule[] = plannedCourses.map((course) => ({
       courseId: course.id,
@@ -358,69 +424,47 @@ export default function SchedulePlanningDrawer({
       sessions: [],
     }));
     setSchedules(initialSchedules);
-  }, [plannedCourses]);
+  }, [plannedCourseIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkConflicts = (newSchedules: CourseSchedule[]) => {
     const conflictList: string[] = [];
-    const occupied: { [key: string]: string } = {};
+    const occupied: Record<string, string> = {};
 
     newSchedules.forEach((schedule) => {
-      schedule.sessions.forEach((session) => {
-        const key = `${session.day}-${session.startTime}`;
-        if (occupied[key]) {
-          const course1 =
-            plannedCourses.find((c) => c.id === occupied[key])?.code ||
-            occupied[key];
-          const course2 =
-            plannedCourses.find((c) => c.id === schedule.courseId)?.code ||
-            schedule.courseId;
-          const conflictMsg = `Conflicto: ${course1} y ${course2} en ${session.day} a las ${session.startTime}`;
-          if (!conflictList.includes(conflictMsg)) {
-            conflictList.push(conflictMsg);
-          }
-        } else {
-          occupied[key] = schedule.courseId;
-        }
-      });
+      occupyExpandedSlots(
+        schedule.sessions,
+        schedule.courseId,
+        occupied,
+        conflictList,
+        plannedCourses,
+        newSchedules,
+        offerMap,
+      );
 
       if (schedule.hasEJ && schedule.sessionsEJ) {
-        schedule.sessionsEJ.forEach((session) => {
-          const key = `${session.day}-${session.startTime}`;
-          if (occupied[key]) {
-            const course1 =
-              plannedCourses.find((c) => c.id === occupied[key])?.code ||
-              occupied[key];
-            const course2 =
-              plannedCourses.find((c) => c.id === schedule.courseId)?.code ||
-              schedule.courseId;
-            const conflictMsg = `Conflicto: ${course1} (EJ) y ${course2} en ${session.day} a las ${session.startTime}`;
-            if (!conflictList.includes(conflictMsg)) {
-              conflictList.push(conflictMsg);
-            }
-          } else {
-            occupied[key] = schedule.courseId;
-          }
-        });
+        occupyExpandedSlots(
+          schedule.sessionsEJ,
+          schedule.courseId,
+          occupied,
+          conflictList,
+          plannedCourses,
+          newSchedules,
+          offerMap,
+          "EJ",
+        );
       }
 
       if (schedule.hasLAB && schedule.sessionsLAB) {
-        schedule.sessionsLAB.forEach((session) => {
-          const key = `${session.day}-${session.startTime}`;
-          if (occupied[key]) {
-            const course1 =
-              plannedCourses.find((c) => c.id === occupied[key])?.code ||
-              occupied[key];
-            const course2 =
-              plannedCourses.find((c) => c.id === schedule.courseId)?.code ||
-              schedule.courseId;
-            const conflictMsg = `Conflicto: ${course1} (LAB) y ${course2} en ${session.day} a las ${session.startTime}`;
-            if (!conflictList.includes(conflictMsg)) {
-              conflictList.push(conflictMsg);
-            }
-          } else {
-            occupied[key] = schedule.courseId;
-          }
-        });
+        occupyExpandedSlots(
+          schedule.sessionsLAB,
+          schedule.courseId,
+          occupied,
+          conflictList,
+          plannedCourses,
+          newSchedules,
+          offerMap,
+          "LAB",
+        );
       }
     });
 
@@ -540,9 +584,10 @@ export default function SchedulePlanningDrawer({
       string,
       Record<string, Array<{ title: string; nrc: string }>>
     > = {};
+    const reportTimeSlots = collectCalendarTimeSlots(allScheduleSessions(schedules));
     DAYS_FULL.forEach((d) => {
       grid[d] = {};
-      TIME_SLOTS.forEach((t) => (grid[d][t] = []));
+      reportTimeSlots.forEach((t) => (grid[d][t] = []));
     });
 
     const allNrcs = new Set<string>();
@@ -550,36 +595,51 @@ export default function SchedulePlanningDrawer({
     schedules.forEach((s) => {
       const course = plannedCourses.find((c) => c.id === s.courseId);
       if (!course) return;
-      const base = course.title.replace(/(\s+EJ|\s+LAB)$/i, "").trim();
+      const labels = getScheduleDisplayLabels(course, s, offerMap, "main");
+      const base = labels.title;
 
       if (s.nrc) {
         allNrcs.add(s.nrc);
         s.sessions.forEach((sess) => {
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if (grid[day]?.[sess.startTime])
-            grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => {
+              if (grid[day]?.[slot])
+                grid[day][slot].push({ title: base, nrc: s.nrc });
+            },
+          );
         });
       }
       if (s.hasEJ && s.nrcEJ && s.sessionsEJ) {
         allNrcs.add(s.nrcEJ);
+        const ejLabels = getScheduleDisplayLabels(course, s, offerMap, "ej");
         s.sessionsEJ.forEach((sess) => {
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if (grid[day]?.[sess.startTime])
-            grid[day][sess.startTime].push({
-              title: `${base} EJ`,
-              nrc: s.nrcEJ!,
-            });
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => {
+              if (grid[day]?.[slot])
+                grid[day][slot].push({
+                  title: `${ejLabels.title} EJ`,
+                  nrc: s.nrcEJ!,
+                });
+            },
+          );
         });
       }
       if (s.hasLAB && s.nrcLAB && s.sessionsLAB) {
         allNrcs.add(s.nrcLAB);
+        const labLabels = getScheduleDisplayLabels(course, s, offerMap, "lab");
         s.sessionsLAB.forEach((sess) => {
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if (grid[day]?.[sess.startTime])
-            grid[day][sess.startTime].push({
-              title: `${base} LAB`,
-              nrc: s.nrcLAB!,
-            });
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => {
+              if (grid[day]?.[slot])
+                grid[day][slot].push({
+                  title: `${labLabels.title} LAB`,
+                  nrc: s.nrcLAB!,
+                });
+            },
+          );
         });
       }
     });
@@ -591,7 +651,7 @@ export default function SchedulePlanningDrawer({
       </tr>
     `;
 
-    const tableBody = TIME_SLOTS.map((time) => {
+    const tableBody = reportTimeSlots.map((time) => {
       const cells = DAYS_FULL.map((day) => {
         const entries = grid[day][time];
         if (!entries.length) return `<td></td>`;
@@ -699,43 +759,56 @@ export default function SchedulePlanningDrawer({
 
   const getScheduleForSlot = (day: DayType, time: string) => {
     for (const schedule of schedules) {
+      const course = plannedCourses.find((c) => c.id === schedule.courseId);
+      if (!course) continue;
+
       for (const session of schedule.sessions) {
-        if (session.day === day && session.startTime === time) {
-          const course = plannedCourses.find((c) => c.id === schedule.courseId);
-          return course
-            ? { code: course.code, title: course.title, type: "" }
-            : null;
+        if (sessionOccupiesGridSlot(session, day, time)) {
+          const labels = getScheduleDisplayLabels(
+            course,
+            schedule,
+            offerMap,
+            "main",
+          );
+          return { code: labels.code, title: labels.title, type: "" };
         }
       }
 
       if (schedule.hasEJ && schedule.sessionsEJ) {
         for (const session of schedule.sessionsEJ) {
-          if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find(
-              (c) => c.id === schedule.courseId,
+          if (sessionOccupiesGridSlot(session, day, time)) {
+            const labels = getScheduleDisplayLabels(
+              course,
+              schedule,
+              offerMap,
+              "ej",
             );
-            return course
-              ? { code: course.code, title: course.title, type: "EJ" }
-              : null;
+            return { code: labels.code, title: labels.title, type: "EJ" };
           }
         }
       }
 
       if (schedule.hasLAB && schedule.sessionsLAB) {
         for (const session of schedule.sessionsLAB) {
-          if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find(
-              (c) => c.id === schedule.courseId,
+          if (sessionOccupiesGridSlot(session, day, time)) {
+            const labels = getScheduleDisplayLabels(
+              course,
+              schedule,
+              offerMap,
+              "lab",
             );
-            return course
-              ? { code: course.code, title: course.title, type: "LAB" }
-              : null;
+            return { code: labels.code, title: labels.title, type: "LAB" };
           }
         }
       }
     }
     return null;
   };
+
+  const calendarTimeSlots = useMemo(
+    () => collectCalendarTimeSlots(allScheduleSessions(schedules)),
+    [schedules],
+  );
 
   useEffect(() => {
     if (exposeOpen) {
@@ -752,17 +825,17 @@ export default function SchedulePlanningDrawer({
 
   // ── Auto-fill helpers ─────────────────────────────────────────────────────
 
-  const sessionsFromOffer = (
-    nrc: string,
-  ): { day: DayType; startTime: string }[] => {
+  const sessionsFromOffer = (nrc: string): ScheduleSession[] => {
     const row = offerMap.get(nrc);
     if (!row) return [];
     return sessionsFromOfferRow(row)
       .map((s) => {
         const day = normalizeOfferDay(s.day);
-        return day ? { day, startTime: s.startTime } : null;
+        return day
+          ? { day, startTime: s.startTime, endTime: s.endTime }
+          : null;
       })
-      .filter((s): s is { day: DayType; startTime: string } => s !== null);
+      .filter((s): s is ScheduleSession => s !== null);
   };
 
   const getOccupiedSlots = useCallback(
@@ -775,9 +848,11 @@ export default function SchedulePlanningDrawer({
           ...(s.sessionsEJ || []),
           ...(s.sessionsLAB || []),
         ];
-        allSessions.forEach((sess) =>
-          occupied.add(slotKey(sess.day, sess.startTime)),
-        );
+        allSessions.forEach((sess) => {
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => occupied.add(slotKey(sess.day, slot)),
+          );
+        });
       });
       return occupied;
     },
@@ -1366,7 +1441,7 @@ export default function SchedulePlanningDrawer({
                                         className="inline-flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-2.5 py-1.5 rounded-lg"
                                       >
                                         <Lock className="w-3 h-3 opacity-60" />
-                                        {s.day} · {s.startTime}
+                                        {s.day} · {formatSessionTimeRange(s)}
                                       </span>
                                     ))}
                                     <button
@@ -1506,7 +1581,7 @@ export default function SchedulePlanningDrawer({
                                             className="inline-flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-2.5 py-1.5 rounded-lg"
                                           >
                                             <Lock className="w-3 h-3 opacity-60" />
-                                            {s.day} · {s.startTime}
+                                            {s.day} · {formatSessionTimeRange(s)}
                                           </span>
                                         ),
                                       )}
@@ -1697,7 +1772,7 @@ export default function SchedulePlanningDrawer({
                                             className="inline-flex items-center gap-1.5 text-xs bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700 px-2.5 py-1.5 rounded-lg"
                                           >
                                             <Lock className="w-3 h-3 opacity-60" />
-                                            {s.day} · {s.startTime}
+                                            {s.day} · {formatSessionTimeRange(s)}
                                           </span>
                                         ),
                                       )}
@@ -1893,7 +1968,7 @@ export default function SchedulePlanningDrawer({
                       </tr>
                     </thead>
                     <tbody>
-                      {TIME_SLOTS.map((time) => (
+                      {calendarTimeSlots.map((time) => (
                         <tr key={time}>
                           <td className="border border-gray-300 dark:border-gray-600 p-2 text-sm font-medium text-center bg-gray-50 dark:bg-gray-700">
                             {time}
@@ -1929,6 +2004,24 @@ export default function SchedulePlanningDrawer({
                     </tbody>
                   </table>
                 </div>
+
+                <Alert className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+                  <TriangleAlert className="text-amber-600 dark:text-amber-400" />
+                  <AlertTitle>Solo planificación — sin registro automático</AlertTitle>
+                  <AlertDescription className="text-amber-800 dark:text-amber-200/90">
+                    <p>
+                      Este planeador sirve únicamente para organizar tu horario de forma
+                      visual. Por ahora no registra materias en el sistema académico en tu
+                      nombre: eso requiere tus credenciales personales y aún no contamos
+                      con autorización de la USFQ para conectar con ese servicio.
+                    </p>
+                    <p className="mt-2">
+                      Existe una automatización de autoregistro que funciona aproximadamente
+                      el 60% de las veces, pero no está publicada de momento. Gracias por
+                      tu comprensión y atención.
+                    </p>
+                  </AlertDescription>
+                </Alert>
               </div>
 
               <div className="flex gap-2 justify-end sticky bottom-0 bg-white dark:bg-gray-800 py-4 border-t border-gray-200 dark:border-gray-700">

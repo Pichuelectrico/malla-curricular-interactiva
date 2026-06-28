@@ -15682,7 +15682,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$O = [
+const __iconNode$N = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -15692,14 +15692,14 @@ const __iconNode$O = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$O);
+const BookOpen = createLucideIcon("book-open", __iconNode$N);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$N = [
+const __iconNode$M = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -15711,20 +15711,7 @@ const __iconNode$N = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$N);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$M = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }]
-];
-const Calendar = createLucideIcon("calendar", __iconNode$M);
+const Calculator = createLucideIcon("calculator", __iconNode$M);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15732,12 +15719,12 @@ const Calendar = createLucideIcon("calendar", __iconNode$M);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$L = [
-  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
-  ["path", { d: "M18 17V9", key: "2bz60n" }],
-  ["path", { d: "M13 17V5", key: "1frdt8" }],
-  ["path", { d: "M8 17v-3", key: "17ska0" }]
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$L);
+const Calendar = createLucideIcon("calendar", __iconNode$L);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15745,62 +15732,63 @@ const ChartColumn = createLucideIcon("chart-column", __iconNode$L);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$K = [
+  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
+  ["path", { d: "M18 17V9", key: "2bz60n" }],
+  ["path", { d: "M13 17V5", key: "1frdt8" }],
+  ["path", { d: "M8 17v-3", key: "17ska0" }]
+];
+const ChartColumn = createLucideIcon("chart-column", __iconNode$K);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$J = [
   ["path", { d: "M18 6 7 17l-5-5", key: "116fxf" }],
   ["path", { d: "m22 10-7.5 7.5L13 16", key: "ke71qq" }]
 ];
-const CheckCheck = createLucideIcon("check-check", __iconNode$K);
+const CheckCheck = createLucideIcon("check-check", __iconNode$J);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$J = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$J);
+const __iconNode$I = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$I);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$I = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$I);
+const __iconNode$H = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$H);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$H = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$H);
+const __iconNode$G = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$G);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$G = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$G);
+const __iconNode$F = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$F);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$F = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$F);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$E = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
-];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$E);
+const __iconNode$E = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$E);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15808,10 +15796,11 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$E);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$D = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$D);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$D);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15819,10 +15808,10 @@ const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$D);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$C = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$C);
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$C);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15830,6 +15819,17 @@ const Clock = createLucideIcon("clock", __iconNode$C);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$B = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$B);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$A = [
   ["path", { d: "M10 2v2", key: "7u0qdc" }],
   ["path", { d: "M14 2v2", key: "6buw04" }],
   [
@@ -15841,19 +15841,7 @@ const __iconNode$B = [
   ],
   ["path", { d: "M6 2v2", key: "colzsn" }]
 ];
-const Coffee = createLucideIcon("coffee", __iconNode$B);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$A = [
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
-  ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
-];
-const Download = createLucideIcon("download", __iconNode$A);
+const Coffee = createLucideIcon("coffee", __iconNode$A);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15861,11 +15849,11 @@ const Download = createLucideIcon("download", __iconNode$A);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$z = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
+  ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
 ];
-const ExternalLink = createLucideIcon("external-link", __iconNode$z);
+const Download = createLucideIcon("download", __iconNode$z);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15873,13 +15861,11 @@ const ExternalLink = createLucideIcon("external-link", __iconNode$z);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$y = [
-  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M10 9H8", key: "b1mrlr" }],
-  ["path", { d: "M16 13H8", key: "t4e002" }],
-  ["path", { d: "M16 17H8", key: "z1uh3a" }]
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
 ];
-const FileText = createLucideIcon("file-text", __iconNode$y);
+const ExternalLink = createLucideIcon("external-link", __iconNode$y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15887,16 +15873,13 @@ const FileText = createLucideIcon("file-text", __iconNode$y);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$x = [
-  [
-    "path",
-    {
-      d: "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
-      key: "tonef"
-    }
-  ],
-  ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M10 9H8", key: "b1mrlr" }],
+  ["path", { d: "M16 13H8", key: "t4e002" }],
+  ["path", { d: "M16 17H8", key: "z1uh3a" }]
 ];
-const Github = createLucideIcon("github", __iconNode$x);
+const FileText = createLucideIcon("file-text", __iconNode$x);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15907,14 +15890,13 @@ const __iconNode$w = [
   [
     "path",
     {
-      d: "M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z",
-      key: "j76jl0"
+      d: "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
+      key: "tonef"
     }
   ],
-  ["path", { d: "M22 10v6", key: "1lu8f3" }],
-  ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
+  ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$w);
+const Github = createLucideIcon("github", __iconNode$w);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15922,11 +15904,17 @@ const GraduationCap = createLucideIcon("graduation-cap", __iconNode$w);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$v = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 16v-4", key: "1dtifu" }],
-  ["path", { d: "M12 8h.01", key: "e9boi3" }]
+  [
+    "path",
+    {
+      d: "M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z",
+      key: "j76jl0"
+    }
+  ],
+  ["path", { d: "M22 10v6", key: "1lu8f3" }],
+  ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const Info = createLucideIcon("info", __iconNode$v);
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$v);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15934,6 +15922,18 @@ const Info = createLucideIcon("info", __iconNode$v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$u = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 16v-4", key: "1dtifu" }],
+  ["path", { d: "M12 8h.01", key: "e9boi3" }]
+];
+const Info = createLucideIcon("info", __iconNode$u);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$t = [
   [
     "path",
     {
@@ -15943,22 +15943,7 @@ const __iconNode$u = [
   ],
   ["circle", { cx: "16.5", cy: "7.5", r: ".5", fill: "currentColor", key: "w0ekpg" }]
 ];
-const KeyRound = createLucideIcon("key-round", __iconNode$u);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$t = [
-  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
-  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
-  ["path", { d: "M2 5h12", key: "or177f" }],
-  ["path", { d: "M7 2h1", key: "1t2jsx" }],
-  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
-  ["path", { d: "M14 18h6", key: "1m8k6r" }]
-];
-const Languages = createLucideIcon("languages", __iconNode$t);
+const KeyRound = createLucideIcon("key-round", __iconNode$t);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -15966,6 +15951,21 @@ const Languages = createLucideIcon("languages", __iconNode$t);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$s = [
+  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
+  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
+  ["path", { d: "M2 5h12", key: "or177f" }],
+  ["path", { d: "M7 2h1", key: "1t2jsx" }],
+  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
+  ["path", { d: "M14 18h6", key: "1m8k6r" }]
+];
+const Languages = createLucideIcon("languages", __iconNode$s);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$r = [
   [
     "path",
     {
@@ -15976,22 +15976,22 @@ const __iconNode$s = [
   ["rect", { width: "4", height: "12", x: "2", y: "9", key: "mk3on5" }],
   ["circle", { cx: "4", cy: "4", r: "2", key: "bt5ra8" }]
 ];
-const Linkedin = createLucideIcon("linkedin", __iconNode$s);
+const Linkedin = createLucideIcon("linkedin", __iconNode$r);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$r = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$r);
+const __iconNode$q = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$q);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$q = [
+const __iconNode$p = [
   ["path", { d: "M12 2v4", key: "3427ic" }],
   ["path", { d: "m16.2 7.8 2.9-2.9", key: "r700ao" }],
   ["path", { d: "M18 12h4", key: "wj9ykh" }],
@@ -16001,18 +16001,7 @@ const __iconNode$q = [
   ["path", { d: "M2 12h4", key: "j09sii" }],
   ["path", { d: "m4.9 4.9 2.9 2.9", key: "giyufr" }]
 ];
-const Loader = createLucideIcon("loader", __iconNode$q);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$p = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
-];
-const Lock = createLucideIcon("lock", __iconNode$p);
+const Loader = createLucideIcon("loader", __iconNode$p);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16020,11 +16009,10 @@ const Lock = createLucideIcon("lock", __iconNode$p);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$o = [
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
-  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
-  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$o);
+const Lock = createLucideIcon("lock", __iconNode$o);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16032,25 +16020,37 @@ const LogOut = createLucideIcon("log-out", __iconNode$o);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$n = [
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
+  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
+  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$n);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$m = [
   ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
   ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
 ];
-const Mail = createLucideIcon("mail", __iconNode$n);
+const Mail = createLucideIcon("mail", __iconNode$m);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$m);
+const __iconNode$l = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$l);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$k = [
   ["path", { d: "M12 20h9", key: "t2du7b" }],
   [
     "path",
@@ -16060,24 +16060,7 @@ const __iconNode$l = [
     }
   ]
 ];
-const PenLine = createLucideIcon("pen-line", __iconNode$l);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$k = [
-  [
-    "path",
-    {
-      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
-      key: "1a8usu"
-    }
-  ],
-  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
-];
-const Pencil = createLucideIcon("pencil", __iconNode$k);
+const PenLine = createLucideIcon("pen-line", __iconNode$k);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -42813,10 +42796,7 @@ function getAssetPath(path) {
 }
 const qrCodeAsset = getAssetPath("qr-code.png");
 function DonationModal({ onClose }) {
-  const handleDonateClick = () => {
-    window.open("https://buymeacoffee.com/yourhandle", "_blank");
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "w-full max-w-md dark:bg-gray-800 dark:border-gray-700", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "w-full max-w-md dark:bg-gray-800 dark:border-gray-700", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-xl font-bold text-gray-800 dark:text-white", children: "¡Apoya este proyecto!" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onClose, className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }) })
@@ -42843,17 +42823,20 @@ function DonationModal({ onClose }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-800 dark:text-white", children: "Todo apoyo se agradece" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-600 dark:text-gray-300 text-sm leading-relaxed", children: "Si esta herramienta te ha sido útil para planificar tu carrera universitaria, considera apoyar su desarrollo y mantenimiento. ¡Cada contribución cuenta!" })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Button,
-        {
-          onClick: handleDonateClick,
-          className: "bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { className: "w-4 h-4 mr-2" }),
-            "Buy Me a Coffee ☕"
-          ]
-        }
-      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            disabled: true,
+            className: "bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg opacity-60 cursor-not-allowed",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { className: "w-4 h-4 mr-2" }),
+              "Buy Me a Coffee ☕"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Próximamente disponible" })
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Tu apoyo ayuda a mantener esta herramienta gratuita y actualizada" }) })
     ] })
   ] }) });
@@ -42950,6 +42933,21 @@ const availableCurricula = [
     }
   },
   {
+    id: "cmc-usfq",
+    slug: "malla-cmc",
+    name: "Composición para Medios Contemporáneos",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 125,
+    courses: 61,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-CMC.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-CMC.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "com-usfq",
     slug: "malla-com",
     name: "Comunicación",
@@ -43021,6 +43019,21 @@ const availableCurricula = [
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-EDU.json`);
       if (!res.ok) throw new Error("No se pudo cargar /data/Malla-EDU.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "emc-usfq",
+    slug: "malla-emc",
+    name: "Ejecución de Música Contemporánea",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 126,
+    courses: 63,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-EMC.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-EMC.json");
       return { default: await res.json() };
     }
   },
@@ -43492,56 +43505,93 @@ function CurriculumSelector({
           )
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "space-y-3 max-h-80 overflow-y-auto pt-0", children: filteredCurricula.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-center text-gray-500 dark:text-gray-400 py-4", children: [
-        "No se encontró ninguna malla para “",
-        search,
-        "”"
-      ] }) : filteredCurricula.map((curriculum) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "div",
-        {
-          className: "p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors",
-          onClick: () => handleCurriculumSelect(curriculum.id),
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-medium text-sm dark:text-white", children: curriculum.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Badge,
-                {
-                  variant: "secondary",
-                  className: "text-xs dark:bg-gray-700 dark:text-gray-300",
-                  children: curriculum.year
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-600 dark:text-gray-400 mb-2", children: curriculum.description }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                Badge,
-                {
-                  variant: "outline",
-                  className: "text-xs dark:border-gray-600 dark:text-gray-300",
-                  children: [
-                    curriculum.credits,
-                    " créditos"
-                  ]
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                Badge,
-                {
-                  variant: "outline",
-                  className: "text-xs dark:border-gray-600 dark:text-gray-300",
-                  children: [
-                    curriculum.courses,
-                    " materias"
-                  ]
-                }
-              )
-            ] })
-          ]
-        },
-        curriculum.id
-      )) })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-3 max-h-80 overflow-y-auto pt-0", children: [
+        filteredCurricula.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-4 space-y-3 text-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: [
+            "No se encontró ninguna malla para “",
+            search,
+            "”"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              size: "sm",
+              className: "border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900/20",
+              onClick: () => {
+                setIsOpen(false);
+                onRequestCurriculum();
+              },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-4 h-4 mr-2" }),
+                "Solicita tu malla"
+              ]
+            }
+          )
+        ] }) : filteredCurricula.map((curriculum) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors",
+            onClick: () => handleCurriculumSelect(curriculum.id),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-medium text-sm dark:text-white", children: curriculum.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Badge,
+                  {
+                    variant: "secondary",
+                    className: "text-xs dark:bg-gray-700 dark:text-gray-300",
+                    children: curriculum.year
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-600 dark:text-gray-400 mb-2", children: curriculum.description }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Badge,
+                  {
+                    variant: "outline",
+                    className: "text-xs dark:border-gray-600 dark:text-gray-300",
+                    children: [
+                      curriculum.credits,
+                      " créditos"
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Badge,
+                  {
+                    variant: "outline",
+                    className: "text-xs dark:border-gray-600 dark:text-gray-300",
+                    children: [
+                      curriculum.courses,
+                      " materias"
+                    ]
+                  }
+                )
+              ] })
+            ]
+          },
+          curriculum.id
+        )),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "p-3 rounded-lg border-2 border-dashed border-blue-300 dark:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors",
+            onClick: () => {
+              setIsOpen(false);
+              onRequestCurriculum();
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-center mb-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-medium text-sm text-blue-800 dark:text-blue-200", children: "Solicita tu malla" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-blue-600 dark:text-blue-400 text-center", children: "¿No encuentras tu carrera? Solicítala aquí" })
+            ]
+          }
+        )
+      ] })
     ] })
   ] });
 }
@@ -43631,10 +43681,7 @@ function ContactModal({ onClose }) {
       setIsSubmitting(false);
     }
   };
-  const handleBuyMeCoffeeClick = () => {
-    window.open("https://buymeacoffee.com/yourhandle", "_blank");
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4 max-w-4xl w-full", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4 max-w-4xl w-full", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "flex-1 dark:bg-gray-800 dark:border-gray-700 max-h-[90vh] overflow-y-auto", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
@@ -43846,26 +43893,20 @@ function ContactModal({ onClose }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-800 dark:text-white", children: "¡Apóyame con un café!" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-600 dark:text-gray-300 text-sm leading-relaxed", children: "Tu café me ayuda a mantener este proyecto y a procesar tu solicitud de malla curricular más rápido." })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            onClick: handleBuyMeCoffeeClick,
-            className: "bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105",
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Coffee, { className: "w-4 h-4" }),
-              "Buy Me a Coffee",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { className: "w-3 h-3" })
-            ] })
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "text-sm font-medium text-blue-800 dark:text-blue-200 mb-2", children: "📱 Instrucciones:" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("ol", { className: "text-xs text-blue-600 dark:text-blue-400 space-y-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: '1. Haz clic en "Buy Me a Coffee"' }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "2. Completa tu donación" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "3. Toma captura del comprobante" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "4. Súbela en el formulario de la izquierda" })
-          ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              disabled: true,
+              className: "bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg opacity-60 cursor-not-allowed",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Coffee, { className: "w-4 h-4" }),
+                "Buy Me a Coffee",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { className: "w-3 h-3" })
+              ] })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Próximamente disponible" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: "¡Gracias por apoyar este proyecto! 🐉❤️" }) })
       ] })
@@ -47458,6 +47499,19 @@ function Alert({
     }
   );
 }
+function AlertTitle({ className, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      "data-slot": "alert-title",
+      className: cn(
+        "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
+        className
+      ),
+      ...props
+    }
+  );
+}
 function AlertDescription({
   className,
   ...props
@@ -47486,16 +47540,16 @@ function useCourseOffer() {
     setIsLoading(true);
     setError(null);
     try {
-      const PAGE_SIZE = 1e3;
+      const PAGE_SIZE2 = 1e3;
       const allRows = [];
       let from = 0;
       while (true) {
-        const { data, error: dbError } = await supabase.from("course_offer").select("*").order("course_code").range(from, from + PAGE_SIZE - 1);
+        const { data, error: dbError } = await supabase.from("course_offer").select("*").order("course_code").range(from, from + PAGE_SIZE2 - 1);
         if (dbError) throw new Error(dbError.message);
         if (!(data == null ? void 0 : data.length)) break;
         allRows.push(...data);
-        if (data.length < PAGE_SIZE) break;
-        from += PAGE_SIZE;
+        if (data.length < PAGE_SIZE2) break;
+        from += PAGE_SIZE2;
       }
       const map = /* @__PURE__ */ new Map();
       allRows.forEach((row) => {
@@ -47527,6 +47581,14 @@ const SHORT_DAYS = /* @__PURE__ */ new Set(["Lun", "Mar", "Mié", "Jue", "Vie"])
 function normalizeCurriculumCode(code) {
   return code.trim().toUpperCase().replace(/\s+/g, "-");
 }
+function normalizeOfferCourseCode(code) {
+  const raw = code.trim().toUpperCase().replace(/\s+/g, "-");
+  if (/^[A-Z]{2,5}-\d/.test(raw)) return raw;
+  const bare = raw.replace(/-/g, "");
+  const match = bare.match(/^([A-Z]{2,5})(\d.*)$/);
+  if (match) return `${match[1]}-${match[2]}`;
+  return raw;
+}
 function hasSpecificCourseCode(course) {
   const normalized = normalizeCurriculumCode(course.code);
   return /^[A-Z]{2,5}-\d/.test(normalized);
@@ -47555,7 +47617,7 @@ function courseMatchesOffer(course, row) {
   const normalizedCode = normalizeCurriculumCode(course.code);
   const offerCode = row.course_code.toUpperCase();
   if (offerCode === normalizedCode) return true;
-  if (offerCode === normalizeCurriculumCode(course.id)) return true;
+  if (offerCode === normalizeOfferCourseCode(course.id)) return true;
   const prefixes = getElectivePrefixes(course);
   if (prefixes) {
     return prefixes.some((p) => offerCode.startsWith(p));
@@ -47573,17 +47635,69 @@ function normalizeOfferDay$1(day) {
   return DAY_FULL_TO_SHORT[day] ?? null;
 }
 function normalizeOfferTime(time) {
+  if (!time) return "00:00";
   return time.slice(0, 5);
+}
+function timeToMinutes(time) {
+  const [h, m] = normalizeOfferTime(time).split(":").map(Number);
+  return h * 60 + m;
+}
+function minutesToTime(minutes) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+const GRID_SLOT_DURATION_MINUTES = 90;
+const GRID_TIME_SLOTS = [
+  "07:00",
+  "08:30",
+  "10:00",
+  "11:30",
+  "13:00",
+  "14:30",
+  "16:00",
+  "17:30"
+];
+function expandSessionToGridSlots(startTime, endTime) {
+  if (!startTime) return [];
+  const start = timeToMinutes(startTime);
+  const end = endTime ? timeToMinutes(endTime) : start + GRID_SLOT_DURATION_MINUTES;
+  if (end <= start) return [normalizeOfferTime(startTime)];
+  const slots = [];
+  let t = start;
+  while (t < end) {
+    slots.push(minutesToTime(t));
+    t += GRID_SLOT_DURATION_MINUTES;
+  }
+  return slots;
+}
+function sessionOccupiesGridSlot(session, day, slotTime) {
+  if (session.day !== day) return false;
+  return expandSessionToGridSlots(session.startTime, session.endTime).includes(
+    normalizeOfferTime(slotTime)
+  );
+}
+function collectCalendarTimeSlots(sessions) {
+  const slotSet = new Set(GRID_TIME_SLOTS);
+  sessions.forEach((sess) => {
+    if (!sess.startTime) return;
+    expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+      (t) => slotSet.add(t)
+    );
+  });
+  return [...slotSet].sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
 }
 function sessionsFromOfferRow(row) {
   if (!row.start_time) return [];
   const startTime = normalizeOfferTime(row.start_time);
-  return row.days.map(normalizeOfferDay$1).filter((d) => d !== null).map((day) => ({ day, startTime }));
+  const endTime = row.end_time ? normalizeOfferTime(row.end_time) : void 0;
+  return row.days.map(normalizeOfferDay$1).filter((d) => d !== null).map((day) => ({ day, startTime, endTime }));
 }
-function sessionsFromOfferNrc(nrc, offerMap) {
-  const row = offerMap.get(nrc);
-  if (!row) return [];
-  return sessionsFromOfferRow(row);
+function formatSessionTimeRange(session) {
+  if (session.endTime && session.endTime !== session.startTime) {
+    return `${session.startTime}–${session.endTime}`;
+  }
+  return session.startTime;
 }
 function getOffersForCourse(offerMap, course, type = "Teoría") {
   return [...offerMap.values()].filter(
@@ -47606,6 +47720,21 @@ function getOffersForSchedule(offerMap, course, explicitCode, type = "Teoría") 
 function getOfferCoursePreview(offerMap, explicitCode) {
   return getOffersForExplicitCode(offerMap, explicitCode, "Teoría")[0];
 }
+function getScheduleDisplayLabels(course, schedule, offerMap, part = "main") {
+  var _a2;
+  const nrc = part === "main" ? schedule.nrc : part === "ej" ? schedule.nrcEJ : schedule.nrcLAB;
+  if (nrc) {
+    const row = offerMap.get(nrc);
+    if (row) return { code: row.course_code, title: row.title };
+  }
+  if (isOpenElectiveCourse(course) && ((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
+    const preview = getOfferCoursePreview(offerMap, schedule.offerCourseCode);
+    if (preview) return { code: preview.course_code, title: preview.title };
+    const code = normalizeOfferCourseCode(schedule.offerCourseCode);
+    return { code, title: code };
+  }
+  return { code: course.code, title: course.title };
+}
 function getLinkedOffers(mainRow, offerMap, type) {
   const letters = new Set(mainRow.group_letters);
   return [...offerMap.values()].filter((row) => {
@@ -47618,7 +47747,13 @@ function slotKey(day, startTime) {
   return `${day}-${startTime}`;
 }
 function nrcConflictsWithSlots(nrc, occupied, offerMap) {
-  return sessionsFromOfferNrc(nrc, offerMap).some((s) => occupied.has(slotKey(s.day, s.startTime)));
+  const row = offerMap.get(nrc);
+  if (!row) return false;
+  return sessionsFromOfferRow(row).some(
+    (sess) => expandSessionToGridSlots(sess.startTime, sess.endTime).some(
+      (slot) => occupied.has(slotKey(sess.day, slot))
+    )
+  );
 }
 function formatOfferSchedule(row) {
   if (row.days.length === 0 || !row.start_time) return "Sin horario";
@@ -47697,6 +47832,49 @@ const TIME_SLOTS = [
   "16:00",
   "17:30"
 ];
+function occupyExpandedSlots(sessions, courseId, occupied, conflictList, plannedCourses, schedules, offerMap, labelSuffix = "") {
+  sessions.forEach((session) => {
+    expandSessionToGridSlots(session.startTime, session.endTime).forEach(
+      (slot) => {
+        const key = `${session.day}-${slot}`;
+        if (occupied[key]) {
+          const otherSchedule = schedules.find(
+            (s) => s.courseId === occupied[key]
+          );
+          const otherCourse = plannedCourses.find(
+            (c) => c.id === occupied[key]
+          );
+          const thisCourse = plannedCourses.find((c) => c.id === courseId);
+          const course1 = otherSchedule && otherCourse ? getScheduleDisplayLabels(
+            otherCourse,
+            otherSchedule,
+            offerMap,
+            "main"
+          ).code : occupied[key];
+          const course2 = thisCourse ? getScheduleDisplayLabels(
+            thisCourse,
+            schedules.find((s) => s.courseId === courseId),
+            offerMap,
+            "main"
+          ).code : courseId;
+          const conflictMsg = `Conflicto: ${course1}${labelSuffix ? ` (${labelSuffix})` : ""} y ${course2} en ${session.day} a las ${slot}`;
+          if (!conflictList.includes(conflictMsg)) {
+            conflictList.push(conflictMsg);
+          }
+        } else {
+          occupied[key] = courseId;
+        }
+      }
+    );
+  });
+}
+function allScheduleSessions(schedules) {
+  return schedules.flatMap((s) => [
+    ...s.sessions,
+    ...s.sessionsEJ ?? [],
+    ...s.sessionsLAB ?? []
+  ]);
+}
 function expandMainSession(periodType, dayGroup, startTime) {
   if (periodType === "verano") {
     return SUMMER_DAYS.map((day) => ({ day, startTime }));
@@ -47826,6 +48004,10 @@ function SchedulePlanningDrawer({
     error: offerError,
     loadFromCache
   } = useCourseOffer();
+  const plannedCourseIds = reactExports.useMemo(
+    () => plannedCourses.map((c) => c.id).sort().join(","),
+    [plannedCourses]
+  );
   reactExports.useEffect(() => {
     const initialSchedules = plannedCourses.map((course) => ({
       courseId: course.id,
@@ -47836,56 +48018,43 @@ function SchedulePlanningDrawer({
       sessions: []
     }));
     setSchedules(initialSchedules);
-  }, [plannedCourses]);
+  }, [plannedCourseIds]);
   const checkConflicts = (newSchedules) => {
     const conflictList = [];
     const occupied = {};
     newSchedules.forEach((schedule) => {
-      schedule.sessions.forEach((session) => {
-        var _a2, _b2;
-        const key = `${session.day}-${session.startTime}`;
-        if (occupied[key]) {
-          const course1 = ((_a2 = plannedCourses.find((c) => c.id === occupied[key])) == null ? void 0 : _a2.code) || occupied[key];
-          const course2 = ((_b2 = plannedCourses.find((c) => c.id === schedule.courseId)) == null ? void 0 : _b2.code) || schedule.courseId;
-          const conflictMsg = `Conflicto: ${course1} y ${course2} en ${session.day} a las ${session.startTime}`;
-          if (!conflictList.includes(conflictMsg)) {
-            conflictList.push(conflictMsg);
-          }
-        } else {
-          occupied[key] = schedule.courseId;
-        }
-      });
+      occupyExpandedSlots(
+        schedule.sessions,
+        schedule.courseId,
+        occupied,
+        conflictList,
+        plannedCourses,
+        newSchedules,
+        offerMap
+      );
       if (schedule.hasEJ && schedule.sessionsEJ) {
-        schedule.sessionsEJ.forEach((session) => {
-          var _a2, _b2;
-          const key = `${session.day}-${session.startTime}`;
-          if (occupied[key]) {
-            const course1 = ((_a2 = plannedCourses.find((c) => c.id === occupied[key])) == null ? void 0 : _a2.code) || occupied[key];
-            const course2 = ((_b2 = plannedCourses.find((c) => c.id === schedule.courseId)) == null ? void 0 : _b2.code) || schedule.courseId;
-            const conflictMsg = `Conflicto: ${course1} (EJ) y ${course2} en ${session.day} a las ${session.startTime}`;
-            if (!conflictList.includes(conflictMsg)) {
-              conflictList.push(conflictMsg);
-            }
-          } else {
-            occupied[key] = schedule.courseId;
-          }
-        });
+        occupyExpandedSlots(
+          schedule.sessionsEJ,
+          schedule.courseId,
+          occupied,
+          conflictList,
+          plannedCourses,
+          newSchedules,
+          offerMap,
+          "EJ"
+        );
       }
       if (schedule.hasLAB && schedule.sessionsLAB) {
-        schedule.sessionsLAB.forEach((session) => {
-          var _a2, _b2;
-          const key = `${session.day}-${session.startTime}`;
-          if (occupied[key]) {
-            const course1 = ((_a2 = plannedCourses.find((c) => c.id === occupied[key])) == null ? void 0 : _a2.code) || occupied[key];
-            const course2 = ((_b2 = plannedCourses.find((c) => c.id === schedule.courseId)) == null ? void 0 : _b2.code) || schedule.courseId;
-            const conflictMsg = `Conflicto: ${course1} (LAB) y ${course2} en ${session.day} a las ${session.startTime}`;
-            if (!conflictList.includes(conflictMsg)) {
-              conflictList.push(conflictMsg);
-            }
-          } else {
-            occupied[key] = schedule.courseId;
-          }
-        });
+        occupyExpandedSlots(
+          schedule.sessionsLAB,
+          schedule.courseId,
+          occupied,
+          conflictList,
+          plannedCourses,
+          newSchedules,
+          offerMap,
+          "LAB"
+        );
       }
     });
     setConflicts(conflictList);
@@ -47977,46 +48146,62 @@ function SchedulePlanningDrawer({
       Vie: "Viernes"
     };
     const grid = {};
+    const reportTimeSlots = collectCalendarTimeSlots(allScheduleSessions(schedules));
     DAYS_FULL.forEach((d) => {
       grid[d] = {};
-      TIME_SLOTS.forEach((t) => grid[d][t] = []);
+      reportTimeSlots.forEach((t) => grid[d][t] = []);
     });
     const allNrcs = /* @__PURE__ */ new Set();
     schedules.forEach((s) => {
       const course = plannedCourses.find((c) => c.id === s.courseId);
       if (!course) return;
-      const base = course.title.replace(/(\s+EJ|\s+LAB)$/i, "").trim();
+      const labels = getScheduleDisplayLabels(course, s, offerMap, "main");
+      const base = labels.title;
       if (s.nrc) {
         allNrcs.add(s.nrc);
         s.sessions.forEach((sess) => {
-          var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
-            grid[day][sess.startTime].push({ title: base, nrc: s.nrc });
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => {
+              var _a2;
+              if ((_a2 = grid[day]) == null ? void 0 : _a2[slot])
+                grid[day][slot].push({ title: base, nrc: s.nrc });
+            }
+          );
         });
       }
       if (s.hasEJ && s.nrcEJ && s.sessionsEJ) {
         allNrcs.add(s.nrcEJ);
+        const ejLabels = getScheduleDisplayLabels(course, s, offerMap, "ej");
         s.sessionsEJ.forEach((sess) => {
-          var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
-            grid[day][sess.startTime].push({
-              title: `${base} EJ`,
-              nrc: s.nrcEJ
-            });
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => {
+              var _a2;
+              if ((_a2 = grid[day]) == null ? void 0 : _a2[slot])
+                grid[day][slot].push({
+                  title: `${ejLabels.title} EJ`,
+                  nrc: s.nrcEJ
+                });
+            }
+          );
         });
       }
       if (s.hasLAB && s.nrcLAB && s.sessionsLAB) {
         allNrcs.add(s.nrcLAB);
+        const labLabels = getScheduleDisplayLabels(course, s, offerMap, "lab");
         s.sessionsLAB.forEach((sess) => {
-          var _a2;
           const day = MAP_SHORT[sess.day] ?? sess.day;
-          if ((_a2 = grid[day]) == null ? void 0 : _a2[sess.startTime])
-            grid[day][sess.startTime].push({
-              title: `${base} LAB`,
-              nrc: s.nrcLAB
-            });
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => {
+              var _a2;
+              if ((_a2 = grid[day]) == null ? void 0 : _a2[slot])
+                grid[day][slot].push({
+                  title: `${labLabels.title} LAB`,
+                  nrc: s.nrcLAB
+                });
+            }
+          );
         });
       }
     });
@@ -48026,7 +48211,7 @@ function SchedulePlanningDrawer({
         ${DAYS_FULL.map((d) => `<th>${d}</th>`).join("")}
       </tr>
     `;
-    const tableBody = TIME_SLOTS.map((time) => {
+    const tableBody = reportTimeSlots.map((time) => {
       const cells = DAYS_FULL.map((day) => {
         const entries = grid[day][time];
         if (!entries.length) return `<td></td>`;
@@ -48124,35 +48309,52 @@ function SchedulePlanningDrawer({
   };
   const getScheduleForSlot = (day, time) => {
     for (const schedule of schedules) {
+      const course = plannedCourses.find((c) => c.id === schedule.courseId);
+      if (!course) continue;
       for (const session of schedule.sessions) {
-        if (session.day === day && session.startTime === time) {
-          const course = plannedCourses.find((c) => c.id === schedule.courseId);
-          return course ? { code: course.code, title: course.title, type: "" } : null;
+        if (sessionOccupiesGridSlot(session, day, time)) {
+          const labels = getScheduleDisplayLabels(
+            course,
+            schedule,
+            offerMap,
+            "main"
+          );
+          return { code: labels.code, title: labels.title, type: "" };
         }
       }
       if (schedule.hasEJ && schedule.sessionsEJ) {
         for (const session of schedule.sessionsEJ) {
-          if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find(
-              (c) => c.id === schedule.courseId
+          if (sessionOccupiesGridSlot(session, day, time)) {
+            const labels = getScheduleDisplayLabels(
+              course,
+              schedule,
+              offerMap,
+              "ej"
             );
-            return course ? { code: course.code, title: course.title, type: "EJ" } : null;
+            return { code: labels.code, title: labels.title, type: "EJ" };
           }
         }
       }
       if (schedule.hasLAB && schedule.sessionsLAB) {
         for (const session of schedule.sessionsLAB) {
-          if (session.day === day && session.startTime === time) {
-            const course = plannedCourses.find(
-              (c) => c.id === schedule.courseId
+          if (sessionOccupiesGridSlot(session, day, time)) {
+            const labels = getScheduleDisplayLabels(
+              course,
+              schedule,
+              offerMap,
+              "lab"
             );
-            return course ? { code: course.code, title: course.title, type: "LAB" } : null;
+            return { code: labels.code, title: labels.title, type: "LAB" };
           }
         }
       }
     }
     return null;
   };
+  const calendarTimeSlots = reactExports.useMemo(
+    () => collectCalendarTimeSlots(allScheduleSessions(schedules)),
+    [schedules]
+  );
   reactExports.useEffect(() => {
     if (exposeOpen) {
       exposeOpen(() => setIsOpen(true));
@@ -48168,7 +48370,7 @@ function SchedulePlanningDrawer({
     if (!row) return [];
     return sessionsFromOfferRow(row).map((s) => {
       const day = normalizeOfferDay(s.day);
-      return day ? { day, startTime: s.startTime } : null;
+      return day ? { day, startTime: s.startTime, endTime: s.endTime } : null;
     }).filter((s) => s !== null);
   };
   const getOccupiedSlots = reactExports.useCallback(
@@ -48181,9 +48383,11 @@ function SchedulePlanningDrawer({
           ...s.sessionsEJ || [],
           ...s.sessionsLAB || []
         ];
-        allSessions.forEach(
-          (sess) => occupied.add(slotKey(sess.day, sess.startTime))
-        );
+        allSessions.forEach((sess) => {
+          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
+            (slot) => occupied.add(slotKey(sess.day, slot))
+          );
+        });
       });
       return occupied;
     },
@@ -48657,7 +48861,7 @@ function SchedulePlanningDrawer({
                               /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
                               s.day,
                               " · ",
-                              s.startTime
+                              formatSessionTimeRange(s)
                             ]
                           },
                           i
@@ -48771,7 +48975,7 @@ function SchedulePlanningDrawer({
                             /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
                             s.day,
                             " · ",
-                            s.startTime
+                            formatSessionTimeRange(s)
                           ]
                         },
                         i
@@ -48932,7 +49136,7 @@ function SchedulePlanningDrawer({
                             /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3 h-3 opacity-60" }),
                             s.day,
                             " · ",
-                            s.startTime
+                            formatSessionTimeRange(s)
                           ]
                         },
                         i
@@ -49094,7 +49298,7 @@ function SchedulePlanningDrawer({
                   day
                 ))
               ] }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: TIME_SLOTS.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: calendarTimeSlots.map((time) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 dark:border-gray-600 p-2 text-sm font-medium text-center bg-gray-50 dark:bg-gray-700", children: time }),
                 DAYS.map((day) => {
                   const courseInfo = getScheduleForSlot(day, time);
@@ -49115,7 +49319,15 @@ function SchedulePlanningDrawer({
                   );
                 })
               ] }, time)) })
-            ] }) })
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert, { className: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "text-amber-600 dark:text-amber-400" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTitle, { children: "Solo planificación — sin registro automático" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDescription, { className: "text-amber-800 dark:text-amber-200/90", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Este planeador sirve únicamente para organizar tu horario de forma visual. Por ahora no registra materias en el sistema académico en tu nombre: eso requiere tus credenciales personales y aún no contamos con autorización de la USFQ para conectar con ese servicio." }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Existe una automatización de autoregistro que funciona aproximadamente el 60% de las veces, pero no está publicada de momento. Gracias por tu comprensión y atención." })
+              ] })
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 justify-end sticky bottom-0 bg-white dark:bg-gray-800 py-4 border-t border-gray-200 dark:border-gray-700", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -50057,6 +50269,10 @@ function CurriculumGrid() {
     }
   }, [isAllCompleted, completedCourses.size, toast2]);
   const sumCredits = (courseIds) => curriculumData.courses.filter((c) => courseIds.has(c.id)).reduce((sum, c) => sum + c.credits, 0);
+  const plannedCoursesList = reactExports.useMemo(
+    () => curriculumData.courses.filter((c) => plannedCourses.has(c.id)),
+    [curriculumData.courses, plannedCourses]
+  );
   const isUnlocked = (course) => {
     if (course.prerequisites.length === 0) return true;
     if (course.alternatives.length > 0) {
@@ -50459,7 +50675,7 @@ function CurriculumGrid() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       SchedulePlanningDrawer,
       {
-        plannedCourses: curriculumData.courses.filter((c) => plannedCourses.has(c.id)),
+        plannedCourses: plannedCoursesList,
         onSave: (schedules) => {
           console.log("Schedules saved:", schedules);
           toast2({
@@ -51028,18 +51244,485 @@ function SettingsModal({
     ] })
   ] });
 }
-function computePrediction(planned, avgHistorical) {
-  const demandSections = planned / 15;
-  const predicted = avgHistorical * 0.6 + demandSections * 0.4;
-  return Math.max(1, Math.round(predicted));
+async function loadFacultyCurriculum(facultyCode) {
+  const slug = `malla-${facultyCode.toLowerCase()}`;
+  const curriculum = availableCurricula.find((c) => c.slug === slug);
+  if (!curriculum) {
+    throw new Error(`No hay malla registrada para la facultad ${facultyCode}`);
+  }
+  const module = await curriculum.dataLoader();
+  const data = module.default ?? module;
+  return data.courses ?? [];
 }
-function trend(planned, avgHistorical) {
-  if (avgHistorical === 0) return "new";
-  const demandSections = planned / 15;
-  const ratio = demandSections / avgHistorical;
-  if (ratio > 1.15) return "up";
-  if (ratio < 0.85) return "down";
+const FACULTY_OFFER_PREFIXES = {
+  ECO: ["ECN"]
+};
+const FACULTY_EXTRA_SUPERVISED_CODES = {};
+function offerPrefixesForFaculty(facultyCode) {
+  const faculty = facultyCode.toUpperCase();
+  return FACULTY_OFFER_PREFIXES[faculty] ?? [faculty];
+}
+function extraSupervisedCodes(facultyCode) {
+  return FACULTY_EXTRA_SUPERVISED_CODES[facultyCode.toUpperCase()] ?? [];
+}
+function offerCodeToCourseId(offerCode, mallaCourses) {
+  const normalized = normalizeOfferCourseCode(offerCode);
+  const match = mallaCourses.find(
+    (c) => normalizeOfferCourseCode(c.id) === normalized || normalizeOfferCourseCode(c.code) === normalized
+  );
+  if (match) return match.id;
+  return normalized.replace(/-/g, "");
+}
+async function fetchFacultySupervisedCourses(facultyCode) {
+  const faculty = facultyCode.toUpperCase();
+  const prefixes = offerPrefixesForFaculty(faculty);
+  const extras = extraSupervisedCodes(faculty);
+  const { data, error } = await supabase.rpc("get_faculty_supervised_courses", {
+    p_prefixes: prefixes,
+    p_extra_codes: extras
+  });
+  if (error) throw new Error(error.message);
+  let mallaCourses = [];
+  try {
+    mallaCourses = await loadFacultyCurriculum(faculty);
+  } catch {
+  }
+  return (data ?? []).map((row) => {
+    const offerCode = normalizeOfferCourseCode(row.course_code);
+    return {
+      offerCode,
+      courseId: offerCodeToCourseId(offerCode, mallaCourses),
+      title: row.title ?? offerCode,
+      facultyCode: faculty
+    };
+  });
+}
+const P_SEQUENTIAL = 0.8;
+const P_SAME_AREA = 0.5;
+const P_OTHER = 0.25;
+function parsePrereqGroup(expr) {
+  return expr.split("||").map((p) => p.trim()).filter(Boolean);
+}
+function buildCurriculumGraph(courses2) {
+  const ids = new Set(courses2.map((c) => c.id));
+  const nodes = new Map(courses2.map((c) => [c.id, c]));
+  const successors = /* @__PURE__ */ new Map();
+  for (const course of courses2) {
+    if (!successors.has(course.id)) successors.set(course.id, []);
+    for (const expr of course.prerequisites ?? []) {
+      for (const prereq of parsePrereqGroup(expr)) {
+        if (!ids.has(prereq)) continue;
+        const list = successors.get(prereq) ?? [];
+        list.push(course.id);
+        successors.set(prereq, list);
+      }
+    }
+  }
+  return { nodes, successors };
+}
+function isDirectPrerequisite(graph, fromId, toId) {
+  const to = graph.nodes.get(toId);
+  if (!to) return false;
+  for (const expr of to.prerequisites ?? []) {
+    if (parsePrereqGroup(expr).includes(fromId)) return true;
+  }
+  return false;
+}
+function isPrimarySuccessor(graph, fromId, toId) {
+  const from = graph.nodes.get(fromId);
+  const to = graph.nodes.get(toId);
+  if (!from || !to) return false;
+  if (from.area !== to.area) return false;
+  if (to.semester !== from.semester + 1) return false;
+  const sameAreaNext = (graph.successors.get(fromId) ?? []).filter((id) => {
+    const n = graph.nodes.get(id);
+    return n && n.area === from.area && n.semester === from.semester + 1;
+  });
+  if (sameAreaNext.length === 1) return sameAreaNext[0] === toId;
+  return sameAreaNext.includes(toId);
+}
+function transitionProbability(graph, fromId, toId) {
+  const from = graph.nodes.get(fromId);
+  const to = graph.nodes.get(toId);
+  if (!from || !to) return P_OTHER;
+  if (isPrimarySuccessor(graph, fromId, toId)) return P_SEQUENTIAL;
+  if (isDirectPrerequisite(graph, fromId, toId)) return P_SAME_AREA;
+  if (from.area === to.area) return P_SAME_AREA;
+  return P_OTHER;
+}
+function collectDagHistoryOfferCodes(courses2) {
+  return [...new Set(courses2.map((c) => normalizeOfferCourseCode(c.id)))];
+}
+function propagateInflow(graph, seedsByCourseId, maxHops = 5) {
+  const inflow = /* @__PURE__ */ new Map();
+  const queue = [];
+  for (const [, course] of graph.nodes) {
+    const prereqExprs = course.prerequisites ?? [];
+    if (prereqExprs.length === 0) continue;
+    let directTotal = 0;
+    for (const expr of prereqExprs) {
+      const group = parsePrereqGroup(expr);
+      let groupMax = 0;
+      for (const prereqId of group) {
+        const seed = seedsByCourseId.get(prereqId) ?? 0;
+        if (seed <= 0) continue;
+        groupMax = Math.max(
+          groupMax,
+          seed * transitionProbability(graph, prereqId, course.id)
+        );
+      }
+      directTotal += groupMax;
+    }
+    if (directTotal < 0.25) continue;
+    inflow.set(course.id, (inflow.get(course.id) ?? 0) + directTotal);
+    queue.push({ id: course.id, students: directTotal, depth: 1 });
+  }
+  while (queue.length > 0) {
+    const { id, students, depth } = queue.shift();
+    if (depth >= maxHops) continue;
+    for (const succId of graph.successors.get(id) ?? []) {
+      const transferred = students * transitionProbability(graph, id, succId);
+      if (transferred < 0.25) continue;
+      inflow.set(succId, (inflow.get(succId) ?? 0) + transferred);
+      queue.push({ id: succId, students: transferred, depth: depth + 1 });
+    }
+  }
+  return inflow;
+}
+function buildHistoricalSeeds(courses2, historyByOfferCode) {
+  const seeds = /* @__PURE__ */ new Map();
+  for (const course of courses2) {
+    const offerCode = normalizeOfferCourseCode(course.id);
+    const hist = historyByOfferCode.get(offerCode);
+    if (hist && hist.lastRegularStudents > 0) {
+      seeds.set(course.id, hist.lastRegularStudents);
+    }
+  }
+  return seeds;
+}
+function propagateDemandFromSources(graph, historySeeds, cursandoSeeds, maxHops = 5) {
+  const inflowFromHistory = propagateInflow(graph, historySeeds, maxHops);
+  const inflowFromCursando = propagateInflow(graph, cursandoSeeds, maxHops);
+  const totalInflow = /* @__PURE__ */ new Map();
+  const allIds = /* @__PURE__ */ new Set([
+    ...inflowFromHistory.keys(),
+    ...inflowFromCursando.keys()
+  ]);
+  for (const id of allIds) {
+    totalInflow.set(
+      id,
+      (inflowFromHistory.get(id) ?? 0) + (inflowFromCursando.get(id) ?? 0)
+    );
+  }
+  return { totalInflow, inflowFromHistory, inflowFromCursando };
+}
+const STUDENTS_PER_SECTION = 25;
+const MIN_STABLE_ENROLLMENT = 8;
+function isStableOffering(history, trend) {
+  if (trend === "down" || trend === "new") return false;
+  const regular = history.periods.filter((p) => !p.isSummer);
+  if (regular.length < 2) return false;
+  const last = regular[regular.length - 1].totalStudents;
+  const prev = regular[regular.length - 2].totalStudents;
+  return last >= MIN_STABLE_ENROLLMENT && prev >= MIN_STABLE_ENROLLMENT;
+}
+function computeDemandPrediction(input) {
+  const { plannedNextSemester, inflowFromHistory, inflowFromCursando, history } = input;
+  if (!history || history.numPeriods === 0) {
+    const estimatedStudents2 = Math.round(plannedNextSemester + inflowFromHistory + inflowFromCursando);
+    const sections = Math.max(1, Math.round(estimatedStudents2 / STUDENTS_PER_SECTION));
+    return {
+      suggestedSections: sections,
+      estimatedStudents: estimatedStudents2,
+      trend: estimatedStudents2 > 0 ? "up" : "new"
+    };
+  }
+  let estimatedStudents = Math.round(
+    history.estimatedNextStudents * 0.45 + history.avgStudents * 0.15 + inflowFromHistory * 0.25 + inflowFromCursando * 0.1 + plannedNextSemester * 0.05
+  );
+  let trend = computeTrend(history, estimatedStudents, inflowFromHistory + inflowFromCursando);
+  if (isStableOffering(history, trend)) {
+    estimatedStudents = Math.max(estimatedStudents, MIN_STABLE_ENROLLMENT);
+  }
+  const suggestedSections = Math.max(
+    1,
+    Math.round(
+      history.estimatedNextSections * 0.35 + history.avgSections * 0.25 + estimatedStudents / STUDENTS_PER_SECTION * 0.25 + inflowFromHistory / STUDENTS_PER_SECTION * 0.1 + inflowFromCursando / STUDENTS_PER_SECTION * 0.05
+    )
+  );
+  return { suggestedSections, estimatedStudents, trend };
+}
+function computeTrend(history, estimate, dagInflow) {
+  var _a2, _b2;
+  const regular = history.periods.filter((p) => !p.isSummer);
+  if (regular.length < 2 && dagInflow <= 0) return "stable";
+  const last = ((_a2 = regular[regular.length - 1]) == null ? void 0 : _a2.totalStudents) ?? 0;
+  const prev = ((_b2 = regular[regular.length - 2]) == null ? void 0 : _b2.totalStudents) ?? last;
+  const baseline = prev > 0 ? last / prev : 1;
+  const reference = Math.max(last, dagInflow, estimate);
+  const projected = reference > 0 ? estimate / reference : 1;
+  const ratio = projected * 0.55 + baseline * 0.45;
+  if (ratio > 1.08) return "up";
+  if (ratio < 0.92) return "down";
   return "stable";
+}
+const PAGE_SIZE = 1e3;
+const IN_BATCH = 50;
+function isSummerPeriod(periodCode) {
+  return periodCode.endsWith("30");
+}
+function aggregateRows(rows) {
+  const perCoursePeriod = /* @__PURE__ */ new Map();
+  for (const row of rows) {
+    const code = normalizeOfferCourseCode(row.course_code);
+    const periodCode = row.period_code ?? row.period;
+    const periodLabel = row.period ?? periodCode;
+    if (!perCoursePeriod.has(code)) perCoursePeriod.set(code, /* @__PURE__ */ new Map());
+    const byPeriod = perCoursePeriod.get(code);
+    const current = byPeriod.get(periodCode) ?? { label: periodLabel, sections: 0, students: 0 };
+    current.sections += 1;
+    current.students += row.total ?? 0;
+    byPeriod.set(periodCode, current);
+  }
+  const result = /* @__PURE__ */ new Map();
+  for (const [courseCode, byPeriod] of perCoursePeriod) {
+    const periods = [...byPeriod.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([periodCode, stats]) => ({
+      periodCode,
+      periodLabel: stats.label,
+      sections: stats.sections,
+      totalStudents: stats.students,
+      isSummer: isSummerPeriod(periodCode)
+    }));
+    const regular = periods.filter((p) => !p.isSummer);
+    const basis = regular.length > 0 ? regular : periods;
+    const avgSections = basis.reduce((s, p) => s + p.sections, 0) / basis.length;
+    const avgStudents = basis.reduce((s, p) => s + p.totalStudents, 0) / basis.length;
+    const maxSections = Math.max(...periods.map((p) => p.sections), 0);
+    const recent = basis.slice(-3).map((p) => p.totalStudents);
+    const estimatedNextStudents = recent.length >= 2 ? Math.round(recent.reduce((a, b) => a + b, 0) / recent.length) : Math.round(avgStudents);
+    const estimatedNextSections = Math.max(
+      1,
+      Math.round(estimatedNextStudents / 25) || Math.round(avgSections)
+    );
+    const lastRegular = regular.length > 0 ? regular[regular.length - 1] : periods[periods.length - 1];
+    const lastRegularStudents = (lastRegular == null ? void 0 : lastRegular.totalStudents) ?? 0;
+    result.set(courseCode, {
+      courseCode,
+      periods,
+      avgSections,
+      avgStudents,
+      maxSections,
+      numPeriods: periods.length,
+      estimatedNextStudents,
+      estimatedNextSections,
+      lastRegularStudents
+    });
+  }
+  return result;
+}
+async function fetchHistoryBatch(offerCodes) {
+  const rows = [];
+  let offset2 = 0;
+  while (true) {
+    const { data, error } = await supabase.from("course_offer_history").select("course_code, total, period, period_code").in("course_code", offerCodes).eq("type", "Teoría").range(offset2, offset2 + PAGE_SIZE - 1);
+    if (error) throw new Error(error.message);
+    const batch = data ?? [];
+    rows.push(...batch);
+    if (batch.length < PAGE_SIZE) break;
+    offset2 += PAGE_SIZE;
+  }
+  return rows;
+}
+async function fetchOfferHistoryForCourses(offerCodes) {
+  if (offerCodes.length === 0) return /* @__PURE__ */ new Map();
+  const allRows = [];
+  for (let i = 0; i < offerCodes.length; i += IN_BATCH) {
+    const batch = offerCodes.slice(i, i + IN_BATCH);
+    const rows = await fetchHistoryBatch(batch);
+    allRows.push(...rows);
+  }
+  return aggregateRows(allRows);
+}
+const DASHBOARD_JSON = "data/predictor-dashboard.json";
+function dashboardUrl() {
+  const base = "/malla-curricular-interactiva/";
+  return `${base}${DASHBOARD_JSON}`;
+}
+let cached = null;
+function clearPythonPredictionsCache() {
+  cached = null;
+}
+async function loadPythonPredictions() {
+  if (cached) return cached;
+  try {
+    const res = await fetch(dashboardUrl(), { cache: "no-cache" });
+    if (!res.ok) return null;
+    cached = await res.json();
+    return cached;
+  } catch {
+    return null;
+  }
+}
+function getPythonPredictionsUrl() {
+  return dashboardUrl();
+}
+function lookupPythonPrediction(index2, offerCode) {
+  if (!index2) return void 0;
+  const key = normalizeOfferCourseCode(offerCode);
+  return index2.by_offer_code[key];
+}
+function formatGeneratedAt(iso) {
+  if (!iso) return "desconocida";
+  try {
+    return new Date(iso).toLocaleString();
+  } catch {
+    return iso;
+  }
+}
+function formatPeriodLabel(period) {
+  const match = period.periodLabel.match(/(\d{4})\/(\d{4})/);
+  if (match) {
+    const start = match[1].slice(2);
+    const end = match[2].slice(2);
+    return `${start}-${end}`;
+  }
+  return period.periodCode;
+}
+function TrendChart({
+  history,
+  estimatedStudents
+}) {
+  const points = [
+    ...history.periods.map((p) => ({
+      key: p.periodCode,
+      label: formatPeriodLabel(p),
+      students: p.totalStudents,
+      sections: p.sections,
+      isEstimate: false,
+      isSummer: p.isSummer
+    })),
+    {
+      key: "estimate",
+      label: "Próximo",
+      students: estimatedStudents,
+      sections: Math.max(1, Math.round(estimatedStudents / 25)),
+      isEstimate: true,
+      isSummer: false
+    }
+  ];
+  const maxStudents = Math.max(...points.map((p) => p.students), 1);
+  const chartH = 160;
+  const barW = Math.min(48, Math.max(28, 320 / points.length - 8));
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-end justify-center gap-2 h-[180px] px-2 border-b border-gray-200 dark:border-gray-600", children: points.map((p) => {
+      const h = Math.max(4, p.students / maxStudents * chartH);
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-1", style: { width: barW + 8 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-medium text-gray-600 dark:text-gray-300", children: p.students }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: `w-full rounded-t transition-all ${p.isEstimate ? "bg-emerald-500/80 border-2 border-dashed border-emerald-600" : p.isSummer ? "bg-amber-400 dark:bg-amber-500" : "bg-blue-500 dark:bg-blue-400"}`,
+            style: { height: h, width: barW },
+            title: `${p.sections} sección(es)`
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-gray-500 dark:text-gray-400 text-center leading-tight", children: p.label })
+      ] }, p.key);
+    }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3 text-[11px] text-gray-500 dark:text-gray-400 justify-center", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-blue-500" }),
+        " Semestre regular"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-amber-400" }),
+        " Verano"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-dashed border-emerald-700" }),
+        " Estimado"
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 text-center", children: "Altura = cupo total ofertado (suma de cupos de todas las secciones de Teoría en ese período)." })
+  ] });
+}
+function CourseDemandDetailDialog({
+  open,
+  onOpenChange,
+  offerCode,
+  title,
+  inProgressCount,
+  plannedNext,
+  inflowFromHistory,
+  inflowFromCursando,
+  propagatedStudents,
+  suggestedSections,
+  estimatedStudents,
+  trend,
+  history
+}) {
+  const trendLabel = trend === "up" ? "Al alza" : trend === "down" ? "A la baja" : trend === "new" ? "Sin historial" : "Estable";
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open, onOpenChange, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "sm:max-w-lg dark:bg-gray-800 dark:border-gray-700", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { className: "text-left dark:text-white", children: [
+        offerCode,
+        " — ",
+        title
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { className: "text-left", children: "Tendencia histórica de cupo ofertado y estimación para el próximo período." })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3 text-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Secciones sugeridas" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold text-blue-600 dark:text-blue-400", children: suggestedSections })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Estudiantes estimados" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold text-gray-800 dark:text-gray-200", children: estimatedStudents })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Cursando (este semestre)" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-lg font-semibold", children: inProgressCount })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Planeada (próximo sem.)" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-lg font-semibold text-blue-600 dark:text-blue-400", children: plannedNext })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 text-xs rounded-lg border border-gray-100 dark:border-gray-700 p-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "DAG desde histórico del catálogo:" }),
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-gray-800 dark:text-gray-200", children: Math.round(inflowFromHistory) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "DAG desde quienes cursan prerrequisitos:" }),
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-gray-800 dark:text-gray-200", children: Math.round(inflowFromCursando) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "Total vía malla (hist. + cursando):" }),
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-gray-800 dark:text-gray-200", children: Math.round(propagatedStudents) })
+      ] })
+    ] }),
+    history && history.periods.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(TrendChart, { history, estimatedStudents }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400 text-center py-6", children: "Sin histórico en el catálogo. La sugerencia se basa solo en demanda de la plataforma y propagación por la malla." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3", children: [
+      "Tendencia: ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: trendLabel }),
+      ".",
+      history && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        " ",
+        "Promedio histórico: ",
+        Math.round(history.avgSections),
+        " secciones,",
+        " ",
+        Math.round(history.avgStudents),
+        " cupos por período regular.",
+        trend === "stable" || trend === "up" ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: " Piso mínimo de 8 estudiantes en materias estables." }) : null
+      ] })
+    ] })
+  ] }) });
 }
 function StatCard({ label, value, icon }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-4 dark:bg-gray-800 flex items-center gap-4", children: [
@@ -51056,9 +51739,9 @@ function TrendIcon({ t }) {
   if (t === "new") return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold text-blue-500 px-1.5 py-0.5 bg-blue-50 dark:bg-blue-900/30 rounded", children: "Nuevo" });
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "w-4 h-4 text-gray-400" });
 }
-function DemandBar({ planned, maxPlanned }) {
-  const pct = maxPlanned > 0 ? Math.round(planned / maxPlanned * 100) : 0;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 w-full", children: [
+function DemandBar({ value, max: max2 }) {
+  const pct = max2 > 0 ? Math.round(value / max2 * 100) : 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 w-full min-w-[80px]", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
@@ -51066,68 +51749,107 @@ function DemandBar({ planned, maxPlanned }) {
         style: { width: `${pct}%` }
       }
     ) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-gray-600 dark:text-gray-300 w-8 text-right", children: planned })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-gray-600 dark:text-gray-300 w-8 text-right", children: Math.round(value) })
   ] });
 }
-function TeacherDashboard({ profile }) {
-  const [demand, setDemand] = reactExports.useState([]);
-  const [history, setHistory] = reactExports.useState(/* @__PURE__ */ new Map());
-  const [predictions, setPredictions] = reactExports.useState([]);
+function TeacherDashboard({
+  profile,
+  facultyOptions,
+  title = "Dashboard Docente"
+}) {
+  const selectableFaculties = facultyOptions ?? profile.faculties;
+  const [faculty, setFaculty] = reactExports.useState(profile.faculty);
+  const showFacultyPicker = selectableFaculties.length > 1 || Boolean(facultyOptions);
+  reactExports.useEffect(() => {
+    setFaculty(profile.faculty);
+  }, [profile.faculty]);
+  const [historyMap, setHistoryMap] = reactExports.useState(/* @__PURE__ */ new Map());
+  const [livePredictions, setLivePredictions] = reactExports.useState([]);
+  const [pythonIndex, setPythonIndex] = reactExports.useState(null);
+  const [estimatorMode, setEstimatorMode] = reactExports.useState("live");
   const [isLoading, setIsLoading] = reactExports.useState(true);
   const [error, setError] = reactExports.useState(null);
   const [lastLoaded, setLastLoaded] = reactExports.useState(null);
-  const [sortBy, setSortBy] = reactExports.useState("planned");
+  const [sortBy, setSortBy] = reactExports.useState("predicted");
+  const [selected, setSelected] = reactExports.useState(null);
   const load = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const { data: demandData, error: demandErr } = await supabase.rpc("get_faculty_demand", {
-        p_faculty: profile.faculty
+      const supervised = await fetchFacultySupervisedCourses(faculty);
+      const offerCodes = supervised.map((c) => c.offerCode);
+      const courseIds = supervised.map((c) => c.courseId);
+      const { data: demandData, error: demandErr } = await supabase.rpc("get_malla_course_demand", {
+        p_course_ids: courseIds
       });
       if (demandErr) throw new Error(demandErr.message);
-      const demandRows = (demandData ?? []).map((r2) => ({
-        course_id: r2.course_id,
-        planned_count: Number(r2.planned_count)
+      const cursandoByCourseId = /* @__PURE__ */ new Map();
+      const plannedNextByCourseId = /* @__PURE__ */ new Map();
+      (demandData ?? []).forEach((r2) => {
+        cursandoByCourseId.set(r2.course_id, Number(r2.in_progress_count));
+        plannedNextByCourseId.set(r2.course_id, Number(r2.planned_count));
+      });
+      let mallaCourses = supervised.map((c) => ({
+        id: c.courseId,
+        code: c.offerCode,
+        title: c.title,
+        description: "",
+        credits: 0,
+        semester: 0,
+        block: "",
+        area: faculty,
+        type: "",
+        prerequisites: [],
+        alternatives: []
       }));
-      const courseCodes = demandRows.map((r2) => r2.course_id);
-      let histAgg = [];
-      if (courseCodes.length > 0) {
-        const { data: histData, error: histErr } = await supabase.from("course_offer_history").select("course_code, total, period").in("course_code", courseCodes).eq("type", "Teoría");
-        if (histErr) throw new Error(histErr.message);
-        const perPeriod = /* @__PURE__ */ new Map();
-        (histData ?? []).forEach((r2) => {
-          if (!perPeriod.has(r2.course_code)) perPeriod.set(r2.course_code, /* @__PURE__ */ new Map());
-          const byPeriod = perPeriod.get(r2.course_code);
-          byPeriod.set(r2.period, Math.max(byPeriod.get(r2.period) ?? 0, r2.total ?? 0));
-        });
-        histAgg = [...perPeriod.entries()].map(([code, byPeriod]) => {
-          const totals = [...byPeriod.values()];
-          const avg = totals.reduce((a, b) => a + b, 0) / totals.length;
-          return {
-            course_code: code,
-            avg_total: avg,
-            max_total: Math.max(...totals),
-            num_periods: totals.length
-          };
-        });
+      try {
+        mallaCourses = await loadFacultyCurriculum(faculty);
+      } catch {
       }
-      const histMap = new Map(histAgg.map((h) => [h.course_code, h]));
-      const preds = demandRows.map((row) => {
-        const hist = histMap.get(row.course_id);
-        const avgHist = (hist == null ? void 0 : hist.avg_total) ?? 0;
+      const graph = buildCurriculumGraph(mallaCourses);
+      const dagHistoryCodes = collectDagHistoryOfferCodes(mallaCourses);
+      const historyFetchCodes = [.../* @__PURE__ */ new Set([...offerCodes, ...dagHistoryCodes])];
+      const histMap = historyFetchCodes.length > 0 ? await fetchOfferHistoryForCourses(historyFetchCodes) : /* @__PURE__ */ new Map();
+      const historySeeds = buildHistoricalSeeds(mallaCourses, histMap);
+      const { totalInflow, inflowFromHistory, inflowFromCursando } = propagateDemandFromSources(
+        graph,
+        historySeeds,
+        cursandoByCourseId
+      );
+      const preds = supervised.map((course) => {
+        const cursando = cursandoByCourseId.get(course.courseId) ?? 0;
+        const plannedNext = plannedNextByCourseId.get(course.courseId) ?? 0;
+        const histInflow = inflowFromHistory.get(course.courseId) ?? 0;
+        const cursandoInflow = inflowFromCursando.get(course.courseId) ?? 0;
+        const hist = histMap.get(course.offerCode);
+        const result = computeDemandPrediction({
+          plannedNextSemester: plannedNext,
+          inflowFromHistory: histInflow,
+          inflowFromCursando: cursandoInflow,
+          history: hist
+        });
         return {
-          course_id: row.course_id,
-          planned_count: row.planned_count,
-          avg_historical: avgHist,
-          max_historical: (hist == null ? void 0 : hist.max_total) ?? 0,
-          num_periods: (hist == null ? void 0 : hist.num_periods) ?? 0,
-          predicted_sections: computePrediction(row.planned_count, avgHist),
-          trend: trend(row.planned_count, avgHist)
+          course_id: course.courseId,
+          offer_code: course.offerCode,
+          title: course.title,
+          in_progress_count: cursando,
+          planned_next: plannedNext,
+          inflow_from_history: histInflow,
+          inflow_from_cursando: cursandoInflow,
+          propagated_students: totalInflow.get(course.courseId) ?? 0,
+          avg_sections: (hist == null ? void 0 : hist.avgSections) ?? 0,
+          avg_students: (hist == null ? void 0 : hist.avgStudents) ?? 0,
+          num_periods: (hist == null ? void 0 : hist.numPeriods) ?? 0,
+          predicted_sections: result.suggestedSections,
+          estimated_students: result.estimatedStudents,
+          trend: result.trend
         };
       });
-      setDemand(demandRows);
-      setHistory(histMap);
-      setPredictions(preds);
+      setHistoryMap(histMap);
+      setLivePredictions(preds);
+      clearPythonPredictionsCache();
+      const pyIndex = await loadPythonPredictions();
+      setPythonIndex(pyIndex);
       setLastLoaded(/* @__PURE__ */ new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cargar los datos");
@@ -51137,31 +51859,73 @@ function TeacherDashboard({ profile }) {
   };
   reactExports.useEffect(() => {
     load();
-  }, []);
+  }, [faculty]);
+  const pythonPredictions = livePredictions.map((row) => {
+    const py = lookupPythonPrediction(pythonIndex, row.offer_code);
+    if (!py) {
+      return {
+        ...row,
+        predicted_sections: 0,
+        estimated_students: 0,
+        trend: "new",
+        model_label: "sin datos"
+      };
+    }
+    return {
+      ...row,
+      in_progress_count: py.in_progress_count,
+      planned_next: py.planned_count,
+      inflow_from_history: py.inflow_from_history,
+      inflow_from_cursando: py.inflow_from_cursando,
+      propagated_students: py.inflow_from_history + py.inflow_from_cursando,
+      predicted_sections: py.suggested_sections,
+      estimated_students: py.estimated_students,
+      trend: py.trend,
+      model_label: py.model
+    };
+  });
+  const predictions = estimatorMode === "live" ? livePredictions : pythonPredictions;
+  const pythonAvailable = Boolean((pythonIndex == null ? void 0 : pythonIndex.by_offer_code) && Object.keys(pythonIndex.by_offer_code).length > 0);
   const sortedPredictions = [...predictions].sort((a, b) => {
-    if (sortBy === "planned") return b.planned_count - a.planned_count;
+    if (sortBy === "planned") return b.planned_next - a.planned_next;
     if (sortBy === "predicted") return b.predicted_sections - a.predicted_sections;
     const order = { up: 3, stable: 2, new: 1, down: 0 };
     return order[b.trend] - order[a.trend];
   });
-  const maxPlanned = Math.max(...predictions.map((p) => p.planned_count), 1);
-  const totalPlanned = predictions.reduce((s, p) => s + p.planned_count, 0);
-  const upTrend = predictions.filter((p) => p.trend === "up").length;
-  const newCourses = predictions.filter((p) => p.trend === "new").length;
+  const maxDemand = Math.max(
+    ...predictions.map((p) => Math.max(p.inflow_from_history, p.inflow_from_cursando)),
+    1
+  );
+  const totalCursando = predictions.reduce((s, p) => s + p.in_progress_count, 0);
+  const totalPlannedNext = predictions.reduce((s, p) => s + p.planned_next, 0);
+  const withHistory = predictions.filter((p) => p.num_periods > 0).length;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto px-4 py-8 space-y-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(GraduationCap, { className: "w-6 h-6 text-blue-600 dark:text-blue-400" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-gray-900 dark:text-white", children: "Dashboard Docente" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-gray-900 dark:text-white", children: title })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: [
           profile.name && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-medium text-gray-700 dark:text-gray-300", children: [
             profile.name,
             " · "
           ] }),
-          "Facultad ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-blue-600 dark:text-blue-400", children: profile.faculty })
+          showFacultyPicker ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2", children: [
+            "Facultad",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                value: faculty,
+                onChange: (e) => setFaculty(e.target.value),
+                className: "text-sm font-semibold text-blue-600 dark:text-blue-400 bg-transparent border border-gray-300 dark:border-gray-600 rounded-md px-2 py-0.5",
+                children: selectableFaculties.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f, children: f }, f))
+              }
+            )
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            "Facultad ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-blue-600 dark:text-blue-400", children: faculty })
+          ] })
         ] }),
         lastLoaded && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-400", children: [
           "Actualizado: ",
@@ -51182,6 +51946,49 @@ function TeacherDashboard({ profile }) {
         }
       )
     ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex rounded-lg border border-gray-200 dark:border-gray-600 p-0.5 bg-gray-50 dark:bg-gray-800/80", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => setEstimatorMode("live"),
+            className: `px-4 py-2 text-sm font-medium rounded-md transition-colors ${estimatorMode === "live" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`,
+            children: "Estimador actual"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => setEstimatorMode("python"),
+            disabled: !pythonAvailable,
+            className: `px-4 py-2 text-sm font-medium rounded-md transition-colors ${estimatorMode === "python" ? "bg-emerald-600 text-white shadow-sm" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"}`,
+            children: "Modelo Python"
+          }
+        )
+      ] }),
+      estimatorMode === "python" && pythonIndex && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+        "Batch generado: ",
+        formatGeneratedAt(pythonIndex.generated_at),
+        pythonIndex.version ? ` · v${pythonIndex.version}` : ""
+      ] }),
+      estimatorMode === "live" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Cálculo en vivo con Supabase (misma fórmula híbrida + DAG)." })
+    ] }),
+    !pythonAvailable && !isLoading && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2", children: [
+      "No se encontró el índice del modelo en",
+      " ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-amber-900 dark:text-amber-200", children: getPythonPredictionsUrl() }),
+      ". Genera el archivo con",
+      " ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-amber-900 dark:text-amber-200", children: "python train.py --skip-export" }),
+      " ",
+      "en ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-amber-900 dark:text-amber-200", children: "predictor/" }),
+      "(escribe en ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-amber-900 dark:text-amber-200", children: "frontend/public/data/predictor-dashboard.json" }),
+      "). Si despliegas en GitHub Pages, incluye ese archivo en el build o en el repositorio."
+    ] }),
     error && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 text-sm text-red-700 dark:text-red-400", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4 flex-shrink-0 mt-0.5" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -51189,54 +51996,88 @@ function TeacherDashboard({ profile }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: error })
       ] })
     ] }),
+    !isLoading && predictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "p-4 dark:bg-gray-800 border-blue-100 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { className: "w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm text-gray-700 dark:text-gray-300 space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium text-gray-900 dark:text-white", children: "¿Cómo leer esta tabla?" }),
+        estimatorMode === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-emerald-700 dark:text-emerald-400", children: [
+          "Vista ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Modelo Python" }),
+          ": predicciones del batch offline (fórmula híbrida + DAG",
+          pythonIndex ? ", con GBR opcional si hubo entrenamiento" : "",
+          "). Los históricos del gráfico siguen viniendo del catálogo en vivo."
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-400", children: [
+          "Vista ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Estimador actual" }),
+          ": cálculo en tiempo real en el navegador."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-400", children: [
+          "Se listan las materias bajo supervisión de la facultad ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: faculty }),
+          "(p. ej. ",
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+            faculty,
+            "-*"
+          ] }),
+          " en el catálogo; Economía usa ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "ECN-*" }),
+          "). No es la malla completa de la carrera."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside text-xs space-y-1 text-gray-600 dark:text-gray-400", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Cursando:" }),
+            " estudiantes tomando la materia ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "este semestre" }),
+            " en la app."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Planeada:" }),
+            " estudiantes que la marcaron para el ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "próximo semestre" }),
+            " (demanda directa)."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "DAG hist.:" }),
+            " cohorte del catálogo del semestre pasado que avanza por la malla (ej. cupo en C++ → ~80% en C++ avanzado)."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "DAG cursando:" }),
+            " quienes ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "cursan" }),
+            " un prerrequisito ahora y probablemente tomarán esta materia el próximo semestre."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Histórico / Secciones:" }),
+            " oferta real pasada del catálogo USFQ + sugerencia combinada."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Clic en una fila" }),
+            " abre el gráfico por período."
+          ] })
+        ] })
+      ] })
+    ] }) }),
     !isLoading && predictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        StatCard,
-        {
-          label: "Materias con demanda",
-          value: predictions.length,
-          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" })
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        StatCard,
-        {
-          label: "Estudiantes planeando",
-          value: totalPlanned,
-          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-5 h-5" })
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        StatCard,
-        {
-          label: "Con tendencia al alza",
-          value: upTrend,
-          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5" })
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        StatCard,
-        {
-          label: "Materias nuevas (sin historial)",
-          value: newCourses,
-          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-5 h-5" })
-        }
-      )
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { label: "Materias supervisadas", value: predictions.length, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { label: "Con histórico", value: withHistory, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-5 h-5" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { label: "Cursando (este sem.)", value: totalCursando, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-5 h-5" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { label: "Planean próximo sem.", value: totalPlannedNext, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5" }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "dark:bg-gray-800 overflow-hidden", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-wrap gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-semibold text-gray-900 dark:text-white", children: [
           "Predicción de demanda — ",
-          profile.faculty
+          faculty,
+          estimatorMode === "python" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-400", children: "(modelo Python)" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Ordenar por:" }),
-          ["planned", "predicted", "trend"].map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Ordenar:" }),
+          ["predicted", "planned", "trend"].map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
               onClick: () => setSortBy(opt),
               className: `text-xs px-2.5 py-1 rounded-md transition-colors ${sortBy === opt ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`,
-              children: opt === "planned" ? "Planeados" : opt === "predicted" ? "Predicción" : "Tendencia"
+              children: opt === "planned" ? "Planeadas" : opt === "predicted" ? "Secciones" : "Tendencia"
             },
             opt
           ))
@@ -51248,100 +52089,133 @@ function TeacherDashboard({ profile }) {
       ] }) : sortedPredictions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-12 text-center text-gray-500 dark:text-gray-400", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-10 h-10 mx-auto mb-3 opacity-30" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-          "Aún no hay estudiantes que hayan marcado materias de ",
-          profile.faculty,
-          " como planeadas."
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm mt-1", children: "Los datos aparecerán aquí cuando los estudiantes usen la malla interactiva." })
+          "No hay materias con código ",
+          faculty,
+          "-* en el histórico del catálogo."
+        ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-50 dark:bg-gray-700/50 text-left", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-36", children: "Código" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Demanda planeada" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center", children: "Historial" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center", children: "Secciones sugeridas" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", children: "Tendencia" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Código" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Materia" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes cursando esta materia este semestre", children: "Cursando" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes que la planean para el próximo semestre", children: "Planeada" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", title: "Demanda propagada desde el histórico del catálogo", children: "DAG hist." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", title: "Demanda propagada desde quienes cursan prerrequisitos ahora", children: "DAG curs." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center", children: "Histórico" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center", children: "Secciones" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", children: "Tend." })
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "divide-y divide-gray-100 dark:divide-gray-700", children: sortedPredictions.map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "tr",
           {
-            className: "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors",
+            onClick: () => setSelected(row),
+            className: "hover:bg-blue-50/60 dark:hover:bg-blue-900/20 transition-colors cursor-pointer",
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded", children: row.course_id }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { planned: row.planned_count, maxPlanned }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4 text-center", children: row.num_periods > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded", children: row.offer_code }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-700 dark:text-gray-300 max-w-[200px] truncate", title: row.title, children: row.title }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center text-gray-700 dark:text-gray-300", children: row.in_progress_count }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center font-medium text-blue-700 dark:text-blue-400", children: row.planned_next }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { value: row.inflow_from_history, max: maxDemand }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { value: row.inflow_from_cursando, max: maxDemand }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: row.num_periods > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-medium text-gray-800 dark:text-gray-200", children: [
-                  row.avg_historical.toFixed(1),
+                  Math.round(row.avg_sections),
                   " secc."
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-gray-400", children: [
+                  "~",
+                  Math.round(row.avg_students),
+                  " cupos · ",
                   row.num_periods,
-                  " período",
-                  row.num_periods !== 1 ? "s" : ""
+                  " períodos"
                 ] })
               ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "Sin datos" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4 text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-lg font-bold ${row.predicted_sections >= (row.avg_historical || 1) ? "text-green-600 dark:text-green-400" : "text-orange-500 dark:text-orange-400"}`, children: row.predicted_sections }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendIcon, { t: row.trend }) }) })
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 text-center", children: [
+                row.model_label === "sin datos" ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "—" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "span",
+                  {
+                    className: `text-lg font-bold ${row.predicted_sections >= (row.avg_sections || 1) ? "text-green-600 dark:text-green-400" : "text-orange-500 dark:text-orange-400"}`,
+                    children: row.predicted_sections
+                  }
+                ),
+                estimatorMode === "python" && row.model_label && row.model_label !== "sin datos" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-gray-400 mt-0.5", children: row.model_label })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendIcon, { t: row.trend }) }) })
             ]
           },
           row.course_id
         )) })
-      ] }) }),
-      !isLoading && sortedPredictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Metodología:" }),
-        ' Secciones sugeridas = (promedio histórico × 60%) + (estudiantes planeados ÷ 15 × 40%). Los datos de demanda provienen de los estudiantes que marcaron materias como "planeadas" en la malla interactiva.'
       ] }) })
     ] }),
-    !isLoading && history.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "dark:bg-gray-800 overflow-hidden", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-4 border-b border-gray-100 dark:border-gray-700", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-gray-900 dark:text-white", children: "Historial de oferta por período" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-0.5", children: "Datos históricos de secciones abiertas por materia, extraídos del catálogo de cursos." })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-50 dark:bg-gray-700/50 text-left", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Código" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 text-center", children: "Prom. secciones" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 text-center", children: "Máx. secciones" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-6 py-3 font-medium text-gray-600 dark:text-gray-400 text-center", children: "Períodos con datos" })
-        ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "divide-y divide-gray-100 dark:divide-gray-700", children: [...history.values()].sort((a, b) => b.avg_total - a.avg_total).map((h) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-semibold text-gray-700 dark:text-gray-300", children: h.course_code }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3 text-center font-medium text-gray-800 dark:text-gray-200", children: h.avg_total.toFixed(1) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3 text-center text-gray-600 dark:text-gray-400", children: h.max_total }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-3 text-center text-gray-500 dark:text-gray-400", children: h.num_periods })
-        ] }, h.course_code)) })
-      ] }) })
-    ] })
+    selected && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CourseDemandDetailDialog,
+      {
+        open: Boolean(selected),
+        onOpenChange: (open) => {
+          if (!open) setSelected(null);
+        },
+        offerCode: selected.offer_code,
+        title: selected.title,
+        inProgressCount: selected.in_progress_count,
+        plannedNext: selected.planned_next,
+        inflowFromHistory: selected.inflow_from_history,
+        inflowFromCursando: selected.inflow_from_cursando,
+        propagatedStudents: selected.propagated_students,
+        suggestedSections: selected.predicted_sections,
+        estimatedStudents: selected.estimated_students,
+        trend: selected.trend,
+        history: historyMap.get(selected.offer_code)
+      }
+    )
   ] });
 }
-const FACULTIES = [
-  "CMP",
-  "MAT",
-  "MAC",
-  "LIT",
-  "ECN",
-  "FIS",
-  "ADM",
-  "JUR",
-  "MED",
-  "PSI",
-  "ARQ",
-  "COM",
-  "FIN",
-  "EDU",
-  "POL",
-  "NUT",
-  "VET",
-  "ODT"
-];
-const MAILTO_BCC_LIMIT = 50;
-async function invokeAdmin(body) {
-  const { data, error } = await supabase.functions.invoke("admin-teachers", { body });
-  if (error) throw new Error(error.message);
-  if (data && typeof data === "object" && "error" in data && data.error) {
-    throw new Error(String(data.error));
-  }
-  return data;
+const USFQ_PROFESSOR_EMAIL_SUFFIX = "@usfq.edu.ec";
+function isProfessorEmail(email) {
+  return Boolean(email == null ? void 0 : email.toLowerCase().endsWith(USFQ_PROFESSOR_EMAIL_SUFFIX));
 }
+function facultyFromCurriculumId(curriculumId) {
+  const match = curriculumId.match(/Malla-(?:academica-)?([A-Z]{3})/i);
+  return match ? match[1].toUpperCase() : null;
+}
+const ALL_FACULTIES = [
+  "ADM",
+  "ANT",
+  "ARQ",
+  "ARV",
+  "BTC",
+  "CIN",
+  "CMP",
+  "COM",
+  "JUR",
+  "DIC",
+  "ECO",
+  "EDU",
+  "FIN",
+  "FIS",
+  "GST",
+  "HSP",
+  "AGE",
+  "ALI",
+  "ICV",
+  "IEL",
+  "IIN",
+  "IME",
+  "INQ",
+  "LIT",
+  "MAC",
+  "MAK",
+  "MAT",
+  "MED",
+  "VET",
+  "NIT",
+  "NUT",
+  "ODT",
+  "PER",
+  "POL",
+  "PSI",
+  "PSC",
+  "PUB"
+];
 function formatDate(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("es-EC", {
@@ -51350,145 +52224,48 @@ function formatDate(iso) {
   });
 }
 function AdminDashboard({ profile }) {
-  const [tab, setTab] = reactExports.useState("teachers");
+  const [tab, setTab] = reactExports.useState("stats");
   const { metadata, isLoading: metaLoading, reload: reloadMeta } = useOfferMetadata();
-  const [teachers, setTeachers] = reactExports.useState([]);
-  const [loadingTeachers, setLoadingTeachers] = reactExports.useState(false);
-  const [teacherError, setTeacherError] = reactExports.useState(null);
-  const [formOpen, setFormOpen] = reactExports.useState(false);
-  const [editing, setEditing] = reactExports.useState(null);
-  const [formEmail, setFormEmail] = reactExports.useState("");
-  const [formName, setFormName] = reactExports.useState("");
-  const [formFaculty, setFormFaculty] = reactExports.useState("CMP");
-  const [formDepartments, setFormDepartments] = reactExports.useState("");
-  const [msgFaculty, setMsgFaculty] = reactExports.useState("");
-  const [msgSubject, setMsgSubject] = reactExports.useState("");
-  const [msgBody, setMsgBody] = reactExports.useState("");
-  const [studentEmails, setStudentEmails] = reactExports.useState([]);
-  const [selectedEmails, setSelectedEmails] = reactExports.useState(/* @__PURE__ */ new Set());
-  const [loadingStudents, setLoadingStudents] = reactExports.useState(false);
-  const [studentError, setStudentError] = reactExports.useState(null);
-  const loadTeachers = reactExports.useCallback(async () => {
-    setLoadingTeachers(true);
-    setTeacherError(null);
+  const [facultyStats, setFacultyStats] = reactExports.useState([]);
+  const [loadingStats, setLoadingStats] = reactExports.useState(false);
+  const [statsError, setStatsError] = reactExports.useState(null);
+  const professorView = {
+    email: profile.email,
+    name: profile.name,
+    faculty: "CMP",
+    faculties: [...ALL_FACULTIES]
+  };
+  const loadFacultyStats = reactExports.useCallback(async () => {
+    setLoadingStats(true);
+    setStatsError(null);
     try {
-      const data = await invokeAdmin({ action: "list" });
-      setTeachers(data.teachers ?? []);
+      const { data, error } = await supabase.rpc("get_faculty_registration_stats");
+      if (error) throw new Error(error.message);
+      setFacultyStats(data ?? []);
     } catch (err) {
-      setTeacherError(err instanceof Error ? err.message : "Error al cargar profesores");
+      setStatsError(err instanceof Error ? err.message : "Error al cargar estadísticas");
     } finally {
-      setLoadingTeachers(false);
+      setLoadingStats(false);
     }
   }, []);
   reactExports.useEffect(() => {
-    loadTeachers();
-  }, [loadTeachers]);
-  const openCreate = () => {
-    setEditing(null);
-    setFormEmail("");
-    setFormName("");
-    setFormFaculty("CMP");
-    setFormDepartments("");
-    setFormOpen(true);
-  };
-  const openEdit = (t) => {
-    setEditing(t);
-    setFormEmail(t.email);
-    setFormName(t.name ?? "");
-    setFormFaculty(t.faculty);
-    setFormDepartments((t.departments ?? []).join(", "));
-    setFormOpen(true);
-  };
-  const saveTeacher = async () => {
-    const departments = formDepartments.split(",").map((d) => d.trim().toUpperCase()).filter(Boolean);
-    try {
-      if (editing) {
-        await invokeAdmin({
-          action: "update",
-          id: editing.id,
-          email: formEmail.trim(),
-          name: formName.trim() || null,
-          faculty: formFaculty,
-          departments
-        });
-      } else {
-        await invokeAdmin({
-          action: "create",
-          email: formEmail.trim(),
-          name: formName.trim() || null,
-          faculty: formFaculty,
-          departments
-        });
-      }
-      setFormOpen(false);
-      await loadTeachers();
-    } catch (err) {
-      setTeacherError(err instanceof Error ? err.message : "Error al guardar");
-    }
-  };
-  const deleteTeacher = async (id) => {
-    if (!confirm("¿Eliminar este perfil de profesor?")) return;
-    try {
-      await invokeAdmin({ action: "delete", id });
-      await loadTeachers();
-    } catch (err) {
-      setTeacherError(err instanceof Error ? err.message : "Error al eliminar");
-    }
-  };
-  const loadStudents = async () => {
-    setLoadingStudents(true);
-    setStudentError(null);
-    try {
-      const { data, error } = await supabase.functions.invoke(
-        "admin-list-students",
-        { body: msgFaculty ? { faculty: msgFaculty } : {} }
-      );
-      if (error) throw new Error(error.message);
-      if (data && "error" in data) throw new Error(String(data.error));
-      const emails = (data == null ? void 0 : data.emails) ?? [];
-      setStudentEmails(emails);
-      setSelectedEmails(/* @__PURE__ */ new Set());
-    } catch (err) {
-      setStudentError(err instanceof Error ? err.message : "Error al cargar alumnos");
-      setStudentEmails([]);
-      setSelectedEmails(/* @__PURE__ */ new Set());
-    } finally {
-      setLoadingStudents(false);
-    }
-  };
-  const toggleEmail = (email) => {
-    setSelectedEmails((prev) => {
-      const next = new Set(prev);
-      if (next.has(email)) next.delete(email);
-      else next.add(email);
-      return next;
-    });
-  };
-  const selectAllStudents = () => setSelectedEmails(new Set(studentEmails));
-  const deselectAllStudents = () => setSelectedEmails(/* @__PURE__ */ new Set());
-  const openMailto = () => {
-    const recipients = studentEmails.filter((e) => selectedEmails.has(e));
-    if (recipients.length === 0) {
-      setStudentError("Selecciona al menos un destinatario de la lista.");
-      return;
-    }
-    const bcc = recipients.slice(0, MAILTO_BCC_LIMIT).join(",");
-    const params = new URLSearchParams();
-    if (bcc) params.set("bcc", bcc);
-    if (msgSubject.trim()) params.set("subject", msgSubject.trim());
-    if (msgBody.trim()) params.set("body", msgBody.trim());
-    window.open(`mailto:?${params.toString()}`, "_blank");
-  };
+    if (tab === "users") loadFacultyStats();
+  }, [tab, loadFacultyStats]);
   const tabs = [
-    { id: "teachers", label: "Profesores", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-4 h-4" }) },
-    { id: "messages", label: "Mensajes", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-4 h-4" }) },
+    { id: "stats", label: "Predicción y demanda", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-4 h-4" }) },
+    { id: "users", label: "Estudiantes registrados", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-4 h-4" }) },
     { id: "offer", label: "Oferta", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-4 h-4" }) }
   ];
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-gray-900 dark:text-white", children: "Panel de administración" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400 mt-1", children: profile.name ?? profile.email })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400 mt-1", children: profile.name ?? profile.email }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-400 mt-1", children: [
+          "Profesores: correo ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-blue-600", children: "@usfq.edu.ec" }),
+          " · Facultad desde progreso de malla"
+        ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2 flex-wrap", children: tabs.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         Button,
@@ -51505,187 +52282,43 @@ function AdminDashboard({ profile }) {
         t.id
       )) })
     ] }),
-    tab === "teachers" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+    tab === "stats" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TeacherDashboard,
+      {
+        profile: professorView,
+        facultyOptions: [...ALL_FACULTIES],
+        title: "Vista de facultad (admin)"
+      }
+    ),
+    tab === "users" && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-5 dark:bg-gray-800 space-y-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Profesores" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", size: "sm", onClick: loadTeachers, disabled: loadingTeachers, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${loadingTeachers ? "animate-spin" : ""}` }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { size: "sm", onClick: openCreate, className: "gap-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "w-4 h-4" }),
-            "Agregar"
-          ] })
-        ] })
-      ] }),
-      teacherError && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-red-600 dark:text-red-400", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4" }),
-        teacherError
-      ] }),
-      formOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-4 dark:bg-gray-800 space-y-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-medium text-gray-900 dark:text-white", children: editing ? "Editar profesor" : "Nuevo profesor" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-2 gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Correo" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: formEmail, onChange: (e) => setFormEmail(e.target.value) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Nombre" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: formName, onChange: (e) => setFormName(e.target.value) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Facultad principal" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "select",
-              {
-                value: formFaculty,
-                onChange: (e) => setFormFaculty(e.target.value),
-                className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm",
-                children: FACULTIES.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f, children: f }, f))
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Departamentos (separados por coma)" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Input,
-              {
-                placeholder: "CMP, MAT",
-                value: formDepartments,
-                onChange: (e) => setFormDepartments(e.target.value)
-              }
-            )
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Estudiantes registrados por facultad" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400 mt-1", children: [
+            "Cuentas con progreso guardado en la malla (desde ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "user_progress" }),
+            ")."
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", onClick: saveTeacher, children: "Guardar" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", variant: "outline", onClick: () => setFormOpen(false), children: "Cancelar" })
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", size: "sm", onClick: loadFacultyStats, disabled: loadingStats, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${loadingStats ? "animate-spin" : ""}` }) })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "overflow-hidden dark:bg-gray-800", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+      statsError && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-red-600 dark:text-red-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4" }),
+        statsError
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-gray-200 dark:border-gray-700 text-left text-gray-500", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Correo" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Nombre" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Facultad" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium", children: "Departamentos" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium w-24" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-right", children: "Estudiantes con malla" })
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("tbody", { children: [
-          teachers.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-gray-100 dark:border-gray-700/50", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-900 dark:text-white", children: t.email }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-600 dark:text-gray-300", children: t.name ?? "—" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: t.faculty }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-600 dark:text-gray-300", children: (t.departments ?? []).join(", ") || "—" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => openEdit(t), className: "p-1.5 text-gray-500 hover:text-blue-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "w-4 h-4" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => deleteTeacher(t.id), className: "p-1.5 text-gray-500 hover:text-red-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-4 h-4" }) })
-            ] }) })
-          ] }, t.id)),
-          teachers.length === 0 && !loadingTeachers && /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: 5, className: "px-4 py-8 text-center text-gray-500", children: "No hay profesores registrados." }) })
+          facultyStats.map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-gray-100 dark:border-gray-700/50", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-mono font-semibold text-gray-900 dark:text-white", children: row.faculty }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right text-gray-700 dark:text-gray-300", children: row.student_count })
+          ] }, row.faculty)),
+          facultyStats.length === 0 && !loadingStats && /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: 2, className: "px-4 py-8 text-center text-gray-500", children: "Sin registros todavía." }) })
         ] })
-      ] }) }) })
-    ] }),
-    tab === "messages" && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-5 dark:bg-gray-800 space-y-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Mensaje a alumnos" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: [
-        "Carga la lista, marca los alumnos que recibirán el correo y luego abre mailto. Solo los seleccionados irán en BCC (máx. ",
-        MAILTO_BCC_LIMIT,
-        ")."
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-2 gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Filtrar por facultad (opcional)" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "select",
-            {
-              value: msgFaculty,
-              onChange: (e) => {
-                setMsgFaculty(e.target.value);
-                setStudentEmails([]);
-                setSelectedEmails(/* @__PURE__ */ new Set());
-              },
-              className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "Todos los alumnos registrados" }),
-                FACULTIES.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f, children: f }, f))
-              ]
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-end", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: loadStudents, disabled: loadingStudents, className: "gap-1.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${loadingStudents ? "animate-spin" : ""}` }),
-          "Cargar destinatarios"
-        ] }) })
-      ] }),
-      studentError && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-red-600 dark:text-red-400", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-4 h-4" }),
-        studentError
-      ] }),
-      studentEmails.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-600 dark:text-gray-300", children: [
-            selectedEmails.size,
-            " de ",
-            studentEmails.length,
-            " seleccionado(s)",
-            selectedEmails.size > MAILTO_BCC_LIMIT && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-amber-600 dark:text-amber-400", children: [
-              " ",
-              "— solo los primeros ",
-              MAILTO_BCC_LIMIT,
-              " irán en BCC"
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: selectAllStudents, children: "Seleccionar todos" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: deselectAllStudents, children: "Quitar selección" })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-h-48 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700", children: studentEmails.map((email) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "label",
-          {
-            className: "flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "input",
-                {
-                  type: "checkbox",
-                  checked: selectedEmails.has(email),
-                  onChange: () => toggleEmail(email),
-                  className: "rounded border-gray-300"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-800 dark:text-gray-200 truncate", children: email })
-            ]
-          },
-          email
-        )) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Asunto" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: msgSubject, onChange: (e) => setMsgSubject(e.target.value) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs text-gray-500 block mb-1", children: "Mensaje" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "textarea",
-          {
-            value: msgBody,
-            onChange: (e) => setMsgBody(e.target.value),
-            rows: 5,
-            className: "w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Button,
-        {
-          onClick: openMailto,
-          className: "gap-1.5",
-          disabled: selectedEmails.size === 0,
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-4 h-4" }),
-            "Abrir correo (mailto)"
-          ]
-        }
-      )
+      ] }) })
     ] }),
     tab === "offer" && /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-5 dark:bg-gray-800 space-y-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
@@ -51715,34 +52348,11 @@ function AdminDashboard({ profile }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { className: "w-4 h-4" }),
           "Comandos locales (offer-scraper)"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("pre", { className: "text-xs text-gray-600 dark:text-gray-400 overflow-x-auto whitespace-pre-wrap", children: `# Backfill periodos históricos
-python scrape.py backfill --only 202510,202420
-
-# Rollover al nuevo semestre (dry-run primero)
-python scrape.py rollover --period-code 202520 --period "Segundo Semestre 2025/2026"
-python scrape.py rollover --period-code 202520 --period "Segundo Semestre 2025/2026" --yes` })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("pre", { className: "text-xs text-gray-600 dark:text-gray-400 overflow-x-auto whitespace-pre-wrap", children: `python scrape.py backfill --only 202510,202420
+python scrape.py rollover --period-code 202610 --period "Primer Semestre 2026/2027" --yes` })
       ] })
     ] })
   ] });
-}
-function useTeacherProfile(email) {
-  const [teacherProfile, setTeacherProfile] = reactExports.useState(null);
-  const [isLoading, setIsLoading] = reactExports.useState(false);
-  reactExports.useEffect(() => {
-    if (!email) {
-      setTeacherProfile(null);
-      return;
-    }
-    setIsLoading(true);
-    supabase.from("teacher_profiles").select("id, email, name, faculty").eq("email", email).maybeSingle().then(({ data }) => {
-      setTeacherProfile(data ?? null);
-      setIsLoading(false);
-    }).catch(() => {
-      setTeacherProfile(null);
-      setIsLoading(false);
-    });
-  }, [email]);
-  return { teacherProfile, isLoading };
 }
 function useAdminProfile(email) {
   const [adminProfile, setAdminProfile] = reactExports.useState(null);
@@ -51762,6 +52372,57 @@ function useAdminProfile(email) {
     });
   }, [email]);
   return { adminProfile, isLoading };
+}
+function useUserRole({
+  userId,
+  email,
+  adminProfile,
+  isAdminLoading
+}) {
+  const [professorContext, setProfessorContext] = reactExports.useState(null);
+  const [isProfessorLoading, setIsProfessorLoading] = reactExports.useState(false);
+  const isAdmin = adminProfile !== null;
+  const isProfessor = isProfessorEmail(email);
+  reactExports.useEffect(() => {
+    if (!userId || !email || !isProfessor) {
+      setProfessorContext(null);
+      return;
+    }
+    setIsProfessorLoading(true);
+    supabase.from("user_progress").select("curriculum_id, updated_at").eq("user_id", userId).order("updated_at", { ascending: false }).then(({ data }) => {
+      const faculties = [
+        ...new Set(
+          (data ?? []).map((r2) => facultyFromCurriculumId(r2.curriculum_id)).filter((f) => Boolean(f))
+        )
+      ];
+      const faculty = faculties[0] ?? "CMP";
+      setProfessorContext({
+        email,
+        name: null,
+        faculty,
+        faculties: faculties.length > 0 ? faculties : [faculty]
+      });
+      setIsProfessorLoading(false);
+    }).catch(() => {
+      setProfessorContext({
+        email,
+        name: null,
+        faculty: "CMP",
+        faculties: ["CMP"]
+      });
+      setIsProfessorLoading(false);
+    });
+  }, [userId, email, isProfessor]);
+  const isLoading = isAdminLoading || isProfessor && isProfessorLoading;
+  return {
+    isAdmin,
+    isProfessor,
+    isStudent: Boolean(email) && !isAdmin && !isProfessor,
+    professorContext,
+    adminProfile,
+    isLoading,
+    allFaculties: [...ALL_FACULTIES]
+  };
 }
 const queryClient = new QueryClient();
 function UserMenu({ onOpenPasswordReset }) {
@@ -51835,9 +52496,7 @@ function UserMenu({ onOpenPasswordReset }) {
 function AuthButton({ onOpenAuth, onOpenPasswordReset }) {
   const { isSignedIn, isLoading, isPasswordRecovery } = useSupabaseAuth();
   if (isLoading) return null;
-  if (isPasswordRecovery) {
-    return null;
-  }
+  if (isPasswordRecovery) return null;
   if (isSignedIn) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(UserMenu, { onOpenPasswordReset });
   }
@@ -51867,9 +52526,17 @@ function AppInner() {
   const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
     isSignedIn ? (user == null ? void 0 : user.email) ?? null : null
   );
-  const { teacherProfile, isLoading: isTeacherLoading } = useTeacherProfile(
-    isSignedIn && !adminProfile ? (user == null ? void 0 : user.email) ?? null : null
-  );
+  const {
+    isAdmin,
+    isProfessor,
+    professorContext,
+    isLoading: isRoleLoading
+  } = useUserRole({
+    userId: isSignedIn ? (user == null ? void 0 : user.id) ?? null : null,
+    email: isSignedIn ? (user == null ? void 0 : user.email) ?? null : null,
+    adminProfile,
+    isAdminLoading
+  });
   const openAuth = (mode) => {
     setAuthMode(mode);
     setAuthModalOpen(true);
@@ -51884,15 +52551,14 @@ function AppInner() {
       setAuthModalOpen(true);
     }
   }, [isPasswordRecovery]);
-  const isRoleLoading = isSignedIn && (isAdminLoading || !adminProfile && isTeacherLoading);
-  const showAdmin = isSignedIn && !isAdminLoading && adminProfile !== null;
-  const showTeacher = isSignedIn && !showAdmin && !isTeacherLoading && teacherProfile !== null;
+  const showAdmin = isSignedIn && isAdmin;
+  const showProfessor = isSignedIn && !isAdmin && isProfessor && professorContext !== null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Malla Curricular Interactiva" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthButton, { onOpenAuth: openAuth, onOpenPasswordReset: openPasswordReset }) })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: isRoleLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-24 text-gray-500", children: "Cargando…" }) : showAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboard, { profile: adminProfile }) : showTeacher ? /* @__PURE__ */ jsxRuntimeExports.jsx(TeacherDashboard, { profile: teacherProfile }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CurriculumGrid, {}) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: isSignedIn && isRoleLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-24 text-gray-500", children: "Cargando…" }) : showAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboard, { profile: adminProfile }) : showProfessor ? /* @__PURE__ */ jsxRuntimeExports.jsx(TeacherDashboard, { profile: professorContext }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CurriculumGrid, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeToggle, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, {}),

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate demand predictions JSON (baseline or trained model)."""
+"""Generate demand predictions JSON (hybrid formula + optional GBR)."""
 
 import argparse
 import pickle
@@ -7,7 +7,7 @@ import pickle
 from config import OUTPUT_DIR
 from data.export import export_all
 from features.build import build_feature_frame
-from models.demand import apply_model, save_predictions
+from models.demand import apply_model, save_dashboard_index, save_predictions
 
 
 def main() -> None:
@@ -29,7 +29,9 @@ def main() -> None:
 
     result = apply_model(features, model)
     out = save_predictions(result)
+    dash = save_dashboard_index(result)
     print(f"Wrote {len(result)} predictions → {out}")
+    print(f"Dashboard index → {dash}")
 
 
 if __name__ == "__main__":

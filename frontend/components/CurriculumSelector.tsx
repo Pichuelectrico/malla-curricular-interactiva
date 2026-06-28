@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ChevronDown, ChevronUp, GraduationCap, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, GraduationCap, Mail, Search } from "lucide-react";
 import { CurriculumData } from "../types/curriculum";
 import { availableCurricula } from "../data/availableCurricula";
 
@@ -104,9 +104,23 @@ export default function CurriculumSelector({
           </CardHeader>
           <CardContent className="space-y-3 max-h-80 overflow-y-auto pt-0">
             {filteredCurricula.length === 0 ? (
-              <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-4">
-                No se encontró ninguna malla para &ldquo;{search}&rdquo;
-              </p>
+              <div className="py-4 space-y-3 text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  No se encontró ninguna malla para &ldquo;{search}&rdquo;
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900/20"
+                  onClick={() => {
+                    setIsOpen(false);
+                    onRequestCurriculum();
+                  }}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Solicita tu malla
+                </Button>
+              </div>
             ) : (
               filteredCurricula.map((curriculum) => (
               <div
@@ -146,10 +160,12 @@ export default function CurriculumSelector({
             ))
             )}
 
-            {/* Request Custom Curriculum Option */}
-            {/* <div
+            <div
               className="p-3 rounded-lg border-2 border-dashed border-blue-300 dark:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors"
-              onClick={onRequestCurriculum}
+              onClick={() => {
+                setIsOpen(false);
+                onRequestCurriculum();
+              }}
             >
               <div className="flex items-center justify-center mb-2">
                 <Mail className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
@@ -157,15 +173,10 @@ export default function CurriculumSelector({
                   Solicita tu malla
                 </h3>
               </div>
-              <p className="text-xs text-blue-600 dark:text-blue-400 text-center mb-2">
+              <p className="text-xs text-blue-600 dark:text-blue-400 text-center">
                 ¿No encuentras tu carrera? Solicítala aquí
               </p>
-              <div className="text-center">
-                <Badge className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-                  ☕ Con un café, más rápido
-                </Badge>
-              </div>
-            </div> */}
+            </div>
           </CardContent>
         </Card>
       )}

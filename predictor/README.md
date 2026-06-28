@@ -1,10 +1,6 @@
 # Course demand predictor
 
-Python tooling to forecast section/cupo needs using:
-
-- Curriculum prerequisite graphs (`frontend/src/data/Malla-*.json`)
-- Historical offer data (`course_offer_history`)
-- Student planned courses (`user_progress`)
+Python tooling aligned with the webapp hybrid estimator (`demandPrediction.ts` + `curriculumGraph.ts`).
 
 ## Setup
 
@@ -13,26 +9,26 @@ cd predictor
 pip install -r requirements.txt
 ```
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` (service role) in `.env` or environment.
+Set `SUPABASE_URL` and `SUPABASE_KEY` in `.env`.
 
 ## Usage
 
 ```bash
-# Export data + train (uses baseline if insufficient history)
-python train.py --faculty CMP
+# Export Supabase + train + write dashboard JSON for the webapp
+python train.py
 
-# Predict only (uses saved model if available)
-python predict.py --faculty CMP
+# Single faculty sample output
+python train.py --faculty MAC --skip-export
+
+# Predict only (uses saved model.pkl if present)
+python predict.py --skip-export
 ```
 
-Output: `predictor/output/predictions.json`
+Outputs:
 
-## Baseline formula
+- `predictor/output/predictions.json` — full batch
+- `frontend/public/data/predictor-dashboard.json` — index for the «Modelo Python» tab
 
-Matches `TeacherDashboard.tsx`:
+## Formula (matches TeacherDashboard)
 
-```
-predicted_sections = round(avg_historical * 0.6 + (planned_count / 15) * 0.4)
-```
-
-When ≥20 courses have history, a GradientBoostingRegressor is trained on `avg_total`.
+Hybrid students estimate with DAG inflow, stable floor of 8, and optional GBR refinement when ≥20 courses have history.

@@ -9,12 +9,8 @@ interface DonationModalProps {
 }
 
 export default function DonationModal({ onClose }: DonationModalProps) {
-  const handleDonateClick = () => {
-    window.open('https://buymeacoffee.com/yourhandle', '_blank');
-  };
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -56,15 +52,17 @@ export default function DonationModal({ onClose }: DonationModalProps) {
             </p>
           </div>
 
-          {/* Donation Button */}
-          <div className="flex justify-center">
-            <Button 
-              onClick={handleDonateClick}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+          <div className="flex flex-col items-center gap-2">
+            <Button
+              disabled
+              className="bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg opacity-60 cursor-not-allowed"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               Buy Me a Coffee ☕
             </Button>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Próximamente disponible
+            </p>
           </div>
 
           {/* Additional message */}

@@ -6,8 +6,8 @@ import pickle
 
 from config import OUTPUT_DIR
 from data.export import export_all
-from features.build import build_feature_frame, load_history_agg
-from models.demand import apply_model, train_demand_model
+from features.build import build_feature_frame
+from models.demand import apply_model, save_dashboard_index, save_predictions, train_demand_model
 
 
 def main() -> None:
@@ -20,18 +20,25 @@ def main() -> None:
         export_all()
 
     features = build_feature_frame(faculty=args.faculty)
-    history = load_history_agg()
-    model = train_demand_model(features, history)
-
+    model = train_demand_model(features)
     result = apply_model(features, model)
+
     model_path = OUTPUT_DIR / "model.pkl"
     with open(model_path, "wb") as f:
         pickle.dump(model, f)
 
-    from models.demand import save_predictions
     out = save_predictions(result)
+    dash = save_dashboard_index(result)
+
     print(f"Saved {len(result)} predictions → {out}")
-    print(f"Model artifact → {model_path} ({'trained' if model else 'baseline only'})")
+    print(f"Dashboard index → {dash}")
+    print(f"Model artifact → {model_path} ({'hybrid+gbr' if model else 'hybrid only'})")
+
+    if args.faculty and len(result):
+        sample = result.nlargest(5, "estimated_students")[
+            ["offer_code", "estimated_students", "suggested_sections", "inflow_from_history", "trend", "model"]
+        ]
+        print(f"\nTop 5 {args.faculty} by estimated_students:\n{sample.to_string(index=False)}")
 
 
 if __name__ == "__main__":
