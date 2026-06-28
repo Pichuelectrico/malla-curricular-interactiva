@@ -8,9 +8,16 @@ import AuthModal, { type AuthMode } from './components/AuthModal';
 import SettingsModal from './components/SettingsModal';
 import TeacherDashboard from './components/TeacherDashboard';
 import AdminDashboard from './components/AdminDashboard';
+import AdminViewToggle, {
+  loadAdminViewMode,
+  saveAdminViewMode,
+  type AdminViewMode,
+} from './components/AdminViewToggle';
 import { AuthProvider, useSupabaseAuth } from './lib/auth';
 import { useAdminProfile } from './lib/useAdminProfile';
 import { useUserRole } from './lib/useUserRole';
+import { ALL_FACULTIES } from './lib/userRoles';
+import { trackPageView } from './lib/analytics';
 import { Settings, LogOut, ChevronDown, User } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -114,6 +121,7 @@ function AppInner() {
   const { isSignedIn, user, isPasswordRecovery } = useSupabaseAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const [adminViewMode, setAdminViewMode] = useState<AdminViewMode>(loadAdminViewMode);
 
   const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
     isSignedIn ? user?.email ?? null : null,
@@ -151,12 +159,41 @@ function AppInner() {
   const showAdmin = isSignedIn && isAdmin;
   const showProfessor = isSignedIn && !isAdmin && isProfessor && professorContext !== null;
 
+  const handleAdminViewChange = (mode: AdminViewMode) => {
+    setAdminViewMode(mode);
+    saveAdminViewMode(mode);
+  };
+
+  const adminProfessorContext =
+    showAdmin && adminProfile
+      ? {
+          email: adminProfile.email,
+          name: adminProfile.name,
+          faculty: 'CMP' as const,
+          faculties: [...ALL_FACULTIES],
+        }
+      : null;
+
+  useEffect(() => {
+    if (isRoleLoading) return;
+    if (isAdmin) return;
+
+    if (showProfessor) {
+      trackPageView('teacher');
+    } else {
+      trackPageView('curriculum');
+    }
+  }, [isRoleLoading, isAdmin, showProfessor]);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Malla Curricular Interactiva</h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
+            {showAdmin && (
+              <AdminViewToggle mode={adminViewMode} onChange={handleAdminViewChange} />
+            )}
             <AuthButton onOpenAuth={openAuth} onOpenPasswordReset={openPasswordReset} />
           </div>
         </div>
@@ -164,8 +201,14 @@ function AppInner() {
       <div className="flex-1">
         {isSignedIn && isRoleLoading ? (
           <div className="flex items-center justify-center py-24 text-gray-500">Cargando…</div>
-        ) : showAdmin ? (
+        ) : showAdmin && adminViewMode === 'admin' ? (
           <AdminDashboard profile={adminProfile!} />
+        ) : showAdmin && adminViewMode === 'teacher' && adminProfessorContext ? (
+          <TeacherDashboard
+            profile={adminProfessorContext}
+            facultyOptions={[...ALL_FACULTIES]}
+            title="Vista de facultad (admin)"
+          />
         ) : showProfessor ? (
           <TeacherDashboard profile={professorContext!} />
         ) : (

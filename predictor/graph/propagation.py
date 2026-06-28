@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from config import MAX_DAG_HOPS, MIN_DAG_FLOW, P_OTHER, P_SAME_AREA, P_SEQUENTIAL
 from features.codes import normalize_course_code
 from graph.curriculum import parse_prereq_group
+
+if TYPE_CHECKING:
+    from features.transition_calibration import TransitionRateTable
 
 
 @dataclass
@@ -64,7 +68,8 @@ def _is_primary_successor(graph: CurriculumGraph, from_id: str, to_id: str) -> b
     return to_id in same_area_next
 
 
-def transition_probability(graph: CurriculumGraph, from_id: str, to_id: str) -> float:
+def default_transition_probability(graph: CurriculumGraph, from_id: str, to_id: str) -> float:
+    """Fixed priors (80/50/25) — fallback when no calibration data."""
     if from_id not in graph.nodes or to_id not in graph.nodes:
         return P_OTHER
     if _is_primary_successor(graph, from_id, to_id):
@@ -78,10 +83,27 @@ def transition_probability(graph: CurriculumGraph, from_id: str, to_id: str) -> 
     return P_OTHER
 
 
+def transition_probability(
+    graph: CurriculumGraph,
+    from_id: str,
+    to_id: str,
+    rates: TransitionRateTable | None = None,
+) -> float:
+    if rates is not None:
+        from features.transition_calibration import classify_edge_type
+
+        et = classify_edge_type(graph, from_id, to_id)
+        calibrated = rates.lookup(from_id, to_id, et)
+        if calibrated is not None:
+            return calibrated
+    return default_transition_probability(graph, from_id, to_id)
+
+
 def _propagate_inflow(
     graph: CurriculumGraph,
     seeds_by_course_id: dict[str, float],
     max_hops: int = MAX_DAG_HOPS,
+    rates: TransitionRateTable | None = None,
 ) -> dict[str, float]:
     inflow: dict[str, float] = {}
     queue: list[tuple[str, float, int]] = []
@@ -99,7 +121,7 @@ def _propagate_inflow(
                 seed = seeds_by_course_id.get(prereq_id, 0.0)
                 if seed <= 0:
                     continue
-                transferred = seed * transition_probability(graph, prereq_id, course_id)
+                transferred = seed * transition_probability(graph, prereq_id, course_id, rates)
                 group_max = max(group_max, transferred)
             direct_total += group_max
 
@@ -113,7 +135,7 @@ def _propagate_inflow(
         if depth >= max_hops:
             continue
         for succ_id in graph.successors.get(node_id, []):
-            transferred = students * transition_probability(graph, node_id, succ_id)
+            transferred = students * transition_probability(graph, node_id, succ_id, rates)
             if transferred < MIN_DAG_FLOW:
                 continue
             inflow[succ_id] = inflow.get(succ_id, 0.0) + transferred
@@ -140,9 +162,10 @@ def propagate_demand_from_sources(
     history_seeds: dict[str, float],
     cursando_seeds: dict[str, float],
     max_hops: int = MAX_DAG_HOPS,
+    rates: TransitionRateTable | None = None,
 ) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
-    inflow_hist = _propagate_inflow(graph, history_seeds, max_hops)
-    inflow_curs = _propagate_inflow(graph, cursando_seeds, max_hops)
+    inflow_hist = _propagate_inflow(graph, history_seeds, max_hops, rates)
+    inflow_curs = _propagate_inflow(graph, cursando_seeds, max_hops, rates)
     total: dict[str, float] = {}
     for key in set(inflow_hist) | set(inflow_curs):
         total[key] = inflow_hist.get(key, 0.0) + inflow_curs.get(key, 0.0)

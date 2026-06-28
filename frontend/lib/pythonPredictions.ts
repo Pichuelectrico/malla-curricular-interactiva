@@ -11,6 +11,8 @@ export interface PythonPredictionEntry {
   gbr_estimated_students?: number | null;
   gbr_suggested_sections?: number | null;
   gbr_available?: boolean;
+  primary_students?: number;
+  primary_sections?: number;
   trend: DemandTrend;
   inflow_from_history: number;
   inflow_from_cursando: number;
@@ -22,6 +24,9 @@ export interface PythonPredictionEntry {
 export interface PythonPredictionsIndex {
   generated_at: string;
   version: number;
+  target_period_code?: string;
+  target_period_label?: string;
+  current_period_code?: string;
   by_offer_code: Record<string, PythonPredictionEntry>;
   by_faculty: Record<string, string[]>;
 }

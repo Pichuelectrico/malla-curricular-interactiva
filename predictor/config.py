@@ -43,3 +43,11 @@ W_SEC_INFLOW_CURS = 0.05
 # Legacy baseline (kept for reference)
 HIST_WEIGHT = 0.6
 PLANNED_WEIGHT = 0.4
+
+# Transition rate calibration (Bayesian shrinkage toward priors)
+TRANSITION_SHRINKAGE_ALPHA = 75.0
+TRANSITION_RATE_MIN = 0.05
+TRANSITION_RATE_MAX = 0.95
+TRANSITION_RATES_JSON = OUTPUT_DIR / "transition_rates.json"
+PUBLIC_TRANSITION_RATES_JSON = REPO_ROOT / "frontend" / "public" / "data" / "transition_rates.json"
+PERIODS_JSON = REPO_ROOT / "offer-scraper" / "periods.json"

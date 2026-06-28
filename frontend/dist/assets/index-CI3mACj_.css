@@ -805,6 +805,10 @@
     margin-bottom: calc(var(--spacing) * 4);
   }
 
+  .ml-1 {
+    margin-left: calc(var(--spacing) * 1);
+  }
+
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
   }
@@ -997,6 +1001,10 @@
     height: calc(var(--spacing) * 16);
   }
 
+  .h-44 {
+    height: calc(var(--spacing) * 44);
+  }
+
   .h-48 {
     height: calc(var(--spacing) * 48);
   }
@@ -1159,6 +1167,10 @@
 
   .max-w-7xl {
     max-width: var(--container-7xl);
+  }
+
+  .max-w-8 {
+    max-width: calc(var(--spacing) * 8);
   }
 
   .max-w-\[160px\] {
@@ -1454,6 +1466,12 @@
     margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
   }
 
+  :where(.space-y-1\.5 > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 1.5) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 1.5) * calc(1 - var(--tw-space-y-reverse)));
+  }
+
   :where(.space-y-2 > :not(:last-child)) {
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
@@ -1632,6 +1650,11 @@
   .rounded-t {
     border-top-left-radius: .25rem;
     border-top-right-radius: .25rem;
+  }
+
+  .rounded-t-sm {
+    border-top-left-radius: calc(var(--radius)  - 4px);
+    border-top-right-radius: calc(var(--radius)  - 4px);
   }
 
   .rounded-l {
@@ -2208,6 +2231,10 @@
 
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
+  }
+
+  .pr-2 {
+    padding-right: calc(var(--spacing) * 2);
   }
 
   .pr-6 {
@@ -3041,6 +3068,11 @@
     color: var(--muted-foreground);
   }
 
+  .last\:border-0:last-child {
+    border-style: var(--tw-border-style);
+    border-width: 0;
+  }
+
   @media (hover: hover) {
     .hover\:border-blue-300:hover {
       border-color: var(--color-blue-300);
@@ -3594,6 +3626,14 @@
 
     .sm\:justify-end {
       justify-content: flex-end;
+    }
+
+    .sm\:gap-2 {
+      gap: calc(var(--spacing) * 2);
+    }
+
+    .sm\:gap-4 {
+      gap: calc(var(--spacing) * 4);
     }
 
     .sm\:self-auto {

@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Users, BookOpen, BarChart3, RefreshCw, AlertCircle, Terminal,
+  Users, BookOpen, BarChart3, RefreshCw, AlertCircle, Terminal, Globe,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '../lib/supabaseClient';
 import { useOfferMetadata } from '../lib/useOfferMetadata';
 import TeacherDashboard from './TeacherDashboard';
+import WebAnalyticsPanel from './WebAnalyticsPanel';
 import type { AdminProfile } from '../lib/useAdminProfile';
 import type { ProfessorContext } from '../lib/useUserRole';
 import { ALL_FACULTIES } from '../lib/userRoles';
 
-type Tab = 'stats' | 'users' | 'offer';
+type Tab = 'stats' | 'users' | 'offer' | 'traffic';
 
 interface AdminDashboardProps {
   profile: AdminProfile;
@@ -65,6 +66,7 @@ export default function AdminDashboard({ profile }: AdminDashboardProps) {
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'stats', label: 'Predicción y demanda', icon: <BarChart3 className="w-4 h-4" /> },
+    { id: 'traffic', label: 'Tráfico web', icon: <Globe className="w-4 h-4" /> },
     { id: 'users', label: 'Estudiantes registrados', icon: <Users className="w-4 h-4" /> },
     { id: 'offer', label: 'Oferta', icon: <BookOpen className="w-4 h-4" /> },
   ];
@@ -104,6 +106,8 @@ export default function AdminDashboard({ profile }: AdminDashboardProps) {
           title="Vista de facultad (admin)"
         />
       )}
+
+      {tab === 'traffic' && <WebAnalyticsPanel />}
 
       {tab === 'users' && (
         <Card className="p-5 dark:bg-gray-800 space-y-4">

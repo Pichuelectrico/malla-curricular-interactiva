@@ -15,7 +15,13 @@ import {
   propagateDemandFromSources,
 } from '../lib/curriculumGraph';
 import { computeDemandPrediction, type DemandTrend } from '../lib/demandPrediction';
-import { fetchOfferHistoryForCourses, type CourseHistoryStats } from '../lib/offerHistory';
+import {
+  fetchOfferHistoryForCourses,
+  fetchOfferMetadata,
+  veranoOfferCodesFromCourses,
+  type CourseHistoryStats,
+} from '../lib/offerHistory';
+import { loadAcademicCalendar } from '../lib/periodCalendar';
 import {
   formatGeneratedAt,
   clearPythonPredictionsCache,
@@ -24,6 +30,7 @@ import {
   lookupPythonPrediction,
   type PythonPredictionsIndex,
 } from '../lib/pythonPredictions';
+import { loadTransitionRates, type TransitionRateTable } from '../lib/transitionRates';
 import type { ProfessorContext } from '../lib/useUserRole';
 import CourseDemandDetailDialog from './CourseDemandDetailDialog';
 
@@ -45,6 +52,8 @@ interface PredictionRow {
   estimated_students: number;
   trend: DemandTrend;
   model_label?: string;
+  gbr_students?: number | null;
+  gbr_sections?: number | null;
 }
 
 function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
@@ -113,6 +122,10 @@ export default function TeacherDashboard({
   const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
   const [sortBy, setSortBy] = useState<'planned' | 'predicted' | 'trend'>('predicted');
   const [selected, setSelected] = useState<PredictionRow | null>(null);
+  const [targetPeriodCode, setTargetPeriodCode] = useState('');
+  const [targetPeriodLabel, setTargetPeriodLabel] = useState('');
+  const [transitionRates, setTransitionRates] = useState<TransitionRateTable | null>(null);
+  const [useGbr, setUseGbr] = useState(true);
 
   const load = async () => {
     setIsLoading(true);
@@ -161,8 +174,27 @@ export default function TeacherDashboard({
       const graph = buildCurriculumGraph(mallaCourses);
       const dagHistoryCodes = collectDagHistoryOfferCodes(mallaCourses);
       const historyFetchCodes = [...new Set([...offerCodes, ...dagHistoryCodes])];
+
+      const [calendar, rates, metadata] = await Promise.all([
+        loadAcademicCalendar(),
+        loadTransitionRates(),
+        fetchOfferMetadata(),
+      ]);
+      setTransitionRates(rates);
+
+      const { targetPeriodCode: tgtCode, targetPeriodLabel: tgtLabel } = calendar.inferTargetPeriod(
+        metadata.currentPeriodCode || undefined,
+      );
+      setTargetPeriodCode(tgtCode);
+      setTargetPeriodLabel(tgtLabel);
+
+      const veranoCodes = veranoOfferCodesFromCourses(mallaCourses);
       const histMap = historyFetchCodes.length > 0
-        ? await fetchOfferHistoryForCourses(historyFetchCodes)
+        ? await fetchOfferHistoryForCourses(historyFetchCodes, {
+            targetPeriodCode: tgtCode,
+            calendar,
+            veranoCourseCodes: veranoCodes,
+          })
         : new Map<string, CourseHistoryStats>();
 
       const historySeeds = buildHistoricalSeeds(mallaCourses, histMap);
@@ -170,6 +202,8 @@ export default function TeacherDashboard({
         graph,
         historySeeds,
         cursandoByCourseId,
+        5,
+        rates,
       );
 
       const preds: PredictionRow[] = supervised.map((course) => {
@@ -209,6 +243,10 @@ export default function TeacherDashboard({
       clearPythonPredictionsCache();
       const pyIndex = await loadPythonPredictions();
       setPythonIndex(pyIndex);
+      if (pyIndex?.target_period_code) {
+        setTargetPeriodCode(pyIndex.target_period_code);
+        setTargetPeriodLabel(pyIndex.target_period_label ?? pyIndex.target_period_code);
+      }
       setLastLoaded(new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar los datos');
@@ -237,8 +275,14 @@ export default function TeacherDashboard({
       inflow_from_history: py.inflow_from_history,
       inflow_from_cursando: py.inflow_from_cursando,
       propagated_students: py.inflow_from_history + py.inflow_from_cursando,
-      predicted_sections: py.suggested_sections,
-      estimated_students: py.estimated_students,
+      predicted_sections: useGbr && py.gbr_available && py.primary_sections != null
+        ? py.primary_sections
+        : py.suggested_sections,
+      estimated_students: useGbr && py.gbr_available && py.primary_students != null
+        ? py.primary_students
+        : py.estimated_students,
+      gbr_students: py.gbr_estimated_students,
+      gbr_sections: py.gbr_suggested_sections,
       trend: py.trend,
       model_label: py.model,
     };
@@ -332,14 +376,32 @@ export default function TeacherDashboard({
         </div>
         {estimatorMode === 'python' && pythonIndex && (
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            Batch generado: {formatGeneratedAt(pythonIndex.generated_at)}
+            Batch: {formatGeneratedAt(pythonIndex.generated_at)}
             {pythonIndex.version ? ` · v${pythonIndex.version}` : ''}
+            {pythonIndex.target_period_label ? (
+              <> · Predicción para <strong>{pythonIndex.target_period_label}</strong></>
+            ) : targetPeriodLabel ? (
+              <> · Predicción para <strong>{targetPeriodLabel}</strong></>
+            ) : null}
           </p>
         )}
-        {estimatorMode === 'live' && (
+        {estimatorMode === 'live' && targetPeriodLabel && (
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            Cálculo en vivo con Supabase (misma fórmula híbrida + DAG).
+            Predicción para <strong>{targetPeriodLabel}</strong>
+            {targetPeriodCode ? ` (${targetPeriodCode})` : ''}
+            {transitionRates ? ' · tasas DAG calibradas' : ' · tasas DAG por defecto (80/50/25)'}
           </p>
+        )}
+        {estimatorMode === 'python' && pythonAvailable && (
+          <label className="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={useGbr}
+              onChange={(e) => setUseGbr(e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            Usar refinamiento GBR cuando esté disponible
+          </label>
         )}
       </div>
 
@@ -390,7 +452,7 @@ export default function TeacherDashboard({
               <ul className="list-disc list-inside text-xs space-y-1 text-gray-600 dark:text-gray-400">
                 <li><strong>Cursando:</strong> estudiantes tomando la materia <em>este semestre</em> en la app.</li>
                 <li><strong>Planeada:</strong> estudiantes que la marcaron para el <em>próximo semestre</em> (demanda directa).</li>
-                <li><strong>DAG hist.:</strong> cohorte del catálogo del semestre pasado que avanza por la malla (ej. cupo en C++ → ~80% en C++ avanzado).</li>
+                <li><strong>DAG hist.:</strong> cohorte del catálogo propagada con tasas calibradas por pares de períodos (fallback 80/50/25).</li>
                 <li><strong>DAG cursando:</strong> quienes <em>cursan</em> un prerrequisito ahora y probablemente tomarán esta materia el próximo semestre.</li>
                 <li><strong>Histórico / Secciones:</strong> oferta real pasada del catálogo USFQ + sugerencia combinada.</li>
                 <li><strong>Clic en una fila</strong> abre el gráfico por período.</li>
@@ -548,6 +610,16 @@ export default function TeacherDashboard({
           estimatedStudents={selected.estimated_students}
           trend={selected.trend}
           history={historyMap.get(selected.offer_code)}
+          targetPeriodLabel={targetPeriodLabel}
+          targetPeriodCode={targetPeriodCode}
+          gbrStudents={selected.gbr_students}
+          gbrSections={selected.gbr_sections}
+          modelLabel={selected.model_label ?? (estimatorMode === 'live' ? 'híbrido+calibrado' : undefined)}
+          prerequisiteRates={
+            transitionRates?.incomingEdges(
+              livePredictions.find((r) => r.offer_code === selected.offer_code)?.course_id ?? selected.course_id,
+            ) ?? []
+          }
         />
       )}
     </div>
