@@ -78,7 +78,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
       form.append("_next", window.location.origin + "/?submitted=true");
 
       const response = await fetch(
-        "https://formsubmit.co/c65548cafea3234a171bd1cc680f1e0c",
+        "https://formsubmit.co/pichuelectrico@gmail.com",
         {
           method: "POST",
           body: form,
