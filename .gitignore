@@ -1,5 +1,6 @@
 .env
 offer-scraper/.env
+predictor/.env
 offer-scraper/snaps/
 offer-scraper/.browser_profile/
 predictor/output/

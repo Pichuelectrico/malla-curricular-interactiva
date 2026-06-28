@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Informe — Predictor de Demanda Curricular</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface2: #f1f5f9;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --plain-bg: #ecfdf5;
+      --plain-border: #10b981;
+      --plain-text: #065f46;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+      --border: #e2e8f0;
+      --code-bg: #1e293b;
+      --font: "Segoe UI", system-ui, sans-serif;
+      --mono: "Consolas", "SF Mono", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .hero {
+      background: linear-gradient(160deg, #1e40af 0%, #1e3a8a 100%);
+      color: #fff;
+      padding: 2.5rem 1.5rem 2rem;
+    }
+
+    .hero-inner, .container { max-width: 780px; margin: 0 auto; }
+
+    .hero h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .hero .subtitle { opacity: 0.92; font-size: 1.05rem; max-width: 620px; }
+
+    nav.toc {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px #00000010;
+    }
+
+    nav.toc ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    nav.toc a { color: var(--accent); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+    nav.toc a:hover { text-decoration: underline; }
+
+    main { padding: 2rem 1.5rem 3rem; }
+
+    section { margin-bottom: 2.75rem; scroll-margin-top: 3.5rem; }
+
+    h2 {
+      font-size: 1.35rem;
+      color: #0f172a;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    h3 { font-size: 1.05rem; color: #334155; margin: 1.25rem 0 0.5rem; }
+
+    p { margin-bottom: 0.85rem; }
+
+    /* Cajas "En palabras simples" */
+    .plain {
+      background: var(--plain-bg);
+      border-left: 4px solid var(--plain-border);
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.15rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .plain-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--plain-text);
+      margin-bottom: 0.35rem;
+    }
+
+    .plain p:last-child { margin-bottom: 0; color: #064e3b; }
+
+    .tech {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      margin: 0.5rem 0 1rem;
+      font-size: 0.95rem;
+    }
+
+    .tech-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem 1.25rem;
+      margin: 1rem 0;
+      box-shadow: 0 1px 2px #00000008;
+    }
+
+    .card.warn {
+      background: var(--warn-bg);
+      border-color: var(--warn-border);
+    }
+
+    .quick {
+      background: var(--accent-soft);
+      border: 1px solid #93c5fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .quick h2 { border: none; font-size: 1.1rem; margin-bottom: 0.5rem; color: #1e40af; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 0.75rem 0;
+    }
+
+    th, td { border: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; }
+    th { background: var(--surface2); font-weight: 600; }
+
+    .formula, pre {
+      font-family: var(--mono);
+      background: var(--code-bg);
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      overflow-x: auto;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      margin: 0.75rem 0;
+    }
+
+    .formula { color: #fde68a; white-space: pre-wrap; }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      background: var(--surface2);
+      padding: 0.12em 0.35em;
+      border-radius: 4px;
+      color: #b45309;
+    }
+
+    ul, ol { margin: 0 0 0.85rem 1.2rem; }
+    li { margin-bottom: 0.35rem; }
+
+    .mermaid {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 0.85rem;
+      margin: 0.65rem 0;
+      padding: 0.75rem;
+      background: var(--surface2);
+      border-radius: 8px;
+    }
+
+    .step-num {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Predictor de demanda curricular</h1>
+    <p class="subtitle">
+      Documentación del proyecto <strong>malla-curricular-interactiva</strong> (USFQ).
+      Describe únicamente lo que el código hace hoy.
+    </p>
+  </div>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#rapido">Resumen</a></li>
+    <li><a href="#que-hace">Qué hace</a></li>
+    <li><a href="#datos">Datos</a></li>
+    <li><a href="#app">Cálculo en la app</a></li>
+    <li><a href="#dag">La malla (DAG)</a></li>
+    <li><a href="#python">Script Python</a></li>
+    <li><a href="#vistas">Dos vistas en la app</a></li>
+    <li><a href="#ejemplo">Ejemplo numérico</a></li>
+    <li><a href="#dashboard">Leer el dashboard</a></li>
+    <li><a href="#limites">Limitaciones</a></li>
+  </ul>
+</nav>
+
+<main class="container">
+
+  <!-- RESUMEN RÁPIDO -->
+  <section id="rapido" class="quick">
+    <h2>Resumen en una frase</h2>
+    <p style="margin:0;font-size:1.05rem;">
+      El sistema <strong>sugiere cuántas secciones abrir</strong> mezclando histórico de cupos USFQ,
+      demanda en la app y propagación por la malla. La misma fórmula corre <strong>en vivo</strong> en el dashboard
+      y en el <strong>batch Python</strong>, que alimenta el tab «Modelo Python».
+    </p>
+  </section>
+
+  <!-- QUÉ HACE -->
+  <section id="que-hace">
+    <h2>1. Qué hace el proyecto</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Imagina que eres coordinador y quieres saber si MAC-4002 necesita 1 o 2 secciones el próximo semestre.
+        El dashboard no adivina: <strong>combina números pasados</strong> (cuánto cupo hubo antes),
+        <strong>intención actual</strong> (quién la tiene planeada en la plataforma) y
+        <strong>la cadena de materias</strong> (si muchos pasaron MAT-2010, parte irá a MAC-4002).
+      </p>
+    </div>
+
+    <div class="tech">
+      <div class="tech-label">Detalle técnico</div>
+      <p>El proyecto tiene <strong>dos piezas</strong> relacionadas:</p>
+      <table>
+        <tr>
+          <th>Pieza</th>
+          <th>Ubicación</th>
+          <th>Para qué sirve</th>
+        </tr>
+        <tr>
+          <td><strong>Dashboard docente</strong></td>
+          <td><code>TeacherDashboard.tsx</code></td>
+          <td>Dos tabs: <em>Estimador actual</em> (Supabase en vivo) y <em>Modelo Python</em> (JSON del batch).</td>
+        </tr>
+        <tr>
+          <td><strong>Script Python</strong></td>
+          <td><code>predictor/</code></td>
+          <td>Exporta datos, aplica la misma fórmula híbrida + DAG, genera <code>predictor-dashboard.json</code> para la app.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>Mecanismos que usa el código</h3>
+    <ul>
+      <li><strong>Heurística ponderada (híbrida)</strong> — pesos fijos 45 % / 15 % / 25 % / 10 % / 5 % en app y Python.</li>
+      <li><strong>Propagación en grafo (DAG)</strong> — prerrequisitos con 80 % / 50 % / 25 %; grupos OR con máximo.</li>
+      <li><strong>Aprendizaje supervisado opcional (Python)</strong> — <code>GradientBoostingRegressor</code> si hay ≥ 20 cursos con historial; no reemplaza la híbrida en pantalla.</li>
+    </ul>
+  </section>
+
+  <!-- DATOS -->
+  <section id="datos">
+    <h2>2. Qué datos lee</h2>
+
+    <h3>2.1 Histórico del catálogo USFQ</h3>
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        La universidad registra cuántas plazas (cupo) ofreció cada materia en semestres anteriores.
+        Eso nos dice, en la práctica, <strong>cuánta demanda hubo</strong> porque USFQ ajusta secciones a la matrícula.
+      </p>
+    </div>
+    <div class="tech">
+      <div class="tech-label">Detalle técnico</div>
+      <ul>
+        <li>Tabla Supabase: <code>course_offer_history</code></li>
+        <li>Solo filas con <code>type = 'Teoría'</code></li>
+        <li><code>total</code> = cupo de una sección; se suman todas las secciones del mismo período</li>
+        <li>Verano: períodos cuyo código termina en <code>30</code> (ej. 202530) se tratan aparte</li>
+        <li>Código normalizado: <code>CMP1001</code> y <code>CMP-1101</code> se unifican (<code>offerMatching.ts</code>)</li>
+        <li>Procesado en: <code>offerHistory.ts</code></li>
+      </ul>
+    </div>
+
+    <h3>2.2 Malla curricular (prerrequisitos)</h3>
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Es el mapa de “qué materia desbloquea cuál”. Si MAT-2010 es prerrequisito de MAC-4002,
+        los estudiantes que cursaron MAT-2010 son candidatos a tomar MAC-4002 después.
+      </p>
+    </div>
+    <div class="tech">
+      <div class="tech-label">Detalle técnico</div>
+      <ul>
+        <li>Archivos JSON: <code>frontend/data/Malla-*.json</code> (CMP, MAC, …)</li>
+        <li>Expresiones OR: <code>MAT2008 || MAT2010 || IEE3010</code> (basta cumplir una)</li>
+        <li>Para el DAG se carga historial de <strong>toda la malla</strong>, no solo materias MAC-*</li>
+        <li>Procesado en: <code>curriculumGraph.ts</code></li>
+      </ul>
+    </div>
+
+    <h3>2.3 Lo que marcan los estudiantes en la app</h3>
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        En la plataforma cada estudiante indica qué cursa <strong>ahora</strong> y qué planea para el
+        <strong>próximo semestre</strong>. Eso es una señal directa de intención, aunque no incluye a todos los estudiantes de la USFQ.
+      </p>
+    </div>
+    <div class="tech">
+      <div class="tech-label">Detalle técnico</div>
+      <ul>
+        <li>RPC Supabase: <code>get_malla_course_demand(p_course_ids)</code></li>
+        <li><code>in_progress_count</code> → materias en <code>in_progress_courses</code> (este semestre)</li>
+        <li><code>planned_count</code> → materias en <code>planned_courses</code> (próximo semestre)</li>
+        <li>El dashboard lista materias vía <code>get_faculty_supervised_courses</code> (ej. MAC-*, ECN-* para Economía)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app">
+    <h2>3. Cómo calcula la app (dashboard docente)</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        El número final no viene de una sola fuente. Es como mezclar ingredientes con recetas fijas:
+        casi la mitad viene del <strong>histórico reciente de la materia</strong>, un cuarto de
+        <strong>quién viene por prerrequisitos</strong>, y el resto de promedios, cursando y planeada.
+        Si la materia es estable y la USFQ exige mínimo 8 para abrir, nunca baja de 8.
+      </p>
+    </div>
+
+    <div class="mermaid">
+flowchart TB
+  A["Histórico USFQ<br/>por materia"] --> F["computeDemandPrediction()"]
+  B["DAG histórico<br/>desde prerrequisitos"] --> F
+  C["DAG cursando<br/>prerrequisitos activos"] --> F
+  D["Planeada en app<br/>próximo semestre"] --> F
+  F --> G["Estudiantes estimados<br/>+ secciones sugeridas<br/>+ tendencia"]
+    </div>
+
+    <h3>Paso a paso (orden real en <code>TeacherDashboard.tsx</code>)</h3>
+    <div class="step"><span class="step-num">1</span><div>Carga materias supervisadas de la facultad y demanda de la app (RPC).</div></div>
+    <div class="step"><span class="step-num">2</span><div>Carga la malla completa y construye el grafo de prerrequisitos.</div></div>
+    <div class="step"><span class="step-num">3</span><div>Descarga historial USFQ de esas materias <strong>y de toda la malla</strong> (para semillas del DAG).</div></div>
+    <div class="step"><span class="step-num">4</span><div>Propaga cohortes por la malla → columnas <em>DAG hist.</em> y <em>DAG curs.</em></div></div>
+    <div class="step"><span class="step-num">5</span><div>Aplica la fórmula ponderada → secciones, estudiantes estimados y tendencia.</div></div>
+
+    <h3>Fórmula de estudiantes estimados</h3>
+    <p>Cuando la materia <strong>sí tiene</strong> historial en el catálogo (<code>demandPrediction.ts</code>):</p>
+    <div class="formula">estimado = redondeo(
+  45% × tendencia reciente        (promedio cupo últimos 3 semestres regulares)
++ 15% × promedio histórico cupo
++ 25% × inflow DAG histórico
++ 10% × inflow DAG cursando
++  5% × planeada en app
+)
+
+Si es materia estable (≥2 períodos regulares con ≥8 cupos, tendencia sube o estable):
+  estimado = máximo(estimado, 8)</div>
+
+    <h3>Fórmula de secciones sugeridas</h3>
+    <div class="formula">secciones = máximo(1, redondeo(
+  35% × tendencia secciones históricas
++ 25% × promedio secciones históricas
++ 25% × (estimado / 25)
++ 10% × (inflow DAG hist / 25)
++  5% × (inflow DAG curs / 25)
+))</div>
+
+    <p>Referencia de tamaño: <code>STUDENTS_PER_SECTION = 25</code>.</p>
+
+    <h3>Sin historial en catálogo</h3>
+    <div class="formula">estimado = planeada + inflow DAG hist + inflow DAG curs
+secciones = máximo(1, redondeo(estimado / 25))</div>
+
+    <h3>Tendencia (columna “Tend.”)</h3>
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Compara si la estimación va <strong>por encima o por debajo</strong> de lo que venimos ofreciendo.
+        Flecha arriba = al alza, flecha abajo = a la baja, guión = estable, etiqueta “Nuevo” = sin historial útil.
+      </p>
+    </div>
+    <div class="tech">
+      <div class="tech-label">Detalle técnico</div>
+      <p>Compara último vs penúltimo período regular y la estimación vs referencia. Umbrales: ratio &gt; 1.08 → <code>up</code>; &lt; 0.92 → <code>down</code>; si no → <code>stable</code>.</p>
+    </div>
+  </section>
+
+  <!-- DAG -->
+  <section id="dag">
+    <h2>4. La malla (DAG): cómo “pasa” la demanda</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Piensa en tuberías: el cupo de MAT-2010 del semestre pasado “fluye” hacia MAC-4002,
+        pero no al 100 % — aplicamos un porcentaje según qué tan directa es la relación en la malla.
+        Si el prerrequisito es alternativo (MAT <em>o</em> IEE), contamos el camino más fuerte, no la suma de todos.
+      </p>
+    </div>
+
+    <div class="mermaid">
+flowchart LR
+  MAT["MAT-2010<br/>semilla: cupo último regular"]
+  MAC["MAC-4002"]
+  MAT -->|"50% prerrequisito directo"| MAC
+    </div>
+
+    <h3>Probabilidades en el código (<code>curriculumGraph.ts</code> / <code>graph/propagation.py</code>)</h3>
+    <table>
+      <tr><th>Situación</th><th>% que pasa</th><th>Constante</th></tr>
+      <tr><td>Siguiente materia en la misma área y semestre consecutivo</td><td>80 %</td><td><code>P_SEQUENTIAL</code></td></tr>
+      <tr><td>Prerrequisito directo (incluso de otra área, ej. MAT → MAC)</td><td>50 %</td><td><code>P_SAME_AREA</code></td></tr>
+      <tr><td>Misma área, otra relación</td><td>50 %</td><td><code>P_SAME_AREA</code></td></tr>
+      <tr><td>Otras rutas indirectas</td><td>25 %</td><td><code>P_OTHER</code></td></tr>
+    </table>
+
+    <h3>Otras reglas del DAG</h3>
+    <ul>
+      <li><strong>Semilla histórica:</strong> <code>lastRegularStudents</code> = cupo total del último semestre regular de cada materia.</li>
+      <li><strong>Semilla cursando:</strong> conteo <code>in_progress_count</code> de prerrequisitos en la app.</li>
+      <li><strong>Grupos OR:</strong> en el primer salto se usa el <em>máximo</em> del grupo, no la suma.</li>
+      <li><strong>Profundidad:</strong> hasta 5 saltos hacia adelante; flujos menores a 0.25 se ignoran.</li>
+    </ul>
+  </section>
+
+  <!-- PYTHON -->
+  <section id="python">
+    <h2>5. Script Python (<code>predictor/</code>)</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        El script hace lo mismo que el estimador del dashboard, pero sobre una <strong>foto de datos</strong>
+        exportada de Supabase. Guarda el resultado en un JSON que la app lee en el tab «Modelo Python».
+        Sirve para recalcular todo de una vez y comparar sin depender de la sesión en vivo.
+      </p>
+    </div>
+
+    <div class="mermaid">
+flowchart LR
+  E["export_all()"] --> F["build_feature_frame()"]
+  F --> H["compute_demand_prediction()"]
+  F --> D["propagate_demand (DAG)"]
+  D --> H
+  H --> J["predictions.json"]
+  H --> K["public/data/predictor-dashboard.json"]
+  F --> T["train_demand_model() opcional"]
+  T --> GBR["GBR refinamiento"]
+    </div>
+
+    <h3>Comandos</h3>
+    <pre>cd predictor
+pip install -r requirements.txt
+python train.py                  # exporta + calcula + entrena GBR opcional
+python train.py --skip-export    # usa JSON ya exportados en output/
+python predict.py --skip-export  # solo predice con model.pkl si existe</pre>
+
+    <p>Requiere <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> en <code>predictor/.env</code> para exportar.</p>
+
+    <h3>Salidas</h3>
+    <table>
+      <tr><th>Archivo</th><th>Contenido</th></tr>
+      <tr><td><code>predictor/output/predictions.json</code></td><td>~2100 filas, todas las carreras del batch</td></tr>
+      <tr><td><code>frontend/public/data/predictor-dashboard.json</code></td><td>Índice por <code>offer_code</code> para el tab de la app</td></tr>
+      <tr><td><code>predictor/output/model.pkl</code></td><td>GBR entrenado (opcional)</td></tr>
+    </table>
+
+    <h3>Misma lógica que la app (archivos Python)</h3>
+    <table>
+      <tr><th>App (TypeScript)</th><th>Python</th></tr>
+      <tr><td><code>offerHistory.ts</code></td><td><code>features/history_stats.py</code></td></tr>
+      <tr><td><code>curriculumGraph.ts</code></td><td><code>graph/propagation.py</code></td></tr>
+      <tr><td><code>demandPrediction.ts</code></td><td><code>features/demand_formula.py</code></td></tr>
+      <tr><td><code>TeacherDashboard.tsx</code></td><td><code>features/build.py</code></td></tr>
+    </table>
+
+    <p>Pesos en <code>predictor/config.py</code>: <code>STUDENTS_PER_SECTION = 25</code>, mismos <code>W_*</code> que la app.</p>
+
+    <h3>GBR opcional (no es lo que muestra el tab)</h3>
+    <div class="tech">
+      <div class="tech-label">Detalle técnico — <code>models/demand.py</code></div>
+      <ul>
+        <li>Si hay ≥ 20 cursos con historial, entrena <code>GradientBoostingRegressor</code>.</li>
+        <li>Features: planeada, cursando, inflows DAG, tendencia histórica, grado del grafo, etc.</li>
+        <li>Target: <code>estimated_students</code> de la fórmula híbrida.</li>
+        <li>El tab «Modelo Python» muestra la <strong>híbrida</strong> (<code>model: "hybrid"</code>). El GBR se guarda como <code>gbr_estimated_students</code> de referencia si existió entrenamiento.</li>
+      </ul>
+    </div>
+
+    <div class="card warn">
+      <strong>Despliegue:</strong> la app carga el JSON con <code>import.meta.env.BASE_URL + 'data/predictor-dashboard.json'</code>
+      (ej. <code>/malla-curricular-interactiva/data/predictor-dashboard.json</code> en GitHub Pages).
+      El archivo debe existir en <code>frontend/public/data/</code> y copiarse al build.
+    </div>
+  </section>
+
+  <!-- VISTAS -->
+  <section id="vistas">
+    <h2>6. Dos vistas en el dashboard</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Arriba de la tabla hay dos pestañas. <strong>Estimador actual</strong> recalcula al refrescar con datos de Supabase.
+        <strong>Modelo Python</strong> muestra el último batch guardado en JSON. Puedes volver al actual cuando quieras.
+      </p>
+    </div>
+
+    <div class="mermaid">
+flowchart TB
+  subgraph Live["Tab: Estimador actual"]
+    L1["RPC Supabase en tiempo real"]
+    L2["computeDemandPrediction() en el navegador"]
+  end
+  subgraph Batch["Tab: Modelo Python"]
+    B1["fetch predictor-dashboard.json"]
+    B2["lookup por offer_code"]
+  end
+  Live --> T["Misma tabla de materias supervisadas"]
+  Batch --> T
+    </div>
+
+    <table>
+      <tr><th>Tab</th><th>Fuente de datos</th><th>Cuándo usarlo</th></tr>
+      <tr>
+        <td><strong>Estimador actual</strong></td>
+        <td>Supabase (histórico, RPC demanda, malla en vivo)</td>
+        <td>Operación diaria; refleja planeada/cursando al momento</td>
+      </tr>
+      <tr>
+        <td><strong>Modelo Python</strong></td>
+        <td><code>user_progress.json</code> + <code>course_offer_history.json</code> del export</td>
+        <td>Comparar batch reproducible; ver resultado tras <code>train.py</code></td>
+      </tr>
+    </table>
+
+    <p class="tech-label" style="margin-top:1rem;">Código: <code>frontend/lib/pythonPredictions.ts</code> carga el JSON; <code>TeacherDashboard.tsx</code> alterna <code>estimatorMode</code>.</p>
+  </section>
+
+  <!-- EJEMPLO -->
+  <section id="ejemplo">
+    <h2>7. Ejemplo numérico (batch real)</h2>
+
+    <p>Valores del último <code>predictor-dashboard.json</code> (generado con <code>python train.py --skip-export</code>). La app y el batch usan la misma fórmula; cifras pueden variar levemente si el export de <code>user_progress</code> difiere del RPC en vivo.</p>
+
+    <h3>7.1 MAC-4002 — Aprendizaje Automático</h3>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        La materia tiene ~34 cupos propios en el último semestre, pero muchos estudiantes llegan por MAT-2010.
+        El DAG aporta <strong>155</strong> de inflow; la fórmula termina en <strong>57 estudiantes</strong> y <strong>2 secciones</strong>
+        (antes, sin DAG externo, la estimación caía cerca de 12).
+      </p>
+    </div>
+
+    <p>Prerrequisito: <code>MAT2008 || MAT2010 || IEE3010</code></p>
+
+    <table>
+      <tr><th>Entrada</th><th>Valor (batch)</th></tr>
+      <tr><td>Tendencia reciente (<code>estimatedNextStudents</code>)</td><td>31</td></tr>
+      <tr><td>Promedio histórico cupo</td><td>28</td></tr>
+      <tr><td>DAG histórico (<code>inflow_from_history</code>)</td><td>155,41</td></tr>
+      <tr><td>DAG cursando</td><td>0</td></tr>
+      <tr><td>Planeada en app (export)</td><td>0</td></tr>
+      <tr><td>Último regular propio</td><td>34 cupos</td></tr>
+    </table>
+
+    <div class="formula">Paso A — DAG (primer salto, grupo OR → máximo):
+  Semilla MAT-2010 (último regular) × 50% prerrequisito directo ≈ 155
+
+Paso B — Fórmula híbrida:
+  0,45 × 31  =  13,95   (histórico reciente)
++ 0,15 × 28  =   4,20   (promedio)
++ 0,25 × 155 =  38,85   (DAG histórico)
++ 0,10 × 0   =   0,00   (DAG cursando)
++ 0,05 × 0   =   0,00   (planeada)
+─────────────────────
+  Total       ≈  57 estudiantes  →  2 secciones sugeridas
+  Tendencia: down (la estimación queda por debajo del último pico de cupo + inflow)</div>
+
+    <div class="step"><span class="step-num">✓</span><div><strong>Resultado batch:</strong> 57 est., 2 sec., DAG hist. 155, <code>model: hybrid</code> (GBR opcional calculó 51 como referencia).</div></div>
+
+    <h3>7.2 CMP-1101 — Programación en C++ (contraste)</h3>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        CMP-1101 es de primer semestre, sin prerrequisitos en la malla. Su estimación sale casi solo del
+        <strong>histórico propio</strong>; el DAG histórico es <strong>0</strong>.
+      </p>
+    </div>
+
+    <table>
+      <tr><th>Entrada</th><th>Valor (batch)</th></tr>
+      <tr><td>DAG histórico</td><td>0</td></tr>
+      <tr><td>Estudiantes estimados</td><td><strong>61</strong></td></tr>
+      <tr><td>Secciones sugeridas</td><td><strong>3</strong></td></tr>
+      <tr><td>Tendencia</td><td>up</td></tr>
+    </table>
+
+    <h3>7.3 Otras materias MAC-* (mismo batch)</h3>
+    <table>
+      <tr><th>Código</th><th>Est.</th><th>Sec.</th><th>DAG hist.</th><th>Tend.</th></tr>
+      <tr><td>MAC-4003</td><td>205</td><td>8</td><td>205</td><td>up</td></tr>
+      <tr><td>MAC-4005</td><td>68</td><td>3</td><td>68</td><td>up</td></tr>
+      <tr><td>MAC-5001</td><td>33</td><td>1</td><td>95</td><td>down</td></tr>
+    </table>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+    <h2>8. Cómo leer el dashboard docente</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Elige el tab <strong>Estimador actual</strong> o <strong>Modelo Python</strong>, luego lee la tabla de tu facultad (ej. MAC-*).
+        Haz clic en una fila para el gráfico por período. En el tab Python verás la fecha del batch arriba.
+      </p>
+    </div>
+
+    <table>
+      <tr><th>Columna</th><th>Qué significa</th><th>Qué NO es</th></tr>
+      <tr>
+        <td><strong>Cursando</strong></td>
+        <td>Estudiantes con la materia en <em>este</em> semestre en la app</td>
+        <td>No es matriculados Banner ni cupo USFQ</td>
+      </tr>
+      <tr>
+        <td><strong>Planeada</strong></td>
+        <td>La marcaron para el <em>próximo</em> semestre</td>
+        <td>No incluye quien llegará solo por prerrequisitos</td>
+      </tr>
+      <tr>
+        <td><strong>DAG hist.</strong></td>
+        <td>Proyección desde cupo pasado de prerrequisitos</td>
+        <td>No son personas contadas una a una</td>
+      </tr>
+      <tr>
+        <td><strong>DAG curs.</strong></td>
+        <td>Proyección desde quien cursa prerrequisitos ahora</td>
+        <td>Complementa al histórico; entra aparte en la fórmula</td>
+      </tr>
+      <tr>
+        <td><strong>Secciones</strong></td>
+        <td>Sugerencia operativa del modelo</td>
+        <td>No es la oferta ya publicada en Banner</td>
+      </tr>
+      <tr>
+        <td><strong>Tend.</strong></td>
+        <td>Dirección respecto a períodos recientes</td>
+        <td>No es un intervalo de confianza estadístico</td>
+      </tr>
+    </table>
+
+    <h3>Modal (clic en fila)</h3>
+    <ul>
+      <li>Barras azules = cupo total ofertado por semestre regular</li>
+      <li>Barras ámbar = verano</li>
+      <li>Barra verde punteada = estimación próximo período</li>
+      <li>Desglose numérico de DAG histórico y DAG cursando</li>
+    </ul>
+  </section>
+
+  <!-- LIMITACIONES -->
+  <section id="limites">
+    <h2>9. Limitaciones (honestas)</h2>
+
+    <div class="split">
+      <div class="card">
+        <h3>Por qué sirve como guía</h3>
+        <ul>
+          <li>App y Python comparten la misma fórmula híbrida y DAG.</li>
+          <li>El cupo histórico refleja decisiones reales de apertura de secciones.</li>
+          <li>La malla codifica reglas académicas que el estudiante debe cumplir.</li>
+          <li>El piso de 8 refleja la regla operativa USFQ en materias estables.</li>
+        </ul>
+      </div>
+      <div class="card warn">
+        <h3>Qué no promete el proyecto</h3>
+        <ul>
+          <li>No usa matriculados reales; usa cupo ofertado.</li>
+          <li>El tab Python usa el export de <code>user_progress</code>, que puede tener menos señal que el RPC en vivo.</li>
+          <li>Los porcentajes del DAG (80/50/25) son fijos, no calibrados con datos.</li>
+          <li>Pocos períodos históricos disponibles hoy (~5).</li>
+          <li>En GitHub Pages hay que incluir <code>predictor-dashboard.json</code> en el deploy.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Archivos del repositorio</h3>
+    <table>
+      <tr><th>Archivo</th><th>Función</th></tr>
+      <tr><td><code>frontend/lib/demandPrediction.ts</code></td><td>Fórmula híbrida, tendencia, piso 8</td></tr>
+      <tr><td><code>frontend/lib/curriculumGraph.ts</code></td><td>Grafo y propagación DAG (app)</td></tr>
+      <tr><td><code>frontend/lib/offerHistory.ts</code></td><td>Histórico del catálogo (app)</td></tr>
+      <tr><td><code>frontend/lib/pythonPredictions.ts</code></td><td>Carga del JSON del batch</td></tr>
+      <tr><td><code>frontend/components/TeacherDashboard.tsx</code></td><td>Tabs, tabla, orquestación</td></tr>
+      <tr><td><code>frontend/public/data/predictor-dashboard.json</code></td><td>Índice para tab Modelo Python</td></tr>
+      <tr><td><code>predictor/features/demand_formula.py</code></td><td>Misma fórmula que la app</td></tr>
+      <tr><td><code>predictor/graph/propagation.py</code></td><td>Mismo DAG que la app</td></tr>
+      <tr><td><code>predictor/features/history_stats.py</code></td><td>Mismo agregado histórico</td></tr>
+      <tr><td><code>predictor/features/build.py</code></td><td>Pipeline del batch</td></tr>
+      <tr><td><code>predictor/models/demand.py</code></td><td>GBR opcional + guardado JSON</td></tr>
+      <tr><td><code>predictor/train.py</code> / <code>predict.py</code></td><td>Entrada del batch</td></tr>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  Proyecto malla-curricular-interactiva · USFQ · Actualizado junio 2026<br/>
+  Abrir este archivo en el navegador. Diagramas: Mermaid.js (requiere internet la primera vez).
+</footer>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+</script>
+
+</body>
+</html>

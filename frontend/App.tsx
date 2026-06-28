@@ -9,8 +9,8 @@ import SettingsModal from './components/SettingsModal';
 import TeacherDashboard from './components/TeacherDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { AuthProvider, useSupabaseAuth } from './lib/auth';
-import { useTeacherProfile } from './lib/useTeacherProfile';
 import { useAdminProfile } from './lib/useAdminProfile';
+import { useUserRole } from './lib/useUserRole';
 import { Settings, LogOut, ChevronDown, User } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -86,10 +86,7 @@ function AuthButton({ onOpenAuth, onOpenPasswordReset }: AuthButtonProps) {
   const { isSignedIn, isLoading, isPasswordRecovery } = useSupabaseAuth();
 
   if (isLoading) return null;
-
-  if (isPasswordRecovery) {
-    return null;
-  }
+  if (isPasswordRecovery) return null;
 
   if (isSignedIn) {
     return <UserMenu onOpenPasswordReset={onOpenPasswordReset} />;
@@ -121,9 +118,18 @@ function AppInner() {
   const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
     isSignedIn ? user?.email ?? null : null,
   );
-  const { teacherProfile, isLoading: isTeacherLoading } = useTeacherProfile(
-    isSignedIn && !adminProfile ? user?.email ?? null : null,
-  );
+
+  const {
+    isAdmin,
+    isProfessor,
+    professorContext,
+    isLoading: isRoleLoading,
+  } = useUserRole({
+    userId: isSignedIn ? user?.id ?? null : null,
+    email: isSignedIn ? user?.email ?? null : null,
+    adminProfile,
+    isAdminLoading,
+  });
 
   const openAuth = (mode: AuthMode) => {
     setAuthMode(mode);
@@ -142,9 +148,8 @@ function AppInner() {
     }
   }, [isPasswordRecovery]);
 
-  const isRoleLoading = isSignedIn && (isAdminLoading || (!adminProfile && isTeacherLoading));
-  const showAdmin = isSignedIn && !isAdminLoading && adminProfile !== null;
-  const showTeacher = isSignedIn && !showAdmin && !isTeacherLoading && teacherProfile !== null;
+  const showAdmin = isSignedIn && isAdmin;
+  const showProfessor = isSignedIn && !isAdmin && isProfessor && professorContext !== null;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
@@ -157,12 +162,12 @@ function AppInner() {
         </div>
       </header>
       <div className="flex-1">
-        {isRoleLoading ? (
+        {isSignedIn && isRoleLoading ? (
           <div className="flex items-center justify-center py-24 text-gray-500">Cargando…</div>
         ) : showAdmin ? (
           <AdminDashboard profile={adminProfile!} />
-        ) : showTeacher ? (
-          <TeacherDashboard profile={teacherProfile!} />
+        ) : showProfessor ? (
+          <TeacherDashboard profile={professorContext!} />
         ) : (
           <CurriculumGrid />
         )}

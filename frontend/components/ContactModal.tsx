@@ -96,12 +96,8 @@ export default function ContactModal({ onClose }: ContactModalProps) {
     }
   };
 
-  const handleBuyMeCoffeeClick = () => {
-    window.open('https://buymeacoffee.com/yourhandle', '_blank');
-  };
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="flex gap-4 max-w-4xl w-full">
         {/* Formulario principal */}
         <Card className="flex-1 dark:bg-gray-800 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
@@ -342,11 +338,10 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </p>
               </div>
 
-              {/* Botón para ir a Buy Me a Coffee */}
-              <div className="flex justify-center">
-                <Button 
-                  onClick={handleBuyMeCoffeeClick}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+              <div className="flex flex-col items-center gap-2">
+                <Button
+                  disabled
+                  className="bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg opacity-60 cursor-not-allowed"
                 >
                   <div className="flex items-center gap-2">
                     <Coffee className="w-4 h-4" />
@@ -354,19 +349,9 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                     <ExternalLink className="w-3 h-3" />
                   </div>
                 </Button>
-              </div>
-
-              {/* Instrucciones */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-                  📱 Instrucciones:
-                </h4>
-                <ol className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                  <li>1. Haz clic en "Buy Me a Coffee"</li>
-                  <li>2. Completa tu donación</li>
-                  <li>3. Toma captura del comprobante</li>
-                  <li>4. Súbela en el formulario de la izquierda</li>
-                </ol>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Próximamente disponible
+                </p>
               </div>
 
               {/* Mensaje de agradecimiento */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSupabaseAuth } from '../lib/auth';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -343,6 +343,11 @@ export default function CurriculumGrid() {
     curriculumData.courses
       .filter(c => courseIds.has(c.id))
       .reduce((sum, c) => sum + c.credits, 0);
+
+  const plannedCoursesList = useMemo(
+    () => curriculumData.courses.filter((c) => plannedCourses.has(c.id)),
+    [curriculumData.courses, plannedCourses],
+  );
 
   const isUnlocked = (course: Course): boolean => {
     if (course.prerequisites.length === 0) return true;
@@ -814,7 +819,7 @@ export default function CurriculumGrid() {
 
       {/* Drawers without their own floating buttons; expose open functions */}
       <SchedulePlanningDrawer
-        plannedCourses={curriculumData.courses.filter(c => plannedCourses.has(c.id))}
+        plannedCourses={plannedCoursesList}
         onSave={(schedules) => {
           console.log('Schedules saved:', schedules);
           toast({
