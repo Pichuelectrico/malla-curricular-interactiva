@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { X, Mail, Coffee, Send, Upload, ExternalLink } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { qrCodeAsset } from '../lib/assets';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { X, Mail, Coffee, Send, Upload, ExternalLink } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { qrCodeAsset } from "../lib/assets";
 
 interface ContactModalProps {
   onClose: () => void;
@@ -14,30 +14,34 @@ interface ContactModalProps {
 
 export default function ContactModal({ onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    university: '',
-    career: '',
-    message: '',
-    buyMeCoffee: false
+    name: "",
+    email: "",
+    university: "",
+    career: "",
+    message: "",
+    buyMeCoffee: false,
   });
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCoffeeModal, setShowCoffeeModal] = useState(false);
   const { toast } = useToast();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value, type } = e.target;
-    const isCheckbox = type === 'checkbox';
-    const newValue = isCheckbox ? (e.target as HTMLInputElement).checked : value;
-    
-    setFormData(prev => ({
+    const isCheckbox = type === "checkbox";
+    const newValue = isCheckbox
+      ? (e.target as HTMLInputElement).checked
+      : value;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: newValue
+      [name]: newValue,
     }));
 
     // Si activa el checkbox de café, mostrar el modal
-    if (name === 'buyMeCoffee' && newValue) {
+    if (name === "buyMeCoffee" && newValue) {
       setShowCoffeeModal(true);
     }
   };
@@ -55,40 +59,48 @@ export default function ContactModal({ onClose }: ContactModalProps) {
 
     try {
       const form = new FormData();
-      form.append('name', formData.name);
-      form.append('email', formData.email);
-      form.append('university', formData.university);
-      form.append('career', formData.career);
-      form.append('message', formData.message);
-      form.append('buyMeCoffee', formData.buyMeCoffee ? 'Sí' : 'No');
-      
-      if (formData.buyMeCoffee && paymentScreenshot) {
-        form.append('paymentScreenshot', paymentScreenshot);
-      }
-      
-      form.append('_subject', `Solicitud de Malla Curricular - ${formData.career}`);
-      form.append('_captcha', 'false');
-      form.append('_next', window.location.origin + '/?submitted=true');
+      form.append("name", formData.name);
+      form.append("email", formData.email);
+      form.append("university", formData.university);
+      form.append("career", formData.career);
+      form.append("message", formData.message);
+      form.append("buyMeCoffee", formData.buyMeCoffee ? "Sí" : "No");
 
-      const response = await fetch('https://formsubmit.co/joshxreinoso@gmail.com', {
-        method: 'POST',
-        body: form
-      });
+      if (formData.buyMeCoffee && paymentScreenshot) {
+        form.append("paymentScreenshot", paymentScreenshot);
+      }
+
+      form.append(
+        "_subject",
+        `Solicitud de Malla Curricular - ${formData.career}`,
+      );
+      form.append("_captcha", "false");
+      form.append("_next", window.location.origin + "/?submitted=true");
+
+      const response = await fetch(
+        "https://formsubmit.co/c65548cafea3234a171bd1cc680f1e0c",
+        {
+          method: "POST",
+          body: form,
+        },
+      );
 
       if (response.ok) {
         toast({
           title: "¡Solicitud enviada! 📧",
-          description: "Te contactaremos pronto para ayudarte con tu malla curricular.",
+          description:
+            "Te contactaremos pronto para ayudarte con tu malla curricular.",
         });
         onClose();
       } else {
-        throw new Error('Error en el envío');
+        throw new Error("Error en el envío");
       }
     } catch (error) {
-      console.error('Error sending form:', error);
+      console.error("Error sending form:", error);
       toast({
         title: "Error al enviar",
-        description: "Hubo un problema al enviar tu solicitud. Inténtalo de nuevo.",
+        description:
+          "Hubo un problema al enviar tu solicitud. Inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -109,7 +121,12 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   Solicita tu Malla
                 </CardTitle>
               </div>
-              <Button variant="ghost" size="sm" onClick={onClose} className="dark:hover:bg-gray-700">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="dark:hover:bg-gray-700"
+              >
                 <X className="w-4 h-4" />
               </Button>
             </div>
@@ -123,14 +140,17 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                 </span>
               </div>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                Si me compras un café ☕, priorizaré tu solicitud y la tendré lista en 24-48 horas.
+                Si me compras un café ☕, priorizaré tu solicitud y la tendré
+                lista en 24-48 horas.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name" className="dark:text-gray-200">Nombre *</Label>
+                  <Label htmlFor="name" className="dark:text-gray-200">
+                    Nombre *
+                  </Label>
                   <Input
                     id="name"
                     name="name"
@@ -142,7 +162,9 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email" className="dark:text-gray-200">Email *</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">
+                    Email *
+                  </Label>
                   <Input
                     id="email"
                     name="email"
@@ -157,7 +179,9 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               </div>
 
               <div>
-                <Label htmlFor="university" className="dark:text-gray-200">Universidad *</Label>
+                <Label htmlFor="university" className="dark:text-gray-200">
+                  Universidad *
+                </Label>
                 <Input
                   id="university"
                   name="university"
@@ -170,7 +194,9 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               </div>
 
               <div>
-                <Label htmlFor="career" className="dark:text-gray-200">Carrera *</Label>
+                <Label htmlFor="career" className="dark:text-gray-200">
+                  Carrera *
+                </Label>
                 <Input
                   id="career"
                   name="career"
@@ -183,7 +209,9 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               </div>
 
               <div>
-                <Label htmlFor="message" className="dark:text-gray-200">Información adicional</Label>
+                <Label htmlFor="message" className="dark:text-gray-200">
+                  Información adicional
+                </Label>
                 <Textarea
                   id="message"
                   name="message"
@@ -205,7 +233,10 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                     onChange={handleInputChange}
                     className="rounded border-gray-300 dark:border-gray-600 text-yellow-600 focus:ring-yellow-500"
                   />
-                  <Label htmlFor="buyMeCoffee" className="text-sm dark:text-gray-200 cursor-pointer">
+                  <Label
+                    htmlFor="buyMeCoffee"
+                    className="text-sm dark:text-gray-200 cursor-pointer"
+                  >
                     ☕ Sí, quiero comprarte un café para priorizar mi solicitud
                   </Label>
                 </div>
@@ -220,9 +251,12 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                           Comprobante de pago del café ☕
                         </span>
                       </div>
-                      
+
                       <div>
-                        <Label htmlFor="paymentScreenshot" className="text-sm text-yellow-700 dark:text-yellow-300">
+                        <Label
+                          htmlFor="paymentScreenshot"
+                          className="text-sm text-yellow-700 dark:text-yellow-300"
+                        >
                           Sube una captura de pantalla del pago
                         </Label>
                         <Input
@@ -235,13 +269,16 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                         {paymentScreenshot && (
                           <div className="flex items-center gap-2 mt-2 text-sm text-green-600 dark:text-green-400">
                             <Upload className="w-4 h-4" />
-                            <span>Archivo subido: {paymentScreenshot.name}</span>
+                            <span>
+                              Archivo subido: {paymentScreenshot.name}
+                            </span>
                           </div>
                         )}
                       </div>
-                      
+
                       <p className="text-xs text-yellow-600 dark:text-yellow-400">
-                        Esto nos ayuda a verificar tu pago y priorizar tu solicitud. ¡Gracias por tu apoyo!
+                        Esto nos ayuda a verificar tu pago y priorizar tu
+                        solicitud. ¡Gracias por tu apoyo!
                       </p>
                     </div>
                   </div>
@@ -297,10 +334,10 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                     ¡Cómprame un café!
                   </CardTitle>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setShowCoffeeModal(false)} 
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCoffeeModal(false)}
                   className="dark:hover:bg-gray-700"
                 >
                   <X className="w-4 h-4" />
@@ -311,9 +348,9 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               {/* QR Code o imagen de Buy Me a Coffee */}
               <div className="flex justify-center">
                 <div className="bg-white p-4 rounded-2xl shadow-lg">
-                  <img 
-                    src={qrCodeAsset} 
-                    alt="QR Code para Buy Me a Coffee" 
+                  <img
+                    src={qrCodeAsset}
+                    alt="QR Code para Buy Me a Coffee"
                     className="w-48 h-48 object-contain rounded-xl"
                     onError={(e) => {
                       const img = e.currentTarget as HTMLImageElement;
@@ -327,14 +364,15 @@ export default function ContactModal({ onClose }: ContactModalProps) {
                   />
                 </div>
               </div>
-              
+
               {/* Mensaje */}
               <div className="text-center space-y-3">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                   ¡Apóyame con un café!
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                  Tu café me ayuda a mantener este proyecto y a procesar tu solicitud de malla curricular más rápido.
+                  Tu café me ayuda a mantener este proyecto y a procesar tu
+                  solicitud de malla curricular más rápido.
                 </p>
               </div>
 

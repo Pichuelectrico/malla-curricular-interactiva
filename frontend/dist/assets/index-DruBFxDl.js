@@ -43654,13 +43654,19 @@ function ContactModal({ onClose }) {
       if (formData.buyMeCoffee && paymentScreenshot) {
         form.append("paymentScreenshot", paymentScreenshot);
       }
-      form.append("_subject", `Solicitud de Malla Curricular - ${formData.career}`);
+      form.append(
+        "_subject",
+        `Solicitud de Malla Curricular - ${formData.career}`
+      );
       form.append("_captcha", "false");
       form.append("_next", window.location.origin + "/?submitted=true");
-      const response = await fetch("https://formsubmit.co/joshxreinoso@gmail.com", {
-        method: "POST",
-        body: form
-      });
+      const response = await fetch(
+        "https://formsubmit.co/c65548cafea3234a171bd1cc680f1e0c",
+        {
+          method: "POST",
+          body: form
+        }
+      );
       if (response.ok) {
         toast2({
           title: "¡Solicitud enviada! 📧",
@@ -43688,7 +43694,16 @@ function ContactModal({ onClose }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-5 h-5 text-blue-600 dark:text-blue-400" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-xl font-bold text-gray-800 dark:text-white", children: "Solicita tu Malla" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onClose, className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "ghost",
+            size: "sm",
+            onClick: onClose,
+            className: "dark:hover:bg-gray-700",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+          }
+        )
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4", children: [
@@ -43790,7 +43805,14 @@ function ContactModal({ onClose }) {
                   className: "rounded border-gray-300 dark:border-gray-600 text-yellow-600 focus:ring-yellow-500"
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "buyMeCoffee", className: "text-sm dark:text-gray-200 cursor-pointer", children: "☕ Sí, quiero comprarte un café para priorizar mi solicitud" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Label,
+                {
+                  htmlFor: "buyMeCoffee",
+                  className: "text-sm dark:text-gray-200 cursor-pointer",
+                  children: "☕ Sí, quiero comprarte un café para priorizar mi solicitud"
+                }
+              )
             ] }),
             formData.buyMeCoffee && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-2 border-dashed border-yellow-300 dark:border-yellow-600 rounded-lg p-4 bg-yellow-50 dark:bg-yellow-900/20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
@@ -43798,7 +43820,14 @@ function ContactModal({ onClose }) {
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-yellow-800 dark:text-yellow-200", children: "Comprobante de pago del café ☕" })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "paymentScreenshot", className: "text-sm text-yellow-700 dark:text-yellow-300", children: "Sube una captura de pantalla del pago" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Label,
+                  {
+                    htmlFor: "paymentScreenshot",
+                    className: "text-sm text-yellow-700 dark:text-yellow-300",
+                    children: "Sube una captura de pantalla del pago"
+                  }
+                ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Input,
                   {
