@@ -7,7 +7,7 @@ import {
   normalizeCourseCode,
 } from './supabaseUserSettings';
 
-const QUERY_KEY = 'userBypassCourses';
+const QUERY_KEY = 'userSettings';
 
 export function useUserBypassCourses() {
   const { isSignedIn, user } = useSupabaseAuth();

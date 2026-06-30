@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, BookOpen, Calendar, Unlock, GraduationCap, Calculator, Layers } from 'lucide-react';
+import { ArrowLeft, BookOpen, Calendar, Unlock, GraduationCap, Calculator, Layers, Settings } from 'lucide-react';
 
 interface TutorialsPageProps {
   onBack: () => void;
@@ -32,6 +32,7 @@ const SECTIONS: TutorialSection[] = [
           <li>Las materias bloqueadas (grises) requieren cumplir prerequisitos primero.</li>
           <li>El límite es de 16 créditos por semestre en modos Cursando y Planeada.</li>
           <li>Tu progreso se guarda automáticamente si tienes sesión iniciada.</li>
+          <li>En <strong>Configuración</strong> (menú de tu cuenta) puedes ver el avance de cada carrera y eliminar el progreso de una malla sin borrar tu cuenta.</li>
         </ul>
       </>
     ),
@@ -67,13 +68,14 @@ const SECTIONS: TutorialSection[] = [
     content: (
       <>
         <p>
-          El planificador de horarios te ayuda a armar tu semestre con las materias que tienes marcadas como cursando o planeada.
+          El planificador de horarios te ayuda a armar tu semestre con las materias que tienes marcadas como <strong>planeadas</strong>.
         </p>
         <ul className="list-disc list-inside space-y-1 mt-2">
           <li>Abre el planificador desde el botón flotante de herramientas (llave inglesa) en la esquina inferior.</li>
-          <li>Arrastra materias al calendario semanal para organizar tu horario.</li>
-          <li>Detecta conflictos de horario automáticamente.</li>
-          <li>Puedes planificar con materias de múltiples mallas si tienes doble carrera o minor.</li>
+          <li>Asigna NRCs en modo automático o arrastra bloques al calendario en modo manual.</li>
+          <li>Detecta conflictos de horario automáticamente (incluye teoría, LAB y EJ).</li>
+          <li>Puedes crear varias opciones de horario (Opción A, B, C) dentro del planificador.</li>
+          <li>Si tienes doble carrera o minor, activa la combinación de mallas desde <strong>Configuración</strong> (ver sección correspondiente).</li>
         </ul>
       </>
     ),
@@ -108,10 +110,33 @@ const SECTIONS: TutorialSection[] = [
           Si estás cursando doble carrera o un minor, puedes combinar materias de varias mallas en el planificador.
         </p>
         <ul className="list-disc list-inside space-y-1 mt-2">
-          <li>Selecciona cada malla por separado y marca tu progreso en cada una.</li>
+          <li>Selecciona cada malla por separado y marca tu progreso en cada una (modo <strong>Planeadas</strong> para el planificador).</li>
           <li>Las materias completadas en una malla pueden desbloquear prerequisitos en otra (overlay global).</li>
-          <li>En el planificador, activa la opción de planificar con materias de múltiples mallas.</li>
-          <li>Esto te permite ver conflictos de horario entre materias de distintas carreras.</li>
+          <li>Abre <strong>Configuración</strong> desde el menú de tu cuenta (arriba a la derecha).</li>
+          <li>En <strong>Progreso por carrera</strong> verás el porcentaje completado, cursando y planeadas de cada malla.</li>
+          <li>Activa <strong>Incluir materias planeadas de mis otras carreras</strong> si tienes planeadas en dos o más carreras.</li>
+          <li>Si una materia está planeada en ambas mallas, el planificador usa la de la <strong>malla activa</strong>.</li>
+          <li>Los conflictos de horario muestran de qué carrera viene cada materia.</li>
+          <li>Puedes <strong>eliminar el progreso</strong> de una carrera específica desde Configuración sin borrar tu cuenta.</li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    id: 'configuracion',
+    title: 'Configuración de cuenta',
+    icon: <Settings className="w-4 h-4" />,
+    content: (
+      <>
+        <p>
+          El menú de <strong>Configuración</strong> está en tu cuenta (arriba a la derecha cuando iniciaste sesión).
+        </p>
+        <ul className="list-disc list-inside space-y-1 mt-2">
+          <li><strong>Progreso por carrera:</strong> resumen con barra de avance (% completado), conteo de completadas, cursando y planeadas.</li>
+          <li><strong>Eliminar progreso de una carrera:</strong> borra solo esa malla en la nube; pide confirmación antes de ejecutar.</li>
+          <li><strong>Planificador de horario:</strong> opción para incluir materias planeadas de otras carreras (visible si tienes planeadas en dos o más mallas).</li>
+          <li><strong>Oferta académica:</strong> periodo actual y fecha del último scrape de cursos.</li>
+          <li><strong>Restablecer contraseña</strong> y <strong>eliminar cuenta</strong> también están en este modal.</li>
         </ul>
       </>
     ),

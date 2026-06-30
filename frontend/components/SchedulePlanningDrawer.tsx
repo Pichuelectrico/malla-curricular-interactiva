@@ -27,7 +27,10 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { PlannedCourseEntry } from "../lib/aggregatedPlanning";
+import {
+  resolvePlannedEntriesForPlanner,
+  type PlannedCourseEntry,
+} from "../lib/aggregatedPlanningMerge";
 import { generateSchedulePDF } from "../utils/pdfGenerator";
 import { useCourseOffer, type CourseOfferRow } from "../lib/useCourseOffer";
 import { useTabbedCache } from "../lib/useTabbedCache";
@@ -302,10 +305,15 @@ function allScheduleSessions(schedules: CourseSchedule[]): ScheduleSession[] {
 }
 
 interface SchedulePlanningDrawerProps {
-  plannedEntries: PlannedCourseEntry[];
+  currentPlannedEntries: PlannedCourseEntry[];
+  allPlannedEntries?: PlannedCourseEntry[];
+  activeCurriculumId?: string;
+  multiMallaAvailable?: boolean;
+  includeOtherMallas?: boolean;
   crossMallaEnabled?: boolean;
   userId?: string;
   initialBucketCodes?: Record<string, string>;
+  onDrawerOpen?: () => void;
   onSave: (schedules: CourseSchedule[]) => void;
   exposeOpen?: (openFn: () => void) => void;
   hideFloatingButton?: boolean;
@@ -466,10 +474,15 @@ function NrcOfferInfo({
 }
 
 export default function SchedulePlanningDrawer({
-  plannedEntries,
+  currentPlannedEntries,
+  allPlannedEntries = [],
+  activeCurriculumId = "",
+  multiMallaAvailable = false,
+  includeOtherMallas = false,
   crossMallaEnabled = false,
   userId,
   initialBucketCodes,
+  onDrawerOpen,
   onSave,
   exposeOpen,
   hideFloatingButton,
@@ -481,6 +494,25 @@ export default function SchedulePlanningDrawer({
   const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const metaHydrated = useRef(false);
+
+  const plannedEntries = useMemo(
+    () =>
+      resolvePlannedEntriesForPlanner({
+        includeOtherMallas:
+          crossMallaEnabled && multiMallaAvailable && includeOtherMallas,
+        activeCurriculumId,
+        currentEntries: currentPlannedEntries,
+        allEntries: allPlannedEntries,
+      }),
+    [
+      crossMallaEnabled,
+      multiMallaAvailable,
+      includeOtherMallas,
+      activeCurriculumId,
+      currentPlannedEntries,
+      allPlannedEntries,
+    ],
+  );
 
   const cacheKey = `schedulePlannerCache_${userId ?? "anonymous"}`;
 
@@ -541,6 +573,7 @@ export default function SchedulePlanningDrawer({
       metaHydrated.current = false;
       return;
     }
+    onDrawerOpen?.();
     if (metaHydrated.current) return;
     metaHydrated.current = true;
     try {
@@ -556,7 +589,7 @@ export default function SchedulePlanningDrawer({
     } catch {
       /* ignore */
     }
-  }, [isOpen, cacheKey]);
+  }, [isOpen, cacheKey, onDrawerOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -2454,10 +2487,12 @@ export default function SchedulePlanningDrawer({
                       el 60% de las veces, pero no está publicada de momento. Gracias por
                       tu comprensión y atención.
                     </p>
-                    {crossMallaEnabled && (
+                    {crossMallaEnabled && multiMallaAvailable && (
                       <p className="mt-2">
-                        Planificar con materias de múltiples mallas (minors, doble carrera)
-                        está disponible solo con cuenta iniciada.
+                        En <strong>Configuración</strong> puedes activar
+                        &quot;Incluir materias planeadas de mis otras
+                        carreras&quot; para combinar doble carrera o minor en un
+                        solo horario.
                       </p>
                     )}
                   </AlertDescription>

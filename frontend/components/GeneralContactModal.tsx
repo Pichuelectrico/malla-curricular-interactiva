@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { X, Mail, Send, AlertTriangle, Briefcase, MessageCircle, ArrowLeft } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  X,
+  Mail,
+  Send,
+  AlertTriangle,
+  Briefcase,
+  MessageCircle,
+  ArrowLeft,
+} from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
-type ContactReason = 'problema' | 'servicios' | 'contacto';
+type ContactReason = "problema" | "servicios" | "contacto";
 
 interface GeneralContactModalProps {
   onClose: () => void;
@@ -21,32 +29,41 @@ const REASONS: {
   subject: string;
 }[] = [
   {
-    id: 'problema',
-    label: 'Reportar un problema',
-    description: 'Algo no funciona o encontraste un error en la app.',
+    id: "problema",
+    label: "Reportar un problema",
+    description: "Algo no funciona o encontraste un error en la app.",
     icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
-    subject: 'Reporte de problema - Malla Curricular',
+    subject: "Reporte de problema - Malla Curricular",
   },
   {
-    id: 'servicios',
-    label: 'Contratar mis servicios',
-    description: 'Desarrollo web, mallas curriculares u otros proyectos.',
+    id: "servicios",
+    label: "Contratar mis servicios",
+    description:
+      "Desarrollo web, Apps, Workflows, automatizaciones, u otros proyectos.",
     icon: <Briefcase className="w-5 h-5 text-blue-500" />,
-    subject: 'Solicitud de servicios',
+    subject: "Solicitud de servicios",
   },
   {
-    id: 'contacto',
-    label: 'Solo contactarme',
-    description: 'Un mensaje general, sugerencia o consulta.',
+    id: "contacto",
+    label: "Solo contactarme",
+    description: "Un mensaje general, sugerencia o consulta.",
     icon: <MessageCircle className="w-5 h-5 text-green-500" />,
-    subject: 'Contacto general - Malla Curricular',
+    subject: "Contacto general - Malla Curricular",
   },
 ];
 
-export default function GeneralContactModal({ onClose }: GeneralContactModalProps) {
-  const [step, setStep] = useState<'select' | 'form'>('select');
-  const [selectedReason, setSelectedReason] = useState<ContactReason | null>(null);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+export default function GeneralContactModal({
+  onClose,
+}: GeneralContactModalProps) {
+  const [step, setStep] = useState<"select" | "form">("select");
+  const [selectedReason, setSelectedReason] = useState<ContactReason | null>(
+    null,
+  );
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -61,7 +78,7 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
 
   const handleSelectReason = (reason: ContactReason) => {
     setSelectedReason(reason);
-    setStep('form');
+    setStep("form");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,18 +88,18 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
 
     try {
       const form = new FormData();
-      form.append('name', formData.name);
-      form.append('email', formData.email);
-      form.append('message', formData.message);
-      form.append('motivo', reasonConfig.label);
-      form.append('_subject', reasonConfig.subject);
-      form.append('_captcha', 'false');
+      form.append("name", formData.name);
+      form.append("email", formData.email);
+      form.append("message", formData.message);
+      form.append("motivo", reasonConfig.label);
+      form.append("_subject", reasonConfig.subject);
+      form.append("_captcha", "false");
 
       const response = await fetch(
-        'https://formsubmit.co/ajax/pichuelectrico@gmail.com',
+        "https://formsubmit.co/ajax/pichuelectrico@gmail.com",
         {
-          method: 'POST',
-          headers: { Accept: 'application/json' },
+          method: "POST",
+          headers: { Accept: "application/json" },
           body: form,
         },
       );
@@ -91,22 +108,23 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
 
       if (response.ok && data?.success) {
         toast({
-          title: '¡Mensaje enviado!',
-          description: 'Te responderemos lo más pronto posible.',
+          title: "¡Mensaje enviado!",
+          description: "Te responderemos lo más pronto posible.",
         });
         onClose();
       } else {
         throw new Error(
-          (data && typeof data.message === 'string' ? data.message : null) ??
-            'Error en el envío',
+          (data && typeof data.message === "string" ? data.message : null) ??
+            "Error en el envío",
         );
       }
     } catch (error) {
-      console.error('Error sending form:', error);
+      console.error("Error sending form:", error);
       toast({
-        title: 'Error al enviar',
-        description: 'Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.',
-        variant: 'destructive',
+        title: "Error al enviar",
+        description:
+          "Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.",
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -124,13 +142,18 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
                 Contáctame
               </CardTitle>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose} className="dark:hover:bg-gray-700">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="dark:hover:bg-gray-700"
+            >
               <X className="w-4 h-4" />
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          {step === 'select' ? (
+          {step === "select" ? (
             <div className="space-y-3">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 ¿En qué te puedo ayudar?
@@ -143,8 +166,12 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
                 >
                   {reason.icon}
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{reason.label}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{reason.description}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {reason.label}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {reason.description}
+                    </p>
                   </div>
                 </button>
               ))}
@@ -153,7 +180,7 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
             <form onSubmit={handleSubmit} className="space-y-4">
               <button
                 type="button"
-                onClick={() => setStep('select')}
+                onClick={() => setStep("select")}
                 className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -168,7 +195,9 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name" className="dark:text-gray-200">Nombre *</Label>
+                  <Label htmlFor="name" className="dark:text-gray-200">
+                    Nombre *
+                  </Label>
                   <Input
                     id="name"
                     name="name"
@@ -180,7 +209,9 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email" className="dark:text-gray-200">Email *</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">
+                    Email *
+                  </Label>
                   <Input
                     id="email"
                     name="email"
@@ -196,14 +227,14 @@ export default function GeneralContactModal({ onClose }: GeneralContactModalProp
 
               <div>
                 <Label htmlFor="message" className="dark:text-gray-200">
-                  Mensaje{selectedReason === 'problema' ? ' *' : ''}
+                  Mensaje{selectedReason === "problema" ? " *" : ""}
                 </Label>
                 <Textarea
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  required={selectedReason === 'problema'}
+                  required={selectedReason === "problema"}
                   className="dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none"
                   placeholder="Escribe tu mensaje aquí..."
                   rows={4}

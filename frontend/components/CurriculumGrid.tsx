@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useSupabaseAuth } from '../lib/auth';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -39,10 +39,12 @@ import {
   type DisplayCourse,
 } from '../lib/bucketFulfillment';
 import {
-  aggregatePlannedCourses,
+  loadMultiMallaPlanned,
   toPlannedEntries,
   type PlannedCourseEntry,
 } from '../lib/aggregatedPlanning';
+import { usePlannerSettings } from '../lib/usePlannerSettings';
+import { PROGRESS_CHANGED_EVENT, type ProgressChangedDetail } from '../lib/progressEvents';
 
 const MAX_SEMESTER_CREDITS = 16;
 
@@ -50,6 +52,7 @@ export default function CurriculumGrid() {
   const { isSignedIn, user, isLoading: authLoading } = useSupabaseAuth();
   const backend = useBackend();
   const { bypassCourses } = useUserBypassCourses();
+  const { includeOtherMallas } = usePlannerSettings();
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
   const [inProgressCourses, setInProgressCourses] = useState<Set<string>>(new Set());
@@ -72,7 +75,8 @@ export default function CurriculumGrid() {
   const [toolboxOpen, setToolboxOpen] = useState(false);
   const [openScheduleDrawer, setOpenScheduleDrawer] = useState<(() => void) | null>(null);
   const [openGradeEstimator, setOpenGradeEstimator] = useState<(() => void) | null>(null);
-  const [aggregatedPlanned, setAggregatedPlanned] = useState<PlannedCourseEntry[] | null>(null);
+  const [aggregatedPlanned, setAggregatedPlanned] = useState<PlannedCourseEntry[]>([]);
+  const [curriculaWithActivity, setCurriculaWithActivity] = useState(0);
   const [bucketFulfillments, setBucketFulfillments] = useState<BucketFulfillmentsMap>({});
   const [bucketModal, setBucketModal] = useState<{
     course: DisplayCourse;
@@ -411,23 +415,60 @@ export default function CurriculumGrid() {
     return m ? m[1].toUpperCase() : curriculumId.slice(0, 6).toUpperCase();
   }, [curriculumId]);
 
-  useEffect(() => {
+  const refreshMultiMallaPlanned = useCallback(async () => {
     if (!isSignedIn || !user?.id) {
-      setAggregatedPlanned(null);
+      setAggregatedPlanned([]);
+      setCurriculaWithActivity(0);
       return;
     }
-    let cancelled = false;
-    aggregatePlannedCourses(user.id)
-      .then((entries) => {
-        if (!cancelled) setAggregatedPlanned(entries);
-      })
-      .catch(() => {
-        if (!cancelled) setAggregatedPlanned(null);
-      });
-    return () => {
-      cancelled = true;
+    try {
+      const { entries, curriculaWithActivity: count } =
+        await loadMultiMallaPlanned(user.id);
+      setAggregatedPlanned(entries);
+      setCurriculaWithActivity(count);
+    } catch {
+      setAggregatedPlanned([]);
+      setCurriculaWithActivity(0);
+    }
+  }, [isSignedIn, user?.id]);
+
+  useEffect(() => {
+    void refreshMultiMallaPlanned();
+  }, [refreshMultiMallaPlanned, plannedCourses, curriculumId]);
+
+  useEffect(() => {
+    const onProgressChanged = (event: Event) => {
+      const detail = (event as CustomEvent<ProgressChangedDetail>).detail;
+      if (detail?.curriculumId && detail.curriculumId !== curriculumId) {
+        void refreshMultiMallaPlanned();
+        return;
+      }
+      void (async () => {
+        try {
+          const response = await backend.progress.loadProgress({ curriculumId });
+          if (response) {
+            setCompletedCourses(new Set(response.completedCourses || []));
+            setInProgressCourses(new Set(response.inProgressCourses || []));
+            setPlannedCourses(new Set(response.plannedCourses || []));
+            setHasWritingIntensive(response.hasWritingIntensive ?? false);
+            setBucketFulfillments(response.bucketFulfillments ?? {});
+          } else {
+            setCompletedCourses(new Set());
+            setInProgressCourses(new Set());
+            setPlannedCourses(new Set());
+            setHasWritingIntensive(false);
+            setBucketFulfillments({});
+          }
+          await refreshMultiMallaPlanned();
+        } catch {
+          /* ignore */
+        }
+      })();
     };
-  }, [isSignedIn, user?.id, plannedCourses]);
+
+    window.addEventListener(PROGRESS_CHANGED_EVENT, onProgressChanged);
+    return () => window.removeEventListener(PROGRESS_CHANGED_EVENT, onProgressChanged);
+  }, [backend, curriculumId, refreshMultiMallaPlanned]);
 
   const plannerBucketCodes = useMemo(
     () =>
@@ -437,12 +478,13 @@ export default function CurriculumGrid() {
     [bucketFulfillments],
   );
 
-  const drawerPlannedEntries = useMemo((): PlannedCourseEntry[] => {
-    if (isSignedIn && aggregatedPlanned && aggregatedPlanned.length > 0) {
-      return aggregatedPlanned;
-    }
-    return toPlannedEntries(plannedCoursesList, mallaShortLabel, curriculumId);
-  }, [isSignedIn, aggregatedPlanned, plannedCoursesList, mallaShortLabel, curriculumId]);
+  const currentPlannedEntries = useMemo(
+    (): PlannedCourseEntry[] =>
+      toPlannedEntries(plannedCoursesList, mallaShortLabel, curriculumId),
+    [plannedCoursesList, mallaShortLabel, curriculumId],
+  );
+
+  const multiMallaAvailable = isSignedIn && curriculaWithActivity >= 2;
 
   const prereqSatisfied = (prereqId: string): boolean => {
     const prereqCourse = curriculumData.courses.find((c) => c.id === prereqId);
@@ -1107,10 +1149,15 @@ export default function CurriculumGrid() {
 
       {/* Drawers without their own floating buttons; expose open functions */}
       <SchedulePlanningDrawer
-        plannedEntries={drawerPlannedEntries}
+        currentPlannedEntries={currentPlannedEntries}
+        allPlannedEntries={aggregatedPlanned}
+        activeCurriculumId={curriculumId}
+        multiMallaAvailable={multiMallaAvailable}
+        includeOtherMallas={includeOtherMallas}
         crossMallaEnabled={isSignedIn}
         userId={user?.id}
         initialBucketCodes={isSignedIn ? plannerBucketCodes : undefined}
+        onDrawerOpen={refreshMultiMallaPlanned}
         onSave={(schedules) => {
           console.log('Schedules saved:', schedules);
           toast({
