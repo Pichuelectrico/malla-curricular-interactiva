@@ -14,7 +14,7 @@ export interface ProgressData {
 }
 
 const BASE_COLUMNS =
-  'completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at';
+  'curriculum_id, completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at';
 
 function isMissingBucketColumnError(message: string): boolean {
   return /bucket_fulfillments/i.test(message);
@@ -140,4 +140,20 @@ export async function loadAllUserProgress(userId: string): Promise<ProgressData[
   return (data ?? []).map((row) =>
     mapProgressRow(row.curriculum_id as string, row as Record<string, unknown>),
   );
+}
+
+export async function deleteProgressForCurriculum(
+  userId: string,
+  curriculumId: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from('user_progress')
+    .delete()
+    .eq('user_id', userId)
+    .eq('curriculum_id', curriculumId);
+
+  if (error) {
+    console.error('Error deleting curriculum progress:', error.message);
+    throw error;
+  }
 }

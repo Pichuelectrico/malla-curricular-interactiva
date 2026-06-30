@@ -48495,6 +48495,62 @@ function AlertDescription({
     }
   );
 }
+function normalizeCurriculumId(curriculumId) {
+  if (!curriculumId) return "";
+  const m = curriculumId.match(/Malla(?:-academica)?-([A-Z0-9]+)/i);
+  if (m) return m[1].toUpperCase();
+  const byCatalog = availableCurricula.find(
+    (c) => c.id === curriculumId || c.slug === curriculumId
+  );
+  if (byCatalog) {
+    return byCatalog.slug.replace(/^malla-/, "").toUpperCase();
+  }
+  return curriculumId.toUpperCase();
+}
+function mergePlannedEntriesWithDedup(entries, activeCurriculumId) {
+  const activeNorm = normalizeCurriculumId(activeCurriculumId);
+  const byCourseId = /* @__PURE__ */ new Map();
+  for (const entry of entries) {
+    const list = byCourseId.get(entry.course.id) ?? [];
+    list.push(entry);
+    byCourseId.set(entry.course.id, list);
+  }
+  const picked = [];
+  for (const list of byCourseId.values()) {
+    const activeEntry = list.find(
+      (e) => normalizeCurriculumId(e.curriculumId) === activeNorm
+    );
+    picked.push(activeEntry ?? list[0]);
+  }
+  picked.sort((a, b) => {
+    const aActive = normalizeCurriculumId(a.curriculumId) === activeNorm ? 0 : 1;
+    const bActive = normalizeCurriculumId(b.curriculumId) === activeNorm ? 0 : 1;
+    if (aActive !== bActive) return aActive - bActive;
+    return a.course.code.localeCompare(b.course.code);
+  });
+  return picked;
+}
+function resolvePlannedEntriesForPlanner({
+  includeOtherMallas,
+  activeCurriculumId,
+  currentEntries,
+  allEntries
+}) {
+  if (!includeOtherMallas) {
+    return currentEntries;
+  }
+  if (allEntries.length === 0) {
+    return currentEntries;
+  }
+  return mergePlannedEntriesWithDedup(allEntries, activeCurriculumId);
+}
+function toPlannedEntries(courses2, curriculumLabel, curriculumId) {
+  return courses2.map((course) => ({
+    course,
+    curriculumId,
+    curriculumLabel: curriculumLabel ?? ""
+  }));
+}
 function useCourseOffer() {
   const [offerMap, setOfferMap] = reactExports.useState(/* @__PURE__ */ new Map());
   const [isLoading, setIsLoading] = reactExports.useState(false);
@@ -49330,10 +49386,15 @@ function NrcOfferInfo({
   ] });
 }
 function SchedulePlanningDrawer({
-  plannedEntries,
+  currentPlannedEntries,
+  allPlannedEntries = [],
+  activeCurriculumId = "",
+  multiMallaAvailable = false,
+  includeOtherMallas = false,
   crossMallaEnabled = false,
   userId,
   initialBucketCodes,
+  onDrawerOpen,
   onSave,
   exposeOpen,
   hideFloatingButton
@@ -49345,6 +49406,22 @@ function SchedulePlanningDrawer({
   const [renamingTabId, setRenamingTabId] = reactExports.useState(null);
   const [renameValue, setRenameValue] = reactExports.useState("");
   const metaHydrated = reactExports.useRef(false);
+  const plannedEntries = reactExports.useMemo(
+    () => resolvePlannedEntriesForPlanner({
+      includeOtherMallas: crossMallaEnabled && multiMallaAvailable && includeOtherMallas,
+      activeCurriculumId,
+      currentEntries: currentPlannedEntries,
+      allEntries: allPlannedEntries
+    }),
+    [
+      crossMallaEnabled,
+      multiMallaAvailable,
+      includeOtherMallas,
+      activeCurriculumId,
+      currentPlannedEntries,
+      allPlannedEntries
+    ]
+  );
   const cacheKey = `schedulePlannerCache_${userId ?? "anonymous"}`;
   const createDefaultSchedules = reactExports.useCallback(
     () => plannedEntries.map(
@@ -49391,6 +49468,7 @@ function SchedulePlanningDrawer({
       metaHydrated.current = false;
       return;
     }
+    onDrawerOpen == null ? void 0 : onDrawerOpen();
     if (metaHydrated.current) return;
     metaHydrated.current = true;
     try {
@@ -49402,7 +49480,7 @@ function SchedulePlanningDrawer({
       }
     } catch {
     }
-  }, [isOpen, cacheKey]);
+  }, [isOpen, cacheKey, onDrawerOpen]);
   reactExports.useEffect(() => {
     if (!isOpen) return;
     try {
@@ -50956,7 +51034,11 @@ function SchedulePlanningDrawer({
               /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDescription, { className: "text-amber-800 dark:text-amber-200/90", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Este planeador sirve únicamente para organizar tu horario de forma visual. Por ahora no registra materias en el sistema académico en tu nombre: eso requiere tus credenciales personales y aún no contamos con autorización de la USFQ para conectar con ese servicio." }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Existe una automatización de autoregistro que funciona aproximadamente el 60% de las veces, pero no está publicada de momento. Gracias por tu comprensión y atención." }),
-                crossMallaEnabled && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Planificar con materias de múltiples mallas (minors, doble carrera) está disponible solo con cuenta iniciada." })
+                crossMallaEnabled && multiMallaAvailable && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2", children: [
+                  "En ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Configuración" }),
+                  ' puedes activar "Incluir materias planeadas de mis otras carreras" para combinar doble carrera o minor en un solo horario.'
+                ] })
               ] })
             ] })
           ] }),
@@ -51735,7 +51817,7 @@ const defaultCurriculumData = {
   "Last-Modified": "2026-06-08T21:53:55.236Z",
   courses
 };
-const BASE_COLUMNS = "completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at";
+const BASE_COLUMNS = "curriculum_id, completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at";
 function isMissingBucketColumnError(message) {
   return /bucket_fulfillments/i.test(message);
 }
@@ -51813,6 +51895,13 @@ async function loadAllUserProgress(userId) {
   return (data ?? []).map(
     (row) => mapProgressRow(row.curriculum_id, row)
   );
+}
+async function deleteProgressForCurriculum(userId, curriculumId) {
+  const { error } = await supabase.from("user_progress").delete().eq("user_id", userId).eq("curriculum_id", curriculumId);
+  if (error) {
+    console.error("Error deleting curriculum progress:", error.message);
+    throw error;
+  }
 }
 const mockBackendClient = {
   progress: {
@@ -51903,37 +51992,84 @@ function useBackend() {
 function normalizeCourseCode(input) {
   return input.replace(/[\s-]/g, "").toUpperCase();
 }
+function isMissingIncludeOtherMallasColumn(message) {
+  return /include_other_mallas/i.test(message);
+}
 async function loadUserSettings(userId) {
-  const { data, error } = await supabase.from("user_settings").select("bypass_courses").eq("user_id", userId).maybeSingle();
+  let { data, error } = await supabase.from("user_settings").select("bypass_courses, include_other_mallas").eq("user_id", userId).maybeSingle();
+  if (error && isMissingIncludeOtherMallasColumn(error.message)) {
+    ({ data, error } = await supabase.from("user_settings").select("bypass_courses").eq("user_id", userId).maybeSingle());
+  }
   if (error) {
     console.error("Error loading user settings:", error.message);
     throw error;
   }
   return {
-    bypassCourses: (data == null ? void 0 : data.bypass_courses) ?? []
+    bypassCourses: (data == null ? void 0 : data.bypass_courses) ?? [],
+    includeOtherMallas: (data == null ? void 0 : data.include_other_mallas) ?? false
   };
 }
 async function saveBypassCourses(userId, bypassCourses) {
-  const { error } = await supabase.from("user_settings").upsert(
-    {
-      user_id: userId,
+  const { data: existing } = await supabase.from("user_settings").select("user_id").eq("user_id", userId).maybeSingle();
+  if (existing) {
+    const { error: error2 } = await supabase.from("user_settings").update({
       bypass_courses: bypassCourses,
       updated_at: (/* @__PURE__ */ new Date()).toISOString()
-    },
-    { onConflict: "user_id" }
-  );
+    }).eq("user_id", userId);
+    if (error2) {
+      console.error("Error saving bypass courses:", error2.message, error2);
+      throw new Error(error2.message);
+    }
+    return;
+  }
+  const { error } = await supabase.from("user_settings").insert({
+    user_id: userId,
+    bypass_courses: bypassCourses,
+    include_other_mallas: false,
+    updated_at: (/* @__PURE__ */ new Date()).toISOString()
+  });
   if (error) {
     console.error("Error saving bypass courses:", error.message, error);
     throw new Error(error.message);
   }
 }
-const QUERY_KEY = "userBypassCourses";
+async function saveIncludeOtherMallas(userId, includeOtherMallas) {
+  const { data: existing } = await supabase.from("user_settings").select("user_id").eq("user_id", userId).maybeSingle();
+  if (existing) {
+    let { error: error2 } = await supabase.from("user_settings").update({
+      include_other_mallas: includeOtherMallas,
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    }).eq("user_id", userId);
+    if (error2 && isMissingIncludeOtherMallasColumn(error2.message)) {
+      return;
+    }
+    if (error2) {
+      console.error("Error saving planner setting:", error2.message, error2);
+      throw new Error(error2.message);
+    }
+    return;
+  }
+  const { error } = await supabase.from("user_settings").insert({
+    user_id: userId,
+    bypass_courses: [],
+    include_other_mallas: includeOtherMallas,
+    updated_at: (/* @__PURE__ */ new Date()).toISOString()
+  });
+  if (error && isMissingIncludeOtherMallasColumn(error.message)) {
+    return;
+  }
+  if (error) {
+    console.error("Error saving planner setting:", error.message, error);
+    throw new Error(error.message);
+  }
+}
+const QUERY_KEY$1 = "userSettings";
 function useUserBypassCourses() {
   const { isSignedIn, user } = useSupabaseAuth();
   const queryClient2 = useQueryClient();
   const userId = (user == null ? void 0 : user.id) ?? null;
   const { data, isLoading } = useQuery({
-    queryKey: [QUERY_KEY, userId],
+    queryKey: [QUERY_KEY$1, userId],
     queryFn: () => loadUserSettings(userId),
     enabled: isSignedIn && !!userId,
     staleTime: 3e4
@@ -51945,7 +52081,7 @@ function useUserBypassCourses() {
   const mutation = useMutation({
     mutationFn: (codes) => saveBypassCourses(userId, codes),
     onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: [QUERY_KEY, userId] });
+      queryClient2.invalidateQueries({ queryKey: [QUERY_KEY$1, userId] });
     }
   });
   const addBypassCourse = async (rawCode) => {
@@ -51973,41 +52109,61 @@ function useUserBypassCourses() {
 }
 const curriculumCache = /* @__PURE__ */ new Map();
 async function loadCoursesForCurriculum(curriculumId) {
-  if (curriculumCache.has(curriculumId)) {
-    return curriculumCache.get(curriculumId);
+  const norm = normalizeCurriculumId(curriculumId);
+  if (curriculumCache.has(norm)) {
+    return curriculumCache.get(norm);
   }
   for (const c of availableCurricula) {
+    const slugCode = c.slug.replace(/^malla-/, "").toUpperCase();
+    if (c.id === curriculumId || slugCode === norm) {
+      try {
+        const mod = await c.dataLoader();
+        const data = mod.default;
+        const courses2 = data.courses ?? [];
+        curriculumCache.set(norm, courses2);
+        return courses2;
+      } catch {
+      }
+    }
     try {
       const mod = await c.dataLoader();
       const data = mod.default;
       const sf = data.source_file ?? c.id;
-      if (sf === curriculumId || c.id === curriculumId) {
+      if (sf === curriculumId || normalizeCurriculumId(sf) === norm) {
         const courses2 = data.courses ?? [];
-        curriculumCache.set(curriculumId, courses2);
+        curriculumCache.set(norm, courses2);
         return courses2;
       }
     } catch {
     }
   }
-  curriculumCache.set(curriculumId, []);
+  curriculumCache.set(norm, []);
   return [];
 }
-function shortLabelFromCurriculumId(curriculumId) {
-  const match = curriculumId.match(/Malla(?:-academica)?-([A-Z0-9]+)/i);
-  if (match) return match[1].toUpperCase();
-  return curriculumId.slice(0, 6).toUpperCase();
+function countCurriculaWithPlanned(rows) {
+  return rows.filter((r2) => {
+    var _a2;
+    return (((_a2 = r2.plannedCourses) == null ? void 0 : _a2.length) ?? 0) > 0;
+  }).length;
 }
-async function aggregatePlannedCourses(userId) {
+function countCurriculaWithActivity(rows) {
+  return rows.filter(
+    (r2) => {
+      var _a2, _b2, _c2;
+      return (((_a2 = r2.completedCourses) == null ? void 0 : _a2.length) ?? 0) > 0 || (((_b2 = r2.inProgressCourses) == null ? void 0 : _b2.length) ?? 0) > 0 || (((_c2 = r2.plannedCourses) == null ? void 0 : _c2.length) ?? 0) > 0 || r2.hasWritingIntensive || Object.keys(r2.bucketFulfillments ?? {}).length > 0;
+    }
+  ).length;
+}
+async function aggregatePlannedFromRows(rows) {
   var _a2;
-  const rows = await loadAllUserProgress(userId);
   const entries = [];
   const seen = /* @__PURE__ */ new Set();
   for (const row of rows) {
     if (!((_a2 = row.plannedCourses) == null ? void 0 : _a2.length)) continue;
     const courses2 = await loadCoursesForCurriculum(row.curriculumId);
-    const label = shortLabelFromCurriculumId(row.curriculumId);
+    const label = normalizeCurriculumId(row.curriculumId);
     for (const courseId of row.plannedCourses) {
-      const key = `${row.curriculumId}:${courseId}`;
+      const key = `${normalizeCurriculumId(row.curriculumId)}:${courseId}`;
       if (seen.has(key)) continue;
       const course = courses2.find((c) => c.id === courseId);
       if (!course) continue;
@@ -52021,18 +52177,55 @@ async function aggregatePlannedCourses(userId) {
   }
   return entries;
 }
-function toPlannedEntries(courses2, curriculumLabel, curriculumId) {
-  return courses2.map((course) => ({
-    course,
-    curriculumId,
-    curriculumLabel: curriculumLabel ?? ""
-  }));
+async function loadMultiMallaPlanned(userId) {
+  const rows = await loadAllUserProgress(userId);
+  const entries = await aggregatePlannedFromRows(rows);
+  return {
+    entries,
+    curriculaWithPlanned: countCurriculaWithPlanned(rows),
+    curriculaWithActivity: countCurriculaWithActivity(rows)
+  };
+}
+const QUERY_KEY = "userSettings";
+function usePlannerSettings() {
+  const { isSignedIn, user } = useSupabaseAuth();
+  const queryClient2 = useQueryClient();
+  const userId = (user == null ? void 0 : user.id) ?? null;
+  const { data, isLoading } = useQuery({
+    queryKey: [QUERY_KEY, userId],
+    queryFn: () => loadUserSettings(userId),
+    enabled: isSignedIn && !!userId,
+    staleTime: 3e4
+  });
+  const mutation = useMutation({
+    mutationFn: (value) => saveIncludeOtherMallas(userId, value),
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: [QUERY_KEY, userId] });
+    }
+  });
+  const setIncludeOtherMallas = async (value) => {
+    if (!userId) return;
+    await mutation.mutateAsync(value);
+  };
+  return {
+    includeOtherMallas: (data == null ? void 0 : data.includeOtherMallas) ?? false,
+    isLoading: isSignedIn && isLoading,
+    isSaving: mutation.isPending,
+    setIncludeOtherMallas
+  };
+}
+const PROGRESS_CHANGED_EVENT = "malla-progress-changed";
+function emitProgressChanged(detail) {
+  window.dispatchEvent(
+    new CustomEvent(PROGRESS_CHANGED_EVENT, { detail })
+  );
 }
 const MAX_SEMESTER_CREDITS = 16;
 function CurriculumGrid() {
   const { isSignedIn, user, isLoading: authLoading } = useSupabaseAuth();
   const backend = useBackend();
   const { bypassCourses } = useUserBypassCourses();
+  const { includeOtherMallas } = usePlannerSettings();
   const [curriculumData, setCurriculumData] = reactExports.useState(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = reactExports.useState(/* @__PURE__ */ new Set());
   const [inProgressCourses, setInProgressCourses] = reactExports.useState(/* @__PURE__ */ new Set());
@@ -52053,7 +52246,8 @@ function CurriculumGrid() {
   const [toolboxOpen, setToolboxOpen] = reactExports.useState(false);
   const [openScheduleDrawer, setOpenScheduleDrawer] = reactExports.useState(null);
   const [openGradeEstimator, setOpenGradeEstimator] = reactExports.useState(null);
-  const [aggregatedPlanned, setAggregatedPlanned] = reactExports.useState(null);
+  const [aggregatedPlanned, setAggregatedPlanned] = reactExports.useState([]);
+  const [curriculaWithActivity, setCurriculaWithActivity] = reactExports.useState(0);
   const [bucketFulfillments, setBucketFulfillments] = reactExports.useState({});
   const [bucketModal, setBucketModal] = reactExports.useState(null);
   const curriculumId = curriculumData.source_file || "Malla-CMP";
@@ -52325,33 +52519,66 @@ function CurriculumGrid() {
     const m = curriculumId.match(/Malla(?:-academica)?-([A-Z0-9]+)/i);
     return m ? m[1].toUpperCase() : curriculumId.slice(0, 6).toUpperCase();
   }, [curriculumId]);
-  reactExports.useEffect(() => {
+  const refreshMultiMallaPlanned = reactExports.useCallback(async () => {
     if (!isSignedIn || !(user == null ? void 0 : user.id)) {
-      setAggregatedPlanned(null);
+      setAggregatedPlanned([]);
+      setCurriculaWithActivity(0);
       return;
     }
-    let cancelled = false;
-    aggregatePlannedCourses(user.id).then((entries) => {
-      if (!cancelled) setAggregatedPlanned(entries);
-    }).catch(() => {
-      if (!cancelled) setAggregatedPlanned(null);
-    });
-    return () => {
-      cancelled = true;
+    try {
+      const { entries, curriculaWithActivity: count2 } = await loadMultiMallaPlanned(user.id);
+      setAggregatedPlanned(entries);
+      setCurriculaWithActivity(count2);
+    } catch {
+      setAggregatedPlanned([]);
+      setCurriculaWithActivity(0);
+    }
+  }, [isSignedIn, user == null ? void 0 : user.id]);
+  reactExports.useEffect(() => {
+    void refreshMultiMallaPlanned();
+  }, [refreshMultiMallaPlanned, plannedCourses, curriculumId]);
+  reactExports.useEffect(() => {
+    const onProgressChanged = (event) => {
+      const detail = event.detail;
+      if ((detail == null ? void 0 : detail.curriculumId) && detail.curriculumId !== curriculumId) {
+        void refreshMultiMallaPlanned();
+        return;
+      }
+      void (async () => {
+        try {
+          const response = await backend.progress.loadProgress({ curriculumId });
+          if (response) {
+            setCompletedCourses(new Set(response.completedCourses || []));
+            setInProgressCourses(new Set(response.inProgressCourses || []));
+            setPlannedCourses(new Set(response.plannedCourses || []));
+            setHasWritingIntensive(response.hasWritingIntensive ?? false);
+            setBucketFulfillments(response.bucketFulfillments ?? {});
+          } else {
+            setCompletedCourses(/* @__PURE__ */ new Set());
+            setInProgressCourses(/* @__PURE__ */ new Set());
+            setPlannedCourses(/* @__PURE__ */ new Set());
+            setHasWritingIntensive(false);
+            setBucketFulfillments({});
+          }
+          await refreshMultiMallaPlanned();
+        } catch {
+        }
+      })();
     };
-  }, [isSignedIn, user == null ? void 0 : user.id, plannedCourses]);
+    window.addEventListener(PROGRESS_CHANGED_EVENT, onProgressChanged);
+    return () => window.removeEventListener(PROGRESS_CHANGED_EVENT, onProgressChanged);
+  }, [backend, curriculumId, refreshMultiMallaPlanned]);
   const plannerBucketCodes = reactExports.useMemo(
     () => Object.fromEntries(
       Object.entries(bucketFulfillments).map(([id, f]) => [id, f.offerCourseCode])
     ),
     [bucketFulfillments]
   );
-  const drawerPlannedEntries = reactExports.useMemo(() => {
-    if (isSignedIn && aggregatedPlanned && aggregatedPlanned.length > 0) {
-      return aggregatedPlanned;
-    }
-    return toPlannedEntries(plannedCoursesList, mallaShortLabel, curriculumId);
-  }, [isSignedIn, aggregatedPlanned, plannedCoursesList, mallaShortLabel, curriculumId]);
+  const currentPlannedEntries = reactExports.useMemo(
+    () => toPlannedEntries(plannedCoursesList, mallaShortLabel, curriculumId),
+    [plannedCoursesList, mallaShortLabel, curriculumId]
+  );
+  const multiMallaAvailable = isSignedIn && curriculaWithActivity >= 2;
   const prereqSatisfied = (prereqId) => {
     const prereqCourse = curriculumData.courses.find((c) => c.id === prereqId);
     if (isSignedIn && prereqCourse && requiresOfferCourseCode(prereqCourse)) {
@@ -52928,10 +53155,15 @@ function CurriculumGrid() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       SchedulePlanningDrawer,
       {
-        plannedEntries: drawerPlannedEntries,
+        currentPlannedEntries,
+        allPlannedEntries: aggregatedPlanned,
+        activeCurriculumId: curriculumId,
+        multiMallaAvailable,
+        includeOtherMallas,
         crossMallaEnabled: isSignedIn,
         userId: user == null ? void 0 : user.id,
         initialBucketCodes: isSignedIn ? plannerBucketCodes : void 0,
+        onDrawerOpen: refreshMultiMallaPlanned,
         onSave: (schedules) => {
           console.log("Schedules saved:", schedules);
           toast2({
@@ -53381,6 +53613,79 @@ function useOfferMetadata() {
   }, [load]);
   return { metadata, isLoading, error, reload: load };
 }
+function resolveCareerMeta(curriculumId) {
+  const norm = normalizeCurriculumId(curriculumId);
+  const match = availableCurricula.find((c) => {
+    const slugCode = c.slug.replace(/^malla-/, "").toUpperCase();
+    return c.id === curriculumId || slugCode === norm;
+  });
+  if (match) {
+    return {
+      name: match.name,
+      label: norm,
+      totalCourses: match.courses
+    };
+  }
+  return {
+    name: curriculumId,
+    label: norm,
+    totalCourses: 0
+  };
+}
+function rowHasActivity(row) {
+  return row.completedCourses.length > 0 || row.inProgressCourses.length > 0 || row.plannedCourses.length > 0 || row.hasWritingIntensive || Object.keys(row.bucketFulfillments ?? {}).length > 0;
+}
+async function loadCurriculumProgressSummaries(userId) {
+  const rows = await loadAllUserProgress(userId);
+  const summaries = [];
+  for (const row of rows) {
+    if (!rowHasActivity(row)) continue;
+    const meta = resolveCareerMeta(row.curriculumId);
+    const completedCount = row.completedCourses.length;
+    const percentComplete = meta.totalCourses > 0 ? Math.min(100, Math.round(completedCount / meta.totalCourses * 100)) : 0;
+    summaries.push({
+      curriculumId: row.curriculumId,
+      curriculumLabel: meta.label,
+      careerName: meta.name,
+      totalCourses: meta.totalCourses,
+      completedCount,
+      inProgressCount: row.inProgressCourses.length,
+      plannedCount: row.plannedCourses.length,
+      percentComplete
+    });
+  }
+  summaries.sort((a, b) => a.careerName.localeCompare(b.careerName, "es"));
+  return summaries;
+}
+async function loadCourseIdsForCurriculum(curriculumId) {
+  const norm = normalizeCurriculumId(curriculumId);
+  for (const c of availableCurricula) {
+    const slugCode = c.slug.replace(/^malla-/, "").toUpperCase();
+    if (c.id !== curriculumId && slugCode !== norm) continue;
+    try {
+      const mod = await c.dataLoader();
+      const data = mod.default;
+      if (data.source_file === curriculumId || normalizeCurriculumId(data.source_file ?? c.id) === norm) {
+        return (data.courses ?? []).map((course) => course.id);
+      }
+    } catch {
+    }
+  }
+  return [];
+}
+async function cleanupLocalProgressArtifacts(curriculumId) {
+  try {
+    localStorage.removeItem(`hasWritingIntensive:${curriculumId}`);
+    const courseIds = new Set(await loadCourseIdsForCurriculum(curriculumId));
+    if (courseIds.size === 0) return;
+    const raw = localStorage.getItem("globalCompletedCourses");
+    if (!raw) return;
+    const globalCompleted = JSON.parse(raw);
+    const next = globalCompleted.filter((id) => !courseIds.has(id));
+    localStorage.setItem("globalCompletedCourses", JSON.stringify(next));
+  } catch {
+  }
+}
 function formatDate$1(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("es-EC", {
@@ -53395,9 +53700,47 @@ function SettingsModal({
 }) {
   const { user, signOut } = useSupabaseAuth();
   const { metadata, isLoading: metaLoading } = useOfferMetadata();
+  const {
+    includeOtherMallas,
+    isLoading: plannerSettingsLoading,
+    isSaving: plannerSettingsSaving,
+    setIncludeOtherMallas
+  } = usePlannerSettings();
   const [deleteStep, setDeleteStep] = reactExports.useState(0);
   const [deleting, setDeleting] = reactExports.useState(false);
   const [deleteError, setDeleteError] = reactExports.useState(null);
+  const [careerSummaries, setCareerSummaries] = reactExports.useState([]);
+  const [careersLoading, setCareersLoading] = reactExports.useState(false);
+  const [multiMallaAvailable, setMultiMallaAvailable] = reactExports.useState(false);
+  const [confirmDeleteCareerId, setConfirmDeleteCareerId] = reactExports.useState(null);
+  const [deletingCareerId, setDeletingCareerId] = reactExports.useState(null);
+  const [careerDeleteError, setCareerDeleteError] = reactExports.useState(null);
+  const refreshCareerSummaries = reactExports.useCallback(async () => {
+    if (!(user == null ? void 0 : user.id)) {
+      setCareerSummaries([]);
+      setMultiMallaAvailable(false);
+      return;
+    }
+    setCareersLoading(true);
+    try {
+      const [summaries, rows] = await Promise.all([
+        loadCurriculumProgressSummaries(user.id),
+        loadAllUserProgress(user.id)
+      ]);
+      setCareerSummaries(summaries);
+      setMultiMallaAvailable(countCurriculaWithActivity(rows) >= 2);
+    } catch (err) {
+      console.error("Error loading career summaries:", err);
+      setCareerSummaries([]);
+      setMultiMallaAvailable(false);
+    } finally {
+      setCareersLoading(false);
+    }
+  }, [user == null ? void 0 : user.id]);
+  reactExports.useEffect(() => {
+    if (!open) return;
+    void refreshCareerSummaries();
+  }, [open, refreshCareerSummaries]);
   if (!open) return null;
   const handlePasswordReset = () => {
     onOpenChange(false);
@@ -53425,15 +53768,40 @@ function SettingsModal({
       setDeleteStep(0);
     }
   };
+  const handleDeleteCareerProgress = async (curriculumId) => {
+    if (!(user == null ? void 0 : user.id)) return;
+    if (confirmDeleteCareerId !== curriculumId) {
+      setConfirmDeleteCareerId(curriculumId);
+      setCareerDeleteError(null);
+      return;
+    }
+    setDeletingCareerId(curriculumId);
+    setCareerDeleteError(null);
+    try {
+      await deleteProgressForCurriculum(user.id, curriculumId);
+      await cleanupLocalProgressArtifacts(curriculumId);
+      setConfirmDeleteCareerId(null);
+      await refreshCareerSummaries();
+      emitProgressChanged({ curriculumId });
+    } catch (err) {
+      setCareerDeleteError(
+        err instanceof Error ? err.message : "No se pudo eliminar el progreso"
+      );
+    } finally {
+      setDeletingCareerId(null);
+    }
+  };
   const handleClose = () => {
     setDeleteStep(0);
     setDeleteError(null);
+    setConfirmDeleteCareerId(null);
+    setCareerDeleteError(null);
     onOpenChange(false);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-black/50", onClick: handleClose }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "w-5 h-5 text-gray-600 dark:text-gray-400" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Configuración" })
@@ -53447,7 +53815,7 @@ function SettingsModal({
           }
         )
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 space-y-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 space-y-6 overflow-y-auto", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300", children: "Cuenta" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-600 dark:text-gray-400", children: user == null ? void 0 : user.email }),
@@ -53465,6 +53833,97 @@ function SettingsModal({
           )
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GraduationCap, { className: "w-4 h-4" }),
+            "Progreso por carrera"
+          ] }),
+          careersLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-gray-500", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-4 h-4 animate-spin" }),
+            "Cargando progreso…"
+          ] }) : careerSummaries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: "Aún no hay progreso guardado en ninguna malla." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", children: careerSummaries.map((career) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: "rounded-lg border border-gray-200 dark:border-gray-600 p-3 space-y-2",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium text-gray-900 dark:text-white truncate", children: career.careerName }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+                      career.curriculumLabel,
+                      career.totalCourses > 0 ? ` · ${career.completedCount}/${career.totalCourses} materias` : ""
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-semibold text-blue-600 dark:text-blue-400 flex-shrink-0", children: [
+                    career.percentComplete,
+                    "%"
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Progress, { value: career.percentComplete, className: "h-2" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+                  career.completedCount,
+                  " completadas · ",
+                  career.inProgressCount,
+                  " cursando ·",
+                  " ",
+                  career.plannedCount,
+                  " planeadas"
+                ] }),
+                confirmDeleteCareerId === career.curriculumId && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-700 dark:text-amber-300", children: "¿Eliminar todo el progreso de esta carrera? No se puede deshacer." }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Button,
+                  {
+                    variant: "outline",
+                    size: "sm",
+                    disabled: deletingCareerId === career.curriculumId,
+                    onClick: () => handleDeleteCareerProgress(career.curriculumId),
+                    className: "w-full gap-2 justify-start text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20",
+                    children: [
+                      deletingCareerId === career.curriculumId ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-4 h-4 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-4 h-4" }),
+                      confirmDeleteCareerId === career.curriculumId ? "Confirmar eliminación" : "Eliminar progreso de esta carrera"
+                    ]
+                  }
+                ),
+                confirmDeleteCareerId === career.curriculumId && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Button,
+                  {
+                    variant: "ghost",
+                    size: "sm",
+                    className: "w-full",
+                    onClick: () => setConfirmDeleteCareerId(null),
+                    children: "Cancelar"
+                  }
+                )
+              ]
+            },
+            career.curriculumId
+          )) }),
+          careerDeleteError && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-red-600 dark:text-red-400", children: careerDeleteError })
+        ] }),
+        multiMallaAvailable && /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3 pt-2 border-t border-gray-200 dark:border-gray-700", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300", children: "Planificador de horario" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "flex items-start gap-2 cursor-pointer rounded-md border border-blue-200 bg-blue-50/80 dark:border-blue-800 dark:bg-blue-950/30 px-3 py-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Checkbox,
+              {
+                checked: includeOtherMallas,
+                disabled: plannerSettingsLoading || plannerSettingsSaving,
+                onCheckedChange: (checked) => {
+                  void setIncludeOtherMallas(checked === true);
+                },
+                className: "mt-0.5"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm text-blue-900 dark:text-blue-100", children: [
+              "Incluir materias planeadas de mis otras carreras",
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "block text-xs font-normal text-blue-700/90 dark:text-blue-200/80 mt-0.5", children: [
+                "Combina doble carrera o minor en un solo horario (usa materias en modo ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Planeadas" }),
+                "). Si una materia está planeada en ambas mallas, se usa la de la malla activa."
+              ] })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-3 pt-2 border-t border-gray-200 dark:border-gray-700", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-4 h-4" }),
             "Oferta académica"
@@ -55262,7 +55721,7 @@ const REASONS = [
   {
     id: "servicios",
     label: "Contratar mis servicios",
-    description: "Desarrollo web, mallas curriculares u otros proyectos.",
+    description: "Desarrollo web, Apps, Workflows, automatizaciones, u otros proyectos.",
     icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Briefcase, { className: "w-5 h-5 text-blue-500" }),
     subject: "Solicitud de servicios"
   },
@@ -55274,10 +55733,18 @@ const REASONS = [
     subject: "Contacto general - Malla Curricular"
   }
 ];
-function GeneralContactModal({ onClose }) {
+function GeneralContactModal({
+  onClose
+}) {
   const [step, setStep] = reactExports.useState("select");
-  const [selectedReason, setSelectedReason] = reactExports.useState(null);
-  const [formData, setFormData] = reactExports.useState({ name: "", email: "", message: "" });
+  const [selectedReason, setSelectedReason] = reactExports.useState(
+    null
+  );
+  const [formData, setFormData] = reactExports.useState({
+    name: "",
+    email: "",
+    message: ""
+  });
   const [isSubmitting, setIsSubmitting] = reactExports.useState(false);
   const { toast: toast2 } = useToast();
   const reasonConfig = REASONS.find((r2) => r2.id === selectedReason);
@@ -55338,7 +55805,16 @@ function GeneralContactModal({ onClose }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-5 h-5 text-blue-600 dark:text-blue-400" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-xl font-bold text-gray-800 dark:text-white", children: "Contáctame" })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onClose, className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          variant: "ghost",
+          size: "sm",
+          onClick: onClose,
+          className: "dark:hover:bg-gray-700",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" })
+        }
+      )
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: step === "select" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-600 dark:text-gray-400 mb-4", children: "¿En qué te puedo ayudar?" }),
@@ -55624,7 +56100,12 @@ const SECTIONS = [
         /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Haz clic en una materia para marcarla según el modo activo." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Las materias bloqueadas (grises) requieren cumplir prerequisitos primero." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "El límite es de 16 créditos por semestre en modos Cursando y Planeada." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Tu progreso se guarda automáticamente si tienes sesión iniciada." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Tu progreso se guarda automáticamente si tienes sesión iniciada." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "En ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Configuración" }),
+          " (menú de tu cuenta) puedes ver el avance de cada carrera y eliminar el progreso de una malla sin borrar tu cuenta."
+        ] })
       ] })
     ] })
   },
@@ -55706,12 +56187,21 @@ const SECTIONS = [
     title: "Uso del planificador",
     icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Calendar, { className: "w-4 h-4" }),
     content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "El planificador de horarios te ayuda a armar tu semestre con las materias que tienes marcadas como cursando o planeada." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+        "El planificador de horarios te ayuda a armar tu semestre con las materias que tienes marcadas como ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "planeadas" }),
+        "."
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Abre el planificador desde el botón flotante de herramientas (llave inglesa) en la esquina inferior." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Arrastra materias al calendario semanal para organizar tu horario." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Detecta conflictos de horario automáticamente." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Puedes planificar con materias de múltiples mallas si tienes doble carrera o minor." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Asigna NRCs en modo automático o arrastra bloques al calendario en modo manual." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Detecta conflictos de horario automáticamente (incluye teoría, LAB y EJ)." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Puedes crear varias opciones de horario (Opción A, B, C) dentro del planificador." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Si tienes doble carrera o minor, activa la combinación de mallas desde ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Configuración" }),
+          " (ver sección correspondiente)."
+        ] })
       ] })
     ] })
   },
@@ -55742,10 +56232,74 @@ const SECTIONS = [
     content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Si estás cursando doble carrera o un minor, puedes combinar materias de varias mallas en el planificador." }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Selecciona cada malla por separado y marca tu progreso en cada una." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Selecciona cada malla por separado y marca tu progreso en cada una (modo ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Planeadas" }),
+          " para el planificador)."
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Las materias completadas en una malla pueden desbloquear prerequisitos en otra (overlay global)." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "En el planificador, activa la opción de planificar con materias de múltiples mallas." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Esto te permite ver conflictos de horario entre materias de distintas carreras." })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Abre ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Configuración" }),
+          " desde el menú de tu cuenta (arriba a la derecha)."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "En ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Progreso por carrera" }),
+          " verás el porcentaje completado, cursando y planeadas de cada malla."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Activa ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Incluir materias planeadas de mis otras carreras" }),
+          " si tienes planeadas en dos o más carreras."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Si una materia está planeada en ambas mallas, el planificador usa la de la ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "malla activa" }),
+          "."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Los conflictos de horario muestran de qué carrera viene cada materia." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Puedes ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "eliminar el progreso" }),
+          " de una carrera específica desde Configuración sin borrar tu cuenta."
+        ] })
+      ] })
+    ] })
+  },
+  {
+    id: "configuracion",
+    title: "Configuración de cuenta",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+        "El menú de ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Configuración" }),
+        " está en tu cuenta (arriba a la derecha cuando iniciaste sesión)."
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Progreso por carrera:" }),
+          " resumen con barra de avance (% completado), conteo de completadas, cursando y planeadas."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Eliminar progreso de una carrera:" }),
+          " borra solo esa malla en la nube; pide confirmación antes de ejecutar."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Planificador de horario:" }),
+          " opción para incluir materias planeadas de otras carreras (visible si tienes planeadas en dos o más mallas)."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Oferta académica:" }),
+          " periodo actual y fecha del último scrape de cursos."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Restablecer contraseña" }),
+          " y ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "eliminar cuenta" }),
+          " también están en este modal."
+        ] })
       ] })
     ] })
   },
