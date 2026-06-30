@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-ALI",
-  "Last-Modified": "2026-06-08T21:54:11.687Z",
+  "Last-Modified": "2026-06-30T19:55:36.248Z",
   "courses": [
     {
       "id": "MAT1201",
@@ -312,8 +312,7 @@
       "area": "ALI",
       "type": "obligatoria",
       "prerequisites": [
-        "QUI2002",
-        "QUI1004 || QUI1001"
+        "QUI2002"
       ],
       "alternatives": []
     },
@@ -590,9 +589,9 @@
       "alternatives": []
     },
     {
-      "id": "INQ4202",
-      "code": "INQ 4202",
-      "title": "Operaciones Unitarias 2 +Lab",
+      "id": "INQ4202E",
+      "code": "INQ 4202E",
+      "title": "Unit Operations 2 +Lab",
       "description": "",
       "credits": 3,
       "semester": 7,
@@ -600,7 +599,8 @@
       "area": "INQ",
       "type": "obligatoria",
       "prerequisites": [
-        "INQ4201 || INQ4201E || INQ3003 || INQ3003E"
+        "ESL0006 || ESL0007 || ENG1001E",
+        "INQ4201 || INQ4201E"
       ],
       "alternatives": []
     },
@@ -714,7 +714,7 @@
       "description": "",
       "credits": 1,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ING",
       "type": "obligatoria",
       "prerequisites": [],
@@ -727,7 +727,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "IIN",
       "type": "obligatoria",
       "prerequisites": [],
@@ -740,7 +740,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ELECTIVA",
       "type": "electiva",
       "prerequisites": [],
@@ -753,7 +753,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -766,7 +766,7 @@
       "description": "",
       "credits": 5,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ALI",
       "type": "obligatoria",
       "prerequisites": [],
