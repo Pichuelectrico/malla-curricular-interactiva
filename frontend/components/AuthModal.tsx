@@ -79,6 +79,29 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'login' }:
     setError('');
     setSuccess('');
 
+    if (mode === 'new-password') {
+      if (password.length < 6) {
+        setError('La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError('Las contraseñas no coinciden.');
+        return;
+      }
+
+      setLoading(true);
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+      setLoading(false);
+      if (updateError) {
+        setError(authErrorMessage(updateError));
+      } else {
+        clearPasswordRecovery();
+        setSuccess('Contraseña actualizada correctamente.');
+        setTimeout(() => handleOpenChange(false), 1500);
+      }
+      return;
+    }
+
     const trimmedEmail = email.trim();
     if (!trimmedEmail) return;
 
@@ -93,33 +116,9 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'login' }:
       }
     }
 
-    if (mode !== 'forgot' && mode !== 'new-password' && !password) return;
-    if (mode === 'new-password' && !password) return;
+    if (mode !== 'forgot' && !password) return;
 
     setLoading(true);
-
-    if (mode === 'new-password') {
-      if (password.length < 6) {
-        setError('La contraseña debe tener al menos 6 caracteres.');
-        setLoading(false);
-        return;
-      }
-      if (password !== confirmPassword) {
-        setError('Las contraseñas no coinciden.');
-        setLoading(false);
-        return;
-      }
-      const { error: updateError } = await supabase.auth.updateUser({ password });
-      setLoading(false);
-      if (updateError) {
-        setError(authErrorMessage(updateError));
-      } else {
-        clearPasswordRecovery();
-        setSuccess('Contraseña actualizada correctamente.');
-        setTimeout(() => handleOpenChange(false), 1500);
-      }
-      return;
-    }
 
     if (mode === 'login') {
       const { error: signInError } = await signInWithPassword(trimmedEmail, password);

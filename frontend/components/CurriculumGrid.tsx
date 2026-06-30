@@ -18,18 +18,38 @@ import ModeSelector, { SelectionMode } from './ModeSelector';
 import WritingIntensiveSidebar from './WritingIntensiveSidebar';
 import SchedulePlanningDrawer from './SchedulePlanningDrawer';
 import GradeEstimatorDrawer from './GradeEstimatorDrawer';
+import BucketCourseCodeModal from './BucketCourseCodeModal';
 import { Course, CurriculumData } from '../types/curriculum';
 import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import { getBlockDisplayName, getOrderedBlocks } from '../utils/curriculumBlocks';
 import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
+import { useUserBypassCourses } from '../lib/useUserBypassCourses';
 import { availableCurricula } from '../data/availableCurricula';
+import { requiresOfferCourseCode } from '../lib/offerMatching';
+import {
+  expandDisplayCourses,
+  getDisplayCreditsForSlot,
+  getRootSlotId,
+  isBucketSatisfiedForPrereq,
+  clearBucketFulfillmentChain,
+  collectFulfillmentSlotIds,
+  type BucketFulfillmentsMap,
+  type BucketFulfillment,
+  type DisplayCourse,
+} from '../lib/bucketFulfillment';
+import {
+  aggregatePlannedCourses,
+  toPlannedEntries,
+  type PlannedCourseEntry,
+} from '../lib/aggregatedPlanning';
 
 const MAX_SEMESTER_CREDITS = 16;
 
 export default function CurriculumGrid() {
-  const { isSignedIn } = useSupabaseAuth();
+  const { isSignedIn, user, isLoading: authLoading } = useSupabaseAuth();
   const backend = useBackend();
+  const { bypassCourses } = useUserBypassCourses();
   const [curriculumData, setCurriculumData] = useState<CurriculumData>(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = useState<Set<string>>(new Set());
   const [inProgressCourses, setInProgressCourses] = useState<Set<string>>(new Set());
@@ -42,7 +62,9 @@ export default function CurriculumGrid() {
   const [hasWritingIntensive, setHasWritingIntensive] = useState(false);
   const [showEnglishAnimation, setShowEnglishAnimation] = useState(false);
   const prevEsl0006CompletedRef = useRef<boolean | null>(null);
+  const prevSignedInRef = useRef<boolean | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [progressHydrated, setProgressHydrated] = useState(false);
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const { toast } = useToast();
 
@@ -50,6 +72,12 @@ export default function CurriculumGrid() {
   const [toolboxOpen, setToolboxOpen] = useState(false);
   const [openScheduleDrawer, setOpenScheduleDrawer] = useState<(() => void) | null>(null);
   const [openGradeEstimator, setOpenGradeEstimator] = useState<(() => void) | null>(null);
+  const [aggregatedPlanned, setAggregatedPlanned] = useState<PlannedCourseEntry[] | null>(null);
+  const [bucketFulfillments, setBucketFulfillments] = useState<BucketFulfillmentsMap>({});
+  const [bucketModal, setBucketModal] = useState<{
+    course: DisplayCourse;
+    mode: SelectionMode;
+  } | null>(null);
 
   const curriculumId = curriculumData.source_file || 'Malla-CMP';
 
@@ -71,7 +99,7 @@ export default function CurriculumGrid() {
             : path.replace(/^\/+/, '');
           clean = slug.replace(/^\/+|\/+$/g, '');
         }
-        if (!clean) return; // no slug -> keep current
+        if (!clean || clean === 'tutoriales' || clean.startsWith('tutoriales/')) return;
         const target = availableCurricula.find(c => c.slug === clean);
         if (!target) return;
         const module = await target.dataLoader();
@@ -96,36 +124,46 @@ export default function CurriculumGrid() {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return;
+
     const loadData = async () => {
       setIsLoadingProgress(true);
+      setProgressHydrated(false);
       try {
         const response = await backend.progress.loadProgress({ curriculumId });
         if (response) {
           setCompletedCourses(new Set(response.completedCourses || []));
           setInProgressCourses(new Set(response.inProgressCourses || []));
           setPlannedCourses(new Set(response.plannedCourses || []));
-          if (typeof (response as any).hasWritingIntensive === 'boolean') {
-            setHasWritingIntensive((response as any).hasWritingIntensive);
+          if (typeof response.hasWritingIntensive === 'boolean') {
+            setHasWritingIntensive(response.hasWritingIntensive);
+          }
+          if (isSignedIn) {
+            setBucketFulfillments(response.bucketFulfillments ?? {});
+          } else {
+            setBucketFulfillments({});
           }
         } else {
-          // Initialize empty progress for new curriculum
           setCompletedCourses(new Set());
           setInProgressCourses(new Set());
           setPlannedCourses(new Set());
+          setBucketFulfillments({});
         }
+        setProgressHydrated(true);
       } catch (error) {
         console.error('Error loading progress:', error);
-        // Fallback to empty state on error
-        setCompletedCourses(new Set());
-        setInProgressCourses(new Set());
-        setPlannedCourses(new Set());
+        toast({
+          title: 'No se pudo cargar tu progreso',
+          description: 'Tus cambios no se guardarán hasta que se restablezca la conexión.',
+          variant: 'destructive',
+        });
       }
 
       const savedCurriculum = localStorage.getItem('curriculumData');
       let idForWI = curriculumId;
       let savedWritingIntensive: string | null = null;
       const legacyWritingIntensive = localStorage.getItem('hasWritingIntensive');
-      
+
       if (savedCurriculum) {
         try {
           const parsed = JSON.parse(savedCurriculum);
@@ -138,28 +176,25 @@ export default function CurriculumGrid() {
         }
       }
 
-      // read per-curriculum WI using the best id we have
-      savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${idForWI}`);
+      if (!isSignedIn) {
+        savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${idForWI}`);
 
-      if (savedWritingIntensive) {
-        try {
-          setHasWritingIntensive(JSON.parse(savedWritingIntensive));
-        } catch (error) {
-          console.error('Error loading writing intensive status:', error);
+        if (savedWritingIntensive) {
+          try {
+            setHasWritingIntensive(JSON.parse(savedWritingIntensive));
+          } catch (error) {
+            console.error('Error loading writing intensive status:', error);
+          }
+        } else if (legacyWritingIntensive) {
+          try {
+            const legacy = JSON.parse(legacyWritingIntensive);
+            setHasWritingIntensive(legacy);
+            localStorage.setItem(`hasWritingIntensive:${idForWI}`, JSON.stringify(legacy));
+            localStorage.removeItem('hasWritingIntensive');
+          } catch (error) {
+            console.error('Error migrating legacy writing intensive status:', error);
+          }
         }
-      } else if (legacyWritingIntensive) {
-        // Migrate legacy global key to per-curriculum key
-        try {
-          const legacy = JSON.parse(legacyWritingIntensive);
-          setHasWritingIntensive(legacy);
-          localStorage.setItem(`hasWritingIntensive:${idForWI}`, JSON.stringify(legacy));
-          localStorage.removeItem('hasWritingIntensive');
-        } catch (error) {
-          console.error('Error migrating legacy writing intensive status:', error);
-          setHasWritingIntensive(false);
-        }
-      } else {
-        setHasWritingIntensive(false);
       }
 
       setDataLoaded(true);
@@ -167,10 +202,17 @@ export default function CurriculumGrid() {
     };
 
     loadData();
-  }, [isSignedIn, curriculumId]);
+  }, [isSignedIn, curriculumId, authLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!dataLoaded || isLoadingProgress) return;
+    if (prevSignedInRef.current === true && !isSignedIn) {
+      setBucketFulfillments({});
+    }
+    prevSignedInRef.current = isSignedIn;
+  }, [isSignedIn]);
+
+  useEffect(() => {
+    if (!dataLoaded || isLoadingProgress || !progressHydrated || authLoading) return;
 
     const saveProgress = async () => {
       try {
@@ -181,15 +223,21 @@ export default function CurriculumGrid() {
           inProgressCourses: [...inProgressCourses],
           plannedCourses: [...plannedCourses],
           hasWritingIntensive,
+          bucketFulfillments: isSignedIn ? bucketFulfillments : undefined,
           lastUpdated: new Date().toISOString()
         });
       } catch (error) {
         console.error('Error saving progress:', error);
+        toast({
+          title: 'No se pudo guardar tu progreso',
+          description: 'Revisa tu conexión e inténtalo de nuevo.',
+          variant: 'destructive',
+        });
       }
     };
 
     saveProgress();
-  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, dataLoaded, curriculumId, isLoadingProgress]);
+  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, bucketFulfillments, isSignedIn, dataLoaded, progressHydrated, authLoading, curriculumId, isLoadingProgress]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Overlay global completed courses onto current curriculum after data loads
   useEffect(() => {
@@ -314,7 +362,16 @@ export default function CurriculumGrid() {
     return () => clearTimeout(timer);
   }, [esl0006Completed, hasWritingIntensive, hasESL0006, dataLoaded, toast]);
 
-  const allCoursesCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
+  const displayCourses = useMemo((): DisplayCourse[] => {
+    if (isSignedIn) {
+      return expandDisplayCourses(curriculumData.courses, bucketFulfillments);
+    }
+    return curriculumData.courses;
+  }, [isSignedIn, curriculumData.courses, bucketFulfillments]);
+
+  const allCoursesCompleted =
+    displayCourses.length > 0 &&
+    displayCourses.every((course) => completedCourses.has(course.id));
   const isAllCompleted = allCoursesCompleted && hasWritingIntensive;
 
   const completedSemesters = new Set(
@@ -340,43 +397,244 @@ export default function CurriculumGrid() {
   }, [isAllCompleted, completedCourses.size, toast]);
 
   const sumCredits = (courseIds: Set<string>) =>
-    curriculumData.courses
-      .filter(c => courseIds.has(c.id))
-      .reduce((sum, c) => sum + c.credits, 0);
+    displayCourses
+      .filter((c) => courseIds.has(c.id))
+      .reduce((sum, c) => sum + getDisplayCreditsForSlot(c, bucketFulfillments), 0);
 
   const plannedCoursesList = useMemo(
-    () => curriculumData.courses.filter((c) => plannedCourses.has(c.id)),
-    [curriculumData.courses, plannedCourses],
+    () => displayCourses.filter((c) => plannedCourses.has(c.id)),
+    [displayCourses, plannedCourses],
   );
 
-  const isUnlocked = (course: Course): boolean => {
-    if (course.prerequisites.length === 0) return true;
-    
-    if (course.alternatives.length > 0) {
-      return course.alternatives.some(altId => completedCourses.has(altId) || inProgressCourses.has(altId));
+  const mallaShortLabel = useMemo(() => {
+    const m = curriculumId.match(/Malla(?:-academica)?-([A-Z0-9]+)/i);
+    return m ? m[1].toUpperCase() : curriculumId.slice(0, 6).toUpperCase();
+  }, [curriculumId]);
+
+  useEffect(() => {
+    if (!isSignedIn || !user?.id) {
+      setAggregatedPlanned(null);
+      return;
     }
-    
-    // Support OR groups written as a single string like "ADM3003 || ADM2003"
+    let cancelled = false;
+    aggregatePlannedCourses(user.id)
+      .then((entries) => {
+        if (!cancelled) setAggregatedPlanned(entries);
+      })
+      .catch(() => {
+        if (!cancelled) setAggregatedPlanned(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, user?.id, plannedCourses]);
+
+  const plannerBucketCodes = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(bucketFulfillments).map(([id, f]) => [id, f.offerCourseCode]),
+      ),
+    [bucketFulfillments],
+  );
+
+  const drawerPlannedEntries = useMemo((): PlannedCourseEntry[] => {
+    if (isSignedIn && aggregatedPlanned && aggregatedPlanned.length > 0) {
+      return aggregatedPlanned;
+    }
+    return toPlannedEntries(plannedCoursesList, mallaShortLabel, curriculumId);
+  }, [isSignedIn, aggregatedPlanned, plannedCoursesList, mallaShortLabel, curriculumId]);
+
+  const prereqSatisfied = (prereqId: string): boolean => {
+    const prereqCourse = curriculumData.courses.find((c) => c.id === prereqId);
+    if (
+      isSignedIn &&
+      prereqCourse &&
+      requiresOfferCourseCode(prereqCourse)
+    ) {
+      return isBucketSatisfiedForPrereq(
+        prereqId,
+        curriculumData.courses,
+        bucketFulfillments,
+        completedCourses,
+        inProgressCourses,
+      );
+    }
+    return completedCourses.has(prereqId) || inProgressCourses.has(prereqId);
+  };
+
+  const isUnlocked = (course: Course): boolean => {
+    if (bypassCourses.has(course.id)) return true;
+    if (course.prerequisites.length === 0) return true;
+
+    if (course.alternatives.length > 0) {
+      return course.alternatives.some((altId) => prereqSatisfied(altId));
+    }
+
     return course.prerequisites.every((prereqGroup) => {
-      const options = prereqGroup.split('||').map(s => s.trim()).filter(Boolean);
+      const options = prereqGroup.split('||').map((s) => s.trim()).filter(Boolean);
       if (options.length > 1) {
-        return options.some(id => completedCourses.has(id) || inProgressCourses.has(id));
+        return options.some((id) => prereqSatisfied(id));
       }
       const id = options[0] || '';
-      return completedCourses.has(id) || inProgressCourses.has(id);
+      return prereqSatisfied(id);
     });
   };
 
+  const removeBucketFromProgress = (rootId: string) => {
+    const ids = new Set(collectFulfillmentSlotIds(rootId, bucketFulfillments));
+    setBucketFulfillments((prev) => clearBucketFulfillmentChain(rootId, prev));
+    setCompletedCourses((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+    setInProgressCourses((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+    setPlannedCourses((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+  };
+
+  const markCourseInMode = (courseId: string, mode: SelectionMode) => {
+    if (mode === 'completed') {
+      setCompletedCourses((prev) => {
+        const next = new Set(prev);
+        next.add(courseId);
+        return next;
+      });
+      setInProgressCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+      setPlannedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+    } else if (mode === 'in-progress') {
+      setInProgressCourses((prev) => {
+        const next = new Set(prev);
+        next.add(courseId);
+        return next;
+      });
+      setCompletedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+      setPlannedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+    } else if (mode === 'planned') {
+      setPlannedCourses((prev) => {
+        const next = new Set(prev);
+        next.add(courseId);
+        return next;
+      });
+      setCompletedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+      setInProgressCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+    }
+  };
+
+  const handleBucketConfirm = (fulfillment: BucketFulfillment) => {
+    if (!bucketModal) return;
+    const { course, mode } = bucketModal;
+
+    setBucketFulfillments((prev) => ({
+      ...prev,
+      [course.id]: fulfillment,
+    }));
+    markCourseInMode(course.id, mode);
+    setBucketModal(null);
+  };
+
   const handleCourseClick = (courseId: string) => {
-    const course = curriculumData.courses.find(c => c.id === courseId);
+    const course =
+      displayCourses.find((c) => c.id === courseId) ??
+      curriculumData.courses.find((c) => c.id === courseId);
     if (!course) return;
 
     const isCurrentlyUnlocked = isUnlocked(course);
     const isCurrentlyCompleted = completedCourses.has(courseId);
     const isCurrentlyInProgress = inProgressCourses.has(courseId);
     const isCurrentlyPlanned = plannedCourses.has(courseId);
+    const isMarked =
+      isCurrentlyCompleted || isCurrentlyInProgress || isCurrentlyPlanned;
 
-    if (!isCurrentlyUnlocked && !isCurrentlyCompleted && !isCurrentlyInProgress && !isCurrentlyPlanned) return;
+    if (!isCurrentlyUnlocked && !isMarked) return;
+
+    const isBucket = requiresOfferCourseCode(course);
+    const rootId = getRootSlotId(courseId);
+
+    if (isMarked) {
+      if (isSignedIn && isBucket) {
+        removeBucketFromProgress(rootId);
+        return;
+      }
+
+      if (currentMode === 'completed' && isCurrentlyCompleted) {
+        setCompletedCourses((prev) => {
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
+        });
+      } else if (currentMode === 'in-progress' && isCurrentlyInProgress) {
+        setInProgressCourses((prev) => {
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
+        });
+      } else if (currentMode === 'planned' && isCurrentlyPlanned) {
+        setPlannedCourses((prev) => {
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
+        });
+      }
+      return;
+    }
+
+    if (isSignedIn && isBucket) {
+      if (currentMode === 'in-progress') {
+        const projectedCredits = sumCredits(inProgressCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast({
+            title: 'Límite de créditos',
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en cursando.`,
+            variant: 'destructive',
+          });
+          return;
+        }
+      } else if (currentMode === 'planned') {
+        const projectedCredits = sumCredits(plannedCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast({
+            title: 'Límite de créditos',
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en planeadas.`,
+            variant: 'destructive',
+          });
+          return;
+        }
+      }
+      setBucketModal({ course, mode: currentMode });
+      return;
+    }
 
     if (currentMode === 'completed') {
       setCompletedCourses(prev => {
@@ -472,6 +730,7 @@ export default function CurriculumGrid() {
     setInProgressCourses(new Set());
     setPlannedCourses(new Set());
     setHasWritingIntensive(false);
+    setBucketFulfillments({});
     // Legacy keys cleanup
     localStorage.removeItem("completedCourses");
     localStorage.removeItem("inProgressCourses");
@@ -503,6 +762,7 @@ export default function CurriculumGrid() {
           inProgressCourses: [] as string[],
           plannedCourses: [] as string[],
           hasWritingIntensive: false,
+          bucketFulfillments: {} as BucketFulfillmentsMap,
           lastUpdated: now,
         };
 
@@ -574,22 +834,24 @@ export default function CurriculumGrid() {
   };
 
   const totalCredits = curriculumData.courses.reduce((sum, course) => sum + course.credits, 0);
-  const completedCredits = curriculumData.courses
-    .filter(course => completedCourses.has(course.id))
-    .reduce((sum, course) => sum + course.credits, 0);
-  const totalCourses = curriculumData.courses.length;
-  const completedCoursesCount = completedCourses.size;
-  
+  const completedCredits = displayCourses
+    .filter((course) => completedCourses.has(course.id))
+    .reduce((sum, course) => sum + getDisplayCreditsForSlot(course, bucketFulfillments), 0);
+  const totalCourses = displayCourses.length;
+  const completedCoursesCount = displayCourses.filter((c) =>
+    completedCourses.has(c.id),
+  ).length;
+
   const creditProgress = totalCredits > 0 ? (completedCredits / totalCredits) * 100 : 0;
   const courseProgress = totalCourses > 0 ? (completedCoursesCount / totalCourses) * 100 : 0;
 
-  const coursesByBlock = curriculumData.courses.reduce((acc, course) => {
+  const coursesByBlock = displayCourses.reduce((acc, course) => {
     if (!acc[course.block]) {
       acc[course.block] = [];
     }
     acc[course.block].push(course);
     return acc;
-  }, {} as Record<string, Course[]>);
+  }, {} as Record<string, DisplayCourse[]>);
 
   const blockOrder = getOrderedBlocks(curriculumData.courses);
 
@@ -757,11 +1019,24 @@ export default function CurriculumGrid() {
           const blockCourses = coursesByBlock[blockName];
           if (!blockCourses || blockCourses.length === 0) return null;
 
+          const blockBaseCourses = curriculumData.courses.filter(
+            (c) => c.block === blockName,
+          );
+          const blockTotalCredits = blockBaseCourses.reduce(
+            (sum, course) => sum + course.credits,
+            0,
+          );
           const blockCompletedCredits = blockCourses
-            .filter(course => completedCourses.has(course.id))
-            .reduce((sum, course) => sum + course.credits, 0);
-          const blockTotalCredits = blockCourses.reduce((sum, course) => sum + course.credits, 0);
-          const blockProgress = blockTotalCredits > 0 ? (blockCompletedCredits / blockTotalCredits) * 100 : 0;
+            .filter((course) => completedCourses.has(course.id))
+            .reduce(
+              (sum, course) =>
+                sum + getDisplayCreditsForSlot(course, bucketFulfillments),
+              0,
+            );
+          const blockProgress =
+            blockTotalCredits > 0
+              ? (blockCompletedCredits / blockTotalCredits) * 100
+              : 0;
 
           return (
             <div key={blockName} className="space-y-4">
@@ -774,18 +1049,23 @@ export default function CurriculumGrid() {
                 </Badge>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {blockCourses.map(course => (
-                  <CourseCard
-                    key={course.id}
-                    course={course}
-                    isCompleted={completedCourses.has(course.id)}
-                    isUnlocked={isUnlocked(course)}
-                    isInProgress={inProgressCourses.has(course.id)}
-                    isPlanned={plannedCourses.has(course.id)}
-                    onClick={handleCourseClick}
-                    allCourses={curriculumData.courses}
-                  />
-                ))}
+                {blockCourses.map((course) => {
+                  const fulfillment = bucketFulfillments[course.id] ?? course.fulfillment;
+                  return (
+                    <CourseCard
+                      key={course.id}
+                      course={course}
+                      isCompleted={completedCourses.has(course.id)}
+                      isUnlocked={isUnlocked(course)}
+                      isInProgress={inProgressCourses.has(course.id)}
+                      isPlanned={plannedCourses.has(course.id)}
+                      onClick={handleCourseClick}
+                      allCourses={curriculumData.courses}
+                      fulfillmentCode={fulfillment?.offerCourseCode}
+                      isRemainder={course.isRemainder}
+                    />
+                  );
+                })}
               </div>
             </div>
           );
@@ -817,9 +1097,20 @@ export default function CurriculumGrid() {
         />
       )}
 
+      {bucketModal && (
+        <BucketCourseCodeModal
+          course={bucketModal.course}
+          onClose={() => setBucketModal(null)}
+          onConfirm={handleBucketConfirm}
+        />
+      )}
+
       {/* Drawers without their own floating buttons; expose open functions */}
       <SchedulePlanningDrawer
-        plannedCourses={plannedCoursesList}
+        plannedEntries={drawerPlannedEntries}
+        crossMallaEnabled={isSignedIn}
+        userId={user?.id}
+        initialBucketCodes={isSignedIn ? plannerBucketCodes : undefined}
         onSave={(schedules) => {
           console.log('Schedules saved:', schedules);
           toast({

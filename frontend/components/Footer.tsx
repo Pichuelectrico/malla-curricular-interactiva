@@ -24,6 +24,18 @@ export default function Footer() {
               <span className="text-sm font-medium">Connect with Josh on LinkedIn</span>
               <ExternalLink className="w-3 h-3 opacity-60" />
             </a>
+
+            {/* Portfolio */}
+            <a
+              href="https://portafolio-josh-reino.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors duration-200 group"
+            >
+              <span className="text-lg group-hover:scale-110 transition-transform duration-200">👾</span>
+              <span className="text-sm font-medium">Ver portafolio de Josh</span>
+              <ExternalLink className="w-3 h-3 opacity-60" />
+            </a>
             
             {/* GitHub */}
             <a

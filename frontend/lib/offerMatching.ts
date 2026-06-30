@@ -26,14 +26,28 @@ export function normalizeOfferCourseCode(code: string): string {
   return raw;
 }
 
-/** Curriculum slots without a fixed USFQ code (ARTE, HUM, ELECTIVA, etc.) */
+/** Generic curriculum bucket codes that need a manual USFQ course code */
+const BUCKET_PREFIXES = new Set([
+  'OPT', 'ELECTIVA', 'ARTE', 'HUM', 'CCSS', 'CIENCIAS',
+]);
+
+/** Real USFQ course codes like CMP-3002, MAT-1201, ADM-3002E */
 export function hasSpecificCourseCode(course: Course): boolean {
-  const normalized = normalizeCurriculumCode(course.code);
-  return /^[A-Z]{2,5}-\d/.test(normalized);
+  return !requiresOfferCourseCode(course);
 }
 
+export function requiresOfferCourseCode(course: Course): boolean {
+  const normalized = normalizeCurriculumCode(course.code);
+  const prefix = normalized.split('-')[0];
+  if (BUCKET_PREFIXES.has(prefix)) return true;
+  const area = course.area?.toUpperCase() ?? '';
+  if (area.startsWith('OPT') || area.endsWith('OPT')) return true;
+  return !/^[A-Z]{2,4}-\d{3,4}/.test(normalized);
+}
+
+/** @deprecated Use requiresOfferCourseCode */
 export function isOpenElectiveCourse(course: Course): boolean {
-  return !hasSpecificCourseCode(course);
+  return requiresOfferCourseCode(course);
 }
 
 export function normalizeOfferCourseCodeInput(raw: string): string {
@@ -41,8 +55,8 @@ export function normalizeOfferCourseCodeInput(raw: string): string {
 }
 
 function getElectivePrefixes(course: Course): string[] | null {
+  if (requiresOfferCourseCode(course)) return null;
   const normalized = normalizeCurriculumCode(course.code);
-  if (/^[A-Z]{2,5}-\d/.test(normalized)) return null;
 
   const colonMatch = course.title.match(/:\s*([A-Z/]+)/i);
   if (colonMatch) {
@@ -214,7 +228,7 @@ export function getOffersForSchedule(
 ): CourseOfferRow[] {
   const trimmed = explicitCode?.trim();
   if (trimmed) return getOffersForExplicitCode(offerMap, trimmed, type);
-  if (isOpenElectiveCourse(course)) return [];
+  if (requiresOfferCourseCode(course)) return [];
   return getOffersForCourse(offerMap, course, type);
 }
 
@@ -248,7 +262,7 @@ export function getScheduleDisplayLabels(
     if (row) return { code: row.course_code, title: row.title };
   }
 
-  if (isOpenElectiveCourse(course) && schedule.offerCourseCode?.trim()) {
+  if (requiresOfferCourseCode(course) && schedule.offerCourseCode?.trim()) {
     const preview = getOfferCoursePreview(offerMap, schedule.offerCourseCode);
     if (preview) return { code: preview.course_code, title: preview.title };
     const code = normalizeOfferCourseCode(schedule.offerCourseCode);
@@ -258,34 +272,126 @@ export function getScheduleDisplayLabels(
   return { code: course.code, title: course.title };
 }
 
+export function formatGroupLetters(letters: string[]): string {
+  if (!letters.length) return '';
+  return letters.map((l) => `| ${l} |`).join(' ');
+}
+
+/** Letter the child section must include to link with theory. */
+export function requiredLinkLetter(
+  main: CourseOfferRow,
+  childType: 'Ejercicios' | 'Laboratorio',
+): string | null {
+  const letters = main.group_letters;
+  if (!letters.length || main.type !== 'Teoría') return null;
+  if (childType === 'Laboratorio') return letters[0] ?? null;
+  if (letters.length >= 2) return letters[1] ?? null;
+  return letters[0] ?? null;
+}
+
+export function isOfferLinkedToMain(
+  main: CourseOfferRow,
+  child: CourseOfferRow,
+): boolean {
+  if (main.course_code !== child.course_code) return false;
+  if (main.type !== 'Teoría') return false;
+  if (child.type !== 'Ejercicios' && child.type !== 'Laboratorio') return false;
+
+  const mainLetters = main.group_letters;
+  const childLetters = child.group_letters;
+  if (!mainLetters.length || !childLetters.length) return true;
+
+  const required = requiredLinkLetter(
+    main,
+    child.type as 'Ejercicios' | 'Laboratorio',
+  );
+  if (!required) {
+    return childLetters.some((l) => mainLetters.includes(l));
+  }
+  return childLetters.includes(required);
+}
+
+export function isNrcLinkedToMain(
+  mainNrc: string,
+  childNrc: string,
+  offerMap: Map<string, CourseOfferRow>,
+): boolean {
+  const main = offerMap.get(mainNrc);
+  const child = offerMap.get(childNrc);
+  if (!main || !child) return false;
+  return isOfferLinkedToMain(main, child);
+}
+
+export function courseRequiresLabEj(title: string): { lab: boolean; ej: boolean } {
+  const t = title.toUpperCase();
+  const lab = /\+LAB/i.test(t);
+  const ej =
+    /\+EJ/i.test(t) ||
+    /\+LAB\s*\/\s*EJ/i.test(t) ||
+    /\+LAB\/EJ/i.test(t) ||
+    /\+LAB\/EJ/i.test(t.replace(/\s/g, ''));
+  return { lab, ej };
+}
+
 export function getLinkedOffers(
   mainRow: CourseOfferRow,
   offerMap: Map<string, CourseOfferRow>,
-  type: 'Ejercicios' | 'Laboratorio'
+  type: 'Ejercicios' | 'Laboratorio',
 ): CourseOfferRow[] {
-  const letters = new Set(mainRow.group_letters);
-  return [...offerMap.values()].filter(row => {
-    if (row.course_code !== mainRow.course_code || row.type !== type) return false;
-    if (letters.size === 0) return true;
-    return row.group_letters.some(l => letters.has(l));
-  });
+  return [...offerMap.values()].filter(
+    (row) =>
+      row.type === type &&
+      row.course_code === mainRow.course_code &&
+      isOfferLinkedToMain(mainRow, row),
+  );
+}
+
+export function sessionEndMinutes(session: ScheduleSessionSlot): number {
+  if (session.endTime) return timeToMinutes(session.endTime);
+  return timeToMinutes(session.startTime) + GRID_SLOT_DURATION_MINUTES;
+}
+
+export function sessionsOverlapOnDay(
+  a: ScheduleSessionSlot,
+  b: ScheduleSessionSlot,
+): boolean {
+  if (a.day !== b.day || !a.startTime || !b.startTime) return false;
+  const aStart = timeToMinutes(a.startTime);
+  const aEnd = sessionEndMinutes(a);
+  const bStart = timeToMinutes(b.startTime);
+  const bEnd = sessionEndMinutes(b);
+  return aStart < bEnd && bStart < aEnd;
 }
 
 export function slotKey(day: string, startTime: string): string {
   return `${day}-${startTime}`;
 }
 
+export function nrcConflictsWithSessions(
+  nrc: string,
+  occupied: ScheduleSessionSlot[],
+  offerMap: Map<string, CourseOfferRow>,
+): boolean {
+  const row = offerMap.get(nrc);
+  if (!row) return false;
+  const candidate = sessionsFromOfferRow(row);
+  return candidate.some((sess) =>
+    occupied.some((occ) => sessionsOverlapOnDay(sess, occ)),
+  );
+}
+
+/** @deprecated Use nrcConflictsWithSessions */
 export function nrcConflictsWithSlots(
   nrc: string,
   occupied: Set<string>,
-  offerMap: Map<string, CourseOfferRow>
+  offerMap: Map<string, CourseOfferRow>,
 ): boolean {
   const row = offerMap.get(nrc);
   if (!row) return false;
   return sessionsFromOfferRow(row).some((sess) =>
     expandSessionToGridSlots(sess.startTime, sess.endTime).some((slot) =>
-      occupied.has(slotKey(sess.day, slot))
-    )
+      occupied.has(slotKey(sess.day, slot)),
+    ),
   );
 }
 

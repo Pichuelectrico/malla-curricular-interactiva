@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Calculator, X, Trash2, RotateCcw, Plus, Target } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Calculator, X, Trash2, RotateCcw, Plus, Target, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useTabbedCache } from '../lib/useTabbedCache';
+import { useSupabaseAuth } from '../lib/auth';
 
 // Letras objetivo y umbrales
 const GRADE_THRESHOLDS: Record<string, number> = {
@@ -32,6 +34,16 @@ function uid() {
   return Math.random().toString(36).slice(2, 9);
 }
 
+interface GradeTabData {
+  categorias: Categoria[];
+  targetLetter: 'A' | 'B' | 'C' | 'D';
+  puntosExtra: number;
+}
+
+function createDefaultGradeData(): GradeTabData {
+  return { categorias: [], targetLetter: 'C', puntosExtra: 0 };
+}
+
 interface GradeEstimatorDrawerProps {
   exposeOpen?: (openFn: () => void) => void;
   hideFloatingButton?: boolean;
@@ -39,18 +51,56 @@ interface GradeEstimatorDrawerProps {
 
 export default function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }: GradeEstimatorDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [targetLetter, setTargetLetter] = useState<'A' | 'B' | 'C' | 'D'>('C');
-  const [puntosExtra, setPuntosExtra] = useState<number>(0);
+  const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
+  const { user } = useSupabaseAuth();
+  const cacheKey = `gradeEstimatorCache_${user?.id ?? 'anonymous'}`;
 
-  // Reiniciar cada vez que se abre
-  useEffect(() => {
-    if (isOpen) {
-      setCategorias([]);
-      setTargetLetter('C');
-      setPuntosExtra(0);
-    }
-  }, [isOpen]);
+  const {
+    tabs,
+    activeTab,
+    activeTabId,
+    updateActiveData,
+    addTab,
+    removeTab,
+    renameTab,
+    selectTab,
+  } = useTabbedCache<GradeTabData>({
+    storageKey: cacheKey,
+    isOpen,
+    createDefaultData: createDefaultGradeData,
+    defaultTabLabel: (i) => `Materia ${i + 1}`,
+  });
+
+  const tabData = activeTab?.data ?? createDefaultGradeData();
+  const categorias = tabData.categorias;
+  const targetLetter = tabData.targetLetter;
+  const puntosExtra = tabData.puntosExtra;
+
+  const patchActive = useCallback(
+    (patch: Partial<GradeTabData>) => {
+      updateActiveData({ ...tabData, ...patch });
+    },
+    [tabData, updateActiveData],
+  );
+
+  const setCategorias = useCallback(
+    (updater: Categoria[] | ((prev: Categoria[]) => Categoria[])) => {
+      const next = typeof updater === 'function' ? updater(tabData.categorias) : updater;
+      patchActive({ categorias: next });
+    },
+    [tabData.categorias, patchActive],
+  );
+
+  const setTargetLetter = useCallback(
+    (letter: 'A' | 'B' | 'C' | 'D') => patchActive({ targetLetter: letter }),
+    [patchActive],
+  );
+
+  const setPuntosExtra = useCallback(
+    (extra: number) => patchActive({ puntosExtra: extra }),
+    [patchActive],
+  );
 
   const metaFinal = useMemo(() => GRADE_THRESHOLDS[targetLetter], [targetLetter]);
 
@@ -172,9 +222,7 @@ export default function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }:
   };
 
   const handleClear = () => {
-    setCategorias([]);
-    setPuntosExtra(0);
-    setTargetLetter('C');
+    patchActive(createDefaultGradeData());
   };
 
   useEffect(() => {
@@ -214,6 +262,72 @@ export default function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }:
                 </h2>
                 <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="dark:hover:bg-gray-700">
                   <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                {tabs.map((tab) => (
+                  <div key={tab.id} className="flex items-center gap-0.5">
+                    {renamingTabId === tab.id ? (
+                      <Input
+                        autoFocus
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onBlur={() => {
+                          renameTab(tab.id, renameValue);
+                          setRenamingTabId(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            renameTab(tab.id, renameValue);
+                            setRenamingTabId(null);
+                          }
+                          if (e.key === 'Escape') setRenamingTabId(null);
+                        }}
+                        className="h-8 w-28 text-sm dark:bg-gray-700"
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => selectTab(tab.id)}
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                          tab.id === activeTabId
+                            ? 'bg-white dark:bg-gray-600 text-emerald-600 dark:text-emerald-400 shadow-sm border border-gray-200 dark:border-gray-600'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700'
+                        }`}
+                      >
+                        {tab.label}
+                        <Pencil
+                          className="w-3 h-3 opacity-50 hover:opacity-100"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setRenamingTabId(tab.id);
+                            setRenameValue(tab.label);
+                          }}
+                        />
+                      </button>
+                    )}
+                    {tabs.length > 1 && tab.id === activeTabId && (
+                      <button
+                        type="button"
+                        onClick={() => removeTab(tab.id)}
+                        className="p-1 text-gray-400 hover:text-red-500"
+                        title="Eliminar materia"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={addTab}
+                  className="h-8 gap-1 text-sm"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Nueva materia
                 </Button>
               </div>
             </div>

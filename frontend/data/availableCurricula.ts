@@ -146,6 +146,21 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
   },
   {
+    id: "dit-usfq",
+    slug: "malla-dit",
+    name: "Diseño de Interiores",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 124,
+    courses: 47,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-DIT.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-DIT.json');
+      return { default: await res.json() };
+    },
+  },
+  {
     id: "dic-usfq",
     slug: "malla-dic",
     name: "Diseño Gráfico: Diseño Comunicacional",

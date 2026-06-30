@@ -14,7 +14,7 @@ var __privateWrapper = (obj, member, setter, getter) => ({
     return __privateGet(obj, member, getter);
   }
 });
-var _provider, _providerCalled, _a, _focused, _cleanup, _setup, _b, _online, _cleanup2, _setup2, _c, _gcTimeout, _d, _initialState, _revertState, _cache, _client, _retryer, _defaultOptions, _abortSignalConsumed, _Query_instances, dispatch_fn, _e, _client2, _observers, _mutationCache, _retryer2, _Mutation_instances, dispatch_fn2, _f, _mutations, _scopes, _mutationId, _g, _queries, _h, _queryCache, _mutationCache2, _defaultOptions2, _queryDefaults, _mutationDefaults, _mountCount, _unsubscribeFocus, _unsubscribeOnline, _i;
+var _provider, _providerCalled, _a, _focused, _cleanup, _setup, _b, _online, _cleanup2, _setup2, _c, _gcTimeout, _d, _initialState, _revertState, _cache, _client, _retryer, _defaultOptions, _abortSignalConsumed, _Query_instances, dispatch_fn, _e, _client2, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _f, _client3, _observers, _mutationCache, _retryer2, _Mutation_instances, dispatch_fn2, _g, _mutations, _scopes, _mutationId, _h, _client4, _currentResult2, _currentMutation, _mutateOptions, _MutationObserver_instances, updateResult_fn, notify_fn2, _i, _queries, _j, _queryCache, _mutationCache2, _defaultOptions2, _queryDefaults, _mutationDefaults, _mountCount, _unsubscribeFocus, _unsubscribeOnline, _k;
 function _mergeNamespaces(n, m) {
   for (var i = 0; i < m.length; i++) {
     const e = m[i];
@@ -12323,6 +12323,17 @@ function replaceEqualDeep(a, b) {
   }
   return aSize === bSize && equalItems === aSize ? a : copy;
 }
+function shallowEqualObjects(a, b) {
+  if (!b || Object.keys(a).length !== Object.keys(b).length) {
+    return false;
+  }
+  for (const key in a) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+  return true;
+}
 function isPlainArray(value) {
   return Array.isArray(value) && value.length === Object.keys(value).length;
 }
@@ -12379,6 +12390,12 @@ function ensureQueryFn(options, fetchOptions) {
     return () => Promise.reject(new Error(`Missing queryFn: '${options.queryHash}'`));
   }
   return options.queryFn;
+}
+function shouldThrowError(throwOnError, params) {
+  if (typeof throwOnError === "function") {
+    return throwOnError(...params);
+  }
+  return !!throwOnError;
 }
 var FocusManager = (_b = class extends Subscribable {
   constructor() {
@@ -12913,7 +12930,7 @@ var Query = (_e = class extends Removable {
     }
   }
   async fetch(options, fetchOptions) {
-    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j, _k, _l;
+    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j2, _k2, _l;
     if (this.state.fetchStatus !== "idle" && // If the promise in the retyer is already rejected, we have to definitely
     // re-start the fetch; there is a chance that the query is still in a
     // pending state when that happens
@@ -13040,13 +13057,13 @@ var Query = (_e = class extends Removable {
         type: "error",
         error
       });
-      (_j = (_i2 = __privateGet(this, _cache).config).onError) == null ? void 0 : _j.call(
+      (_j2 = (_i2 = __privateGet(this, _cache).config).onError) == null ? void 0 : _j2.call(
         _i2,
         error,
         this
       );
-      (_l = (_k = __privateGet(this, _cache).config).onSettled) == null ? void 0 : _l.call(
-        _k,
+      (_l = (_k2 = __privateGet(this, _cache).config).onSettled) == null ? void 0 : _l.call(
+        _k2,
         this.state.data,
         error,
         this
@@ -13160,6 +13177,445 @@ function getDefaultState$1(options) {
     fetchStatus: "idle"
   };
 }
+var QueryObserver = (_f = class extends Subscribable {
+  constructor(client2, options) {
+    super();
+    __privateAdd(this, _QueryObserver_instances);
+    __privateAdd(this, _client2);
+    __privateAdd(this, _currentQuery);
+    __privateAdd(this, _currentQueryInitialState);
+    __privateAdd(this, _currentResult);
+    __privateAdd(this, _currentResultState);
+    __privateAdd(this, _currentResultOptions);
+    __privateAdd(this, _currentThenable);
+    __privateAdd(this, _selectError);
+    __privateAdd(this, _selectFn);
+    __privateAdd(this, _selectResult);
+    // This property keeps track of the last query with defined data.
+    // It will be used to pass the previous data and query to the placeholder function between renders.
+    __privateAdd(this, _lastQueryWithDefinedData);
+    __privateAdd(this, _staleTimeoutId);
+    __privateAdd(this, _refetchIntervalId);
+    __privateAdd(this, _currentRefetchInterval);
+    __privateAdd(this, _trackedProps, /* @__PURE__ */ new Set());
+    this.options = options;
+    __privateSet(this, _client2, client2);
+    __privateSet(this, _selectError, null);
+    __privateSet(this, _currentThenable, pendingThenable());
+    this.bindMethods();
+    this.setOptions(options);
+  }
+  bindMethods() {
+    this.refetch = this.refetch.bind(this);
+  }
+  onSubscribe() {
+    if (this.listeners.size === 1) {
+      __privateGet(this, _currentQuery).addObserver(this);
+      if (shouldFetchOnMount(__privateGet(this, _currentQuery), this.options)) {
+        __privateMethod(this, _QueryObserver_instances, executeFetch_fn).call(this);
+      } else {
+        this.updateResult();
+      }
+      __privateMethod(this, _QueryObserver_instances, updateTimers_fn).call(this);
+    }
+  }
+  onUnsubscribe() {
+    if (!this.hasListeners()) {
+      this.destroy();
+    }
+  }
+  shouldFetchOnReconnect() {
+    return shouldFetchOn(
+      __privateGet(this, _currentQuery),
+      this.options,
+      this.options.refetchOnReconnect
+    );
+  }
+  shouldFetchOnWindowFocus() {
+    return shouldFetchOn(
+      __privateGet(this, _currentQuery),
+      this.options,
+      this.options.refetchOnWindowFocus
+    );
+  }
+  destroy() {
+    this.listeners = /* @__PURE__ */ new Set();
+    __privateMethod(this, _QueryObserver_instances, clearStaleTimeout_fn).call(this);
+    __privateMethod(this, _QueryObserver_instances, clearRefetchInterval_fn).call(this);
+    __privateGet(this, _currentQuery).removeObserver(this);
+  }
+  setOptions(options) {
+    const prevOptions = this.options;
+    const prevQuery = __privateGet(this, _currentQuery);
+    this.options = __privateGet(this, _client2).defaultQueryOptions(options);
+    if (this.options.enabled !== void 0 && typeof this.options.enabled !== "boolean" && typeof this.options.enabled !== "function" && typeof resolveEnabled(this.options.enabled, __privateGet(this, _currentQuery)) !== "boolean") {
+      throw new Error(
+        "Expected enabled to be a boolean or a callback that returns a boolean"
+      );
+    }
+    __privateMethod(this, _QueryObserver_instances, updateQuery_fn).call(this);
+    __privateGet(this, _currentQuery).setOptions(this.options);
+    if (prevOptions._defaulted && !shallowEqualObjects(this.options, prevOptions)) {
+      __privateGet(this, _client2).getQueryCache().notify({
+        type: "observerOptionsUpdated",
+        query: __privateGet(this, _currentQuery),
+        observer: this
+      });
+    }
+    const mounted = this.hasListeners();
+    if (mounted && shouldFetchOptionally(
+      __privateGet(this, _currentQuery),
+      prevQuery,
+      this.options,
+      prevOptions
+    )) {
+      __privateMethod(this, _QueryObserver_instances, executeFetch_fn).call(this);
+    }
+    this.updateResult();
+    if (mounted && (__privateGet(this, _currentQuery) !== prevQuery || resolveEnabled(this.options.enabled, __privateGet(this, _currentQuery)) !== resolveEnabled(prevOptions.enabled, __privateGet(this, _currentQuery)) || resolveStaleTime(this.options.staleTime, __privateGet(this, _currentQuery)) !== resolveStaleTime(prevOptions.staleTime, __privateGet(this, _currentQuery)))) {
+      __privateMethod(this, _QueryObserver_instances, updateStaleTimeout_fn).call(this);
+    }
+    const nextRefetchInterval = __privateMethod(this, _QueryObserver_instances, computeRefetchInterval_fn).call(this);
+    if (mounted && (__privateGet(this, _currentQuery) !== prevQuery || resolveEnabled(this.options.enabled, __privateGet(this, _currentQuery)) !== resolveEnabled(prevOptions.enabled, __privateGet(this, _currentQuery)) || nextRefetchInterval !== __privateGet(this, _currentRefetchInterval))) {
+      __privateMethod(this, _QueryObserver_instances, updateRefetchInterval_fn).call(this, nextRefetchInterval);
+    }
+  }
+  getOptimisticResult(options) {
+    const query = __privateGet(this, _client2).getQueryCache().build(__privateGet(this, _client2), options);
+    const result = this.createResult(query, options);
+    if (shouldAssignObserverCurrentProperties(this, result)) {
+      __privateSet(this, _currentResult, result);
+      __privateSet(this, _currentResultOptions, this.options);
+      __privateSet(this, _currentResultState, __privateGet(this, _currentQuery).state);
+    }
+    return result;
+  }
+  getCurrentResult() {
+    return __privateGet(this, _currentResult);
+  }
+  trackResult(result, onPropTracked) {
+    return new Proxy(result, {
+      get: (target, key) => {
+        this.trackProp(key);
+        onPropTracked == null ? void 0 : onPropTracked(key);
+        if (key === "promise" && !this.options.experimental_prefetchInRender && __privateGet(this, _currentThenable).status === "pending") {
+          __privateGet(this, _currentThenable).reject(
+            new Error(
+              "experimental_prefetchInRender feature flag is not enabled"
+            )
+          );
+        }
+        return Reflect.get(target, key);
+      }
+    });
+  }
+  trackProp(key) {
+    __privateGet(this, _trackedProps).add(key);
+  }
+  getCurrentQuery() {
+    return __privateGet(this, _currentQuery);
+  }
+  refetch({ ...options } = {}) {
+    return this.fetch({
+      ...options
+    });
+  }
+  fetchOptimistic(options) {
+    const defaultedOptions = __privateGet(this, _client2).defaultQueryOptions(options);
+    const query = __privateGet(this, _client2).getQueryCache().build(__privateGet(this, _client2), defaultedOptions);
+    return query.fetch().then(() => this.createResult(query, defaultedOptions));
+  }
+  fetch(fetchOptions) {
+    return __privateMethod(this, _QueryObserver_instances, executeFetch_fn).call(this, {
+      ...fetchOptions,
+      cancelRefetch: fetchOptions.cancelRefetch ?? true
+    }).then(() => {
+      this.updateResult();
+      return __privateGet(this, _currentResult);
+    });
+  }
+  createResult(query, options) {
+    var _a2;
+    const prevQuery = __privateGet(this, _currentQuery);
+    const prevOptions = this.options;
+    const prevResult = __privateGet(this, _currentResult);
+    const prevResultState = __privateGet(this, _currentResultState);
+    const prevResultOptions = __privateGet(this, _currentResultOptions);
+    const queryChange = query !== prevQuery;
+    const queryInitialState = queryChange ? query.state : __privateGet(this, _currentQueryInitialState);
+    const { state } = query;
+    let newState = { ...state };
+    let isPlaceholderData = false;
+    let data;
+    if (options._optimisticResults) {
+      const mounted = this.hasListeners();
+      const fetchOnMount = !mounted && shouldFetchOnMount(query, options);
+      const fetchOptionally = mounted && shouldFetchOptionally(query, prevQuery, options, prevOptions);
+      if (fetchOnMount || fetchOptionally) {
+        newState = {
+          ...newState,
+          ...fetchState(state.data, query.options)
+        };
+      }
+      if (options._optimisticResults === "isRestoring") {
+        newState.fetchStatus = "idle";
+      }
+    }
+    let { error, errorUpdatedAt, status } = newState;
+    data = newState.data;
+    let skipSelect = false;
+    if (options.placeholderData !== void 0 && data === void 0 && status === "pending") {
+      let placeholderData;
+      if ((prevResult == null ? void 0 : prevResult.isPlaceholderData) && options.placeholderData === (prevResultOptions == null ? void 0 : prevResultOptions.placeholderData)) {
+        placeholderData = prevResult.data;
+        skipSelect = true;
+      } else {
+        placeholderData = typeof options.placeholderData === "function" ? options.placeholderData(
+          (_a2 = __privateGet(this, _lastQueryWithDefinedData)) == null ? void 0 : _a2.state.data,
+          __privateGet(this, _lastQueryWithDefinedData)
+        ) : options.placeholderData;
+      }
+      if (placeholderData !== void 0) {
+        status = "success";
+        data = replaceData(
+          prevResult == null ? void 0 : prevResult.data,
+          placeholderData,
+          options
+        );
+        isPlaceholderData = true;
+      }
+    }
+    if (options.select && data !== void 0 && !skipSelect) {
+      if (prevResult && data === (prevResultState == null ? void 0 : prevResultState.data) && options.select === __privateGet(this, _selectFn)) {
+        data = __privateGet(this, _selectResult);
+      } else {
+        try {
+          __privateSet(this, _selectFn, options.select);
+          data = options.select(data);
+          data = replaceData(prevResult == null ? void 0 : prevResult.data, data, options);
+          __privateSet(this, _selectResult, data);
+          __privateSet(this, _selectError, null);
+        } catch (selectError) {
+          __privateSet(this, _selectError, selectError);
+        }
+      }
+    }
+    if (__privateGet(this, _selectError)) {
+      error = __privateGet(this, _selectError);
+      data = __privateGet(this, _selectResult);
+      errorUpdatedAt = Date.now();
+      status = "error";
+    }
+    const isFetching = newState.fetchStatus === "fetching";
+    const isPending = status === "pending";
+    const isError = status === "error";
+    const isLoading = isPending && isFetching;
+    const hasData = data !== void 0;
+    const result = {
+      status,
+      fetchStatus: newState.fetchStatus,
+      isPending,
+      isSuccess: status === "success",
+      isError,
+      isInitialLoading: isLoading,
+      isLoading,
+      data,
+      dataUpdatedAt: newState.dataUpdatedAt,
+      error,
+      errorUpdatedAt,
+      failureCount: newState.fetchFailureCount,
+      failureReason: newState.fetchFailureReason,
+      errorUpdateCount: newState.errorUpdateCount,
+      isFetched: newState.dataUpdateCount > 0 || newState.errorUpdateCount > 0,
+      isFetchedAfterMount: newState.dataUpdateCount > queryInitialState.dataUpdateCount || newState.errorUpdateCount > queryInitialState.errorUpdateCount,
+      isFetching,
+      isRefetching: isFetching && !isPending,
+      isLoadingError: isError && !hasData,
+      isPaused: newState.fetchStatus === "paused",
+      isPlaceholderData,
+      isRefetchError: isError && hasData,
+      isStale: isStale(query, options),
+      refetch: this.refetch,
+      promise: __privateGet(this, _currentThenable),
+      isEnabled: resolveEnabled(options.enabled, query) !== false
+    };
+    const nextResult = result;
+    if (this.options.experimental_prefetchInRender) {
+      const finalizeThenableIfPossible = (thenable) => {
+        if (nextResult.status === "error") {
+          thenable.reject(nextResult.error);
+        } else if (nextResult.data !== void 0) {
+          thenable.resolve(nextResult.data);
+        }
+      };
+      const recreateThenable = () => {
+        const pending = __privateSet(this, _currentThenable, nextResult.promise = pendingThenable());
+        finalizeThenableIfPossible(pending);
+      };
+      const prevThenable = __privateGet(this, _currentThenable);
+      switch (prevThenable.status) {
+        case "pending":
+          if (query.queryHash === prevQuery.queryHash) {
+            finalizeThenableIfPossible(prevThenable);
+          }
+          break;
+        case "fulfilled":
+          if (nextResult.status === "error" || nextResult.data !== prevThenable.value) {
+            recreateThenable();
+          }
+          break;
+        case "rejected":
+          if (nextResult.status !== "error" || nextResult.error !== prevThenable.reason) {
+            recreateThenable();
+          }
+          break;
+      }
+    }
+    return nextResult;
+  }
+  updateResult() {
+    const prevResult = __privateGet(this, _currentResult);
+    const nextResult = this.createResult(__privateGet(this, _currentQuery), this.options);
+    __privateSet(this, _currentResultState, __privateGet(this, _currentQuery).state);
+    __privateSet(this, _currentResultOptions, this.options);
+    if (__privateGet(this, _currentResultState).data !== void 0) {
+      __privateSet(this, _lastQueryWithDefinedData, __privateGet(this, _currentQuery));
+    }
+    if (shallowEqualObjects(nextResult, prevResult)) {
+      return;
+    }
+    __privateSet(this, _currentResult, nextResult);
+    const shouldNotifyListeners = () => {
+      if (!prevResult) {
+        return true;
+      }
+      const { notifyOnChangeProps } = this.options;
+      const notifyOnChangePropsValue = typeof notifyOnChangeProps === "function" ? notifyOnChangeProps() : notifyOnChangeProps;
+      if (notifyOnChangePropsValue === "all" || !notifyOnChangePropsValue && !__privateGet(this, _trackedProps).size) {
+        return true;
+      }
+      const includedProps = new Set(
+        notifyOnChangePropsValue ?? __privateGet(this, _trackedProps)
+      );
+      if (this.options.throwOnError) {
+        includedProps.add("error");
+      }
+      return Object.keys(__privateGet(this, _currentResult)).some((key) => {
+        const typedKey = key;
+        const changed = __privateGet(this, _currentResult)[typedKey] !== prevResult[typedKey];
+        return changed && includedProps.has(typedKey);
+      });
+    };
+    __privateMethod(this, _QueryObserver_instances, notify_fn).call(this, { listeners: shouldNotifyListeners() });
+  }
+  onQueryUpdate() {
+    this.updateResult();
+    if (this.hasListeners()) {
+      __privateMethod(this, _QueryObserver_instances, updateTimers_fn).call(this);
+    }
+  }
+}, _client2 = new WeakMap(), _currentQuery = new WeakMap(), _currentQueryInitialState = new WeakMap(), _currentResult = new WeakMap(), _currentResultState = new WeakMap(), _currentResultOptions = new WeakMap(), _currentThenable = new WeakMap(), _selectError = new WeakMap(), _selectFn = new WeakMap(), _selectResult = new WeakMap(), _lastQueryWithDefinedData = new WeakMap(), _staleTimeoutId = new WeakMap(), _refetchIntervalId = new WeakMap(), _currentRefetchInterval = new WeakMap(), _trackedProps = new WeakMap(), _QueryObserver_instances = new WeakSet(), executeFetch_fn = function(fetchOptions) {
+  __privateMethod(this, _QueryObserver_instances, updateQuery_fn).call(this);
+  let promise = __privateGet(this, _currentQuery).fetch(
+    this.options,
+    fetchOptions
+  );
+  if (!(fetchOptions == null ? void 0 : fetchOptions.throwOnError)) {
+    promise = promise.catch(noop$2);
+  }
+  return promise;
+}, updateStaleTimeout_fn = function() {
+  __privateMethod(this, _QueryObserver_instances, clearStaleTimeout_fn).call(this);
+  const staleTime = resolveStaleTime(
+    this.options.staleTime,
+    __privateGet(this, _currentQuery)
+  );
+  if (isServer || __privateGet(this, _currentResult).isStale || !isValidTimeout(staleTime)) {
+    return;
+  }
+  const time = timeUntilStale(__privateGet(this, _currentResult).dataUpdatedAt, staleTime);
+  const timeout = time + 1;
+  __privateSet(this, _staleTimeoutId, timeoutManager.setTimeout(() => {
+    if (!__privateGet(this, _currentResult).isStale) {
+      this.updateResult();
+    }
+  }, timeout));
+}, computeRefetchInterval_fn = function() {
+  return (typeof this.options.refetchInterval === "function" ? this.options.refetchInterval(__privateGet(this, _currentQuery)) : this.options.refetchInterval) ?? false;
+}, updateRefetchInterval_fn = function(nextInterval) {
+  __privateMethod(this, _QueryObserver_instances, clearRefetchInterval_fn).call(this);
+  __privateSet(this, _currentRefetchInterval, nextInterval);
+  if (isServer || resolveEnabled(this.options.enabled, __privateGet(this, _currentQuery)) === false || !isValidTimeout(__privateGet(this, _currentRefetchInterval)) || __privateGet(this, _currentRefetchInterval) === 0) {
+    return;
+  }
+  __privateSet(this, _refetchIntervalId, timeoutManager.setInterval(() => {
+    if (this.options.refetchIntervalInBackground || focusManager.isFocused()) {
+      __privateMethod(this, _QueryObserver_instances, executeFetch_fn).call(this);
+    }
+  }, __privateGet(this, _currentRefetchInterval)));
+}, updateTimers_fn = function() {
+  __privateMethod(this, _QueryObserver_instances, updateStaleTimeout_fn).call(this);
+  __privateMethod(this, _QueryObserver_instances, updateRefetchInterval_fn).call(this, __privateMethod(this, _QueryObserver_instances, computeRefetchInterval_fn).call(this));
+}, clearStaleTimeout_fn = function() {
+  if (__privateGet(this, _staleTimeoutId)) {
+    timeoutManager.clearTimeout(__privateGet(this, _staleTimeoutId));
+    __privateSet(this, _staleTimeoutId, void 0);
+  }
+}, clearRefetchInterval_fn = function() {
+  if (__privateGet(this, _refetchIntervalId)) {
+    timeoutManager.clearInterval(__privateGet(this, _refetchIntervalId));
+    __privateSet(this, _refetchIntervalId, void 0);
+  }
+}, updateQuery_fn = function() {
+  const query = __privateGet(this, _client2).getQueryCache().build(__privateGet(this, _client2), this.options);
+  if (query === __privateGet(this, _currentQuery)) {
+    return;
+  }
+  const prevQuery = __privateGet(this, _currentQuery);
+  __privateSet(this, _currentQuery, query);
+  __privateSet(this, _currentQueryInitialState, query.state);
+  if (this.hasListeners()) {
+    prevQuery == null ? void 0 : prevQuery.removeObserver(this);
+    query.addObserver(this);
+  }
+}, notify_fn = function(notifyOptions) {
+  notifyManager.batch(() => {
+    if (notifyOptions.listeners) {
+      this.listeners.forEach((listener) => {
+        listener(__privateGet(this, _currentResult));
+      });
+    }
+    __privateGet(this, _client2).getQueryCache().notify({
+      query: __privateGet(this, _currentQuery),
+      type: "observerResultsUpdated"
+    });
+  });
+}, _f);
+function shouldLoadOnMount(query, options) {
+  return resolveEnabled(options.enabled, query) !== false && query.state.data === void 0 && !(query.state.status === "error" && options.retryOnMount === false);
+}
+function shouldFetchOnMount(query, options) {
+  return shouldLoadOnMount(query, options) || query.state.data !== void 0 && shouldFetchOn(query, options, options.refetchOnMount);
+}
+function shouldFetchOn(query, options, field) {
+  if (resolveEnabled(options.enabled, query) !== false && resolveStaleTime(options.staleTime, query) !== "static") {
+    const value = typeof field === "function" ? field(query) : field;
+    return value === "always" || value !== false && isStale(query, options);
+  }
+  return false;
+}
+function shouldFetchOptionally(query, prevQuery, options, prevOptions) {
+  return (query !== prevQuery || resolveEnabled(prevOptions.enabled, query) === false) && (!options.suspense || query.state.status !== "error") && isStale(query, options);
+}
+function isStale(query, options) {
+  return resolveEnabled(options.enabled, query) !== false && query.isStaleByTime(resolveStaleTime(options.staleTime, query));
+}
+function shouldAssignObserverCurrentProperties(observer, optimisticResult) {
+  if (!shallowEqualObjects(observer.getCurrentResult(), optimisticResult)) {
+    return true;
+  }
+  return false;
+}
 function infiniteQueryBehavior(pages) {
   return {
     onFetch: (context, query) => {
@@ -13271,15 +13727,15 @@ function getPreviousPageParam(options, { pages, pageParams }) {
   var _a2;
   return pages.length > 0 ? (_a2 = options.getPreviousPageParam) == null ? void 0 : _a2.call(options, pages[0], pages, pageParams[0], pageParams) : void 0;
 }
-var Mutation = (_f = class extends Removable {
+var Mutation = (_g = class extends Removable {
   constructor(config) {
     super();
     __privateAdd(this, _Mutation_instances);
-    __privateAdd(this, _client2);
+    __privateAdd(this, _client3);
     __privateAdd(this, _observers);
     __privateAdd(this, _mutationCache);
     __privateAdd(this, _retryer2);
-    __privateSet(this, _client2, config.client);
+    __privateSet(this, _client3, config.client);
     this.mutationId = config.mutationId;
     __privateSet(this, _mutationCache, config.mutationCache);
     __privateSet(this, _observers, []);
@@ -13329,12 +13785,12 @@ var Mutation = (_f = class extends Removable {
     this.execute(this.state.variables);
   }
   async execute(variables) {
-    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t;
+    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j2, _k2, _l, _m, _n, _o, _p, _q, _r, _s, _t;
     const onContinue = () => {
       __privateMethod(this, _Mutation_instances, dispatch_fn2).call(this, { type: "continue" });
     };
     const mutationFnContext = {
-      client: __privateGet(this, _client2),
+      client: __privateGet(this, _client3),
       meta: this.options.meta,
       mutationKey: this.options.mutationKey
     };
@@ -13400,7 +13856,7 @@ var Mutation = (_f = class extends Removable {
         this.state.context,
         mutationFnContext
       ));
-      await ((_j = (_i2 = __privateGet(this, _mutationCache).config).onSettled) == null ? void 0 : _j.call(
+      await ((_j2 = (_i2 = __privateGet(this, _mutationCache).config).onSettled) == null ? void 0 : _j2.call(
         _i2,
         data,
         null,
@@ -13409,8 +13865,8 @@ var Mutation = (_f = class extends Removable {
         this,
         mutationFnContext
       ));
-      await ((_l = (_k = this.options).onSettled) == null ? void 0 : _l.call(
-        _k,
+      await ((_l = (_k2 = this.options).onSettled) == null ? void 0 : _l.call(
+        _k2,
         data,
         null,
         variables,
@@ -13461,7 +13917,7 @@ var Mutation = (_f = class extends Removable {
       __privateGet(this, _mutationCache).runNext(this);
     }
   }
-}, _client2 = new WeakMap(), _observers = new WeakMap(), _mutationCache = new WeakMap(), _retryer2 = new WeakMap(), _Mutation_instances = new WeakSet(), dispatch_fn2 = function(action) {
+}, _client3 = new WeakMap(), _observers = new WeakMap(), _mutationCache = new WeakMap(), _retryer2 = new WeakMap(), _Mutation_instances = new WeakSet(), dispatch_fn2 = function(action) {
   const reducer2 = (state) => {
     switch (action.type) {
       case "failed":
@@ -13526,7 +13982,7 @@ var Mutation = (_f = class extends Removable {
       action
     });
   });
-}, _f);
+}, _g);
 function getDefaultState() {
   return {
     context: void 0,
@@ -13540,7 +13996,7 @@ function getDefaultState() {
     submittedAt: 0
   };
 }
-var MutationCache = (_g = class extends Subscribable {
+var MutationCache = (_h = class extends Subscribable {
   constructor(config = {}) {
     super();
     __privateAdd(this, _mutations);
@@ -13652,12 +14108,136 @@ var MutationCache = (_g = class extends Subscribable {
       )
     );
   }
-}, _mutations = new WeakMap(), _scopes = new WeakMap(), _mutationId = new WeakMap(), _g);
+}, _mutations = new WeakMap(), _scopes = new WeakMap(), _mutationId = new WeakMap(), _h);
 function scopeFor(mutation) {
   var _a2;
   return (_a2 = mutation.options.scope) == null ? void 0 : _a2.id;
 }
-var QueryCache = (_h = class extends Subscribable {
+var MutationObserver$1 = (_i = class extends Subscribable {
+  constructor(client2, options) {
+    super();
+    __privateAdd(this, _MutationObserver_instances);
+    __privateAdd(this, _client4);
+    __privateAdd(this, _currentResult2);
+    __privateAdd(this, _currentMutation);
+    __privateAdd(this, _mutateOptions);
+    __privateSet(this, _client4, client2);
+    this.setOptions(options);
+    this.bindMethods();
+    __privateMethod(this, _MutationObserver_instances, updateResult_fn).call(this);
+  }
+  bindMethods() {
+    this.mutate = this.mutate.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+  setOptions(options) {
+    var _a2;
+    const prevOptions = this.options;
+    this.options = __privateGet(this, _client4).defaultMutationOptions(options);
+    if (!shallowEqualObjects(this.options, prevOptions)) {
+      __privateGet(this, _client4).getMutationCache().notify({
+        type: "observerOptionsUpdated",
+        mutation: __privateGet(this, _currentMutation),
+        observer: this
+      });
+    }
+    if ((prevOptions == null ? void 0 : prevOptions.mutationKey) && this.options.mutationKey && hashKey(prevOptions.mutationKey) !== hashKey(this.options.mutationKey)) {
+      this.reset();
+    } else if (((_a2 = __privateGet(this, _currentMutation)) == null ? void 0 : _a2.state.status) === "pending") {
+      __privateGet(this, _currentMutation).setOptions(this.options);
+    }
+  }
+  onUnsubscribe() {
+    var _a2;
+    if (!this.hasListeners()) {
+      (_a2 = __privateGet(this, _currentMutation)) == null ? void 0 : _a2.removeObserver(this);
+    }
+  }
+  onMutationUpdate(action) {
+    __privateMethod(this, _MutationObserver_instances, updateResult_fn).call(this);
+    __privateMethod(this, _MutationObserver_instances, notify_fn2).call(this, action);
+  }
+  getCurrentResult() {
+    return __privateGet(this, _currentResult2);
+  }
+  reset() {
+    var _a2;
+    (_a2 = __privateGet(this, _currentMutation)) == null ? void 0 : _a2.removeObserver(this);
+    __privateSet(this, _currentMutation, void 0);
+    __privateMethod(this, _MutationObserver_instances, updateResult_fn).call(this);
+    __privateMethod(this, _MutationObserver_instances, notify_fn2).call(this);
+  }
+  mutate(variables, options) {
+    var _a2;
+    __privateSet(this, _mutateOptions, options);
+    (_a2 = __privateGet(this, _currentMutation)) == null ? void 0 : _a2.removeObserver(this);
+    __privateSet(this, _currentMutation, __privateGet(this, _client4).getMutationCache().build(__privateGet(this, _client4), this.options));
+    __privateGet(this, _currentMutation).addObserver(this);
+    return __privateGet(this, _currentMutation).execute(variables);
+  }
+}, _client4 = new WeakMap(), _currentResult2 = new WeakMap(), _currentMutation = new WeakMap(), _mutateOptions = new WeakMap(), _MutationObserver_instances = new WeakSet(), updateResult_fn = function() {
+  var _a2;
+  const state = ((_a2 = __privateGet(this, _currentMutation)) == null ? void 0 : _a2.state) ?? getDefaultState();
+  __privateSet(this, _currentResult2, {
+    ...state,
+    isPending: state.status === "pending",
+    isSuccess: state.status === "success",
+    isError: state.status === "error",
+    isIdle: state.status === "idle",
+    mutate: this.mutate,
+    reset: this.reset
+  });
+}, notify_fn2 = function(action) {
+  notifyManager.batch(() => {
+    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
+    if (__privateGet(this, _mutateOptions) && this.hasListeners()) {
+      const variables = __privateGet(this, _currentResult2).variables;
+      const onMutateResult = __privateGet(this, _currentResult2).context;
+      const context = {
+        client: __privateGet(this, _client4),
+        meta: this.options.meta,
+        mutationKey: this.options.mutationKey
+      };
+      if ((action == null ? void 0 : action.type) === "success") {
+        (_b2 = (_a2 = __privateGet(this, _mutateOptions)).onSuccess) == null ? void 0 : _b2.call(
+          _a2,
+          action.data,
+          variables,
+          onMutateResult,
+          context
+        );
+        (_d2 = (_c2 = __privateGet(this, _mutateOptions)).onSettled) == null ? void 0 : _d2.call(
+          _c2,
+          action.data,
+          null,
+          variables,
+          onMutateResult,
+          context
+        );
+      } else if ((action == null ? void 0 : action.type) === "error") {
+        (_f2 = (_e2 = __privateGet(this, _mutateOptions)).onError) == null ? void 0 : _f2.call(
+          _e2,
+          action.error,
+          variables,
+          onMutateResult,
+          context
+        );
+        (_h2 = (_g2 = __privateGet(this, _mutateOptions)).onSettled) == null ? void 0 : _h2.call(
+          _g2,
+          void 0,
+          action.error,
+          variables,
+          onMutateResult,
+          context
+        );
+      }
+    }
+    this.listeners.forEach((listener) => {
+      listener(__privateGet(this, _currentResult2));
+    });
+  });
+}, _i);
+var QueryCache = (_j = class extends Subscribable {
   constructor(config = {}) {
     super();
     __privateAdd(this, _queries);
@@ -13744,8 +14324,8 @@ var QueryCache = (_h = class extends Subscribable {
       });
     });
   }
-}, _queries = new WeakMap(), _h);
-var QueryClient = (_i = class {
+}, _queries = new WeakMap(), _j);
+var QueryClient = (_k = class {
   constructor(config = {}) {
     __privateAdd(this, _queryCache);
     __privateAdd(this, _mutationCache2);
@@ -14032,10 +14612,17 @@ var QueryClient = (_i = class {
     __privateGet(this, _queryCache).clear();
     __privateGet(this, _mutationCache2).clear();
   }
-}, _queryCache = new WeakMap(), _mutationCache2 = new WeakMap(), _defaultOptions2 = new WeakMap(), _queryDefaults = new WeakMap(), _mutationDefaults = new WeakMap(), _mountCount = new WeakMap(), _unsubscribeFocus = new WeakMap(), _unsubscribeOnline = new WeakMap(), _i);
+}, _queryCache = new WeakMap(), _mutationCache2 = new WeakMap(), _defaultOptions2 = new WeakMap(), _queryDefaults = new WeakMap(), _mutationDefaults = new WeakMap(), _mountCount = new WeakMap(), _unsubscribeFocus = new WeakMap(), _unsubscribeOnline = new WeakMap(), _k);
 var QueryClientContext = reactExports.createContext(
   void 0
 );
+var useQueryClient = (queryClient2) => {
+  const client2 = reactExports.useContext(QueryClientContext);
+  if (!client2) {
+    throw new Error("No QueryClient set, use QueryClientProvider to set one");
+  }
+  return client2;
+};
 var QueryClientProvider = ({
   client: client2,
   children
@@ -14048,6 +14635,167 @@ var QueryClientProvider = ({
   }, [client2]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientContext.Provider, { value: client2, children });
 };
+var IsRestoringContext = reactExports.createContext(false);
+var useIsRestoring = () => reactExports.useContext(IsRestoringContext);
+IsRestoringContext.Provider;
+function createValue() {
+  let isReset = false;
+  return {
+    clearReset: () => {
+      isReset = false;
+    },
+    reset: () => {
+      isReset = true;
+    },
+    isReset: () => {
+      return isReset;
+    }
+  };
+}
+var QueryErrorResetBoundaryContext = reactExports.createContext(createValue());
+var useQueryErrorResetBoundary = () => reactExports.useContext(QueryErrorResetBoundaryContext);
+var ensurePreventErrorBoundaryRetry = (options, errorResetBoundary) => {
+  if (options.suspense || options.throwOnError || options.experimental_prefetchInRender) {
+    if (!errorResetBoundary.isReset()) {
+      options.retryOnMount = false;
+    }
+  }
+};
+var useClearResetErrorBoundary = (errorResetBoundary) => {
+  reactExports.useEffect(() => {
+    errorResetBoundary.clearReset();
+  }, [errorResetBoundary]);
+};
+var getHasError = ({
+  result,
+  errorResetBoundary,
+  throwOnError,
+  query,
+  suspense
+}) => {
+  return result.isError && !errorResetBoundary.isReset() && !result.isFetching && query && (suspense && result.data === void 0 || shouldThrowError(throwOnError, [result.error, query]));
+};
+var ensureSuspenseTimers = (defaultedOptions) => {
+  if (defaultedOptions.suspense) {
+    const MIN_SUSPENSE_TIME_MS = 1e3;
+    const clamp2 = (value) => value === "static" ? value : Math.max(value ?? MIN_SUSPENSE_TIME_MS, MIN_SUSPENSE_TIME_MS);
+    const originalStaleTime = defaultedOptions.staleTime;
+    defaultedOptions.staleTime = typeof originalStaleTime === "function" ? (...args) => clamp2(originalStaleTime(...args)) : clamp2(originalStaleTime);
+    if (typeof defaultedOptions.gcTime === "number") {
+      defaultedOptions.gcTime = Math.max(
+        defaultedOptions.gcTime,
+        MIN_SUSPENSE_TIME_MS
+      );
+    }
+  }
+};
+var willFetch = (result, isRestoring) => result.isLoading && result.isFetching && !isRestoring;
+var shouldSuspend = (defaultedOptions, result) => (defaultedOptions == null ? void 0 : defaultedOptions.suspense) && result.isPending;
+var fetchOptimistic = (defaultedOptions, observer, errorResetBoundary) => observer.fetchOptimistic(defaultedOptions).catch(() => {
+  errorResetBoundary.clearReset();
+});
+function useBaseQuery(options, Observer, queryClient2) {
+  var _a2, _b2, _c2, _d2, _e2;
+  const isRestoring = useIsRestoring();
+  const errorResetBoundary = useQueryErrorResetBoundary();
+  const client2 = useQueryClient();
+  const defaultedOptions = client2.defaultQueryOptions(options);
+  (_b2 = (_a2 = client2.getDefaultOptions().queries) == null ? void 0 : _a2._experimental_beforeQuery) == null ? void 0 : _b2.call(
+    _a2,
+    defaultedOptions
+  );
+  defaultedOptions._optimisticResults = isRestoring ? "isRestoring" : "optimistic";
+  ensureSuspenseTimers(defaultedOptions);
+  ensurePreventErrorBoundaryRetry(defaultedOptions, errorResetBoundary);
+  useClearResetErrorBoundary(errorResetBoundary);
+  const isNewCacheEntry = !client2.getQueryCache().get(defaultedOptions.queryHash);
+  const [observer] = reactExports.useState(
+    () => new Observer(
+      client2,
+      defaultedOptions
+    )
+  );
+  const result = observer.getOptimisticResult(defaultedOptions);
+  const shouldSubscribe = !isRestoring && options.subscribed !== false;
+  reactExports.useSyncExternalStore(
+    reactExports.useCallback(
+      (onStoreChange) => {
+        const unsubscribe = shouldSubscribe ? observer.subscribe(notifyManager.batchCalls(onStoreChange)) : noop$2;
+        observer.updateResult();
+        return unsubscribe;
+      },
+      [observer, shouldSubscribe]
+    ),
+    () => observer.getCurrentResult(),
+    () => observer.getCurrentResult()
+  );
+  reactExports.useEffect(() => {
+    observer.setOptions(defaultedOptions);
+  }, [defaultedOptions, observer]);
+  if (shouldSuspend(defaultedOptions, result)) {
+    throw fetchOptimistic(defaultedOptions, observer, errorResetBoundary);
+  }
+  if (getHasError({
+    result,
+    errorResetBoundary,
+    throwOnError: defaultedOptions.throwOnError,
+    query: client2.getQueryCache().get(defaultedOptions.queryHash),
+    suspense: defaultedOptions.suspense
+  })) {
+    throw result.error;
+  }
+  (_d2 = (_c2 = client2.getDefaultOptions().queries) == null ? void 0 : _c2._experimental_afterQuery) == null ? void 0 : _d2.call(
+    _c2,
+    defaultedOptions,
+    result
+  );
+  if (defaultedOptions.experimental_prefetchInRender && !isServer && willFetch(result, isRestoring)) {
+    const promise = isNewCacheEntry ? (
+      // Fetch immediately on render in order to ensure `.promise` is resolved even if the component is unmounted
+      fetchOptimistic(defaultedOptions, observer, errorResetBoundary)
+    ) : (
+      // subscribe to the "cache promise" so that we can finalize the currentThenable once data comes in
+      (_e2 = client2.getQueryCache().get(defaultedOptions.queryHash)) == null ? void 0 : _e2.promise
+    );
+    promise == null ? void 0 : promise.catch(noop$2).finally(() => {
+      observer.updateResult();
+    });
+  }
+  return !defaultedOptions.notifyOnChangeProps ? observer.trackResult(result) : result;
+}
+function useQuery(options, queryClient2) {
+  return useBaseQuery(options, QueryObserver);
+}
+function useMutation(options, queryClient2) {
+  const client2 = useQueryClient();
+  const [observer] = reactExports.useState(
+    () => new MutationObserver$1(
+      client2,
+      options
+    )
+  );
+  reactExports.useEffect(() => {
+    observer.setOptions(options);
+  }, [observer, options]);
+  const result = reactExports.useSyncExternalStore(
+    reactExports.useCallback(
+      (onStoreChange) => observer.subscribe(notifyManager.batchCalls(onStoreChange)),
+      [observer]
+    ),
+    () => observer.getCurrentResult(),
+    () => observer.getCurrentResult()
+  );
+  const mutate = reactExports.useCallback(
+    (variables, mutateOptions) => {
+      observer.mutate(variables, mutateOptions).catch(noop$2);
+    },
+    [observer]
+  );
+  if (result.error && shouldThrowError(observer.options.throwOnError, [result.error])) {
+    throw result.error;
+  }
+  return { ...result, mutate, mutateAsync: result.mutate };
+}
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1e6;
 let count$2 = 0;
@@ -15682,7 +16430,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$R = [
+const __iconNode$Y = [
   [
     "path",
     {
@@ -15691,14 +16439,25 @@ const __iconNode$R = [
     }
   ]
 ];
-const Activity = createLucideIcon("activity", __iconNode$R);
+const Activity = createLucideIcon("activity", __iconNode$Y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$Q = [
+const __iconNode$X = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$X);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$W = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -15708,14 +16467,25 @@ const __iconNode$Q = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$Q);
+const BookOpen = createLucideIcon("book-open", __iconNode$W);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$P = [
+const __iconNode$V = [
+  ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
+  ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
+];
+const Briefcase = createLucideIcon("briefcase", __iconNode$V);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$U = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -15727,125 +16497,125 @@ const __iconNode$P = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$P);
+const Calculator = createLucideIcon("calculator", __iconNode$U);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$O = [
+const __iconNode$T = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$O);
+const Calendar = createLucideIcon("calendar", __iconNode$T);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$N = [
+const __iconNode$S = [
   ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
   ["path", { d: "M18 17V9", key: "2bz60n" }],
   ["path", { d: "M13 17V5", key: "1frdt8" }],
   ["path", { d: "M8 17v-3", key: "17ska0" }]
 ];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$N);
+const ChartColumn = createLucideIcon("chart-column", __iconNode$S);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$M = [
+const __iconNode$R = [
   ["path", { d: "M18 6 7 17l-5-5", key: "116fxf" }],
   ["path", { d: "m22 10-7.5 7.5L13 16", key: "ke71qq" }]
 ];
-const CheckCheck = createLucideIcon("check-check", __iconNode$M);
+const CheckCheck = createLucideIcon("check-check", __iconNode$R);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$L = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$L);
+const __iconNode$Q = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$Q);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$K = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$K);
+const __iconNode$P = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$P);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$J = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$J);
+const __iconNode$O = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$O);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$I = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$I);
+const __iconNode$N = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$N);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$H = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$H);
+const __iconNode$M = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$M);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$G = [
+const __iconNode$L = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$G);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$L);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$F = [
+const __iconNode$K = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$F);
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$K);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$E = [
+const __iconNode$J = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$E);
+const Clock = createLucideIcon("clock", __iconNode$J);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$D = [
+const __iconNode$I = [
   ["path", { d: "M10 2v2", key: "7u0qdc" }],
   ["path", { d: "M14 2v2", key: "6buw04" }],
   [
@@ -15857,38 +16627,38 @@ const __iconNode$D = [
   ],
   ["path", { d: "M6 2v2", key: "colzsn" }]
 ];
-const Coffee = createLucideIcon("coffee", __iconNode$D);
+const Coffee = createLucideIcon("coffee", __iconNode$I);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$C = [
+const __iconNode$H = [
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
   ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
 ];
-const Download = createLucideIcon("download", __iconNode$C);
+const Download = createLucideIcon("download", __iconNode$H);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$B = [
+const __iconNode$G = [
   ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
   ["path", { d: "M10 14 21 3", key: "gplh6r" }],
   ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
 ];
-const ExternalLink = createLucideIcon("external-link", __iconNode$B);
+const ExternalLink = createLucideIcon("external-link", __iconNode$G);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$A = [
+const __iconNode$F = [
   [
     "path",
     {
@@ -15898,28 +16668,28 @@ const __iconNode$A = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$A);
+const Eye = createLucideIcon("eye", __iconNode$F);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$z = [
+const __iconNode$E = [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   ["path", { d: "M10 9H8", key: "b1mrlr" }],
   ["path", { d: "M16 13H8", key: "t4e002" }],
   ["path", { d: "M16 17H8", key: "z1uh3a" }]
 ];
-const FileText = createLucideIcon("file-text", __iconNode$z);
+const FileText = createLucideIcon("file-text", __iconNode$E);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [
+const __iconNode$D = [
   [
     "path",
     {
@@ -15929,26 +16699,26 @@ const __iconNode$y = [
   ],
   ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
 ];
-const Github = createLucideIcon("github", __iconNode$y);
+const Github = createLucideIcon("github", __iconNode$D);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$x = [
+const __iconNode$C = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
   ["path", { d: "M2 12h20", key: "9i4pu4" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$x);
+const Globe = createLucideIcon("globe", __iconNode$C);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$w = [
+const __iconNode$B = [
   [
     "path",
     {
@@ -15959,26 +16729,26 @@ const __iconNode$w = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$w);
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$B);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$v = [
+const __iconNode$A = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 16v-4", key: "1dtifu" }],
   ["path", { d: "M12 8h.01", key: "e9boi3" }]
 ];
-const Info = createLucideIcon("info", __iconNode$v);
+const Info = createLucideIcon("info", __iconNode$A);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$u = [
+const __iconNode$z = [
   [
     "path",
     {
@@ -15988,14 +16758,14 @@ const __iconNode$u = [
   ],
   ["circle", { cx: "16.5", cy: "7.5", r: ".5", fill: "currentColor", key: "w0ekpg" }]
 ];
-const KeyRound = createLucideIcon("key-round", __iconNode$u);
+const KeyRound = createLucideIcon("key-round", __iconNode$z);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$t = [
+const __iconNode$y = [
   ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
   ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
   ["path", { d: "M2 5h12", key: "or177f" }],
@@ -16003,14 +16773,44 @@ const __iconNode$t = [
   ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
   ["path", { d: "M14 18h6", key: "1m8k6r" }]
 ];
-const Languages = createLucideIcon("languages", __iconNode$t);
+const Languages = createLucideIcon("languages", __iconNode$y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$s = [
+const __iconNode$x = [
+  [
+    "path",
+    {
+      d: "M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z",
+      key: "zw3jo"
+    }
+  ],
+  [
+    "path",
+    {
+      d: "M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12",
+      key: "1wduqc"
+    }
+  ],
+  [
+    "path",
+    {
+      d: "M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17",
+      key: "kqbvx6"
+    }
+  ]
+];
+const Layers = createLucideIcon("layers", __iconNode$x);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$w = [
   [
     "path",
     {
@@ -16021,22 +16821,22 @@ const __iconNode$s = [
   ["rect", { width: "4", height: "12", x: "2", y: "9", key: "mk3on5" }],
   ["circle", { cx: "4", cy: "4", r: "2", key: "bt5ra8" }]
 ];
-const Linkedin = createLucideIcon("linkedin", __iconNode$s);
+const Linkedin = createLucideIcon("linkedin", __iconNode$w);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$r = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$r);
+const __iconNode$v = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$v);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$q = [
+const __iconNode$u = [
   ["path", { d: "M12 2v4", key: "3427ic" }],
   ["path", { d: "m16.2 7.8 2.9-2.9", key: "r700ao" }],
   ["path", { d: "M18 12h4", key: "wj9ykh" }],
@@ -16046,7 +16846,53 @@ const __iconNode$q = [
   ["path", { d: "M2 12h4", key: "j09sii" }],
   ["path", { d: "m4.9 4.9 2.9 2.9", key: "giyufr" }]
 ];
-const Loader = createLucideIcon("loader", __iconNode$q);
+const Loader = createLucideIcon("loader", __iconNode$u);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$t = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 9.9-1", key: "1mm8w8" }]
+];
+const LockOpen = createLucideIcon("lock-open", __iconNode$t);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$s = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+];
+const Lock = createLucideIcon("lock", __iconNode$s);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$r = [
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }],
+  ["polyline", { points: "10 17 15 12 10 7", key: "1ail0h" }],
+  ["line", { x1: "15", x2: "3", y1: "12", y2: "12", key: "v6grx8" }]
+];
+const LogIn = createLucideIcon("log-in", __iconNode$r);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$q = [
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
+  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
+  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$q);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16054,10 +16900,10 @@ const Loader = createLucideIcon("loader", __iconNode$q);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$p = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
+  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$p);
+const Mail = createLucideIcon("mail", __iconNode$p);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16065,37 +16911,24 @@ const Lock = createLucideIcon("lock", __iconNode$p);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$o = [
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
-  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
-  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+  ["path", { d: "M7.9 20A9 9 0 1 0 4 16.1L2 22Z", key: "vv11sd" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$o);
+const MessageCircle = createLucideIcon("message-circle", __iconNode$o);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [
-  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
-  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
-];
-const Mail = createLucideIcon("mail", __iconNode$n);
+const __iconNode$n = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$n);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$m);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$l = [
+const __iconNode$m = [
   ["path", { d: "M12 20h9", key: "t2du7b" }],
   [
     "path",
@@ -16105,7 +16938,24 @@ const __iconNode$l = [
     }
   ]
 ];
-const PenLine = createLucideIcon("pen-line", __iconNode$l);
+const PenLine = createLucideIcon("pen-line", __iconNode$m);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [
+  [
+    "path",
+    {
+      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+      key: "1a8usu"
+    }
+  ],
+  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+];
+const Pencil = createLucideIcon("pencil", __iconNode$l);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -28687,7 +29537,7 @@ Option 2: Install and provide the "ws" package:
    * @internal
    */
   _initializeOptions(options) {
-    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2, _j, _k, _l, _m;
+    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2, _j2, _k2, _l, _m;
     this.worker = (_a2 = options === null || options === void 0 ? void 0 : options.worker) !== null && _a2 !== void 0 ? _a2 : false;
     this.accessToken = (_b2 = options === null || options === void 0 ? void 0 : options.accessToken) !== null && _b2 !== void 0 ? _b2 : null;
     const result = {};
@@ -28699,12 +29549,12 @@ Option 2: Install and provide the "ws" package:
     result.logger = options === null || options === void 0 ? void 0 : options.logger;
     result.heartbeatCallback = this._wrapHeartbeatCallback(options === null || options === void 0 ? void 0 : options.heartbeatCallback);
     result.sessionStorage = (_h2 = options === null || options === void 0 ? void 0 : options.sessionStorage) !== null && _h2 !== void 0 ? _h2 : resolveSessionStorage();
-    result.reconnectAfterMs = (_j = options === null || options === void 0 ? void 0 : options.reconnectAfterMs) !== null && _j !== void 0 ? _j : ((tries) => {
+    result.reconnectAfterMs = (_j2 = options === null || options === void 0 ? void 0 : options.reconnectAfterMs) !== null && _j2 !== void 0 ? _j2 : ((tries) => {
       return RECONNECT_INTERVALS[tries - 1] || DEFAULT_RECONNECT_FALLBACK;
     });
     let defaultEncode;
     let defaultDecode;
-    const vsn = (_k = options === null || options === void 0 ? void 0 : options.vsn) !== null && _k !== void 0 ? _k : DEFAULT_VSN$1;
+    const vsn = (_k2 = options === null || options === void 0 ? void 0 : options.vsn) !== null && _k2 !== void 0 ? _k2 : DEFAULT_VSN$1;
     switch (vsn) {
       case VSN_1_0_0:
         defaultEncode = (payload, callback) => {
@@ -35749,7 +36599,7 @@ class GoTrueClient {
     }
   }
   async signInWithEthereum(credentials) {
-    var _a2, _b2, _c2, _d2, _f2, _g2, _h2, _j, _k, _l, _m;
+    var _a2, _b2, _c2, _d2, _f2, _g2, _h2, _j2, _k2, _l, _m;
     let message;
     let signature;
     if ("message" in credentials) {
@@ -35801,8 +36651,8 @@ class GoTrueClient {
         issuedAt: (_f2 = (_d2 = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _d2 === void 0 ? void 0 : _d2.issuedAt) !== null && _f2 !== void 0 ? _f2 : /* @__PURE__ */ new Date(),
         expirationTime: (_g2 = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _g2 === void 0 ? void 0 : _g2.expirationTime,
         notBefore: (_h2 = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _h2 === void 0 ? void 0 : _h2.notBefore,
-        requestId: (_j = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _j === void 0 ? void 0 : _j.requestId,
-        resources: (_k = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _k === void 0 ? void 0 : _k.resources
+        requestId: (_j2 = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _j2 === void 0 ? void 0 : _j2.requestId,
+        resources: (_k2 = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _k2 === void 0 ? void 0 : _k2.resources
       };
       message = createSiweMessage(siweMessage);
       signature = await resolvedWallet.request({
@@ -35840,7 +36690,7 @@ class GoTrueClient {
     }
   }
   async signInWithSolana(credentials) {
-    var _a2, _b2, _c2, _d2, _f2, _g2, _h2, _j, _k, _l, _m, _o;
+    var _a2, _b2, _c2, _d2, _f2, _g2, _h2, _j2, _k2, _l, _m, _o;
     let message;
     let signature;
     if ("message" in credentials) {
@@ -35901,8 +36751,8 @@ class GoTrueClient {
           ...((_f2 = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _f2 === void 0 ? void 0 : _f2.expirationTime) ? [`Expiration Time: ${options.signInWithSolana.expirationTime}`] : [],
           ...((_g2 = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _g2 === void 0 ? void 0 : _g2.chainId) ? [`Chain ID: ${options.signInWithSolana.chainId}`] : [],
           ...((_h2 = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _h2 === void 0 ? void 0 : _h2.nonce) ? [`Nonce: ${options.signInWithSolana.nonce}`] : [],
-          ...((_j = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _j === void 0 ? void 0 : _j.requestId) ? [`Request ID: ${options.signInWithSolana.requestId}`] : [],
-          ...((_l = (_k = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _k === void 0 ? void 0 : _k.resources) === null || _l === void 0 ? void 0 : _l.length) ? [
+          ...((_j2 = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _j2 === void 0 ? void 0 : _j2.requestId) ? [`Request ID: ${options.signInWithSolana.requestId}`] : [],
+          ...((_l = (_k2 = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _k2 === void 0 ? void 0 : _k2.resources) === null || _l === void 0 ? void 0 : _l.length) ? [
             "Resources",
             ...options.signInWithSolana.resources.map((resource) => `- ${resource}`)
           ] : []
@@ -42414,7 +43264,10 @@ function CourseCard({
   isInProgress,
   isPlanned,
   onClick,
-  allCourses
+  allCourses,
+  fulfillmentCode,
+  fulfillmentTitle,
+  isRemainder
 }) {
   const [showDetails, setShowDetails] = reactExports.useState(false);
   const getCardStyle = () => {
@@ -42488,7 +43341,8 @@ function CourseCard({
         /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-sm font-medium truncate", children: course.title }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-600 dark:text-gray-400 mt-1", children: course.code })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-600 dark:text-gray-400 mt-1", children: fulfillmentCode ?? course.code }),
+            fulfillmentTitle && fulfillmentCode && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-500 truncate", children: fulfillmentTitle })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: showDetails, onOpenChange: setShowDetails, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -42507,7 +43361,7 @@ function CourseCard({
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4 text-sm", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium dark:text-gray-200", children: "Código:" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "dark:text-gray-300", children: course.code })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "dark:text-gray-300", children: fulfillmentCode ?? course.code })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium dark:text-gray-200", children: "Créditos:" }),
@@ -42564,7 +43418,12 @@ function CourseCard({
               " cr"
             ] })
           ] }),
-          course.type !== "obligatoria" && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs mt-2 dark:bg-gray-700 dark:text-gray-300", children: getTypeLabel(course.type) })
+          isRemainder && /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "secondary", className: "text-xs mt-2 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200", children: [
+            "Pendiente — ",
+            course.credits,
+            " cr"
+          ] }),
+          course.type !== "obligatoria" && !isRemainder && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs mt-2 dark:bg-gray-700 dark:text-gray-300", children: getTypeLabel(course.type) })
         ] })
       ]
     }
@@ -43035,6 +43894,21 @@ const availableCurricula = [
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-JUR.json`);
       if (!res.ok) throw new Error("No se pudo cargar /data/Malla-JUR.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "dit-usfq",
+    slug: "malla-dit",
+    name: "Diseño de Interiores",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 124,
+    courses: 47,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-DIT.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-DIT.json");
       return { default: await res.json() };
     }
   },
@@ -47662,6 +48536,124 @@ function useCourseOffer() {
   }, []);
   return { offerMap, isLoading, lastRefreshed, period, periodCode, lastUpdated, error, loadFromCache };
 }
+function uid$1() {
+  return Math.random().toString(36).slice(2, 10);
+}
+function optionLabel(index2) {
+  return `Opción ${String.fromCharCode(65 + index2)}`;
+}
+function useTabbedCache({
+  storageKey,
+  isOpen,
+  createDefaultData,
+  defaultTabLabel = optionLabel
+}) {
+  const hydrated = reactExports.useRef(false);
+  const [tabs, setTabs] = reactExports.useState([]);
+  const [activeTabId, setActiveTabId] = reactExports.useState("");
+  const persist = reactExports.useCallback(
+    (nextTabs, nextActiveId) => {
+      try {
+        sessionStorage.setItem(
+          storageKey,
+          JSON.stringify({ tabs: nextTabs, activeTabId: nextActiveId })
+        );
+      } catch {
+      }
+    },
+    [storageKey]
+  );
+  reactExports.useEffect(() => {
+    var _a2;
+    if (!isOpen || hydrated.current) return;
+    hydrated.current = true;
+    try {
+      const raw = sessionStorage.getItem(storageKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if ((_a2 = parsed.tabs) == null ? void 0 : _a2.length) {
+          setTabs(parsed.tabs);
+          setActiveTabId(
+            parsed.activeTabId && parsed.tabs.some((t) => t.id === parsed.activeTabId) ? parsed.activeTabId : parsed.tabs[0].id
+          );
+          return;
+        }
+      }
+    } catch {
+    }
+    const id = uid$1();
+    const initial = [
+      { id, label: defaultTabLabel(0), data: createDefaultData() }
+    ];
+    setTabs(initial);
+    setActiveTabId(id);
+    persist(initial, id);
+  }, [isOpen, storageKey, createDefaultData, defaultTabLabel, persist]);
+  reactExports.useEffect(() => {
+    if (!hydrated.current || tabs.length === 0) return;
+    persist(tabs, activeTabId);
+  }, [tabs, activeTabId, persist]);
+  const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
+  const updateActiveData = reactExports.useCallback((data) => {
+    setTabs(
+      (prev) => prev.map((t) => t.id === activeTabId ? { ...t, data } : t)
+    );
+  }, [activeTabId]);
+  const addTab = reactExports.useCallback(() => {
+    const id = uid$1();
+    setTabs((prev) => {
+      const next = [
+        ...prev,
+        { id, label: defaultTabLabel(prev.length), data: createDefaultData() }
+      ];
+      return next;
+    });
+    setActiveTabId(id);
+  }, [createDefaultData, defaultTabLabel]);
+  const removeTab = reactExports.useCallback(
+    (id) => {
+      setTabs((prev) => {
+        var _a2;
+        if (prev.length <= 1) return prev;
+        const next = prev.filter((t) => t.id !== id);
+        if (activeTabId === id) {
+          setActiveTabId(((_a2 = next[0]) == null ? void 0 : _a2.id) ?? "");
+        }
+        return next;
+      });
+    },
+    [activeTabId]
+  );
+  const renameTab = reactExports.useCallback((id, label) => {
+    const trimmed = label.trim();
+    if (!trimmed) return;
+    setTabs(
+      (prev) => prev.map((t) => t.id === id ? { ...t, label: trimmed } : t)
+    );
+  }, []);
+  const selectTab = reactExports.useCallback((id) => {
+    setActiveTabId(id);
+  }, []);
+  const replaceAllTabs = reactExports.useCallback(
+    (nextTabs, nextActiveId) => {
+      var _a2;
+      setTabs(nextTabs);
+      setActiveTabId(nextActiveId ?? ((_a2 = nextTabs[0]) == null ? void 0 : _a2.id) ?? "");
+    },
+    []
+  );
+  return {
+    tabs,
+    activeTab,
+    activeTabId,
+    updateActiveData,
+    addTab,
+    removeTab,
+    renameTab,
+    selectTab,
+    replaceAllTabs
+  };
+}
 const DAY_FULL_TO_SHORT = {
   Lunes: "Lun",
   Martes: "Mar",
@@ -47682,20 +48674,30 @@ function normalizeOfferCourseCode(code) {
   if (match) return `${match[1]}-${match[2]}`;
   return raw;
 }
-function hasSpecificCourseCode(course) {
+const BUCKET_PREFIXES$1 = /* @__PURE__ */ new Set([
+  "OPT",
+  "ELECTIVA",
+  "ARTE",
+  "HUM",
+  "CCSS",
+  "CIENCIAS"
+]);
+function requiresOfferCourseCode(course) {
+  var _a2;
   const normalized = normalizeCurriculumCode(course.code);
-  return /^[A-Z]{2,5}-\d/.test(normalized);
-}
-function isOpenElectiveCourse(course) {
-  return !hasSpecificCourseCode(course);
+  const prefix = normalized.split("-")[0];
+  if (BUCKET_PREFIXES$1.has(prefix)) return true;
+  const area = ((_a2 = course.area) == null ? void 0 : _a2.toUpperCase()) ?? "";
+  if (area.startsWith("OPT") || area.endsWith("OPT")) return true;
+  return !/^[A-Z]{2,4}-\d{3,4}/.test(normalized);
 }
 function normalizeOfferCourseCodeInput(raw) {
   return raw.toUpperCase().replace(/\s+/g, "-").replace(/[^A-Z0-9-]/g, "");
 }
 function getElectivePrefixes(course) {
   var _a2;
+  if (requiresOfferCourseCode(course)) return null;
   const normalized = normalizeCurriculumCode(course.code);
-  if (/^[A-Z]{2,5}-\d/.test(normalized)) return null;
   const colonMatch = course.title.match(/:\s*([A-Z/]+)/i);
   if (colonMatch) {
     return colonMatch[1].split("/").map((p) => `${p.trim().toUpperCase()}-`);
@@ -47807,7 +48809,7 @@ function getOffersForExplicitCode(offerMap, explicitCode, type = "Teoría") {
 function getOffersForSchedule(offerMap, course, explicitCode, type = "Teoría") {
   const trimmed = explicitCode == null ? void 0 : explicitCode.trim();
   if (trimmed) return getOffersForExplicitCode(offerMap, trimmed, type);
-  if (isOpenElectiveCourse(course)) return [];
+  if (requiresOfferCourseCode(course)) return [];
   return getOffersForCourse(offerMap, course, type);
 }
 function getOfferCoursePreview(offerMap, explicitCode) {
@@ -47820,7 +48822,7 @@ function getScheduleDisplayLabels(course, schedule, offerMap, part = "main") {
     const row = offerMap.get(nrc);
     if (row) return { code: row.course_code, title: row.title };
   }
-  if (isOpenElectiveCourse(course) && ((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
+  if (requiresOfferCourseCode(course) && ((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
     const preview = getOfferCoursePreview(offerMap, schedule.offerCourseCode);
     if (preview) return { code: preview.course_code, title: preview.title };
     const code = normalizeOfferCourseCode(schedule.offerCourseCode);
@@ -47828,24 +48830,62 @@ function getScheduleDisplayLabels(course, schedule, offerMap, part = "main") {
   }
   return { code: course.code, title: course.title };
 }
+function formatGroupLetters(letters) {
+  if (!letters.length) return "";
+  return letters.map((l) => `| ${l} |`).join(" ");
+}
+function requiredLinkLetter(main, childType) {
+  const letters = main.group_letters;
+  if (!letters.length || main.type !== "Teoría") return null;
+  if (childType === "Laboratorio") return letters[0] ?? null;
+  if (letters.length >= 2) return letters[1] ?? null;
+  return letters[0] ?? null;
+}
+function isOfferLinkedToMain(main, child) {
+  if (main.course_code !== child.course_code) return false;
+  if (main.type !== "Teoría") return false;
+  if (child.type !== "Ejercicios" && child.type !== "Laboratorio") return false;
+  const mainLetters = main.group_letters;
+  const childLetters = child.group_letters;
+  if (!mainLetters.length || !childLetters.length) return true;
+  const required = requiredLinkLetter(
+    main,
+    child.type
+  );
+  if (!required) {
+    return childLetters.some((l) => mainLetters.includes(l));
+  }
+  return childLetters.includes(required);
+}
+function courseRequiresLabEj(title) {
+  const t = title.toUpperCase();
+  const lab = /\+LAB/i.test(t);
+  const ej = /\+EJ/i.test(t) || /\+LAB\s*\/\s*EJ/i.test(t) || /\+LAB\/EJ/i.test(t) || /\+LAB\/EJ/i.test(t.replace(/\s/g, ""));
+  return { lab, ej };
+}
 function getLinkedOffers(mainRow, offerMap, type) {
-  const letters = new Set(mainRow.group_letters);
-  return [...offerMap.values()].filter((row) => {
-    if (row.course_code !== mainRow.course_code || row.type !== type) return false;
-    if (letters.size === 0) return true;
-    return row.group_letters.some((l) => letters.has(l));
-  });
+  return [...offerMap.values()].filter(
+    (row) => row.type === type && row.course_code === mainRow.course_code && isOfferLinkedToMain(mainRow, row)
+  );
 }
-function slotKey(day, startTime) {
-  return `${day}-${startTime}`;
+function sessionEndMinutes(session) {
+  if (session.endTime) return timeToMinutes(session.endTime);
+  return timeToMinutes(session.startTime) + GRID_SLOT_DURATION_MINUTES;
 }
-function nrcConflictsWithSlots(nrc, occupied, offerMap) {
+function sessionsOverlapOnDay(a, b) {
+  if (a.day !== b.day || !a.startTime || !b.startTime) return false;
+  const aStart = timeToMinutes(a.startTime);
+  const aEnd = sessionEndMinutes(a);
+  const bStart = timeToMinutes(b.startTime);
+  const bEnd = sessionEndMinutes(b);
+  return aStart < bEnd && bStart < aEnd;
+}
+function nrcConflictsWithSessions(nrc, occupied, offerMap) {
   const row = offerMap.get(nrc);
   if (!row) return false;
-  return sessionsFromOfferRow(row).some(
-    (sess) => expandSessionToGridSlots(sess.startTime, sess.endTime).some(
-      (slot) => occupied.has(slotKey(sess.day, slot))
-    )
+  const candidate = sessionsFromOfferRow(row);
+  return candidate.some(
+    (sess) => occupied.some((occ) => sessionsOverlapOnDay(sess, occ))
   );
 }
 function formatOfferSchedule(row) {
@@ -47853,6 +48893,183 @@ function formatOfferSchedule(row) {
   const time = `${normalizeOfferTime(row.start_time)}${row.end_time ? `–${normalizeOfferTime(row.end_time)}` : ""}`;
   const days = row.days.map((d) => normalizeOfferDay$1(d) ?? d).join(", ");
   return `${days} ${time}`;
+}
+const BUCKET_AREA_ALLOWED_PREFIXES = {
+  CIENCIAS: ["BIO", "QUI", "FIS", "ECL", "NUT", "GEO"],
+  HUM: ["LIT", "FIL", "ESC", "ARH"],
+  CCSS: ["ANT", "EDU", "HIS", "REL", "POL", "SOC", "PSI"],
+  ARTE: ["ART", "DAN", "TEA", "MUS"]
+};
+const BUCKET_PREFIXES = /* @__PURE__ */ new Set([
+  "OPT",
+  "ELECTIVA",
+  "ARTE",
+  "HUM",
+  "CCSS",
+  "CIENCIAS"
+]);
+const REMAINDER_ID_RE = /^(.+)__rem(\d+)$/;
+function getRootSlotId(slotId) {
+  const match = slotId.match(REMAINDER_ID_RE);
+  return match ? match[1] : slotId;
+}
+function getBucketCategory(course) {
+  var _a2;
+  const normalized = normalizeCurriculumCode(course.code);
+  const prefix = normalized.split("-")[0];
+  if (BUCKET_PREFIXES.has(prefix)) {
+    return prefix;
+  }
+  const area = ((_a2 = course.area) == null ? void 0 : _a2.toUpperCase()) ?? "";
+  if (area === "CIENCIAS") return "CIENCIAS";
+  if (area === "HUM") return "HUM";
+  if (area === "CCSS") return "CCSS";
+  if (area === "ARTE") return "ARTE";
+  if (area.startsWith("OPT") || area.endsWith("OPT")) return "OPT";
+  if (area === "ELECTIVA" || area.startsWith("ELECTIVA")) return "ELECTIVA";
+  return null;
+}
+function getAllowedPrefixesForCourse(course) {
+  const category = getBucketCategory(course);
+  if (!category) return null;
+  if (category === "OPT" || category === "ELECTIVA") return null;
+  return BUCKET_AREA_ALLOWED_PREFIXES[category];
+}
+function getCodePrefix(code) {
+  const normalized = normalizeOfferCourseCode(code);
+  return normalized.split("-")[0] ?? "";
+}
+function validateOfferCodeForBucket(course, rawCode) {
+  const code = normalizeOfferCourseCode(rawCode.trim());
+  if (!code || !/^[A-Z]{2,5}-\d/.test(code)) {
+    return { valid: false, error: "Ingresa un código USFQ válido (ej. MUS-2101)." };
+  }
+  const allowed = getAllowedPrefixesForCourse(course);
+  if (allowed) {
+    const prefix = getCodePrefix(code);
+    if (!allowed.includes(prefix)) {
+      const category = getBucketCategory(course);
+      return {
+        valid: false,
+        error: `El código debe pertenecer a ${category}: ${allowed.join(", ")}.`
+      };
+    }
+  }
+  return { valid: true };
+}
+function resolveCourseCredits(code, offerMap) {
+  const preview = getOfferCoursePreview(offerMap, code);
+  if ((preview == null ? void 0 : preview.credits) != null && preview.credits > 0) {
+    return preview.credits;
+  }
+  return null;
+}
+function applyFulfillment(slotCredits, courseCredits) {
+  const creditsApplied = Math.min(courseCredits, slotCredits);
+  const creditsRemaining = Math.max(0, slotCredits - creditsApplied);
+  return { creditsApplied, creditsRemaining };
+}
+function creditsMeetMinimum(courseCredits, _slotCredits) {
+  return courseCredits > 0;
+}
+function buildRemainderSlot(root, index2, credits, fulfillment) {
+  const category = getBucketCategory(root);
+  const label = category ?? root.area;
+  return {
+    ...root,
+    id: `${root.id}__rem${index2}`,
+    code: root.code,
+    title: `${label} — ${credits} cr pendiente`,
+    credits,
+    isRemainder: true,
+    parentSlotId: root.id,
+    fulfillment
+  };
+}
+function expandBucketChain(root, fulfillments) {
+  const slots = [];
+  let slotCredits = root.credits;
+  let remIndex = 0;
+  let currentId = root.id;
+  while (true) {
+    const fulfillment = fulfillments[currentId];
+    const isRoot = currentId === root.id;
+    if (isRoot) {
+      slots.push({ ...root, fulfillment });
+    } else {
+      slots.push(buildRemainderSlot(root, remIndex - 1, slotCredits, fulfillment));
+    }
+    if (!fulfillment) break;
+    const { creditsRemaining } = applyFulfillment(slotCredits, fulfillment.courseCredits);
+    if (creditsRemaining <= 0) break;
+    remIndex++;
+    const nextId = `${root.id}__rem${remIndex - 1}`;
+    slotCredits = creditsRemaining;
+    if (!fulfillments[nextId]) {
+      slots.push(buildRemainderSlot(root, remIndex - 1, slotCredits));
+      break;
+    }
+    currentId = nextId;
+  }
+  return slots;
+}
+function expandDisplayCourses(courses2, fulfillments) {
+  const result = [];
+  for (const course of courses2) {
+    const hasChain = fulfillments[course.id] || Object.keys(fulfillments).some((k) => getRootSlotId(k) === course.id);
+    if (hasChain) {
+      result.push(...expandBucketChain(course, fulfillments));
+    } else {
+      result.push({ ...course });
+    }
+  }
+  return result;
+}
+function isBucketSatisfiedForPrereq(rootId, courses2, fulfillments, completedIds, inProgressIds) {
+  const root = courses2.find((c) => c.id === rootId);
+  if (!root || !getBucketCategory(root)) {
+    return completedIds.has(rootId) || inProgressIds.has(rootId);
+  }
+  let slotCredits = root.credits;
+  let currentId = rootId;
+  let remIndex = 0;
+  while (slotCredits > 0) {
+    const marked = completedIds.has(currentId) || inProgressIds.has(currentId);
+    const fulfillment = fulfillments[currentId];
+    if (!marked || !fulfillment) return false;
+    const { creditsRemaining } = applyFulfillment(slotCredits, fulfillment.courseCredits);
+    if (creditsRemaining <= 0) return true;
+    remIndex++;
+    currentId = `${rootId}__rem${remIndex - 1}`;
+    slotCredits = creditsRemaining;
+  }
+  return slotCredits === 0;
+}
+function getDisplayCreditsForSlot(course, fulfillments) {
+  const fulfillment = fulfillments[course.id] ?? course.fulfillment;
+  if (fulfillment) {
+    return applyFulfillment(course.credits, fulfillment.courseCredits).creditsApplied;
+  }
+  return course.credits;
+}
+function collectFulfillmentSlotIds(rootId, fulfillments) {
+  const ids = [rootId];
+  for (const key of Object.keys(fulfillments)) {
+    if (key.startsWith(`${rootId}__rem`)) ids.push(key);
+  }
+  return ids;
+}
+function clearBucketFulfillmentChain(rootId, fulfillments) {
+  const next = { ...fulfillments };
+  for (const id of collectFulfillmentSlotIds(rootId, fulfillments)) {
+    delete next[id];
+  }
+  return next;
+}
+function getAllowedAreasLabel(course) {
+  const prefixes = getAllowedPrefixesForCourse(course);
+  if (!prefixes) return null;
+  return prefixes.join(", ");
 }
 const DAYS = ["Lun", "Mar", "Mié", "Jue", "Vie"];
 function NrcSuggestions({
@@ -47896,7 +49113,8 @@ function NrcSuggestions({
             avail && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "block text-[10px] font-medium text-gray-500 dark:text-gray-400 mt-0.5", children: [
               avail,
               " disp."
-            ] })
+            ] }),
+            row.group_letters.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-[10px] text-gray-400 dark:text-gray-500 truncate", children: formatGroupLetters(row.group_letters) })
           ]
         },
         row.nrc
@@ -47925,41 +49143,68 @@ const TIME_SLOTS = [
   "16:00",
   "17:30"
 ];
-function occupyExpandedSlots(sessions, courseId, occupied, conflictList, plannedCourses, schedules, offerMap, labelSuffix = "") {
+function mallaTag(label) {
+  return label ? ` (${label})` : "";
+}
+function occupySessions(sessions, courseId, occupied, conflictList, plannedEntries, schedules, offerMap, labelSuffix = "") {
+  const findEntry = (id) => plannedEntries.find((e) => e.course.id === id);
   sessions.forEach((session) => {
-    expandSessionToGridSlots(session.startTime, session.endTime).forEach(
-      (slot) => {
-        const key = `${session.day}-${slot}`;
-        if (occupied[key]) {
-          const otherSchedule = schedules.find(
-            (s) => s.courseId === occupied[key]
-          );
-          const otherCourse = plannedCourses.find(
-            (c) => c.id === occupied[key]
-          );
-          const thisCourse = plannedCourses.find((c) => c.id === courseId);
-          const course1 = otherSchedule && otherCourse ? getScheduleDisplayLabels(
-            otherCourse,
-            otherSchedule,
-            offerMap,
-            "main"
-          ).code : occupied[key];
-          const course2 = thisCourse ? getScheduleDisplayLabels(
-            thisCourse,
-            schedules.find((s) => s.courseId === courseId),
-            offerMap,
-            "main"
-          ).code : courseId;
-          const conflictMsg = `Conflicto: ${course1}${labelSuffix ? ` (${labelSuffix})` : ""} y ${course2} en ${session.day} a las ${slot}`;
-          if (!conflictList.includes(conflictMsg)) {
-            conflictList.push(conflictMsg);
-          }
-        } else {
-          occupied[key] = courseId;
+    if (!session.startTime) return;
+    for (const occ of occupied) {
+      if (sessionsOverlapOnDay(session, occ.session)) {
+        const otherEntry = findEntry(occ.courseId);
+        const thisEntry = findEntry(courseId);
+        const otherSchedule = schedules.find((s) => s.courseId === occ.courseId);
+        const thisSchedule = schedules.find((s) => s.courseId === courseId);
+        const course1 = otherEntry && otherSchedule ? getScheduleDisplayLabels(
+          otherEntry.course,
+          otherSchedule,
+          offerMap,
+          "main"
+        ).code : occ.courseId;
+        const course2 = thisEntry && thisSchedule ? getScheduleDisplayLabels(
+          thisEntry.course,
+          thisSchedule,
+          offerMap,
+          "main"
+        ).code : courseId;
+        const suffix = labelSuffix ? ` ${labelSuffix}` : "";
+        const timeStr = formatSessionTimeRange(session);
+        const conflictMsg = `Conflicto: ${course1}${mallaTag(otherEntry == null ? void 0 : otherEntry.curriculumLabel)}${suffix} y ${course2}${mallaTag(thisEntry == null ? void 0 : thisEntry.curriculumLabel)} en ${session.day} ${timeStr}`;
+        if (!conflictList.includes(conflictMsg)) {
+          conflictList.push(conflictMsg);
         }
       }
-    );
+    }
+    occupied.push({ session, courseId });
   });
+}
+function emptySchedule(courseId, courseTitle, initialBucketCodes) {
+  const { lab, ej } = courseTitle ? courseRequiresLabEj(courseTitle) : { lab: false, ej: false };
+  return {
+    courseId,
+    offerCourseCode: (initialBucketCodes == null ? void 0 : initialBucketCodes[courseId]) ?? "",
+    nrc: "",
+    hasEJ: ej,
+    hasLAB: lab,
+    sessions: []
+  };
+}
+function syncSchedulesWithPlanned(current, planned, initialBucketCodes) {
+  const plannedIds = new Set(planned.map((p) => p.course.id));
+  const kept = current.map((s) => {
+    var _a2;
+    if (!plannedIds.has(s.courseId)) return s;
+    if (!((_a2 = s.offerCourseCode) == null ? void 0 : _a2.trim()) && (initialBucketCodes == null ? void 0 : initialBucketCodes[s.courseId])) {
+      return { ...s, offerCourseCode: initialBucketCodes[s.courseId] };
+    }
+    return s;
+  }).filter((s) => plannedIds.has(s.courseId));
+  const existingIds = new Set(kept.map((s) => s.courseId));
+  const added = planned.filter((p) => !existingIds.has(p.course.id)).map(
+    (p) => emptySchedule(p.course.id, p.course.title, initialBucketCodes)
+  );
+  return [...kept, ...added];
 }
 function allScheduleSessions(schedules) {
   return schedules.flatMap((s) => [
@@ -48076,11 +49321,19 @@ function NrcOfferInfo({
         row.end_time ? `–${row.end_time}` : ""
       ] })
     ] }),
+    row.group_letters.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      "Agrupación:",
+      " ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium text-gray-700 dark:text-gray-200", children: formatGroupLetters(row.group_letters) })
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AvailabilityBadge, { row })
   ] });
 }
 function SchedulePlanningDrawer({
-  plannedCourses,
+  plannedEntries,
+  crossMallaEnabled = false,
+  userId,
+  initialBucketCodes,
   onSave,
   exposeOpen,
   hideFloatingButton
@@ -48088,8 +49341,40 @@ function SchedulePlanningDrawer({
   const [isOpen, setIsOpen] = reactExports.useState(false);
   const [periodType, setPeriodType] = reactExports.useState("semestre");
   const [entryMode, setEntryMode] = reactExports.useState("auto");
-  const [schedules, setSchedules] = reactExports.useState([]);
   const [conflicts, setConflicts] = reactExports.useState([]);
+  const [renamingTabId, setRenamingTabId] = reactExports.useState(null);
+  const [renameValue, setRenameValue] = reactExports.useState("");
+  const metaHydrated = reactExports.useRef(false);
+  const cacheKey = `schedulePlannerCache_${userId ?? "anonymous"}`;
+  const createDefaultSchedules = reactExports.useCallback(
+    () => plannedEntries.map(
+      (e) => emptySchedule(e.course.id, e.course.title, initialBucketCodes)
+    ),
+    [plannedEntries, initialBucketCodes]
+  );
+  const {
+    tabs,
+    activeTab,
+    activeTabId,
+    updateActiveData,
+    addTab,
+    removeTab,
+    renameTab,
+    selectTab,
+    replaceAllTabs
+  } = useTabbedCache({
+    storageKey: cacheKey,
+    isOpen,
+    createDefaultData: createDefaultSchedules
+  });
+  const schedules = (activeTab == null ? void 0 : activeTab.data) ?? [];
+  const setSchedules = reactExports.useCallback(
+    (value) => {
+      const next = typeof value === "function" ? value((activeTab == null ? void 0 : activeTab.data) ?? []) : value;
+      updateActiveData(next);
+    },
+    [activeTab == null ? void 0 : activeTab.data, updateActiveData]
+  );
   const {
     offerMap,
     isLoading: offerLoading,
@@ -48098,52 +49383,78 @@ function SchedulePlanningDrawer({
     loadFromCache
   } = useCourseOffer();
   const plannedCourseIds = reactExports.useMemo(
-    () => plannedCourses.map((c) => c.id).sort().join(","),
-    [plannedCourses]
+    () => plannedEntries.map((e) => e.course.id).sort().join(","),
+    [plannedEntries]
   );
   reactExports.useEffect(() => {
-    const initialSchedules = plannedCourses.map((course) => ({
-      courseId: course.id,
-      offerCourseCode: "",
-      nrc: "",
-      hasEJ: false,
-      hasLAB: false,
-      sessions: []
-    }));
-    setSchedules(initialSchedules);
+    if (!isOpen) {
+      metaHydrated.current = false;
+      return;
+    }
+    if (metaHydrated.current) return;
+    metaHydrated.current = true;
+    try {
+      const raw = sessionStorage.getItem(`${cacheKey}_meta`);
+      if (raw) {
+        const meta = JSON.parse(raw);
+        if (meta.periodType) setPeriodType(meta.periodType);
+        if (meta.entryMode) setEntryMode(meta.entryMode);
+      }
+    } catch {
+    }
+  }, [isOpen, cacheKey]);
+  reactExports.useEffect(() => {
+    if (!isOpen) return;
+    try {
+      sessionStorage.setItem(
+        `${cacheKey}_meta`,
+        JSON.stringify({ periodType, entryMode })
+      );
+    } catch {
+    }
+  }, [periodType, entryMode, isOpen, cacheKey]);
+  reactExports.useEffect(() => {
+    if (!isOpen || tabs.length === 0) return;
+    replaceAllTabs(
+      tabs.map((tab) => ({
+        ...tab,
+        data: syncSchedulesWithPlanned(tab.data, plannedEntries, initialBucketCodes)
+      })),
+      activeTabId
+    );
   }, [plannedCourseIds]);
   const checkConflicts = (newSchedules) => {
     const conflictList = [];
-    const occupied = {};
+    const occupied = [];
     newSchedules.forEach((schedule) => {
-      occupyExpandedSlots(
+      occupySessions(
         schedule.sessions,
         schedule.courseId,
         occupied,
         conflictList,
-        plannedCourses,
+        plannedEntries,
         newSchedules,
         offerMap
       );
       if (schedule.hasEJ && schedule.sessionsEJ) {
-        occupyExpandedSlots(
+        occupySessions(
           schedule.sessionsEJ,
           schedule.courseId,
           occupied,
           conflictList,
-          plannedCourses,
+          plannedEntries,
           newSchedules,
           offerMap,
           "EJ"
         );
       }
       if (schedule.hasLAB && schedule.sessionsLAB) {
-        occupyExpandedSlots(
+        occupySessions(
           schedule.sessionsLAB,
           schedule.courseId,
           occupied,
           conflictList,
-          plannedCourses,
+          plannedEntries,
           newSchedules,
           offerMap,
           "LAB"
@@ -48153,6 +49464,10 @@ function SchedulePlanningDrawer({
     setConflicts(conflictList);
     return conflictList.length === 0;
   };
+  reactExports.useEffect(() => {
+    if (!isOpen || !activeTab) return;
+    checkConflicts(activeTab.data);
+  }, [activeTabId, isOpen]);
   const getDefaultMainDayGroup = () => periodType === "verano" ? "Lun-Jue" : "Lun/Mié";
   const addMainSession = (courseId) => {
     const dayGroup = getDefaultMainDayGroup();
@@ -48222,7 +49537,7 @@ function SchedulePlanningDrawer({
     setSchedules(updated);
     checkConflicts(updated);
   };
-  const generateHTMLReport = () => {
+  const buildReportSection = (optionSchedules, optionLabel2) => {
     const DAYS_FULL = [
       "Lunes",
       "Martes",
@@ -48239,15 +49554,18 @@ function SchedulePlanningDrawer({
       Vie: "Viernes"
     };
     const grid = {};
-    const reportTimeSlots = collectCalendarTimeSlots(allScheduleSessions(schedules));
+    const reportTimeSlots = collectCalendarTimeSlots(
+      allScheduleSessions(optionSchedules)
+    );
     DAYS_FULL.forEach((d) => {
       grid[d] = {};
       reportTimeSlots.forEach((t) => grid[d][t] = []);
     });
     const allNrcs = /* @__PURE__ */ new Set();
-    schedules.forEach((s) => {
-      const course = plannedCourses.find((c) => c.id === s.courseId);
-      if (!course) return;
+    optionSchedules.forEach((s) => {
+      const entry = plannedEntries.find((e) => e.course.id === s.courseId);
+      if (!entry) return;
+      const course = entry.course;
       const labels = getScheduleDisplayLabels(course, s, offerMap, "main");
       const base = labels.title;
       if (s.nrc) {
@@ -48329,6 +49647,22 @@ function SchedulePlanningDrawer({
     const nrcRow = nrcs.length ? `<div class="nrcs">
            ${nrcs.map((n) => `<div class="nrc-cell">${n}</div>`).join("")}
          </div>` : "";
+    return `
+      <section class="option-section">
+        <h2>${optionLabel2}</h2>
+        <table class="schedule">
+          <thead>${tableHeader}</thead>
+          <tbody>${tableBody}</tbody>
+        </table>
+        ${nrcs.length ? "<h3>NRCs</h3>" : ""}
+        ${nrcRow}
+      </section>
+    `;
+  };
+  const generateHTMLReport = () => {
+    const sections = tabs.map(
+      (tab) => buildReportSection(tab.data, tab.label)
+    );
     const html = `
       <!DOCTYPE html>
       <html>
@@ -48340,6 +49674,10 @@ function SchedulePlanningDrawer({
           *{ box-sizing:border-box; }
           body{ font-family:Arial, Helvetica, sans-serif; color:var(--text); background:var(--bg); margin:0; padding:24px; }
           h1{ text-align:center; margin:0 0 16px; font-size:24px; }
+          h2{ margin:24px 0 12px; font-size:18px; border-bottom:2px solid var(--border); padding-bottom:6px; }
+          h3{ margin:16px 0 8px; font-size:14px; }
+          .option-section{ margin-bottom:32px; page-break-inside:avoid; }
+          .option-section + .option-section{ border-top:2px solid var(--border); padding-top:24px; }
           .schedule{ width:100%; border-collapse:collapse; table-layout:fixed; }
           .schedule th, .schedule td{ border:1px solid var(--border); padding:6px; vertical-align:top; }
           .schedule th{ background:var(--head); color:#fff; font-weight:700; text-align:center; }
@@ -48350,7 +49688,6 @@ function SchedulePlanningDrawer({
           .entry:last-child{ margin-bottom:0; }
           .entry .title{ font-weight:700; font-size:12px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
           .entry .nrc{ font-size:11px; color:#334155; }
-          h2{ margin:20px 0 8px; font-size:16px; }
           .nrcs{ display:flex; flex-wrap:wrap; gap:6px; }
           .nrc-cell{ border:1px solid var(--border); padding:6px 10px; border-radius:4px; font-size:12px; background:#fff; }
           .controls{ text-align:center; margin-top:20px; }
@@ -48360,12 +49697,7 @@ function SchedulePlanningDrawer({
       </head>
       <body>
         <h1>Calendario de clases</h1>
-        <table class="schedule">
-          <thead>${tableHeader}</thead>
-          <tbody>${tableBody}</tbody>
-        </table>
-        ${nrcs.length ? "<h2>NRCs</h2>" : ""}
-        ${nrcRow}
+        ${sections.join("")}
         <div class="controls no-print">
           <button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         </div>
@@ -48402,7 +49734,8 @@ function SchedulePlanningDrawer({
   };
   const getScheduleForSlot = (day, time) => {
     for (const schedule of schedules) {
-      const course = plannedCourses.find((c) => c.id === schedule.courseId);
+      const entry = plannedEntries.find((e) => e.course.id === schedule.courseId);
+      const course = entry == null ? void 0 : entry.course;
       if (!course) continue;
       for (const session of schedule.sessions) {
         if (sessionOccupiesGridSlot(session, day, time)) {
@@ -48466,21 +49799,16 @@ function SchedulePlanningDrawer({
       return day ? { day, startTime: s.startTime, endTime: s.endTime } : null;
     }).filter((s) => s !== null);
   };
-  const getOccupiedSlots = reactExports.useCallback(
+  const getOccupiedSessions = reactExports.useCallback(
     (excludeCourseId) => {
-      const occupied = /* @__PURE__ */ new Set();
+      const occupied = [];
       schedules.forEach((s) => {
         if (excludeCourseId && s.courseId === excludeCourseId) return;
-        const allSessions = [
+        occupied.push(
           ...s.sessions,
-          ...s.sessionsEJ || [],
-          ...s.sessionsLAB || []
-        ];
-        allSessions.forEach((sess) => {
-          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
-            (slot) => occupied.add(slotKey(sess.day, slot))
-          );
-        });
+          ...s.sessionsEJ ?? [],
+          ...s.sessionsLAB ?? []
+        );
       });
       return occupied;
     },
@@ -48488,9 +49816,9 @@ function SchedulePlanningDrawer({
   );
   const filterSuggestions = reactExports.useCallback(
     (offers, excludeCourseId) => {
-      const occupied = getOccupiedSlots(excludeCourseId);
+      const occupied = getOccupiedSessions(excludeCourseId);
       const withoutConflict = offers.filter(
-        (row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap)
+        (row) => !nrcConflictsWithSessions(row.nrc, occupied, offerMap)
       );
       const withSchedule = withoutConflict.filter(isValidOfferSchedule);
       const withoutSchedule = withoutConflict.filter(
@@ -48501,7 +49829,7 @@ function SchedulePlanningDrawer({
       );
       return { suggestions, totalOffers: offers.length };
     },
-    [getOccupiedSlots, offerMap]
+    [getOccupiedSessions, offerMap]
   );
   const applyAutoFillFromOffer = (current) => {
     if (entryMode !== "auto") return current;
@@ -48510,11 +49838,22 @@ function SchedulePlanningDrawer({
       if (s.nrc && offerMap.has(s.nrc)) {
         next.sessions = sessionsFromOffer(s.nrc);
       }
+      const mainRow = s.nrc ? offerMap.get(s.nrc) : void 0;
       if (s.hasEJ && s.nrcEJ && offerMap.has(s.nrcEJ)) {
-        next.sessionsEJ = sessionsFromOffer(s.nrcEJ);
+        const ejRow = offerMap.get(s.nrcEJ);
+        if (!mainRow || isOfferLinkedToMain(mainRow, ejRow)) {
+          next.sessionsEJ = sessionsFromOffer(s.nrcEJ);
+        } else {
+          next.sessionsEJ = void 0;
+        }
       }
       if (s.hasLAB && s.nrcLAB && offerMap.has(s.nrcLAB)) {
-        next.sessionsLAB = sessionsFromOffer(s.nrcLAB);
+        const labRow = offerMap.get(s.nrcLAB);
+        if (!mainRow || isOfferLinkedToMain(mainRow, labRow)) {
+          next.sessionsLAB = sessionsFromOffer(s.nrcLAB);
+        } else {
+          next.sessionsLAB = void 0;
+        }
       }
       return next;
     });
@@ -48554,6 +49893,23 @@ function SchedulePlanningDrawer({
       const next = { ...s, nrc };
       if (entryMode === "auto" && offerMap.has(nrc)) {
         next.sessions = sessionsFromOffer(nrc);
+      } else if (!nrc) {
+        next.sessions = [];
+      }
+      const mainRow = nrc ? offerMap.get(nrc) : void 0;
+      if (next.nrcEJ) {
+        const ejRow = offerMap.get(next.nrcEJ);
+        if (!mainRow || !ejRow || !isOfferLinkedToMain(mainRow, ejRow)) {
+          next.nrcEJ = "";
+          next.sessionsEJ = void 0;
+        }
+      }
+      if (next.nrcLAB) {
+        const labRow = offerMap.get(next.nrcLAB);
+        if (!mainRow || !labRow || !isOfferLinkedToMain(mainRow, labRow)) {
+          next.nrcLAB = "";
+          next.sessionsLAB = void 0;
+        }
       }
       return next;
     });
@@ -48566,7 +49922,15 @@ function SchedulePlanningDrawer({
       if (s.courseId !== courseId) return s;
       const next = { ...s, nrcEJ };
       if (entryMode === "auto" && offerMap.has(nrcEJ)) {
-        next.sessionsEJ = sessionsFromOffer(nrcEJ);
+        const mainRow = s.nrc ? offerMap.get(s.nrc) : void 0;
+        const ejRow = offerMap.get(nrcEJ);
+        if (!mainRow || isOfferLinkedToMain(mainRow, ejRow)) {
+          next.sessionsEJ = sessionsFromOffer(nrcEJ);
+        } else {
+          next.sessionsEJ = void 0;
+        }
+      } else if (!nrcEJ) {
+        next.sessionsEJ = void 0;
       }
       return next;
     });
@@ -48579,13 +49943,51 @@ function SchedulePlanningDrawer({
       if (s.courseId !== courseId) return s;
       const next = { ...s, nrcLAB };
       if (entryMode === "auto" && offerMap.has(nrcLAB)) {
-        next.sessionsLAB = sessionsFromOffer(nrcLAB);
+        const mainRow = s.nrc ? offerMap.get(s.nrc) : void 0;
+        const labRow = offerMap.get(nrcLAB);
+        if (!mainRow || isOfferLinkedToMain(mainRow, labRow)) {
+          next.sessionsLAB = sessionsFromOffer(nrcLAB);
+        } else {
+          next.sessionsLAB = void 0;
+        }
+      } else if (!nrcLAB) {
+        next.sessionsLAB = void 0;
       }
       return next;
     });
     setSchedules(updated);
     checkConflicts(updated);
   };
+  const groupingWarnings = reactExports.useMemo(() => {
+    const warnings = [];
+    schedules.forEach((s) => {
+      const entry = plannedEntries.find((e) => e.course.id === s.courseId);
+      if (!entry) return;
+      const label = entry.course.code;
+      const mainRow = s.nrc ? offerMap.get(s.nrc) : void 0;
+      if (s.hasEJ && !s.nrcEJ) {
+        warnings.push(`${label}: falta NRC de ejercicios (EJ).`);
+      } else if (s.hasEJ && s.nrcEJ && mainRow) {
+        const ejRow = offerMap.get(s.nrcEJ);
+        if (ejRow && !isOfferLinkedToMain(mainRow, ejRow)) {
+          warnings.push(
+            `${label}: NRC EJ ${s.nrcEJ} no agrupa con teoría ${s.nrc}.`
+          );
+        }
+      }
+      if (s.hasLAB && !s.nrcLAB) {
+        warnings.push(`${label}: falta NRC de laboratorio (LAB).`);
+      } else if (s.hasLAB && s.nrcLAB && mainRow) {
+        const labRow = offerMap.get(s.nrcLAB);
+        if (labRow && !isOfferLinkedToMain(mainRow, labRow)) {
+          warnings.push(
+            `${label}: NRC LAB ${s.nrcLAB} no agrupa con teoría ${s.nrc}.`
+          );
+        }
+      }
+    });
+    return warnings;
+  }, [schedules, offerMap, plannedEntries]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     !hideFloatingButton && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed bottom-4 right-4 z-30", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 p-0 py-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Button,
@@ -48663,6 +50065,75 @@ function SchedulePlanningDrawer({
               }
             )
           ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5 mt-3", children: [
+            tabs.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-0.5", children: [
+              renamingTabId === tab.id ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  autoFocus: true,
+                  value: renameValue,
+                  onChange: (e) => setRenameValue(e.target.value),
+                  onBlur: () => {
+                    renameTab(tab.id, renameValue);
+                    setRenamingTabId(null);
+                  },
+                  onKeyDown: (e) => {
+                    if (e.key === "Enter") {
+                      renameTab(tab.id, renameValue);
+                      setRenamingTabId(null);
+                    }
+                    if (e.key === "Escape") setRenamingTabId(null);
+                  },
+                  className: "h-8 w-28 text-sm dark:bg-gray-700"
+                }
+              ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => selectTab(tab.id),
+                  className: `flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${tab.id === activeTabId ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-gray-200 dark:border-gray-600" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700"}`,
+                  children: [
+                    tab.label,
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Pencil,
+                      {
+                        className: "w-3 h-3 opacity-50 hover:opacity-100",
+                        onClick: (e) => {
+                          e.stopPropagation();
+                          setRenamingTabId(tab.id);
+                          setRenameValue(tab.label);
+                        }
+                      }
+                    )
+                  ]
+                }
+              ),
+              tabs.length > 1 && tab.id === activeTabId && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => removeTab(tab.id),
+                  className: "p-1 text-gray-400 hover:text-red-500",
+                  title: "Eliminar opción",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-3.5 h-3.5" })
+                }
+              )
+            ] }, tab.id)),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Button,
+              {
+                type: "button",
+                variant: "ghost",
+                size: "sm",
+                onClick: addTab,
+                className: "h-8 gap-1 text-sm",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "w-3.5 h-3.5" }),
+                  "Nueva opción"
+                ]
+              }
+            )
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-2", children: entryMode === "auto" ? "Modo automático: ingresa el NRC y el horario se llena desde la oferta de cursos." : periodType === "semestre" ? "Modo manual · Clase principal: Lun/Mié o Mar/Jue. EJ y LAB: por día." : "Modo manual · Clase principal: Lun a Jue. EJ y LAB: por día." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700", children: [
             offerMap.size > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Wifi, { className: "w-3.5 h-3.5 text-green-500 shrink-0" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(WifiOff, { className: "w-3.5 h-3.5 text-gray-400 shrink-0" }),
@@ -48675,19 +50146,27 @@ function SchedulePlanningDrawer({
             /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "h-4 w-4" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDescription, { children: conflicts.map((conflict, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: conflict }, i)) })
           ] }),
+          groupingWarnings.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert, { className: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "text-amber-600 dark:text-amber-400" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDescription, { className: "text-amber-800 dark:text-amber-200/90", children: groupingWarnings.map((warning, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: warning }, i)) })
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-gray-900 dark:text-white", children: "Materias planeadas" }),
-            plannedCourses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-500 dark:text-gray-400", children: 'No hay materias planeadas. Marca materias como "planeadas" en la malla curricular.' }) : plannedCourses.map((course) => {
+            plannedEntries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-500 dark:text-gray-400", children: 'No hay materias planeadas. Marca materias como "planeadas" en la malla curricular.' }) : plannedEntries.map((entry) => {
+              const course = entry.course;
               const schedule = schedules.find(
                 (s) => s.courseId === course.id
               );
               if (!schedule) return null;
               return /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "p-4 dark:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-semibold text-gray-900 dark:text-white", children: [
-                    course.code,
-                    " - ",
-                    course.title
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-semibold text-gray-900 dark:text-white flex items-center gap-2 flex-wrap", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                      course.code,
+                      " - ",
+                      course.title
+                    ] }),
+                    entry.curriculumLabel && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200", children: entry.curriculumLabel })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm text-gray-500 dark:text-gray-400", children: [
                     course.credits,
@@ -48695,7 +50174,7 @@ function SchedulePlanningDrawer({
                   ] })
                 ] }) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
-                  isOpenElectiveCourse(course) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  requiresOfferCourseCode(course) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1", children: "Código de materia" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       Input,
@@ -48711,6 +50190,13 @@ function SchedulePlanningDrawer({
                     ),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 mt-1", children: "Ingresa el código USFQ de la materia que tomarás para ver NRCs disponibles." }),
                     schedule.offerCourseCode && (() => {
+                      const areaCheck = validateOfferCodeForBucket(
+                        course,
+                        schedule.offerCourseCode
+                      );
+                      if (!areaCheck.valid) {
+                        return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: areaCheck.error });
+                      }
                       const preview = getOfferCoursePreview(
                         offerMap,
                         schedule.offerCourseCode
@@ -48745,7 +50231,7 @@ function SchedulePlanningDrawer({
                     ),
                     entryMode === "auto" && offerMap.size > 0 && (() => {
                       var _a2;
-                      if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
+                      if (requiresOfferCourseCode(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim())) {
                         return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-400 dark:text-gray-500 mt-2", children: "Ingresa el código de materia para ver sugerencias de NRC." });
                       }
                       const { suggestions, totalOffers } = filterSuggestions(
@@ -48769,6 +50255,31 @@ function SchedulePlanningDrawer({
                       );
                     })()
                   ] }) }),
+                  schedule.nrc && (() => {
+                    const mainRow = offerMap.get(schedule.nrc);
+                    if (!(mainRow == null ? void 0 : mainRow.group_letters.length)) return null;
+                    const parts = [];
+                    if (schedule.hasLAB) {
+                      const labL = requiredLinkLetter(
+                        mainRow,
+                        "Laboratorio"
+                      );
+                      if (labL)
+                        parts.push(`LAB usa | ${labL} |`);
+                    }
+                    if (schedule.hasEJ) {
+                      const ejL = requiredLinkLetter(
+                        mainRow,
+                        "Ejercicios"
+                      );
+                      if (ejL) parts.push(`EJ usa | ${ejL} |`);
+                    }
+                    if (!parts.length) return null;
+                    return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+                      "Agrupación requerida — ",
+                      parts.join(" · ")
+                    ] });
+                  })(),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-2", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48851,19 +50362,31 @@ function SchedulePlanningDrawer({
                           offerMap
                         }
                       ),
+                      schedule.nrcEJ && schedule.nrc && offerMap.has(schedule.nrcEJ) && (() => {
+                        const mainRow = offerMap.get(schedule.nrc);
+                        const ejRow = offerMap.get(schedule.nrcEJ);
+                        if (mainRow && ejRow && !isOfferLinkedToMain(mainRow, ejRow)) {
+                          return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: [
+                            "Este NRC EJ no agrupa con la teoría seleccionada (",
+                            formatGroupLetters(
+                              mainRow.group_letters
+                            ),
+                            ")."
+                          ] });
+                        }
+                        return null;
+                      })(),
                       entryMode === "auto" && offerMap.size > 0 && (() => {
                         var _a2;
-                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
+                        if (requiresOfferCourseCode(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
                           return null;
                         const mainRow = schedule.nrc ? offerMap.get(schedule.nrc) : void 0;
-                        const ejOffers = mainRow ? getLinkedOffers(
+                        if (!mainRow) {
+                          return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-400 dark:text-gray-500 mt-2", children: "Selecciona primero el NRC de teoría para ver EJ compatibles." });
+                        }
+                        const ejOffers = getLinkedOffers(
                           mainRow,
                           offerMap,
-                          "Ejercicios"
-                        ) : getOffersForSchedule(
-                          offerMap,
-                          course,
-                          schedule.offerCourseCode,
                           "Ejercicios"
                         );
                         const { suggestions, totalOffers } = filterSuggestions(ejOffers, course.id);
@@ -48904,19 +50427,33 @@ function SchedulePlanningDrawer({
                           offerMap
                         }
                       ),
+                      schedule.nrcLAB && schedule.nrc && offerMap.has(schedule.nrcLAB) && (() => {
+                        const mainRow = offerMap.get(schedule.nrc);
+                        const labRow = offerMap.get(
+                          schedule.nrcLAB
+                        );
+                        if (mainRow && labRow && !isOfferLinkedToMain(mainRow, labRow)) {
+                          return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: [
+                            "Este NRC LAB no agrupa con la teoría seleccionada (",
+                            formatGroupLetters(
+                              mainRow.group_letters
+                            ),
+                            ")."
+                          ] });
+                        }
+                        return null;
+                      })(),
                       entryMode === "auto" && offerMap.size > 0 && (() => {
                         var _a2;
-                        if (isOpenElectiveCourse(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
+                        if (requiresOfferCourseCode(course) && !((_a2 = schedule.offerCourseCode) == null ? void 0 : _a2.trim()))
                           return null;
                         const mainRow = schedule.nrc ? offerMap.get(schedule.nrc) : void 0;
-                        const labOffers = mainRow ? getLinkedOffers(
+                        if (!mainRow) {
+                          return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-400 dark:text-gray-500 mt-2", children: "Selecciona primero el NRC de teoría para ver LAB compatibles." });
+                        }
+                        const labOffers = getLinkedOffers(
                           mainRow,
                           offerMap,
-                          "Laboratorio"
-                        ) : getOffersForSchedule(
-                          offerMap,
-                          course,
-                          schedule.offerCourseCode,
                           "Laboratorio"
                         );
                         const { suggestions, totalOffers } = filterSuggestions(labOffers, course.id);
@@ -49418,7 +50955,8 @@ function SchedulePlanningDrawer({
               /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTitle, { children: "Solo planificación — sin registro automático" }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDescription, { className: "text-amber-800 dark:text-amber-200/90", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Este planeador sirve únicamente para organizar tu horario de forma visual. Por ahora no registra materias en el sistema académico en tu nombre: eso requiere tus credenciales personales y aún no contamos con autorización de la USFQ para conectar con ese servicio." }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Existe una automatización de autoregistro que funciona aproximadamente el 60% de las veces, pero no está publicada de momento. Gracias por tu comprensión y atención." })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Existe una automatización de autoregistro que funciona aproximadamente el 60% de las veces, pero no está publicada de momento. Gracias por tu comprensión y atención." }),
+                crossMallaEnabled && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Planificar con materias de múltiples mallas (minors, doble carrera) está disponible solo con cuenta iniciada." })
               ] })
             ] })
           ] }),
@@ -49462,18 +51000,55 @@ const GRADE_THRESHOLDS = {
 function uid() {
   return Math.random().toString(36).slice(2, 9);
 }
+function createDefaultGradeData() {
+  return { categorias: [], targetLetter: "C", puntosExtra: 0 };
+}
 function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }) {
   const [isOpen, setIsOpen] = reactExports.useState(false);
-  const [categorias, setCategorias] = reactExports.useState([]);
-  const [targetLetter, setTargetLetter] = reactExports.useState("C");
-  const [puntosExtra, setPuntosExtra] = reactExports.useState(0);
-  reactExports.useEffect(() => {
-    if (isOpen) {
-      setCategorias([]);
-      setTargetLetter("C");
-      setPuntosExtra(0);
-    }
-  }, [isOpen]);
+  const [renamingTabId, setRenamingTabId] = reactExports.useState(null);
+  const [renameValue, setRenameValue] = reactExports.useState("");
+  const { user } = useSupabaseAuth();
+  const cacheKey = `gradeEstimatorCache_${(user == null ? void 0 : user.id) ?? "anonymous"}`;
+  const {
+    tabs,
+    activeTab,
+    activeTabId,
+    updateActiveData,
+    addTab,
+    removeTab,
+    renameTab,
+    selectTab
+  } = useTabbedCache({
+    storageKey: cacheKey,
+    isOpen,
+    createDefaultData: createDefaultGradeData,
+    defaultTabLabel: (i) => `Materia ${i + 1}`
+  });
+  const tabData = (activeTab == null ? void 0 : activeTab.data) ?? createDefaultGradeData();
+  const categorias = tabData.categorias;
+  const targetLetter = tabData.targetLetter;
+  const puntosExtra = tabData.puntosExtra;
+  const patchActive = reactExports.useCallback(
+    (patch) => {
+      updateActiveData({ ...tabData, ...patch });
+    },
+    [tabData, updateActiveData]
+  );
+  const setCategorias = reactExports.useCallback(
+    (updater) => {
+      const next = typeof updater === "function" ? updater(tabData.categorias) : updater;
+      patchActive({ categorias: next });
+    },
+    [tabData.categorias, patchActive]
+  );
+  const setTargetLetter = reactExports.useCallback(
+    (letter) => patchActive({ targetLetter: letter }),
+    [patchActive]
+  );
+  const setPuntosExtra = reactExports.useCallback(
+    (extra) => patchActive({ puntosExtra: extra }),
+    [patchActive]
+  );
   const metaFinal = reactExports.useMemo(() => GRADE_THRESHOLDS[targetLetter], [targetLetter]);
   const puntosActualesCategoria = (cat) => {
     const obtenidos = cat.items.reduce((acc, i) => acc + (i.puntos_obtenidos ?? 0), 0);
@@ -49563,9 +51138,7 @@ function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }) {
     }));
   };
   const handleClear = () => {
-    setCategorias([]);
-    setPuntosExtra(0);
-    setTargetLetter("C");
+    patchActive(createDefaultGradeData());
   };
   reactExports.useEffect(() => {
     if (exposeOpen) {
@@ -49588,13 +51161,84 @@ function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }) {
     isOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 flex", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-black/50", onClick: () => setIsOpen(false) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[95vw] max-w-6xl bg-white dark:bg-gray-800 shadow-xl overflow-y-auto", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-5 h-5" }),
-            " Aproxima tu nota"
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-5 h-5" }),
+              " Aproxima tu nota"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: () => setIsOpen(false), className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-5 h-5" }) })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: () => setIsOpen(false), className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-5 h-5" }) })
-        ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5 mt-3", children: [
+            tabs.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-0.5", children: [
+              renamingTabId === tab.id ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  autoFocus: true,
+                  value: renameValue,
+                  onChange: (e) => setRenameValue(e.target.value),
+                  onBlur: () => {
+                    renameTab(tab.id, renameValue);
+                    setRenamingTabId(null);
+                  },
+                  onKeyDown: (e) => {
+                    if (e.key === "Enter") {
+                      renameTab(tab.id, renameValue);
+                      setRenamingTabId(null);
+                    }
+                    if (e.key === "Escape") setRenamingTabId(null);
+                  },
+                  className: "h-8 w-28 text-sm dark:bg-gray-700"
+                }
+              ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => selectTab(tab.id),
+                  className: `flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${tab.id === activeTabId ? "bg-white dark:bg-gray-600 text-emerald-600 dark:text-emerald-400 shadow-sm border border-gray-200 dark:border-gray-600" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700"}`,
+                  children: [
+                    tab.label,
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Pencil,
+                      {
+                        className: "w-3 h-3 opacity-50 hover:opacity-100",
+                        onClick: (e) => {
+                          e.stopPropagation();
+                          setRenamingTabId(tab.id);
+                          setRenameValue(tab.label);
+                        }
+                      }
+                    )
+                  ]
+                }
+              ),
+              tabs.length > 1 && tab.id === activeTabId && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => removeTab(tab.id),
+                  className: "p-1 text-gray-400 hover:text-red-500",
+                  title: "Eliminar materia",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-3.5 h-3.5" })
+                }
+              )
+            ] }, tab.id)),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Button,
+              {
+                type: "button",
+                variant: "ghost",
+                size: "sm",
+                onClick: addTab,
+                className: "h-8 gap-1 text-sm",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "w-3.5 h-3.5" }),
+                  "Nueva materia"
+                ]
+              }
+            )
+          ] })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 space-y-6", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 items-end", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -49752,6 +51396,120 @@ function GradeEstimatorDrawer({ exposeOpen, hideFloatingButton }) {
       ] })
     ] })
   ] });
+}
+function BucketCourseCodeModal({
+  course,
+  onClose,
+  onConfirm
+}) {
+  const [code, setCode] = reactExports.useState("");
+  const [manualCredits, setManualCredits] = reactExports.useState("");
+  const { offerMap, loadFromCache } = useCourseOffer();
+  reactExports.useEffect(() => {
+    loadFromCache();
+  }, [loadFromCache]);
+  const normalizedCode = normalizeOfferCourseCodeInput(code);
+  const validation = reactExports.useMemo(
+    () => normalizedCode ? validateOfferCodeForBucket(course, normalizedCode) : { valid: false },
+    [course, normalizedCode]
+  );
+  const preview = normalizedCode && validation.valid ? getOfferCoursePreview(offerMap, normalizedCode) : void 0;
+  const offerCredits = normalizedCode && validation.valid ? resolveCourseCredits(normalizedCode, offerMap) : null;
+  const needsManualCredits = validation.valid && offerCredits === null;
+  const parsedManual = parseInt(manualCredits, 10);
+  const courseCredits = offerCredits ?? (Number.isFinite(parsedManual) ? parsedManual : null);
+  const areasLabel = getAllowedAreasLabel(course);
+  const creditsOk = courseCredits !== null && creditsMeetMinimum(courseCredits, course.credits);
+  const willCreateRemainder = creditsOk && courseCredits !== null && courseCredits < course.credits;
+  const canConfirm = validation.valid && courseCredits !== null && creditsOk;
+  const handleConfirm = () => {
+    if (!canConfirm || !normalizedCode || courseCredits === null) return;
+    onConfirm({
+      offerCourseCode: normalizedCode,
+      courseCredits
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "w-full max-w-md dark:bg-gray-800 dark:border-gray-700", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "flex flex-row items-start justify-between space-y-0 pb-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-lg dark:text-white", children: "Código de materia" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-500 dark:text-gray-400 mt-1", children: [
+          course.title,
+          " (",
+          course.credits,
+          " cr)"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onClose, className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-4", children: [
+      areasLabel && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-400", children: [
+        "Áreas permitidas: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: areasLabel })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "bucket-offer-code", className: "text-sm dark:text-gray-200", children: "Código USFQ" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            id: "bucket-offer-code",
+            value: code,
+            onChange: (e) => setCode(e.target.value),
+            placeholder: "ej. MUS-2101",
+            className: "mt-1 uppercase dark:bg-gray-700 dark:border-gray-600",
+            autoFocus: true
+          }
+        ),
+        !validation.valid && normalizedCode && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-600 dark:text-red-400 mt-1", children: "error" in validation ? validation.error : "Código inválido" }),
+        preview && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-300 mt-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium", children: preview.course_code }),
+          " — ",
+          preview.title,
+          preview.credits != null && ` (${preview.credits} cr)`
+        ] }),
+        needsManualCredits && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-600 dark:text-amber-400 mt-1", children: "No encontrado en la oferta actual. Ingresa los créditos manualmente." })
+      ] }),
+      needsManualCredits && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "bucket-manual-credits", className: "text-sm dark:text-gray-200", children: "Créditos de la materia" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            id: "bucket-manual-credits",
+            type: "number",
+            min: 1,
+            value: manualCredits,
+            onChange: (e) => setManualCredits(e.target.value),
+            placeholder: "ej. 2",
+            className: "mt-1 w-32 dark:bg-gray-700 dark:border-gray-600"
+          }
+        )
+      ] }),
+      courseCredits !== null && courseCredits <= 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-600 dark:text-red-400", children: "La materia debe tener al menos 1 crédito." }),
+      willCreateRemainder && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-blue-600 dark:text-blue-400", children: [
+        "Esta materia aporta ",
+        courseCredits,
+        " cr de ",
+        course.credits,
+        ". Se creará un card pendiente con ",
+        course.credits - courseCredits,
+        " cr restante",
+        course.credits - courseCredits !== 1 ? "s" : "",
+        "."
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2 pt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: onClose, className: "dark:border-gray-600", children: "Cancelar" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            onClick: handleConfirm,
+            disabled: !canConfirm,
+            className: "bg-blue-600 hover:bg-blue-700 text-white",
+            children: "Confirmar"
+          }
+        )
+      ] })
+    ] })
+  ] }) });
 }
 function generateMermaidDiagram(courses2, completedCourses, sourceFile) {
   const mermaidCode = ["flowchart TD"];
@@ -49977,6 +51735,10 @@ const defaultCurriculumData = {
   "Last-Modified": "2026-06-08T21:53:55.236Z",
   courses
 };
+const BASE_COLUMNS = "completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at";
+function isMissingBucketColumnError(message) {
+  return /bucket_fulfillments/i.test(message);
+}
 function emptyProgress(curriculumId) {
   return {
     curriculumId,
@@ -49987,39 +51749,70 @@ function emptyProgress(curriculumId) {
     lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
   };
 }
+function mapProgressRow(curriculumId, row) {
+  return {
+    curriculumId,
+    completedCourses: row.completed_courses ?? [],
+    inProgressCourses: row.in_progress_courses ?? [],
+    plannedCourses: row.planned_courses ?? [],
+    hasWritingIntensive: row.has_writing_intensive ?? false,
+    bucketFulfillments: row.bucket_fulfillments ?? {},
+    lastUpdated: row.updated_at ?? (/* @__PURE__ */ new Date()).toISOString()
+  };
+}
+async function fetchProgressRow(curriculumId, userId, includeBucketColumn) {
+  const columns = includeBucketColumn ? `${BASE_COLUMNS}, bucket_fulfillments` : BASE_COLUMNS;
+  return supabase.from("user_progress").select(columns).eq("user_id", userId).eq("curriculum_id", curriculumId).maybeSingle();
+}
 async function loadProgressFromSupabase(curriculumId, userId) {
-  const { data, error } = await supabase.from("user_progress").select("completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at").eq("user_id", userId).eq("curriculum_id", curriculumId).maybeSingle();
+  let { data, error } = await fetchProgressRow(curriculumId, userId, true);
+  if (error && isMissingBucketColumnError(error.message)) {
+    ({ data, error } = await fetchProgressRow(curriculumId, userId, false));
+  }
   if (error) {
     console.error("Error loading progress from Supabase:", error.message);
     throw error;
   }
   if (!data) return emptyProgress(curriculumId);
-  return {
-    curriculumId,
-    completedCourses: data.completed_courses ?? [],
-    inProgressCourses: data.in_progress_courses ?? [],
-    plannedCourses: data.planned_courses ?? [],
-    hasWritingIntensive: data.has_writing_intensive ?? false,
-    lastUpdated: data.updated_at ?? (/* @__PURE__ */ new Date()).toISOString()
-  };
+  return mapProgressRow(curriculumId, data);
 }
 async function saveProgressToSupabase(params, userId) {
-  const { error } = await supabase.from("user_progress").upsert(
+  const basePayload = {
+    user_id: userId,
+    curriculum_id: params.curriculumId,
+    completed_courses: params.completedCourses,
+    in_progress_courses: params.inProgressCourses ?? [],
+    planned_courses: params.plannedCourses ?? [],
+    has_writing_intensive: params.hasWritingIntensive ?? false,
+    updated_at: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  let { error } = await supabase.from("user_progress").upsert(
     {
-      user_id: userId,
-      curriculum_id: params.curriculumId,
-      completed_courses: params.completedCourses,
-      in_progress_courses: params.inProgressCourses ?? [],
-      planned_courses: params.plannedCourses ?? [],
-      has_writing_intensive: params.hasWritingIntensive ?? false,
-      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+      ...basePayload,
+      bucket_fulfillments: params.bucketFulfillments ?? {}
     },
     { onConflict: "user_id,curriculum_id" }
   );
+  if (error && isMissingBucketColumnError(error.message)) {
+    ({ error } = await supabase.from("user_progress").upsert(basePayload, { onConflict: "user_id,curriculum_id" }));
+  }
   if (error) {
     console.error("Error saving progress to Supabase:", error.message);
     throw error;
   }
+}
+async function loadAllUserProgress(userId) {
+  let { data, error } = await supabase.from("user_progress").select(`${BASE_COLUMNS}, bucket_fulfillments`).eq("user_id", userId);
+  if (error && isMissingBucketColumnError(error.message)) {
+    ({ data, error } = await supabase.from("user_progress").select(BASE_COLUMNS).eq("user_id", userId));
+  }
+  if (error) {
+    console.error("Error loading all progress from Supabase:", error.message);
+    throw error;
+  }
+  return (data ?? []).map(
+    (row) => mapProgressRow(row.curriculum_id, row)
+  );
 }
 const mockBackendClient = {
   progress: {
@@ -50107,10 +51900,139 @@ function useBackend() {
   }
   return mockBackendClient;
 }
+function normalizeCourseCode(input) {
+  return input.replace(/[\s-]/g, "").toUpperCase();
+}
+async function loadUserSettings(userId) {
+  const { data, error } = await supabase.from("user_settings").select("bypass_courses").eq("user_id", userId).maybeSingle();
+  if (error) {
+    console.error("Error loading user settings:", error.message);
+    throw error;
+  }
+  return {
+    bypassCourses: (data == null ? void 0 : data.bypass_courses) ?? []
+  };
+}
+async function saveBypassCourses(userId, bypassCourses) {
+  const { error } = await supabase.from("user_settings").upsert(
+    {
+      user_id: userId,
+      bypass_courses: bypassCourses,
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    },
+    { onConflict: "user_id" }
+  );
+  if (error) {
+    console.error("Error saving bypass courses:", error.message, error);
+    throw new Error(error.message);
+  }
+}
+const QUERY_KEY = "userBypassCourses";
+function useUserBypassCourses() {
+  const { isSignedIn, user } = useSupabaseAuth();
+  const queryClient2 = useQueryClient();
+  const userId = (user == null ? void 0 : user.id) ?? null;
+  const { data, isLoading } = useQuery({
+    queryKey: [QUERY_KEY, userId],
+    queryFn: () => loadUserSettings(userId),
+    enabled: isSignedIn && !!userId,
+    staleTime: 3e4
+  });
+  const bypassCourses = reactExports.useMemo(
+    () => new Set((data == null ? void 0 : data.bypassCourses) ?? []),
+    [data == null ? void 0 : data.bypassCourses]
+  );
+  const mutation = useMutation({
+    mutationFn: (codes) => saveBypassCourses(userId, codes),
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: [QUERY_KEY, userId] });
+    }
+  });
+  const addBypassCourse = async (rawCode) => {
+    if (!userId) return;
+    const code = normalizeCourseCode(rawCode);
+    if (!code) return;
+    const current = (data == null ? void 0 : data.bypassCourses) ?? [];
+    if (current.includes(code)) return;
+    await mutation.mutateAsync([...current, code]);
+  };
+  const removeBypassCourse = async (code) => {
+    if (!userId) return;
+    const current = (data == null ? void 0 : data.bypassCourses) ?? [];
+    await mutation.mutateAsync(current.filter((c) => c !== code));
+  };
+  return {
+    bypassCourses,
+    bypassCourseList: (data == null ? void 0 : data.bypassCourses) ?? [],
+    isLoading: isSignedIn && isLoading,
+    isSaving: mutation.isPending,
+    addBypassCourse,
+    removeBypassCourse,
+    normalizeCourseCode
+  };
+}
+const curriculumCache = /* @__PURE__ */ new Map();
+async function loadCoursesForCurriculum(curriculumId) {
+  if (curriculumCache.has(curriculumId)) {
+    return curriculumCache.get(curriculumId);
+  }
+  for (const c of availableCurricula) {
+    try {
+      const mod = await c.dataLoader();
+      const data = mod.default;
+      const sf = data.source_file ?? c.id;
+      if (sf === curriculumId || c.id === curriculumId) {
+        const courses2 = data.courses ?? [];
+        curriculumCache.set(curriculumId, courses2);
+        return courses2;
+      }
+    } catch {
+    }
+  }
+  curriculumCache.set(curriculumId, []);
+  return [];
+}
+function shortLabelFromCurriculumId(curriculumId) {
+  const match = curriculumId.match(/Malla(?:-academica)?-([A-Z0-9]+)/i);
+  if (match) return match[1].toUpperCase();
+  return curriculumId.slice(0, 6).toUpperCase();
+}
+async function aggregatePlannedCourses(userId) {
+  var _a2;
+  const rows = await loadAllUserProgress(userId);
+  const entries = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const row of rows) {
+    if (!((_a2 = row.plannedCourses) == null ? void 0 : _a2.length)) continue;
+    const courses2 = await loadCoursesForCurriculum(row.curriculumId);
+    const label = shortLabelFromCurriculumId(row.curriculumId);
+    for (const courseId of row.plannedCourses) {
+      const key = `${row.curriculumId}:${courseId}`;
+      if (seen.has(key)) continue;
+      const course = courses2.find((c) => c.id === courseId);
+      if (!course) continue;
+      seen.add(key);
+      entries.push({
+        course,
+        curriculumId: row.curriculumId,
+        curriculumLabel: label
+      });
+    }
+  }
+  return entries;
+}
+function toPlannedEntries(courses2, curriculumLabel, curriculumId) {
+  return courses2.map((course) => ({
+    course,
+    curriculumId,
+    curriculumLabel: curriculumLabel ?? ""
+  }));
+}
 const MAX_SEMESTER_CREDITS = 16;
 function CurriculumGrid() {
-  const { isSignedIn } = useSupabaseAuth();
+  const { isSignedIn, user, isLoading: authLoading } = useSupabaseAuth();
   const backend = useBackend();
+  const { bypassCourses } = useUserBypassCourses();
   const [curriculumData, setCurriculumData] = reactExports.useState(defaultCurriculumData);
   const [completedCourses, setCompletedCourses] = reactExports.useState(/* @__PURE__ */ new Set());
   const [inProgressCourses, setInProgressCourses] = reactExports.useState(/* @__PURE__ */ new Set());
@@ -50123,12 +52045,17 @@ function CurriculumGrid() {
   const [hasWritingIntensive, setHasWritingIntensive] = reactExports.useState(false);
   const [showEnglishAnimation, setShowEnglishAnimation] = reactExports.useState(false);
   const prevEsl0006CompletedRef = reactExports.useRef(null);
+  const prevSignedInRef = reactExports.useRef(null);
   const [dataLoaded, setDataLoaded] = reactExports.useState(false);
+  const [progressHydrated, setProgressHydrated] = reactExports.useState(false);
   const [isLoadingProgress, setIsLoadingProgress] = reactExports.useState(false);
   const { toast: toast2 } = useToast();
   const [toolboxOpen, setToolboxOpen] = reactExports.useState(false);
   const [openScheduleDrawer, setOpenScheduleDrawer] = reactExports.useState(null);
   const [openGradeEstimator, setOpenGradeEstimator] = reactExports.useState(null);
+  const [aggregatedPlanned, setAggregatedPlanned] = reactExports.useState(null);
+  const [bucketFulfillments, setBucketFulfillments] = reactExports.useState({});
+  const [bucketModal, setBucketModal] = reactExports.useState(null);
   const curriculumId = curriculumData.source_file || "Malla-CMP";
   reactExports.useEffect(() => {
     const loadFromUrl = async () => {
@@ -50142,7 +52069,7 @@ function CurriculumGrid() {
           const slug = path.startsWith(base) ? path.slice(base.length) : path.replace(/^\/+/, "");
           clean = slug.replace(/^\/+|\/+$/g, "");
         }
-        if (!clean) return;
+        if (!clean || clean === "tutoriales" || clean.startsWith("tutoriales/")) return;
         const target = availableCurricula.find((c) => c.slug === clean);
         if (!target) return;
         const module = await target.dataLoader();
@@ -50164,8 +52091,10 @@ function CurriculumGrid() {
     };
   }, []);
   reactExports.useEffect(() => {
+    if (authLoading) return;
     const loadData = async () => {
       setIsLoadingProgress(true);
+      setProgressHydrated(false);
       try {
         const response = await backend.progress.loadProgress({ curriculumId });
         if (response) {
@@ -50175,16 +52104,25 @@ function CurriculumGrid() {
           if (typeof response.hasWritingIntensive === "boolean") {
             setHasWritingIntensive(response.hasWritingIntensive);
           }
+          if (isSignedIn) {
+            setBucketFulfillments(response.bucketFulfillments ?? {});
+          } else {
+            setBucketFulfillments({});
+          }
         } else {
           setCompletedCourses(/* @__PURE__ */ new Set());
           setInProgressCourses(/* @__PURE__ */ new Set());
           setPlannedCourses(/* @__PURE__ */ new Set());
+          setBucketFulfillments({});
         }
+        setProgressHydrated(true);
       } catch (error) {
         console.error("Error loading progress:", error);
-        setCompletedCourses(/* @__PURE__ */ new Set());
-        setInProgressCourses(/* @__PURE__ */ new Set());
-        setPlannedCourses(/* @__PURE__ */ new Set());
+        toast2({
+          title: "No se pudo cargar tu progreso",
+          description: "Tus cambios no se guardarán hasta que se restablezca la conexión.",
+          variant: "destructive"
+        });
       }
       const savedCurriculum = localStorage.getItem("curriculumData");
       let idForWI = curriculumId;
@@ -50201,33 +52139,38 @@ function CurriculumGrid() {
           console.error("Error loading curriculum data:", error);
         }
       }
-      savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${idForWI}`);
-      if (savedWritingIntensive) {
-        try {
-          setHasWritingIntensive(JSON.parse(savedWritingIntensive));
-        } catch (error) {
-          console.error("Error loading writing intensive status:", error);
+      if (!isSignedIn) {
+        savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${idForWI}`);
+        if (savedWritingIntensive) {
+          try {
+            setHasWritingIntensive(JSON.parse(savedWritingIntensive));
+          } catch (error) {
+            console.error("Error loading writing intensive status:", error);
+          }
+        } else if (legacyWritingIntensive) {
+          try {
+            const legacy = JSON.parse(legacyWritingIntensive);
+            setHasWritingIntensive(legacy);
+            localStorage.setItem(`hasWritingIntensive:${idForWI}`, JSON.stringify(legacy));
+            localStorage.removeItem("hasWritingIntensive");
+          } catch (error) {
+            console.error("Error migrating legacy writing intensive status:", error);
+          }
         }
-      } else if (legacyWritingIntensive) {
-        try {
-          const legacy = JSON.parse(legacyWritingIntensive);
-          setHasWritingIntensive(legacy);
-          localStorage.setItem(`hasWritingIntensive:${idForWI}`, JSON.stringify(legacy));
-          localStorage.removeItem("hasWritingIntensive");
-        } catch (error) {
-          console.error("Error migrating legacy writing intensive status:", error);
-          setHasWritingIntensive(false);
-        }
-      } else {
-        setHasWritingIntensive(false);
       }
       setDataLoaded(true);
       setIsLoadingProgress(false);
     };
     loadData();
-  }, [isSignedIn, curriculumId]);
+  }, [isSignedIn, curriculumId, authLoading]);
   reactExports.useEffect(() => {
-    if (!dataLoaded || isLoadingProgress) return;
+    if (prevSignedInRef.current === true && !isSignedIn) {
+      setBucketFulfillments({});
+    }
+    prevSignedInRef.current = isSignedIn;
+  }, [isSignedIn]);
+  reactExports.useEffect(() => {
+    if (!dataLoaded || isLoadingProgress || !progressHydrated || authLoading) return;
     const saveProgress = async () => {
       try {
         await backend.progress.saveProgress({
@@ -50237,14 +52180,20 @@ function CurriculumGrid() {
           inProgressCourses: [...inProgressCourses],
           plannedCourses: [...plannedCourses],
           hasWritingIntensive,
+          bucketFulfillments: isSignedIn ? bucketFulfillments : void 0,
           lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
         });
       } catch (error) {
         console.error("Error saving progress:", error);
+        toast2({
+          title: "No se pudo guardar tu progreso",
+          description: "Revisa tu conexión e inténtalo de nuevo.",
+          variant: "destructive"
+        });
       }
     };
     saveProgress();
-  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, dataLoaded, curriculumId, isLoadingProgress]);
+  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, bucketFulfillments, isSignedIn, dataLoaded, progressHydrated, authLoading, curriculumId, isLoadingProgress]);
   reactExports.useEffect(() => {
     if (!dataLoaded) return;
     try {
@@ -50343,7 +52292,13 @@ function CurriculumGrid() {
     }, 500);
     return () => clearTimeout(timer);
   }, [esl0006Completed, hasWritingIntensive, hasESL0006, dataLoaded, toast2]);
-  const allCoursesCompleted = curriculumData.courses.length > 0 && completedCourses.size === curriculumData.courses.length;
+  const displayCourses = reactExports.useMemo(() => {
+    if (isSignedIn) {
+      return expandDisplayCourses(curriculumData.courses, bucketFulfillments);
+    }
+    return curriculumData.courses;
+  }, [isSignedIn, curriculumData.courses, bucketFulfillments]);
+  const allCoursesCompleted = displayCourses.length > 0 && displayCourses.every((course) => completedCourses.has(course.id));
   const isAllCompleted = allCoursesCompleted && hasWritingIntensive;
   const completedSemesters = new Set(
     curriculumData.courses.filter((course) => completedCourses.has(course.id)).map((course) => course.semester)
@@ -50361,33 +52316,212 @@ function CurriculumGrid() {
       setShowCelebration(false);
     }
   }, [isAllCompleted, completedCourses.size, toast2]);
-  const sumCredits = (courseIds) => curriculumData.courses.filter((c) => courseIds.has(c.id)).reduce((sum, c) => sum + c.credits, 0);
+  const sumCredits = (courseIds) => displayCourses.filter((c) => courseIds.has(c.id)).reduce((sum, c) => sum + getDisplayCreditsForSlot(c, bucketFulfillments), 0);
   const plannedCoursesList = reactExports.useMemo(
-    () => curriculumData.courses.filter((c) => plannedCourses.has(c.id)),
-    [curriculumData.courses, plannedCourses]
+    () => displayCourses.filter((c) => plannedCourses.has(c.id)),
+    [displayCourses, plannedCourses]
   );
+  const mallaShortLabel = reactExports.useMemo(() => {
+    const m = curriculumId.match(/Malla(?:-academica)?-([A-Z0-9]+)/i);
+    return m ? m[1].toUpperCase() : curriculumId.slice(0, 6).toUpperCase();
+  }, [curriculumId]);
+  reactExports.useEffect(() => {
+    if (!isSignedIn || !(user == null ? void 0 : user.id)) {
+      setAggregatedPlanned(null);
+      return;
+    }
+    let cancelled = false;
+    aggregatePlannedCourses(user.id).then((entries) => {
+      if (!cancelled) setAggregatedPlanned(entries);
+    }).catch(() => {
+      if (!cancelled) setAggregatedPlanned(null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, user == null ? void 0 : user.id, plannedCourses]);
+  const plannerBucketCodes = reactExports.useMemo(
+    () => Object.fromEntries(
+      Object.entries(bucketFulfillments).map(([id, f]) => [id, f.offerCourseCode])
+    ),
+    [bucketFulfillments]
+  );
+  const drawerPlannedEntries = reactExports.useMemo(() => {
+    if (isSignedIn && aggregatedPlanned && aggregatedPlanned.length > 0) {
+      return aggregatedPlanned;
+    }
+    return toPlannedEntries(plannedCoursesList, mallaShortLabel, curriculumId);
+  }, [isSignedIn, aggregatedPlanned, plannedCoursesList, mallaShortLabel, curriculumId]);
+  const prereqSatisfied = (prereqId) => {
+    const prereqCourse = curriculumData.courses.find((c) => c.id === prereqId);
+    if (isSignedIn && prereqCourse && requiresOfferCourseCode(prereqCourse)) {
+      return isBucketSatisfiedForPrereq(
+        prereqId,
+        curriculumData.courses,
+        bucketFulfillments,
+        completedCourses,
+        inProgressCourses
+      );
+    }
+    return completedCourses.has(prereqId) || inProgressCourses.has(prereqId);
+  };
   const isUnlocked = (course) => {
+    if (bypassCourses.has(course.id)) return true;
     if (course.prerequisites.length === 0) return true;
     if (course.alternatives.length > 0) {
-      return course.alternatives.some((altId) => completedCourses.has(altId) || inProgressCourses.has(altId));
+      return course.alternatives.some((altId) => prereqSatisfied(altId));
     }
     return course.prerequisites.every((prereqGroup) => {
       const options = prereqGroup.split("||").map((s) => s.trim()).filter(Boolean);
       if (options.length > 1) {
-        return options.some((id2) => completedCourses.has(id2) || inProgressCourses.has(id2));
+        return options.some((id2) => prereqSatisfied(id2));
       }
       const id = options[0] || "";
-      return completedCourses.has(id) || inProgressCourses.has(id);
+      return prereqSatisfied(id);
     });
   };
+  const removeBucketFromProgress = (rootId) => {
+    const ids = new Set(collectFulfillmentSlotIds(rootId, bucketFulfillments));
+    setBucketFulfillments((prev) => clearBucketFulfillmentChain(rootId, prev));
+    setCompletedCourses((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+    setInProgressCourses((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+    setPlannedCourses((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+  };
+  const markCourseInMode = (courseId, mode) => {
+    if (mode === "completed") {
+      setCompletedCourses((prev) => {
+        const next = new Set(prev);
+        next.add(courseId);
+        return next;
+      });
+      setInProgressCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+      setPlannedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+    } else if (mode === "in-progress") {
+      setInProgressCourses((prev) => {
+        const next = new Set(prev);
+        next.add(courseId);
+        return next;
+      });
+      setCompletedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+      setPlannedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+    } else if (mode === "planned") {
+      setPlannedCourses((prev) => {
+        const next = new Set(prev);
+        next.add(courseId);
+        return next;
+      });
+      setCompletedCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+      setInProgressCourses((prev) => {
+        const next = new Set(prev);
+        next.delete(courseId);
+        return next;
+      });
+    }
+  };
+  const handleBucketConfirm = (fulfillment) => {
+    if (!bucketModal) return;
+    const { course, mode } = bucketModal;
+    setBucketFulfillments((prev) => ({
+      ...prev,
+      [course.id]: fulfillment
+    }));
+    markCourseInMode(course.id, mode);
+    setBucketModal(null);
+  };
   const handleCourseClick = (courseId) => {
-    const course = curriculumData.courses.find((c) => c.id === courseId);
+    const course = displayCourses.find((c) => c.id === courseId) ?? curriculumData.courses.find((c) => c.id === courseId);
     if (!course) return;
     const isCurrentlyUnlocked = isUnlocked(course);
     const isCurrentlyCompleted = completedCourses.has(courseId);
     const isCurrentlyInProgress = inProgressCourses.has(courseId);
     const isCurrentlyPlanned = plannedCourses.has(courseId);
-    if (!isCurrentlyUnlocked && !isCurrentlyCompleted && !isCurrentlyInProgress && !isCurrentlyPlanned) return;
+    const isMarked = isCurrentlyCompleted || isCurrentlyInProgress || isCurrentlyPlanned;
+    if (!isCurrentlyUnlocked && !isMarked) return;
+    const isBucket = requiresOfferCourseCode(course);
+    const rootId = getRootSlotId(courseId);
+    if (isMarked) {
+      if (isSignedIn && isBucket) {
+        removeBucketFromProgress(rootId);
+        return;
+      }
+      if (currentMode === "completed" && isCurrentlyCompleted) {
+        setCompletedCourses((prev) => {
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
+        });
+      } else if (currentMode === "in-progress" && isCurrentlyInProgress) {
+        setInProgressCourses((prev) => {
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
+        });
+      } else if (currentMode === "planned" && isCurrentlyPlanned) {
+        setPlannedCourses((prev) => {
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
+        });
+      }
+      return;
+    }
+    if (isSignedIn && isBucket) {
+      if (currentMode === "in-progress") {
+        const projectedCredits = sumCredits(inProgressCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast2({
+            title: "Límite de créditos",
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en cursando.`,
+            variant: "destructive"
+          });
+          return;
+        }
+      } else if (currentMode === "planned") {
+        const projectedCredits = sumCredits(plannedCourses) + course.credits;
+        if (projectedCredits > MAX_SEMESTER_CREDITS) {
+          toast2({
+            title: "Límite de créditos",
+            description: `Solo puedes seleccionar hasta ${MAX_SEMESTER_CREDITS} créditos en planeadas.`,
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+      setBucketModal({ course, mode: currentMode });
+      return;
+    }
     if (currentMode === "completed") {
       setCompletedCourses((prev) => {
         const newCompleted = new Set(prev);
@@ -50477,6 +52611,7 @@ function CurriculumGrid() {
     setInProgressCourses(/* @__PURE__ */ new Set());
     setPlannedCourses(/* @__PURE__ */ new Set());
     setHasWritingIntensive(false);
+    setBucketFulfillments({});
     localStorage.removeItem("completedCourses");
     localStorage.removeItem("inProgressCourses");
     localStorage.removeItem("plannedCourses");
@@ -50502,6 +52637,7 @@ function CurriculumGrid() {
           inProgressCourses: [],
           plannedCourses: [],
           hasWritingIntensive: false,
+          bucketFulfillments: {},
           lastUpdated: now
         };
         await backend.progress.saveProgress({ curriculumId, ...empty });
@@ -50563,12 +52699,14 @@ function CurriculumGrid() {
     });
   };
   const totalCredits = curriculumData.courses.reduce((sum, course) => sum + course.credits, 0);
-  const completedCredits = curriculumData.courses.filter((course) => completedCourses.has(course.id)).reduce((sum, course) => sum + course.credits, 0);
-  const totalCourses = curriculumData.courses.length;
-  const completedCoursesCount = completedCourses.size;
+  const completedCredits = displayCourses.filter((course) => completedCourses.has(course.id)).reduce((sum, course) => sum + getDisplayCreditsForSlot(course, bucketFulfillments), 0);
+  const totalCourses = displayCourses.length;
+  const completedCoursesCount = displayCourses.filter(
+    (c) => completedCourses.has(c.id)
+  ).length;
   const creditProgress = totalCredits > 0 ? completedCredits / totalCredits * 100 : 0;
   const courseProgress = totalCourses > 0 ? completedCoursesCount / totalCourses * 100 : 0;
-  const coursesByBlock = curriculumData.courses.reduce((acc, course) => {
+  const coursesByBlock = displayCourses.reduce((acc, course) => {
     if (!acc[course.block]) {
       acc[course.block] = [];
     }
@@ -50717,8 +52855,17 @@ function CurriculumGrid() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-8", children: blockOrder.map((blockName) => {
       const blockCourses = coursesByBlock[blockName];
       if (!blockCourses || blockCourses.length === 0) return null;
-      const blockCompletedCredits = blockCourses.filter((course) => completedCourses.has(course.id)).reduce((sum, course) => sum + course.credits, 0);
-      const blockTotalCredits = blockCourses.reduce((sum, course) => sum + course.credits, 0);
+      const blockBaseCourses = curriculumData.courses.filter(
+        (c) => c.block === blockName
+      );
+      const blockTotalCredits = blockBaseCourses.reduce(
+        (sum, course) => sum + course.credits,
+        0
+      );
+      const blockCompletedCredits = blockCourses.filter((course) => completedCourses.has(course.id)).reduce(
+        (sum, course) => sum + getDisplayCreditsForSlot(course, bucketFulfillments),
+        0
+      );
       const blockProgress = blockTotalCredits > 0 ? blockCompletedCredits / blockTotalCredits * 100 : 0;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
@@ -50732,19 +52879,24 @@ function CurriculumGrid() {
             "%)"
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4", children: blockCourses.map((course) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-          CourseCard,
-          {
-            course,
-            isCompleted: completedCourses.has(course.id),
-            isUnlocked: isUnlocked(course),
-            isInProgress: inProgressCourses.has(course.id),
-            isPlanned: plannedCourses.has(course.id),
-            onClick: handleCourseClick,
-            allCourses: curriculumData.courses
-          },
-          course.id
-        )) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4", children: blockCourses.map((course) => {
+          const fulfillment = bucketFulfillments[course.id] ?? course.fulfillment;
+          return /* @__PURE__ */ jsxRuntimeExports.jsx(
+            CourseCard,
+            {
+              course,
+              isCompleted: completedCourses.has(course.id),
+              isUnlocked: isUnlocked(course),
+              isInProgress: inProgressCourses.has(course.id),
+              isPlanned: plannedCourses.has(course.id),
+              onClick: handleCourseClick,
+              allCourses: curriculumData.courses,
+              fulfillmentCode: fulfillment == null ? void 0 : fulfillment.offerCourseCode,
+              isRemainder: course.isRemainder
+            },
+            course.id
+          );
+        }) })
       ] }, blockName);
     }) }),
     showUpload && /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -50765,10 +52917,21 @@ function CurriculumGrid() {
         showNotice: showEnglishAnimation
       }
     ),
+    bucketModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      BucketCourseCodeModal,
+      {
+        course: bucketModal.course,
+        onClose: () => setBucketModal(null),
+        onConfirm: handleBucketConfirm
+      }
+    ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       SchedulePlanningDrawer,
       {
-        plannedCourses: plannedCoursesList,
+        plannedEntries: drawerPlannedEntries,
+        crossMallaEnabled: isSignedIn,
+        userId: user == null ? void 0 : user.id,
+        initialBucketCodes: isSignedIn ? plannerBucketCodes : void 0,
         onSave: (schedules) => {
           console.log("Schedules saved:", schedules);
           toast2({
@@ -50906,6 +53069,20 @@ function Footer() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "a",
         {
+          href: "https://portafolio-josh-reino.vercel.app/",
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "flex items-center space-x-2 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors duration-200 group",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg group-hover:scale-110 transition-transform duration-200", children: "👾" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium", children: "Ver portafolio de Josh" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { className: "w-3 h-3 opacity-60" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "a",
+        {
           href: "https://github.com/Pichuelectrico",
           target: "_blank",
           rel: "noopener noreferrer",
@@ -51009,6 +53186,27 @@ function AuthModal({ open, onOpenChange, initialMode = "login" }) {
     e.preventDefault();
     setError("");
     setSuccess("");
+    if (mode === "new-password") {
+      if (password.length < 6) {
+        setError("La contraseña debe tener al menos 6 caracteres.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError("Las contraseñas no coinciden.");
+        return;
+      }
+      setLoading(true);
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+      setLoading(false);
+      if (updateError) {
+        setError(authErrorMessage(updateError));
+      } else {
+        clearPasswordRecovery();
+        setSuccess("Contraseña actualizada correctamente.");
+        setTimeout(() => handleOpenChange(false), 1500);
+      }
+      return;
+    }
     const trimmedEmail = email.trim();
     if (!trimmedEmail) return;
     if (mode === "signup") {
@@ -51021,31 +53219,8 @@ function AuthModal({ open, onOpenChange, initialMode = "login" }) {
         return;
       }
     }
-    if (mode !== "forgot" && mode !== "new-password" && !password) return;
-    if (mode === "new-password" && !password) return;
+    if (mode !== "forgot" && !password) return;
     setLoading(true);
-    if (mode === "new-password") {
-      if (password.length < 6) {
-        setError("La contraseña debe tener al menos 6 caracteres.");
-        setLoading(false);
-        return;
-      }
-      if (password !== confirmPassword) {
-        setError("Las contraseñas no coinciden.");
-        setLoading(false);
-        return;
-      }
-      const { error: updateError } = await supabase.auth.updateUser({ password });
-      setLoading(false);
-      if (updateError) {
-        setError(authErrorMessage(updateError));
-      } else {
-        clearPasswordRecovery();
-        setSuccess("Contraseña actualizada correctamente.");
-        setTimeout(() => handleOpenChange(false), 1500);
-      }
-      return;
-    }
     if (mode === "login") {
       const { error: signInError } = await signInWithPassword(trimmedEmail, password);
       setLoading(false);
@@ -52854,6 +55029,7 @@ const ALL_FACULTIES = [
   "COM",
   "JUR",
   "DIC",
+  "DIT",
   "ECO",
   "EDU",
   "FIN",
@@ -53056,6 +55232,578 @@ function AdminViewToggle({ mode, onChange }) {
       ] })
     }
   );
+}
+const navButtonClass = "px-2 sm:px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors whitespace-nowrap";
+function HeaderNav({
+  showAdmin,
+  adminViewMode,
+  onAdminViewChange,
+  onOpenTutoriales,
+  onOpenContact,
+  onOpenSobrepaso,
+  authButton
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1 sm:gap-2", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onOpenTutoriales, className: navButtonClass, children: "Tutoriales" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onOpenContact, className: navButtonClass, children: "Contáctame" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onOpenSobrepaso, className: navButtonClass, children: "Sobrepaso" }),
+    showAdmin && /* @__PURE__ */ jsxRuntimeExports.jsx(AdminViewToggle, { mode: adminViewMode, onChange: onAdminViewChange }),
+    authButton
+  ] });
+}
+const REASONS = [
+  {
+    id: "problema",
+    label: "Reportar un problema",
+    description: "Algo no funciona o encontraste un error en la app.",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "w-5 h-5 text-amber-500" }),
+    subject: "Reporte de problema - Malla Curricular"
+  },
+  {
+    id: "servicios",
+    label: "Contratar mis servicios",
+    description: "Desarrollo web, mallas curriculares u otros proyectos.",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Briefcase, { className: "w-5 h-5 text-blue-500" }),
+    subject: "Solicitud de servicios"
+  },
+  {
+    id: "contacto",
+    label: "Solo contactarme",
+    description: "Un mensaje general, sugerencia o consulta.",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageCircle, { className: "w-5 h-5 text-green-500" }),
+    subject: "Contacto general - Malla Curricular"
+  }
+];
+function GeneralContactModal({ onClose }) {
+  const [step, setStep] = reactExports.useState("select");
+  const [selectedReason, setSelectedReason] = reactExports.useState(null);
+  const [formData, setFormData] = reactExports.useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = reactExports.useState(false);
+  const { toast: toast2 } = useToast();
+  const reasonConfig = REASONS.find((r2) => r2.id === selectedReason);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSelectReason = (reason) => {
+    setSelectedReason(reason);
+    setStep("form");
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!reasonConfig) return;
+    setIsSubmitting(true);
+    try {
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("email", formData.email);
+      form.append("message", formData.message);
+      form.append("motivo", reasonConfig.label);
+      form.append("_subject", reasonConfig.subject);
+      form.append("_captcha", "false");
+      const response = await fetch(
+        "https://formsubmit.co/ajax/pichuelectrico@gmail.com",
+        {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: form
+        }
+      );
+      const data = await response.json().catch(() => null);
+      if (response.ok && (data == null ? void 0 : data.success)) {
+        toast2({
+          title: "¡Mensaje enviado!",
+          description: "Te responderemos lo más pronto posible."
+        });
+        onClose();
+      } else {
+        throw new Error(
+          (data && typeof data.message === "string" ? data.message : null) ?? "Error en el envío"
+        );
+      }
+    } catch (error) {
+      console.error("Error sending form:", error);
+      toast2({
+        title: "Error al enviar",
+        description: "Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "w-full max-w-lg dark:bg-gray-800 dark:border-gray-700 max-h-[90vh] overflow-y-auto", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-5 h-5 text-blue-600 dark:text-blue-400" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-xl font-bold text-gray-800 dark:text-white", children: "Contáctame" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onClose, className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: step === "select" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-600 dark:text-gray-400 mb-4", children: "¿En qué te puedo ayudar?" }),
+      REASONS.map((reason) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => handleSelectReason(reason.id),
+          className: "w-full flex items-start gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-left",
+          children: [
+            reason.icon,
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium text-gray-900 dark:text-white", children: reason.label }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400", children: reason.description })
+            ] })
+          ]
+        },
+        reason.id
+      ))
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => setStep("select"),
+          className: "flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-4 h-4" }),
+            "Cambiar motivo"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium text-gray-700 dark:text-gray-300", children: reasonConfig == null ? void 0 : reasonConfig.label }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "name", className: "dark:text-gray-200", children: "Nombre *" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              id: "name",
+              name: "name",
+              value: formData.name,
+              onChange: handleInputChange,
+              required: true,
+              className: "dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+              placeholder: "Tu nombre"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "email", className: "dark:text-gray-200", children: "Email *" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              id: "email",
+              name: "email",
+              type: "email",
+              value: formData.email,
+              onChange: handleInputChange,
+              required: true,
+              className: "dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+              placeholder: "tu@email.com"
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "message", className: "dark:text-gray-200", children: [
+          "Mensaje",
+          selectedReason === "problema" ? " *" : ""
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Textarea,
+          {
+            id: "message",
+            name: "message",
+            value: formData.message,
+            onChange: handleInputChange,
+            required: selectedReason === "problema",
+            className: "dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none",
+            placeholder: "Escribe tu mensaje aquí...",
+            rows: 4
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            type: "button",
+            variant: "outline",
+            onClick: onClose,
+            className: "flex-1 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700",
+            children: "Cancelar"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            type: "submit",
+            disabled: isSubmitting,
+            className: "flex-1 bg-blue-600 hover:bg-blue-700 text-white",
+            children: isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" }),
+              "Enviando..."
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
+              "Enviar"
+            ] })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-center text-gray-500 dark:text-gray-400", children: "Te responderemos lo más pronto posible." })
+    ] }) })
+  ] }) });
+}
+function SobrepasoModal({ onClose, onOpenAuth }) {
+  const { isSignedIn } = useSupabaseAuth();
+  const {
+    bypassCourseList,
+    isLoading,
+    isSaving,
+    addBypassCourse,
+    removeBypassCourse,
+    normalizeCourseCode: normalizeCourseCode2
+  } = useUserBypassCourses();
+  const [inputCode, setInputCode] = reactExports.useState("");
+  const { toast: toast2 } = useToast();
+  const handleAdd = async () => {
+    const normalized = normalizeCourseCode2(inputCode);
+    if (!normalized) {
+      toast2({
+        title: "Código inválido",
+        description: "Ingresa un código de materia válido, por ejemplo CMP4002.",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (bypassCourseList.includes(normalized)) {
+      toast2({
+        title: "Ya existe",
+        description: `${normalized} ya está en tu lista de sobrepaso.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    try {
+      await addBypassCourse(inputCode);
+      setInputCode("");
+      toast2({ title: "Agregado", description: `${normalized} se desbloqueará sin prerequisitos.` });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error desconocido";
+      console.error("Error adding bypass course:", err);
+      toast2({
+        title: "Error",
+        description: message.includes("user_settings") ? "No se pudo guardar. Verifica tu conexión e inténtalo de nuevo." : `No se pudo guardar: ${message}`,
+        variant: "destructive"
+      });
+    }
+  };
+  const handleRemove = async (code) => {
+    try {
+      await removeBypassCourse(code);
+      toast2({ title: "Eliminado", description: `${code} ya no tiene sobrepaso.` });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error desconocido";
+      console.error("Error removing bypass course:", err);
+      toast2({
+        title: "Error",
+        description: `No se pudo eliminar: ${message}`,
+        variant: "destructive"
+      });
+    }
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAdd();
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "w-full max-w-md dark:bg-gray-800 dark:border-gray-700", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(LockOpen, { className: "w-5 h-5 text-purple-600 dark:text-purple-400" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-xl font-bold text-gray-800 dark:text-white", children: "Sobrepaso" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onClose, className: "dark:hover:bg-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: !isSignedIn ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center space-y-4 py-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 mx-auto bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LockOpen, { className: "w-6 h-6 text-purple-600 dark:text-purple-400" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-600 dark:text-gray-400", children: "Sobrepaso solo está disponible para cuentas con sesión iniciada." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-500", children: "Inicia sesión para agregar códigos de materia y desbloquearlas sin cumplir prerequisitos." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          onClick: () => {
+            onClose();
+            onOpenAuth();
+          },
+          className: "bg-blue-600 hover:bg-blue-700 text-white",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4 mr-2" }),
+            "Iniciar sesión"
+          ]
+        }
+      )
+    ] }) : isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-8 text-gray-500", children: "Cargando..." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-600 dark:text-gray-400", children: "Agrega códigos de materia (ej. CMP4002, CMP-4002) para desbloquearlas sin cumplir prerequisitos en cualquier malla donde existan." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "courseCode", className: "sr-only", children: "Código de materia" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              id: "courseCode",
+              value: inputCode,
+              onChange: (e) => setInputCode(e.target.value),
+              onKeyDown: handleKeyDown,
+              placeholder: "Ej: CMP4002",
+              disabled: isSaving,
+              className: "dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            onClick: handleAdd,
+            disabled: isSaving || !inputCode.trim(),
+            className: "bg-purple-600 hover:bg-purple-700 text-white",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "w-4 h-4" })
+          }
+        )
+      ] }),
+      bypassCourseList.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { className: "text-sm text-gray-600 dark:text-gray-400", children: [
+          "Materias con sobrepaso (",
+          bypassCourseList.length,
+          ")"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: bypassCourseList.map((code) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "span",
+          {
+            className: "inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium",
+            children: [
+              code,
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  onClick: () => handleRemove(code),
+                  disabled: isSaving,
+                  className: "hover:text-red-600 dark:hover:text-red-400 transition-colors",
+                  "aria-label": `Eliminar ${code}`,
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "w-3.5 h-3.5" })
+                }
+              )
+            ]
+          },
+          code
+        )) })
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-500 text-center py-4 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg", children: "No tienes materias con sobrepaso aún." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-500", children: "El sobrepaso omite prerequisitos, pero el límite de 16 créditos por semestre sigue aplicando." })
+    ] }) })
+  ] }) });
+}
+const SECTIONS = [
+  {
+    id: "malla",
+    title: "Uso de la malla",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "La malla curricular te permite visualizar todas las materias de tu carrera organizadas por semestre o bloque." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Selecciona tu carrera desde el selector en la parte superior." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Usa los modos de selección: ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Completada" }),
+          ", ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Cursando" }),
+          " o ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Planeada" }),
+          "."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Haz clic en una materia para marcarla según el modo activo." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Las materias bloqueadas (grises) requieren cumplir prerequisitos primero." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "El límite es de 16 créditos por semestre en modos Cursando y Planeada." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Tu progreso se guarda automáticamente si tienes sesión iniciada." })
+      ] })
+    ] })
+  },
+  {
+    id: "opcion-libre",
+    title: "Materias de opción libre",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Layers, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+        "Algunos requisitos de la malla no son una materia fija sino un ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "bucket de créditos" }),
+        " que debes cubrir con una materia USFQ concreta. Esto aplica a ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "HUM" }),
+        ", ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "CCSS" }),
+        ", ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "CIENCIAS" }),
+        ", ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "ARTE" }),
+        ", ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "OPT" }),
+        " y ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "ELECTIVAS" }),
+        "."
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Debes tener ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "sesión iniciada" }),
+          " para registrar el código de materia al marcarlas como completada, cursando o planeada."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Al marcar un bucket, ingresa el código USFQ de la materia que tomaste o tomarás (ej. ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-xs bg-gray-100 dark:bg-gray-700 px-1 rounded", children: "MUS-2101" }),
+          ", ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-xs bg-gray-100 dark:bg-gray-700 px-1 rounded", children: "LIT-2001" }),
+          ")."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "CIENCIAS:" }),
+          " BIO, QUI, FIS, ECL, NUT, GEO."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "HUM:" }),
+          " LIT, FIL, ESC, ARH."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "CCSS:" }),
+          " ANT, EDU, HIS, REL, POL, SOC, PSI."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "ARTE:" }),
+          " ART, DAN, TEA, MUS."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "OPT / ELECTIVAS:" }),
+          " cualquier materia USFQ válida."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Si la materia elegida tiene ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "menos créditos" }),
+          " que el bucket (ej. 2 cr de 3), aparece un card adicional pendiente con los créditos faltantes de la misma categoría."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Al completar un slot pendiente, la materia debe tener ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "al menos" }),
+          " los créditos que faltan (puede tener más)."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "El código se ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "prellena en el planificador" }),
+          ' en el campo "Código de materia" y puedes editarlo antes de elegir el NRC.'
+        ] })
+      ] })
+    ] })
+  },
+  {
+    id: "planificador",
+    title: "Uso del planificador",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Calendar, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "El planificador de horarios te ayuda a armar tu semestre con las materias que tienes marcadas como cursando o planeada." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Abre el planificador desde el botón flotante de herramientas (llave inglesa) en la esquina inferior." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Arrastra materias al calendario semanal para organizar tu horario." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Detecta conflictos de horario automáticamente." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Puedes planificar con materias de múltiples mallas si tienes doble carrera o minor." })
+      ] })
+    ] })
+  },
+  {
+    id: "sobrepaso",
+    title: "Cómo hacer sobrepasos",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(LockOpen, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "El sobrepaso te permite desbloquear materias sin cumplir sus prerequisitos. Es útil si ya aprobaste una materia equivalente en otra universidad o tienes una excepción académica." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Debes tener una cuenta con sesión iniciada." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+          "Haz clic en ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Sobrepaso" }),
+          " en el header."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Agrega el código de la materia (ej. CMP4002 o CMP-4002)." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "La materia se desbloqueará en cualquier malla donde exista ese código." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Puedes quitar códigos en cualquier momento desde el mismo modal." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "El límite de 16 créditos por semestre sigue aplicando." })
+      ] })
+    ] })
+  },
+  {
+    id: "doble-minor",
+    title: "Doble carrera y minor",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(GraduationCap, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Si estás cursando doble carrera o un minor, puedes combinar materias de varias mallas en el planificador." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Selecciona cada malla por separado y marca tu progreso en cada una." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Las materias completadas en una malla pueden desbloquear prerequisitos en otra (overlay global)." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "En el planificador, activa la opción de planificar con materias de múltiples mallas." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Esto te permite ver conflictos de horario entre materias de distintas carreras." })
+      ] })
+    ] })
+  },
+  {
+    id: "calculador",
+    title: "Uso del calculador de nota",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Calculator, { className: "w-4 h-4" }),
+    content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "El calculador de nota te ayuda a estimar tu calificación final según las ponderaciones de cada actividad." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside space-y-1 mt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Abre el calculador desde el botón flotante de herramientas." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Ingresa el nombre de cada categoría (exámenes, tareas, proyectos, etc.) y su ponderación." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Agrega las notas que ya tienes en cada categoría." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "El calculador te muestra tu promedio actual y qué nota necesitas para alcanzar tu meta." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Tus datos se guardan localmente mientras navegas." })
+      ] })
+    ] })
+  }
+];
+function VideoPlaceholder({ videoId }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6 aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center border border-dashed border-gray-300 dark:border-gray-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-500 dark:text-gray-400 text-sm", children: "Video próximamente" }) });
+}
+function TutorialsPage({ onBack }) {
+  const [activeId, setActiveId] = reactExports.useState(SECTIONS[0].id);
+  const activeSection = SECTIONS.find((s) => s.id === activeId) ?? SECTIONS[0];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Button,
+      {
+        variant: "ghost",
+        onClick: onBack,
+        className: "mb-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }),
+          "Volver a la malla"
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-gray-900 dark:text-white mb-8", children: "Tutoriales" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row gap-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "md:w-64 flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-1", children: SECTIONS.map((section) => /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => setActiveId(section.id),
+          className: `w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-left transition-colors ${activeId === section.id ? "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 font-medium" : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`,
+          children: [
+            section.icon,
+            section.title
+          ]
+        }
+      ) }, section.id)) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "flex-1 dark:bg-gray-800 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white mb-4", children: activeSection.title }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-gray-600 dark:text-gray-300 text-sm leading-relaxed space-y-2", children: activeSection.content }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(VideoPlaceholder, { videoId: activeSection.videoId })
+      ] }) })
+    ] })
+  ] });
 }
 function useAdminProfile(email) {
   const [adminProfile, setAdminProfile] = reactExports.useState(null);
@@ -53305,6 +56053,9 @@ function AppInner() {
   const [authModalOpen, setAuthModalOpen] = reactExports.useState(false);
   const [authMode, setAuthMode] = reactExports.useState("login");
   const [adminViewMode, setAdminViewMode] = reactExports.useState(loadAdminViewMode);
+  const [showContact, setShowContact] = reactExports.useState(false);
+  const [showSobrepaso, setShowSobrepaso] = reactExports.useState(false);
+  const [showTutoriales, setShowTutoriales] = reactExports.useState(false);
   const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
     isSignedIn ? (user == null ? void 0 : user.email) ?? null : null
   );
@@ -53346,6 +56097,15 @@ function AppInner() {
     faculties: [...ALL_FACULTIES]
   } : null;
   reactExports.useEffect(() => {
+    const checkHash = () => {
+      const raw = window.location.hash.replace(/^#/, "").replace(/^\/+/, "");
+      setShowTutoriales(raw === "tutoriales" || raw.startsWith("tutoriales/"));
+    };
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, []);
+  reactExports.useEffect(() => {
     if (isRoleLoading) return;
     if (isAdmin) return;
     if (showProfessor) {
@@ -53354,15 +56114,29 @@ function AppInner() {
       trackPageView("curriculum");
     }
   }, [isRoleLoading, isAdmin, showProfessor]);
+  const openTutoriales = () => {
+    window.location.hash = "/tutoriales";
+  };
+  const closeTutoriales = () => {
+    window.location.hash = "";
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: "Malla Curricular Interactiva" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 sm:gap-4", children: [
-        showAdmin && /* @__PURE__ */ jsxRuntimeExports.jsx(AdminViewToggle, { mode: adminViewMode, onChange: handleAdminViewChange }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(AuthButton, { onOpenAuth: openAuth, onOpenPasswordReset: openPasswordReset })
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        HeaderNav,
+        {
+          showAdmin,
+          adminViewMode,
+          onAdminViewChange: handleAdminViewChange,
+          onOpenTutoriales: openTutoriales,
+          onOpenContact: () => setShowContact(true),
+          onOpenSobrepaso: () => setShowSobrepaso(true),
+          authButton: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthButton, { onOpenAuth: openAuth, onOpenPasswordReset: openPasswordReset })
+        }
+      )
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: isSignedIn && isRoleLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-24 text-gray-500", children: "Cargando…" }) : showAdmin && adminViewMode === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboard, { profile: adminProfile }) : showAdmin && adminViewMode === "teacher" && adminProfessorContext ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: showTutoriales ? /* @__PURE__ */ jsxRuntimeExports.jsx(TutorialsPage, { onBack: closeTutoriales }) : isSignedIn && isRoleLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-24 text-gray-500", children: "Cargando…" }) : showAdmin && adminViewMode === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboard, { profile: adminProfile }) : showAdmin && adminViewMode === "teacher" && adminProfessorContext ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       TeacherDashboard,
       {
         profile: adminProfessorContext,
@@ -53379,6 +56153,14 @@ function AppInner() {
         open: authModalOpen || isPasswordRecovery,
         onOpenChange: setAuthModalOpen,
         initialMode: authMode
+      }
+    ),
+    showContact && /* @__PURE__ */ jsxRuntimeExports.jsx(GeneralContactModal, { onClose: () => setShowContact(false) }),
+    showSobrepaso && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      SobrepasoModal,
+      {
+        onClose: () => setShowSobrepaso(false),
+        onOpenAuth: () => openAuth("login")
       }
     )
   ] });

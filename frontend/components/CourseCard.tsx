@@ -20,6 +20,9 @@ interface CourseCardProps {
   isPlanned: boolean;
   onClick: (courseId: string) => void;
   allCourses: Course[];
+  fulfillmentCode?: string;
+  fulfillmentTitle?: string;
+  isRemainder?: boolean;
 }
 
 export default function CourseCard({
@@ -29,7 +32,10 @@ export default function CourseCard({
   isInProgress,
   isPlanned,
   onClick,
-  allCourses
+  allCourses,
+  fulfillmentCode,
+  fulfillmentTitle,
+  isRemainder,
 }: CourseCardProps) {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -113,7 +119,14 @@ export default function CourseCard({
             <CardTitle className="text-sm font-medium truncate">
               {course.title}
             </CardTitle>
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{course.code}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              {fulfillmentCode ?? course.code}
+            </p>
+            {fulfillmentTitle && fulfillmentCode && (
+              <p className="text-xs text-gray-500 dark:text-gray-500 truncate">
+                {fulfillmentTitle}
+              </p>
+            )}
           </div>
           <Dialog open={showDetails} onOpenChange={setShowDetails}>
             <DialogTrigger asChild>
@@ -134,7 +147,7 @@ export default function CourseCard({
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="font-medium dark:text-gray-200">Código:</span>
-                    <p className="dark:text-gray-300">{course.code}</p>
+                    <p className="dark:text-gray-300">{fulfillmentCode ?? course.code}</p>
                   </div>
                   <div>
                     <span className="font-medium dark:text-gray-200">Créditos:</span>
@@ -209,7 +222,12 @@ export default function CourseCard({
             {course.credits} cr
           </div>
         </div>
-        {course.type !== 'obligatoria' && (
+        {isRemainder && (
+          <Badge variant="secondary" className="text-xs mt-2 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+            Pendiente — {course.credits} cr
+          </Badge>
+        )}
+        {course.type !== 'obligatoria' && !isRemainder && (
           <Badge variant="secondary" className="text-xs mt-2 dark:bg-gray-700 dark:text-gray-300">
             {getTypeLabel(course.type)}
           </Badge>
