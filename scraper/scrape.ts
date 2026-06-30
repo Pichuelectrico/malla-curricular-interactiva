@@ -117,6 +117,7 @@ const KNOWN_CAREERS: CareerEntry[] = [
   { code: "POL", name: "Ciencias Políticas" },
   { code: "PSI", name: "Psicología" },
   { code: "PSC", name: "Psicología Clínica" },
+  { code: "DIT", name: "Diseño de Interiores" },
   { code: "PUB", name: "Publicidad" },
 ].map(({ code, name }) => ({ code, name, codigoCarrera: `1${code}` }));
 
@@ -125,7 +126,7 @@ const KNOWN_CAREERS: CareerEntry[] = [
 /** Parse `openModalPreRequisitos('materia', 'area', 'curso', 'codigoMalla')` */
 function parseOnclick(onclick: string): PrereqParams | null {
   const m = onclick.match(
-    /openModalPreRequisitos\(\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/
+    /openModalPreRequisitos\(\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/,
   );
   if (!m) return null;
   return { materia: m[1], area: m[2], curso: m[3], codigoMalla: m[4] };
@@ -151,9 +152,17 @@ function areaFromCode(code: string): string {
 /** Infer course type from code */
 function inferType(code: string): Course["type"] {
   const upper = code.toUpperCase();
-  if (upper.startsWith("ELECTIVA") || upper.startsWith("ELEC")) return "electiva";
-  if (upper.startsWith("OPT") || upper.startsWith("HUM") || upper.startsWith("ARTE") ||
-      upper.startsWith("CCSS") || upper.startsWith("ECL") || upper.startsWith("NUT")) return "optativa";
+  if (upper.startsWith("ELECTIVA") || upper.startsWith("ELEC"))
+    return "electiva";
+  if (
+    upper.startsWith("OPT") ||
+    upper.startsWith("HUM") ||
+    upper.startsWith("ARTE") ||
+    upper.startsWith("CCSS") ||
+    upper.startsWith("ECL") ||
+    upper.startsWith("NUT")
+  )
+    return "optativa";
   return "obligatoria";
 }
 
@@ -167,7 +176,7 @@ function inferType(code: string): Course["type"] {
  */
 async function fetchPrerequisites(
   page: Page,
-  params: PrereqParams
+  params: PrereqParams,
 ): Promise<{ prerequisites: string[]; alternatives: string[] }> {
   const url = new URL(PREREQ_URL);
   url.searchParams.set("materia", params.materia);
@@ -201,9 +210,11 @@ async function fetchPrerequisites(
   for (const rowMatch of rowMatches) {
     const rowHtml = rowMatch[1];
     const cells = [...rowHtml.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) =>
-      m[1].replace(/&[a-z]+;/g, (e) =>
-        e === "&amp;" ? "&" : e === "&nbsp;" ? " " : e === "&#243;" ? "ó" : e
-      ).trim()
+      m[1]
+        .replace(/&[a-z]+;/g, (e) =>
+          e === "&amp;" ? "&" : e === "&nbsp;" ? " " : e === "&#243;" ? "ó" : e,
+        )
+        .trim(),
     );
 
     if (cells.length < 4) continue;
@@ -232,7 +243,11 @@ async function fetchPrerequisites(
   return { prerequisites, alternatives: [] };
 }
 
-async function fetchHtml(page: Page, url: string, retries = 3): Promise<string> {
+async function fetchHtml(
+  page: Page,
+  url: string,
+  retries = 3,
+): Promise<string> {
   let lastError: Error | null = null;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
@@ -248,7 +263,9 @@ async function fetchHtml(page: Page, url: string, retries = 3): Promise<string> 
       return html;
     } catch (err) {
       lastError = err as Error;
-      console.warn(`  Attempt ${attempt}/${retries} failed: ${lastError.message}`);
+      console.warn(
+        `  Attempt ${attempt}/${retries} failed: ${lastError.message}`,
+      );
       if (attempt < retries) {
         await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
       }
@@ -286,7 +303,7 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
     let currentBlock = "";
 
     const allEls = Array.from(
-      document.body.querySelectorAll("h1,h2,h3,h4,h5,h6,th,tr")
+      document.body.querySelectorAll("h1,h2,h3,h4,h5,h6,th,tr"),
     ) as HTMLElement[];
 
     for (const el of allEls) {
@@ -294,7 +311,10 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
       const text = el.textContent?.trim() ?? "";
 
       // H4 = new year (reset nothing, just context)
-      if (["H1","H2","H3","H4","H5","H6"].includes(tag) && /AÑO/i.test(text)) {
+      if (
+        ["H1", "H2", "H3", "H4", "H5", "H6"].includes(tag) &&
+        /AÑO/i.test(text)
+      ) {
         // year change — semester counter continues across years
         continue;
       }
@@ -304,7 +324,8 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
         if (/VERANO|SUMMER/i.test(text)) {
           semesterCounter++;
           veranoCounter++;
-          currentBlock = veranoCounter > 1 ? `Verano ${veranoCounter}` : "Verano";
+          currentBlock =
+            veranoCounter > 1 ? `Verano ${veranoCounter}` : "Verano";
         } else if (/SEMESTRE|SEMESTER/i.test(text)) {
           semesterCounter++;
           regularSemesterCounter++;
@@ -316,7 +337,7 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
       // TR in a TBODY = course row
       if (tag === "TR" && el.parentElement?.tagName === "TBODY") {
         const cells = Array.from(el.querySelectorAll("td")).map(
-          (td) => td.textContent?.trim() ?? ""
+          (td) => td.textContent?.trim() ?? "",
         );
         if (cells.length < 2) continue;
 
@@ -325,12 +346,17 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
         const rawCredits = cells[2] ?? "";
 
         // Skip TOTAL rows and empty rows
-        if (!code || rawTitle === "TOTAL" || code === "" || /^INGENIERÍA|^ADMINISTRACIÓN|^ECONOMÍA/i.test(rawTitle)) {
+        if (
+          !code ||
+          rawTitle === "TOTAL" ||
+          code === "" ||
+          /^INGENIERÍA|^ADMINISTRACIÓN|^ECONOMÍA/i.test(rawTitle)
+        ) {
           continue;
         }
 
         const img = el.querySelector(
-          "img[onclick*='openModalPreRequisitos']"
+          "img[onclick*='openModalPreRequisitos']",
         ) as HTMLImageElement | null;
         const onclick = img?.getAttribute("onclick") ?? "";
 
@@ -357,7 +383,7 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
 async function scrapeMalla(
   page: Page,
   codigoCarrera: string,
-  careerCode: string
+  careerCode: string,
 ): Promise<Course[]> {
   const url = `${MALLA_URL}?codigoCarrera=${codigoCarrera}&out=1`;
   console.log(`  → Scraping malla: ${url}`);
@@ -380,8 +406,8 @@ async function scrapeMalla(
     const area = areaFromCode(row.code);
 
     courses.push({
-      id: row.code.replace(/\s+/g, ""),  // e.g. "CMP1001"
-      code: row.code,                     // e.g. "CMP 1001"
+      id: row.code.replace(/\s+/g, ""), // e.g. "CMP1001"
+      code: row.code, // e.g. "CMP 1001"
       title,
       description: "",
       credits,
@@ -403,7 +429,8 @@ async function main() {
   const args = process.argv.slice(2);
   const isDryRun = args.includes("--dry-run");
   const careerIdx = args.indexOf("--career");
-  const specificCareer = careerIdx !== -1 ? args[careerIdx + 1]?.toUpperCase() : null;
+  const specificCareer =
+    careerIdx !== -1 ? args[careerIdx + 1]?.toUpperCase() : null;
 
   const targets = specificCareer
     ? KNOWN_CAREERS.filter((c) => c.code === specificCareer)
@@ -411,14 +438,18 @@ async function main() {
 
   if (targets.length === 0) {
     console.error(`No career found with code "${specificCareer}".`);
-    console.error(`Known codes: ${KNOWN_CAREERS.map((c) => c.code).join(", ")}`);
+    console.error(
+      `Known codes: ${KNOWN_CAREERS.map((c) => c.code).join(", ")}`,
+    );
     process.exit(1);
   }
 
   if (isDryRun) {
     console.log("=== DRY RUN — URLs only, no files written ===\n");
     for (const c of targets) {
-      console.log(`${c.code.padEnd(10)} ${MALLA_URL}?codigoCarrera=${c.codigoCarrera}&out=1`);
+      console.log(
+        `${c.code.padEnd(10)} ${MALLA_URL}?codigoCarrera=${c.codigoCarrera}&out=1`,
+      );
     }
     return;
   }
@@ -437,12 +468,20 @@ async function main() {
   });
   const page = await context.newPage();
 
-  const summary: { code: string; status: "ok" | "error" | "empty"; courses: number }[] = [];
+  const summary: {
+    code: string;
+    status: "ok" | "error" | "empty";
+    courses: number;
+  }[] = [];
 
   for (const career of targets) {
     console.log(`\n[${career.code}] ${career.name}`);
     try {
-      const courses = await scrapeMalla(page, career.codigoCarrera, career.code);
+      const courses = await scrapeMalla(
+        page,
+        career.codigoCarrera,
+        career.code,
+      );
 
       if (courses.length === 0) {
         console.warn(`  ⚠ No courses found — career code may be incorrect.`);
@@ -459,7 +498,11 @@ async function main() {
       const outPath = join(OUTPUT_DIR, `Malla-${career.code}.json`);
       writeFileSync(outPath, JSON.stringify(output, null, 2), "utf-8");
       console.log(`  ✓ Wrote ${courses.length} courses → ${outPath}`);
-      summary.push({ code: career.code, status: "ok", courses: courses.length });
+      summary.push({
+        code: career.code,
+        status: "ok",
+        courses: courses.length,
+      });
     } catch (err) {
       console.error(`  ✗ Error: ${(err as Error).message}`);
       summary.push({ code: career.code, status: "error", courses: 0 });

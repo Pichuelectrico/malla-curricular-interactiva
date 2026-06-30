@@ -8,11 +8,15 @@ import AuthModal, { type AuthMode } from './components/AuthModal';
 import SettingsModal from './components/SettingsModal';
 import TeacherDashboard from './components/TeacherDashboard';
 import AdminDashboard from './components/AdminDashboard';
-import AdminViewToggle, {
+import HeaderNav from './components/HeaderNav';
+import {
   loadAdminViewMode,
   saveAdminViewMode,
   type AdminViewMode,
 } from './components/AdminViewToggle';
+import GeneralContactModal from './components/GeneralContactModal';
+import SobrepasoModal from './components/SobrepasoModal';
+import TutorialsPage from './components/TutorialsPage';
 import { AuthProvider, useSupabaseAuth } from './lib/auth';
 import { useAdminProfile } from './lib/useAdminProfile';
 import { useUserRole } from './lib/useUserRole';
@@ -122,6 +126,9 @@ function AppInner() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [adminViewMode, setAdminViewMode] = useState<AdminViewMode>(loadAdminViewMode);
+  const [showContact, setShowContact] = useState(false);
+  const [showSobrepaso, setShowSobrepaso] = useState(false);
+  const [showTutoriales, setShowTutoriales] = useState(false);
 
   const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
     isSignedIn ? user?.email ?? null : null,
@@ -175,6 +182,16 @@ function AppInner() {
       : null;
 
   useEffect(() => {
+    const checkHash = () => {
+      const raw = window.location.hash.replace(/^#/, '').replace(/^\/+/, '');
+      setShowTutoriales(raw === 'tutoriales' || raw.startsWith('tutoriales/'));
+    };
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => window.removeEventListener('hashchange', checkHash);
+  }, []);
+
+  useEffect(() => {
     if (isRoleLoading) return;
     if (isAdmin) return;
 
@@ -185,21 +202,36 @@ function AppInner() {
     }
   }, [isRoleLoading, isAdmin, showProfessor]);
 
+  const openTutoriales = () => {
+    window.location.hash = '/tutoriales';
+  };
+
+  const closeTutoriales = () => {
+    window.location.hash = '';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Malla Curricular Interactiva</h1>
-          <div className="flex items-center gap-2 sm:gap-4">
-            {showAdmin && (
-              <AdminViewToggle mode={adminViewMode} onChange={handleAdminViewChange} />
-            )}
-            <AuthButton onOpenAuth={openAuth} onOpenPasswordReset={openPasswordReset} />
-          </div>
+          <HeaderNav
+            showAdmin={showAdmin}
+            adminViewMode={adminViewMode}
+            onAdminViewChange={handleAdminViewChange}
+            onOpenTutoriales={openTutoriales}
+            onOpenContact={() => setShowContact(true)}
+            onOpenSobrepaso={() => setShowSobrepaso(true)}
+            authButton={
+              <AuthButton onOpenAuth={openAuth} onOpenPasswordReset={openPasswordReset} />
+            }
+          />
         </div>
       </header>
       <div className="flex-1">
-        {isSignedIn && isRoleLoading ? (
+        {showTutoriales ? (
+          <TutorialsPage onBack={closeTutoriales} />
+        ) : isSignedIn && isRoleLoading ? (
           <div className="flex items-center justify-center py-24 text-gray-500">Cargando…</div>
         ) : showAdmin && adminViewMode === 'admin' ? (
           <AdminDashboard profile={adminProfile!} />
@@ -223,6 +255,15 @@ function AppInner() {
         onOpenChange={setAuthModalOpen}
         initialMode={authMode}
       />
+      {showContact && (
+        <GeneralContactModal onClose={() => setShowContact(false)} />
+      )}
+      {showSobrepaso && (
+        <SobrepasoModal
+          onClose={() => setShowSobrepaso(false)}
+          onOpenAuth={() => openAuth('login')}
+        />
+      )}
     </div>
   );
 }

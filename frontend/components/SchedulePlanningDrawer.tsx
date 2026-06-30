@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   Calendar,
   X,
@@ -12,6 +12,8 @@ import {
   Zap,
   PenLine,
   Lock,
+  Plus,
+  Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,9 +27,10 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Course } from "../types/curriculum";
+import type { PlannedCourseEntry } from "../lib/aggregatedPlanning";
 import { generateSchedulePDF } from "../utils/pdfGenerator";
 import { useCourseOffer, type CourseOfferRow } from "../lib/useCourseOffer";
+import { useTabbedCache } from "../lib/useTabbedCache";
 import {
   collectCalendarTimeSlots,
   expandSessionToGridSlots,
@@ -37,15 +40,21 @@ import {
   getOfferCoursePreview,
   getOffersForSchedule,
   getScheduleDisplayLabels,
-  isOpenElectiveCourse,
+  requiresOfferCourseCode,
   isValidOfferSchedule,
-  nrcConflictsWithSlots,
+  isOfferLinkedToMain,
+  requiredLinkLetter,
+  formatGroupLetters,
+  courseRequiresLabEj,
+  nrcConflictsWithSessions,
   normalizeOfferCourseCodeInput,
   normalizeOfferDay as normalizeOfferDayLib,
   sessionOccupiesGridSlot,
   sessionsFromOfferRow,
+  sessionsOverlapOnDay,
   slotKey,
 } from "../lib/offerMatching";
+import { validateOfferCodeForBucket } from "../lib/bucketFulfillment";
 const DAYS = ["Lun", "Mar", "Mié", "Jue", "Vie"] as const;
 type DayType = (typeof DAYS)[number];
 
@@ -122,6 +131,11 @@ function NrcSuggestions({
                   {avail} disp.
                 </span>
               )}
+              {row.group_letters.length > 0 && (
+                <span className="block text-[10px] text-gray-400 dark:text-gray-500 truncate">
+                  {formatGroupLetters(row.group_letters)}
+                </span>
+              )}
             </button>
           );
         })}
@@ -179,54 +193,104 @@ interface CourseSchedule {
   sessionsLAB?: ScheduleSession[];
 }
 
-function occupyExpandedSlots(
+interface OccupiedSession {
+  session: ScheduleSession;
+  courseId: string;
+}
+
+function mallaTag(label?: string): string {
+  return label ? ` (${label})` : "";
+}
+
+function occupySessions(
   sessions: ScheduleSession[],
   courseId: string,
-  occupied: Record<string, string>,
+  occupied: OccupiedSession[],
   conflictList: string[],
-  plannedCourses: Course[],
+  plannedEntries: PlannedCourseEntry[],
   schedules: CourseSchedule[],
   offerMap: Map<string, CourseOfferRow>,
   labelSuffix = "",
 ) {
+  const findEntry = (id: string) =>
+    plannedEntries.find((e) => e.course.id === id);
+
   sessions.forEach((session) => {
-    expandSessionToGridSlots(session.startTime, session.endTime).forEach(
-      (slot) => {
-        const key = `${session.day}-${slot}`;
-        if (occupied[key]) {
-          const otherSchedule = schedules.find(
-            (s) => s.courseId === occupied[key],
-          );
-          const otherCourse = plannedCourses.find(
-            (c) => c.id === occupied[key],
-          );
-          const thisCourse = plannedCourses.find((c) => c.id === courseId);
-          const course1 = otherSchedule && otherCourse
+    if (!session.startTime) return;
+    for (const occ of occupied) {
+      if (sessionsOverlapOnDay(session, occ.session)) {
+        const otherEntry = findEntry(occ.courseId);
+        const thisEntry = findEntry(courseId);
+        const otherSchedule = schedules.find((s) => s.courseId === occ.courseId);
+        const thisSchedule = schedules.find((s) => s.courseId === courseId);
+        const course1 =
+          otherEntry && otherSchedule
             ? getScheduleDisplayLabels(
-                otherCourse,
+                otherEntry.course,
                 otherSchedule,
                 offerMap,
                 "main",
               ).code
-            : occupied[key];
-          const course2 = thisCourse
+            : occ.courseId;
+        const course2 =
+          thisEntry && thisSchedule
             ? getScheduleDisplayLabels(
-                thisCourse,
-                schedules.find((s) => s.courseId === courseId)!,
+                thisEntry.course,
+                thisSchedule,
                 offerMap,
                 "main",
               ).code
             : courseId;
-          const conflictMsg = `Conflicto: ${course1}${labelSuffix ? ` (${labelSuffix})` : ""} y ${course2} en ${session.day} a las ${slot}`;
-          if (!conflictList.includes(conflictMsg)) {
-            conflictList.push(conflictMsg);
-          }
-        } else {
-          occupied[key] = courseId;
+        const suffix = labelSuffix ? ` ${labelSuffix}` : "";
+        const timeStr = formatSessionTimeRange(session);
+        const conflictMsg = `Conflicto: ${course1}${mallaTag(otherEntry?.curriculumLabel)}${suffix} y ${course2}${mallaTag(thisEntry?.curriculumLabel)} en ${session.day} ${timeStr}`;
+        if (!conflictList.includes(conflictMsg)) {
+          conflictList.push(conflictMsg);
         }
-      },
-    );
+      }
+    }
+    occupied.push({ session, courseId });
   });
+}
+
+function emptySchedule(
+  courseId: string,
+  courseTitle?: string,
+  initialBucketCodes?: Record<string, string>,
+): CourseSchedule {
+  const { lab, ej } = courseTitle
+    ? courseRequiresLabEj(courseTitle)
+    : { lab: false, ej: false };
+  return {
+    courseId,
+    offerCourseCode: initialBucketCodes?.[courseId] ?? "",
+    nrc: "",
+    hasEJ: ej,
+    hasLAB: lab,
+    sessions: [],
+  };
+}
+
+function syncSchedulesWithPlanned(
+  current: CourseSchedule[],
+  planned: PlannedCourseEntry[],
+  initialBucketCodes?: Record<string, string>,
+): CourseSchedule[] {
+  const plannedIds = new Set(planned.map((p) => p.course.id));
+  const kept = current.map((s) => {
+    if (!plannedIds.has(s.courseId)) return s;
+    if (!s.offerCourseCode?.trim() && initialBucketCodes?.[s.courseId]) {
+      return { ...s, offerCourseCode: initialBucketCodes[s.courseId] };
+    }
+    return s;
+  }).filter((s) => plannedIds.has(s.courseId));
+  const existingIds = new Set(kept.map((s) => s.courseId));
+  const added = planned
+    .filter((p) => !existingIds.has(p.course.id))
+    .map((p) =>
+      emptySchedule(p.course.id, p.course.title, initialBucketCodes),
+    );
+  return [...kept, ...added];
 }
 
 function allScheduleSessions(schedules: CourseSchedule[]): ScheduleSession[] {
@@ -238,7 +302,10 @@ function allScheduleSessions(schedules: CourseSchedule[]): ScheduleSession[] {
 }
 
 interface SchedulePlanningDrawerProps {
-  plannedCourses: Course[];
+  plannedEntries: PlannedCourseEntry[];
+  crossMallaEnabled?: boolean;
+  userId?: string;
+  initialBucketCodes?: Record<string, string>;
   onSave: (schedules: CourseSchedule[]) => void;
   exposeOpen?: (openFn: () => void) => void;
   hideFloatingButton?: boolean;
@@ -385,13 +452,24 @@ function NrcOfferInfo({
           </span>
         </div>
       )}
+      {row.group_letters.length > 0 && (
+        <div>
+          Agrupación:{" "}
+          <span className="font-medium text-gray-700 dark:text-gray-200">
+            {formatGroupLetters(row.group_letters)}
+          </span>
+        </div>
+      )}
       <AvailabilityBadge row={row} />
     </div>
   );
 }
 
 export default function SchedulePlanningDrawer({
-  plannedCourses,
+  plannedEntries,
+  crossMallaEnabled = false,
+  userId,
+  initialBucketCodes,
   onSave,
   exposeOpen,
   hideFloatingButton,
@@ -399,8 +477,52 @@ export default function SchedulePlanningDrawer({
   const [isOpen, setIsOpen] = useState(false);
   const [periodType, setPeriodType] = useState<PeriodType>("semestre");
   const [entryMode, setEntryMode] = useState<"auto" | "manual">("auto");
-  const [schedules, setSchedules] = useState<CourseSchedule[]>([]);
   const [conflicts, setConflicts] = useState<string[]>([]);
+  const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const metaHydrated = useRef(false);
+
+  const cacheKey = `schedulePlannerCache_${userId ?? "anonymous"}`;
+
+  const createDefaultSchedules = useCallback(
+    () =>
+      plannedEntries.map((e) =>
+        emptySchedule(e.course.id, e.course.title, initialBucketCodes),
+      ),
+    [plannedEntries, initialBucketCodes],
+  );
+
+  const {
+    tabs,
+    activeTab,
+    activeTabId,
+    updateActiveData,
+    addTab,
+    removeTab,
+    renameTab,
+    selectTab,
+    replaceAllTabs,
+  } = useTabbedCache<CourseSchedule[]>({
+    storageKey: cacheKey,
+    isOpen,
+    createDefaultData: createDefaultSchedules,
+  });
+
+  const schedules = activeTab?.data ?? [];
+
+  const setSchedules = useCallback(
+    (
+      value:
+        | CourseSchedule[]
+        | ((prev: CourseSchedule[]) => CourseSchedule[]),
+    ) => {
+      const next =
+        typeof value === "function" ? value(activeTab?.data ?? []) : value;
+      updateActiveData(next);
+    },
+    [activeTab?.data, updateActiveData],
+  );
+
   const {
     offerMap,
     isLoading: offerLoading,
@@ -410,44 +532,77 @@ export default function SchedulePlanningDrawer({
   } = useCourseOffer();
 
   const plannedCourseIds = useMemo(
-    () => plannedCourses.map((c) => c.id).sort().join(","),
-    [plannedCourses],
+    () => plannedEntries.map((e) => e.course.id).sort().join(","),
+    [plannedEntries],
   );
 
   useEffect(() => {
-    const initialSchedules: CourseSchedule[] = plannedCourses.map((course) => ({
-      courseId: course.id,
-      offerCourseCode: "",
-      nrc: "",
-      hasEJ: false,
-      hasLAB: false,
-      sessions: [],
-    }));
-    setSchedules(initialSchedules);
+    if (!isOpen) {
+      metaHydrated.current = false;
+      return;
+    }
+    if (metaHydrated.current) return;
+    metaHydrated.current = true;
+    try {
+      const raw = sessionStorage.getItem(`${cacheKey}_meta`);
+      if (raw) {
+        const meta = JSON.parse(raw) as {
+          periodType?: PeriodType;
+          entryMode?: "auto" | "manual";
+        };
+        if (meta.periodType) setPeriodType(meta.periodType);
+        if (meta.entryMode) setEntryMode(meta.entryMode);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [isOpen, cacheKey]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    try {
+      sessionStorage.setItem(
+        `${cacheKey}_meta`,
+        JSON.stringify({ periodType, entryMode }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [periodType, entryMode, isOpen, cacheKey]);
+
+  useEffect(() => {
+    if (!isOpen || tabs.length === 0) return;
+    replaceAllTabs(
+      tabs.map((tab) => ({
+        ...tab,
+        data: syncSchedulesWithPlanned(tab.data, plannedEntries, initialBucketCodes),
+      })),
+      activeTabId,
+    );
   }, [plannedCourseIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkConflicts = (newSchedules: CourseSchedule[]) => {
     const conflictList: string[] = [];
-    const occupied: Record<string, string> = {};
+    const occupied: OccupiedSession[] = [];
 
     newSchedules.forEach((schedule) => {
-      occupyExpandedSlots(
+      occupySessions(
         schedule.sessions,
         schedule.courseId,
         occupied,
         conflictList,
-        plannedCourses,
+        plannedEntries,
         newSchedules,
         offerMap,
       );
 
       if (schedule.hasEJ && schedule.sessionsEJ) {
-        occupyExpandedSlots(
+        occupySessions(
           schedule.sessionsEJ,
           schedule.courseId,
           occupied,
           conflictList,
-          plannedCourses,
+          plannedEntries,
           newSchedules,
           offerMap,
           "EJ",
@@ -455,12 +610,12 @@ export default function SchedulePlanningDrawer({
       }
 
       if (schedule.hasLAB && schedule.sessionsLAB) {
-        occupyExpandedSlots(
+        occupySessions(
           schedule.sessionsLAB,
           schedule.courseId,
           occupied,
           conflictList,
-          plannedCourses,
+          plannedEntries,
           newSchedules,
           offerMap,
           "LAB",
@@ -471,6 +626,11 @@ export default function SchedulePlanningDrawer({
     setConflicts(conflictList);
     return conflictList.length === 0;
   };
+
+  useEffect(() => {
+    if (!isOpen || !activeTab) return;
+    checkConflicts(activeTab.data);
+  }, [activeTabId, isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getDefaultMainDayGroup = (): SemesterDayPair | SummerDayGroup =>
     periodType === "verano" ? "Lun-Jue" : "Lun/Mié";
@@ -562,8 +722,10 @@ export default function SchedulePlanningDrawer({
     checkConflicts(updated);
   };
 
-  const generateHTMLReport = () => {
-    // Build a grid: days as columns, hours as rows
+  const buildReportSection = (
+    optionSchedules: CourseSchedule[],
+    optionLabel: string,
+  ): string => {
     const DAYS_FULL = [
       "Lunes",
       "Martes",
@@ -584,7 +746,9 @@ export default function SchedulePlanningDrawer({
       string,
       Record<string, Array<{ title: string; nrc: string }>>
     > = {};
-    const reportTimeSlots = collectCalendarTimeSlots(allScheduleSessions(schedules));
+    const reportTimeSlots = collectCalendarTimeSlots(
+      allScheduleSessions(optionSchedules),
+    );
     DAYS_FULL.forEach((d) => {
       grid[d] = {};
       reportTimeSlots.forEach((t) => (grid[d][t] = []));
@@ -592,9 +756,10 @@ export default function SchedulePlanningDrawer({
 
     const allNrcs = new Set<string>();
 
-    schedules.forEach((s) => {
-      const course = plannedCourses.find((c) => c.id === s.courseId);
-      if (!course) return;
+    optionSchedules.forEach((s) => {
+      const entry = plannedEntries.find((e) => e.course.id === s.courseId);
+      if (!entry) return;
+      const course = entry.course;
       const labels = getScheduleDisplayLabels(course, s, offerMap, "main");
       const base = labels.title;
 
@@ -651,29 +816,31 @@ export default function SchedulePlanningDrawer({
       </tr>
     `;
 
-    const tableBody = reportTimeSlots.map((time) => {
-      const cells = DAYS_FULL.map((day) => {
-        const entries = grid[day][time];
-        if (!entries.length) return `<td></td>`;
-        const content = entries
-          .map(
-            (e) => `
+    const tableBody = reportTimeSlots
+      .map((time) => {
+        const cells = DAYS_FULL.map((day) => {
+          const entries = grid[day][time];
+          if (!entries.length) return `<td></td>`;
+          const content = entries
+            .map(
+              (e) => `
           <div class="entry">
             <div class="title">${e.title}</div>
             <div class="nrc">NRC: ${e.nrc}</div>
           </div>
         `,
-          )
-          .join("");
-        return `<td class="filled">${content}</td>`;
-      }).join("");
-      return `
+            )
+            .join("");
+          return `<td class="filled">${content}</td>`;
+        }).join("");
+        return `
         <tr>
           <td class="time">${time}</td>
           ${cells}
         </tr>
       `;
-    }).join("");
+      })
+      .join("");
 
     const nrcs = Array.from(allNrcs);
     const nrcRow = nrcs.length
@@ -681,6 +848,24 @@ export default function SchedulePlanningDrawer({
            ${nrcs.map((n) => `<div class="nrc-cell">${n}</div>`).join("")}
          </div>`
       : "";
+
+    return `
+      <section class="option-section">
+        <h2>${optionLabel}</h2>
+        <table class="schedule">
+          <thead>${tableHeader}</thead>
+          <tbody>${tableBody}</tbody>
+        </table>
+        ${nrcs.length ? "<h3>NRCs</h3>" : ""}
+        ${nrcRow}
+      </section>
+    `;
+  };
+
+  const generateHTMLReport = () => {
+    const sections = tabs.map((tab) =>
+      buildReportSection(tab.data, tab.label),
+    );
 
     const html = `
       <!DOCTYPE html>
@@ -693,6 +878,10 @@ export default function SchedulePlanningDrawer({
           *{ box-sizing:border-box; }
           body{ font-family:Arial, Helvetica, sans-serif; color:var(--text); background:var(--bg); margin:0; padding:24px; }
           h1{ text-align:center; margin:0 0 16px; font-size:24px; }
+          h2{ margin:24px 0 12px; font-size:18px; border-bottom:2px solid var(--border); padding-bottom:6px; }
+          h3{ margin:16px 0 8px; font-size:14px; }
+          .option-section{ margin-bottom:32px; page-break-inside:avoid; }
+          .option-section + .option-section{ border-top:2px solid var(--border); padding-top:24px; }
           .schedule{ width:100%; border-collapse:collapse; table-layout:fixed; }
           .schedule th, .schedule td{ border:1px solid var(--border); padding:6px; vertical-align:top; }
           .schedule th{ background:var(--head); color:#fff; font-weight:700; text-align:center; }
@@ -703,7 +892,6 @@ export default function SchedulePlanningDrawer({
           .entry:last-child{ margin-bottom:0; }
           .entry .title{ font-weight:700; font-size:12px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
           .entry .nrc{ font-size:11px; color:#334155; }
-          h2{ margin:20px 0 8px; font-size:16px; }
           .nrcs{ display:flex; flex-wrap:wrap; gap:6px; }
           .nrc-cell{ border:1px solid var(--border); padding:6px 10px; border-radius:4px; font-size:12px; background:#fff; }
           .controls{ text-align:center; margin-top:20px; }
@@ -713,12 +901,7 @@ export default function SchedulePlanningDrawer({
       </head>
       <body>
         <h1>Calendario de clases</h1>
-        <table class="schedule">
-          <thead>${tableHeader}</thead>
-          <tbody>${tableBody}</tbody>
-        </table>
-        ${nrcs.length ? "<h2>NRCs</h2>" : ""}
-        ${nrcRow}
+        ${sections.join("")}
         <div class="controls no-print">
           <button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         </div>
@@ -759,7 +942,8 @@ export default function SchedulePlanningDrawer({
 
   const getScheduleForSlot = (day: DayType, time: string) => {
     for (const schedule of schedules) {
-      const course = plannedCourses.find((c) => c.id === schedule.courseId);
+      const entry = plannedEntries.find((e) => e.course.id === schedule.courseId);
+      const course = entry?.course;
       if (!course) continue;
 
       for (const session of schedule.sessions) {
@@ -838,21 +1022,16 @@ export default function SchedulePlanningDrawer({
       .filter((s): s is ScheduleSession => s !== null);
   };
 
-  const getOccupiedSlots = useCallback(
-    (excludeCourseId?: string): Set<string> => {
-      const occupied = new Set<string>();
+  const getOccupiedSessions = useCallback(
+    (excludeCourseId?: string): ScheduleSession[] => {
+      const occupied: ScheduleSession[] = [];
       schedules.forEach((s) => {
         if (excludeCourseId && s.courseId === excludeCourseId) return;
-        const allSessions = [
+        occupied.push(
           ...s.sessions,
-          ...(s.sessionsEJ || []),
-          ...(s.sessionsLAB || []),
-        ];
-        allSessions.forEach((sess) => {
-          expandSessionToGridSlots(sess.startTime, sess.endTime).forEach(
-            (slot) => occupied.add(slotKey(sess.day, slot)),
-          );
-        });
+          ...(s.sessionsEJ ?? []),
+          ...(s.sessionsLAB ?? []),
+        );
       });
       return occupied;
     },
@@ -864,9 +1043,9 @@ export default function SchedulePlanningDrawer({
       offers: CourseOfferRow[],
       excludeCourseId: string,
     ): { suggestions: CourseOfferRow[]; totalOffers: number } => {
-      const occupied = getOccupiedSlots(excludeCourseId);
+      const occupied = getOccupiedSessions(excludeCourseId);
       const withoutConflict = offers.filter(
-        (row) => !nrcConflictsWithSlots(row.nrc, occupied, offerMap),
+        (row) => !nrcConflictsWithSessions(row.nrc, occupied, offerMap),
       );
       const withSchedule = withoutConflict.filter(isValidOfferSchedule);
       const withoutSchedule = withoutConflict.filter(
@@ -877,7 +1056,7 @@ export default function SchedulePlanningDrawer({
       );
       return { suggestions, totalOffers: offers.length };
     },
-    [getOccupiedSlots, offerMap],
+    [getOccupiedSessions, offerMap],
   );
 
   const applyAutoFillFromOffer = (
@@ -889,11 +1068,22 @@ export default function SchedulePlanningDrawer({
       if (s.nrc && offerMap.has(s.nrc)) {
         next.sessions = sessionsFromOffer(s.nrc);
       }
+      const mainRow = s.nrc ? offerMap.get(s.nrc) : undefined;
       if (s.hasEJ && s.nrcEJ && offerMap.has(s.nrcEJ)) {
-        next.sessionsEJ = sessionsFromOffer(s.nrcEJ);
+        const ejRow = offerMap.get(s.nrcEJ)!;
+        if (!mainRow || isOfferLinkedToMain(mainRow, ejRow)) {
+          next.sessionsEJ = sessionsFromOffer(s.nrcEJ);
+        } else {
+          next.sessionsEJ = undefined;
+        }
       }
       if (s.hasLAB && s.nrcLAB && offerMap.has(s.nrcLAB)) {
-        next.sessionsLAB = sessionsFromOffer(s.nrcLAB);
+        const labRow = offerMap.get(s.nrcLAB)!;
+        if (!mainRow || isOfferLinkedToMain(mainRow, labRow)) {
+          next.sessionsLAB = sessionsFromOffer(s.nrcLAB);
+        } else {
+          next.sessionsLAB = undefined;
+        }
       }
       return next;
     });
@@ -936,6 +1126,23 @@ export default function SchedulePlanningDrawer({
       const next = { ...s, nrc };
       if (entryMode === "auto" && offerMap.has(nrc)) {
         next.sessions = sessionsFromOffer(nrc);
+      } else if (!nrc) {
+        next.sessions = [];
+      }
+      const mainRow = nrc ? offerMap.get(nrc) : undefined;
+      if (next.nrcEJ) {
+        const ejRow = offerMap.get(next.nrcEJ);
+        if (!mainRow || !ejRow || !isOfferLinkedToMain(mainRow, ejRow)) {
+          next.nrcEJ = "";
+          next.sessionsEJ = undefined;
+        }
+      }
+      if (next.nrcLAB) {
+        const labRow = offerMap.get(next.nrcLAB);
+        if (!mainRow || !labRow || !isOfferLinkedToMain(mainRow, labRow)) {
+          next.nrcLAB = "";
+          next.sessionsLAB = undefined;
+        }
       }
       return next;
     });
@@ -949,7 +1156,15 @@ export default function SchedulePlanningDrawer({
       if (s.courseId !== courseId) return s;
       const next = { ...s, nrcEJ };
       if (entryMode === "auto" && offerMap.has(nrcEJ)) {
-        next.sessionsEJ = sessionsFromOffer(nrcEJ);
+        const mainRow = s.nrc ? offerMap.get(s.nrc) : undefined;
+        const ejRow = offerMap.get(nrcEJ)!;
+        if (!mainRow || isOfferLinkedToMain(mainRow, ejRow)) {
+          next.sessionsEJ = sessionsFromOffer(nrcEJ);
+        } else {
+          next.sessionsEJ = undefined;
+        }
+      } else if (!nrcEJ) {
+        next.sessionsEJ = undefined;
       }
       return next;
     });
@@ -963,13 +1178,54 @@ export default function SchedulePlanningDrawer({
       if (s.courseId !== courseId) return s;
       const next = { ...s, nrcLAB };
       if (entryMode === "auto" && offerMap.has(nrcLAB)) {
-        next.sessionsLAB = sessionsFromOffer(nrcLAB);
+        const mainRow = s.nrc ? offerMap.get(s.nrc) : undefined;
+        const labRow = offerMap.get(nrcLAB)!;
+        if (!mainRow || isOfferLinkedToMain(mainRow, labRow)) {
+          next.sessionsLAB = sessionsFromOffer(nrcLAB);
+        } else {
+          next.sessionsLAB = undefined;
+        }
+      } else if (!nrcLAB) {
+        next.sessionsLAB = undefined;
       }
       return next;
     });
     setSchedules(updated);
     checkConflicts(updated);
   };
+
+  const groupingWarnings = useMemo(() => {
+    const warnings: string[] = [];
+    schedules.forEach((s) => {
+      const entry = plannedEntries.find((e) => e.course.id === s.courseId);
+      if (!entry) return;
+      const label = entry.course.code;
+      const mainRow = s.nrc ? offerMap.get(s.nrc) : undefined;
+
+      if (s.hasEJ && !s.nrcEJ) {
+        warnings.push(`${label}: falta NRC de ejercicios (EJ).`);
+      } else if (s.hasEJ && s.nrcEJ && mainRow) {
+        const ejRow = offerMap.get(s.nrcEJ);
+        if (ejRow && !isOfferLinkedToMain(mainRow, ejRow)) {
+          warnings.push(
+            `${label}: NRC EJ ${s.nrcEJ} no agrupa con teoría ${s.nrc}.`,
+          );
+        }
+      }
+
+      if (s.hasLAB && !s.nrcLAB) {
+        warnings.push(`${label}: falta NRC de laboratorio (LAB).`);
+      } else if (s.hasLAB && s.nrcLAB && mainRow) {
+        const labRow = offerMap.get(s.nrcLAB);
+        if (labRow && !isOfferLinkedToMain(mainRow, labRow)) {
+          warnings.push(
+            `${label}: NRC LAB ${s.nrcLAB} no agrupa con teoría ${s.nrc}.`,
+          );
+        }
+      }
+    });
+    return warnings;
+  }, [schedules, offerMap, plannedEntries]);
 
   return (
     <>
@@ -1055,6 +1311,74 @@ export default function SchedulePlanningDrawer({
                   <X className="w-5 h-5" />
                 </Button>
               </div>
+
+              {/* Schedule option tabs */}
+              <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                {tabs.map((tab) => (
+                  <div key={tab.id} className="flex items-center gap-0.5">
+                    {renamingTabId === tab.id ? (
+                      <Input
+                        autoFocus
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onBlur={() => {
+                          renameTab(tab.id, renameValue);
+                          setRenamingTabId(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            renameTab(tab.id, renameValue);
+                            setRenamingTabId(null);
+                          }
+                          if (e.key === "Escape") setRenamingTabId(null);
+                        }}
+                        className="h-8 w-28 text-sm dark:bg-gray-700"
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => selectTab(tab.id)}
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                          tab.id === activeTabId
+                            ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-gray-200 dark:border-gray-600"
+                            : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700"
+                        }`}
+                      >
+                        {tab.label}
+                        <Pencil
+                          className="w-3 h-3 opacity-50 hover:opacity-100"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setRenamingTabId(tab.id);
+                            setRenameValue(tab.label);
+                          }}
+                        />
+                      </button>
+                    )}
+                    {tabs.length > 1 && tab.id === activeTabId && (
+                      <button
+                        type="button"
+                        onClick={() => removeTab(tab.id)}
+                        className="p-1 text-gray-400 hover:text-red-500"
+                        title="Eliminar opción"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={addTab}
+                  className="h-8 gap-1 text-sm"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Nueva opción
+                </Button>
+              </div>
+
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {entryMode === "auto"
                   ? "Modo automático: ingresa el NRC y el horario se llena desde la oferta de cursos."
@@ -1097,17 +1421,29 @@ export default function SchedulePlanningDrawer({
                 </Alert>
               )}
 
+              {groupingWarnings.length > 0 && (
+                <Alert className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+                  <TriangleAlert className="text-amber-600 dark:text-amber-400" />
+                  <AlertDescription className="text-amber-800 dark:text-amber-200/90">
+                    {groupingWarnings.map((warning, i) => (
+                      <div key={i}>{warning}</div>
+                    ))}
+                  </AlertDescription>
+                </Alert>
+              )}
+
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Materias planeadas
                 </h3>
-                {plannedCourses.length === 0 ? (
+                {plannedEntries.length === 0 ? (
                   <p className="text-gray-500 dark:text-gray-400">
                     No hay materias planeadas. Marca materias como "planeadas"
                     en la malla curricular.
                   </p>
                 ) : (
-                  plannedCourses.map((course) => {
+                  plannedEntries.map((entry) => {
+                    const course = entry.course;
                     const schedule = schedules.find(
                       (s) => s.courseId === course.id,
                     );
@@ -1118,8 +1454,15 @@ export default function SchedulePlanningDrawer({
                         <div className="space-y-3">
                           <div className="flex justify-between items-start">
                             <div>
-                              <div className="font-semibold text-gray-900 dark:text-white">
-                                {course.code} - {course.title}
+                              <div className="font-semibold text-gray-900 dark:text-white flex items-center gap-2 flex-wrap">
+                                <span>
+                                  {course.code} - {course.title}
+                                </span>
+                                {entry.curriculumLabel && (
+                                  <span className="text-xs font-medium px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+                                    {entry.curriculumLabel}
+                                  </span>
+                                )}
                               </div>
                               <div className="text-sm text-gray-500 dark:text-gray-400">
                                 {course.credits} créditos
@@ -1128,7 +1471,7 @@ export default function SchedulePlanningDrawer({
                           </div>
 
                           <div className="space-y-3">
-                            {isOpenElectiveCourse(course) && (
+                            {requiresOfferCourseCode(course) && (
                               <div>
                                 <label className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
                                   Código de materia
@@ -1150,6 +1493,17 @@ export default function SchedulePlanningDrawer({
                                 </p>
                                 {schedule.offerCourseCode &&
                                   (() => {
+                                    const areaCheck = validateOfferCodeForBucket(
+                                      course,
+                                      schedule.offerCourseCode,
+                                    );
+                                    if (!areaCheck.valid) {
+                                      return (
+                                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                          {areaCheck.error}
+                                        </p>
+                                      );
+                                    }
                                     const preview = getOfferCoursePreview(
                                       offerMap,
                                       schedule.offerCourseCode,
@@ -1194,7 +1548,7 @@ export default function SchedulePlanningDrawer({
                                   offerMap.size > 0 &&
                                   (() => {
                                     if (
-                                      isOpenElectiveCourse(course) &&
+                                      requiresOfferCourseCode(course) &&
                                       !schedule.offerCourseCode?.trim()
                                     ) {
                                       return (
@@ -1228,6 +1582,34 @@ export default function SchedulePlanningDrawer({
                                   })()}
                               </div>
                             </div>
+
+                            {schedule.nrc &&
+                              (() => {
+                                const mainRow = offerMap.get(schedule.nrc);
+                                if (!mainRow?.group_letters.length) return null;
+                                const parts: string[] = [];
+                                if (schedule.hasLAB) {
+                                  const labL = requiredLinkLetter(
+                                    mainRow,
+                                    "Laboratorio",
+                                  );
+                                  if (labL)
+                                    parts.push(`LAB usa | ${labL} |`);
+                                }
+                                if (schedule.hasEJ) {
+                                  const ejL = requiredLinkLetter(
+                                    mainRow,
+                                    "Ejercicios",
+                                  );
+                                  if (ejL) parts.push(`EJ usa | ${ejL} |`);
+                                }
+                                if (!parts.length) return null;
+                                return (
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    Agrupación requerida — {parts.join(" · ")}
+                                  </p>
+                                );
+                              })()}
 
                             <div className="flex gap-4">
                               <div className="flex items-center space-x-2">
@@ -1310,29 +1692,54 @@ export default function SchedulePlanningDrawer({
                                     nrc={schedule.nrcEJ || ""}
                                     offerMap={offerMap}
                                   />
+                                  {schedule.nrcEJ &&
+                                    schedule.nrc &&
+                                    offerMap.has(schedule.nrcEJ) &&
+                                    (() => {
+                                      const mainRow = offerMap.get(schedule.nrc);
+                                      const ejRow = offerMap.get(schedule.nrcEJ!);
+                                      if (
+                                        mainRow &&
+                                        ejRow &&
+                                        !isOfferLinkedToMain(mainRow, ejRow)
+                                      ) {
+                                        return (
+                                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                            Este NRC EJ no agrupa con la teoría
+                                            seleccionada (
+                                            {formatGroupLetters(
+                                              mainRow.group_letters,
+                                            )}
+                                            ).
+                                          </p>
+                                        );
+                                      }
+                                      return null;
+                                    })()}
                                   {entryMode === "auto" &&
                                     offerMap.size > 0 &&
                                     (() => {
                                       if (
-                                        isOpenElectiveCourse(course) &&
+                                        requiresOfferCourseCode(course) &&
                                         !schedule.offerCourseCode?.trim()
                                       )
                                         return null;
                                       const mainRow = schedule.nrc
                                         ? offerMap.get(schedule.nrc)
                                         : undefined;
-                                      const ejOffers = mainRow
-                                        ? getLinkedOffers(
-                                            mainRow,
-                                            offerMap,
-                                            "Ejercicios",
-                                          )
-                                        : getOffersForSchedule(
-                                            offerMap,
-                                            course,
-                                            schedule.offerCourseCode,
-                                            "Ejercicios",
-                                          );
+                                      if (!mainRow) {
+                                        return (
+                                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                                            Selecciona primero el NRC de teoría
+                                            para ver EJ compatibles.
+                                          </p>
+                                        );
+                                      }
+                                      const ejOffers = getLinkedOffers(
+                                        mainRow,
+                                        offerMap,
+                                        "Ejercicios",
+                                      );
                                       const { suggestions, totalOffers } =
                                         filterSuggestions(ejOffers, course.id);
                                       return (
@@ -1374,29 +1781,56 @@ export default function SchedulePlanningDrawer({
                                     nrc={schedule.nrcLAB || ""}
                                     offerMap={offerMap}
                                   />
+                                  {schedule.nrcLAB &&
+                                    schedule.nrc &&
+                                    offerMap.has(schedule.nrcLAB) &&
+                                    (() => {
+                                      const mainRow = offerMap.get(schedule.nrc);
+                                      const labRow = offerMap.get(
+                                        schedule.nrcLAB!,
+                                      );
+                                      if (
+                                        mainRow &&
+                                        labRow &&
+                                        !isOfferLinkedToMain(mainRow, labRow)
+                                      ) {
+                                        return (
+                                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                            Este NRC LAB no agrupa con la teoría
+                                            seleccionada (
+                                            {formatGroupLetters(
+                                              mainRow.group_letters,
+                                            )}
+                                            ).
+                                          </p>
+                                        );
+                                      }
+                                      return null;
+                                    })()}
                                   {entryMode === "auto" &&
                                     offerMap.size > 0 &&
                                     (() => {
                                       if (
-                                        isOpenElectiveCourse(course) &&
+                                        requiresOfferCourseCode(course) &&
                                         !schedule.offerCourseCode?.trim()
                                       )
                                         return null;
                                       const mainRow = schedule.nrc
                                         ? offerMap.get(schedule.nrc)
                                         : undefined;
-                                      const labOffers = mainRow
-                                        ? getLinkedOffers(
-                                            mainRow,
-                                            offerMap,
-                                            "Laboratorio",
-                                          )
-                                        : getOffersForSchedule(
-                                            offerMap,
-                                            course,
-                                            schedule.offerCourseCode,
-                                            "Laboratorio",
-                                          );
+                                      if (!mainRow) {
+                                        return (
+                                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                                            Selecciona primero el NRC de teoría
+                                            para ver LAB compatibles.
+                                          </p>
+                                        );
+                                      }
+                                      const labOffers = getLinkedOffers(
+                                        mainRow,
+                                        offerMap,
+                                        "Laboratorio",
+                                      );
                                       const { suggestions, totalOffers } =
                                         filterSuggestions(labOffers, course.id);
                                       return (
@@ -2020,6 +2454,12 @@ export default function SchedulePlanningDrawer({
                       el 60% de las veces, pero no está publicada de momento. Gracias por
                       tu comprensión y atención.
                     </p>
+                    {crossMallaEnabled && (
+                      <p className="mt-2">
+                        Planificar con materias de múltiples mallas (minors, doble carrera)
+                        está disponible solo con cuenta iniciada.
+                      </p>
+                    )}
                   </AlertDescription>
                 </Alert>
               </div>

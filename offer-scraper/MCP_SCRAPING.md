@@ -29,17 +29,17 @@ flowchart LR
   G --> H[(Supabase)]
 ```
 
-| Acción | Comando upload |
-|--------|----------------|
-| Periodo histórico (semestres pasados) | `--target history` |
-| Periodo actual (reemplaza `course_offer`) | `--target current` |
+| Acción                                    | Comando upload      |
+| ----------------------------------------- | ------------------- |
+| Periodo histórico (semestres pasados)     | `--target history`  |
+| Periodo actual (reemplaza `course_offer`) | `--target current`  |
 | Rollover (archivar actual → cargar nuevo) | `--target rollover` |
 
 ---
 
 ## Paso 1 — Iniciar sesión en el navegador MCP
 
-1. Pide al agente: *“Navega a https://catalogodecursos.usfq.edu.ec/dashboard/home con Playwright MCP”*.
+1. Pide al agente: _“Navega a https://catalogodecursos.usfq.edu.ec/dashboard/home con Playwright MCP”_.
 2. Si redirige a login Microsoft, inicia sesión manualmente en la ventana del navegador.
 3. Confirma que ves **“Bienvenido, …”** y el combobox **Periodos**.
 
@@ -53,13 +53,13 @@ El script reutilizable está en `offer-scraper/mcp_scrape.js`.
 **Edita** las dos primeras constantes antes de ejecutar:
 
 ```javascript
-const PERIOD_CODE = '202610';   // código numérico del periodo
-const PERIOD_LABEL = 'Primer Semestre 2026/2027';
+const PERIOD_CODE = "202610"; // código numérico del periodo
+const PERIOD_LABEL = "Primer Semestre 2026/2027";
 ```
 
 Pide al agente que ejecute:
 
-> *“Ejecuta `browser_run_code_unsafe` con el archivo `offer-scraper/mcp_scrape.js`”*
+> _“Ejecuta `browser_run_code_unsafe` con el archivo `offer-scraper/mcp_scrape.js`”_
 
 El script:
 
@@ -115,13 +115,13 @@ Si el rollover falla por permisos RLS del anon key, el agente puede completar co
 
 ## Periodos de referencia (`periods.json`)
 
-| Código | Etiqueta |
-|--------|----------|
-| 202610 | Primer Semestre 2026/2027 |
+| Código | Etiqueta                   |
+| ------ | -------------------------- |
+| 202610 | Primer Semestre 2026/2027  |
 | 202520 | Segundo Semestre 2025/2026 |
-| 202510 | Primer Semestre 2025/2026 |
-| 202530 | Verano 2025/2026 |
-| 202630 | Verano 2026/2027 |
+| 202510 | Primer Semestre 2025/2026  |
+| 202530 | Verano 2025/2026           |
+| 202630 | Verano 2026/2027           |
 
 Lista completa en el combobox del catálogo (puede cambiar cada año).
 
@@ -158,13 +158,13 @@ WHERE id = 1;
 
 ## Solución de problemas
 
-| Problema | Qué hacer |
-|----------|-----------|
-| Redirige a login | Inicia sesión manual en el navegador MCP y repite. |
-| `raw is not iterable` | Usar `page.evaluate(() => { ... })` inline (no pasar función externa). |
-| Upsert history falla `42P10` | `upload_to_history` ahora borra+inserta por periodo; re-ejecutar upload. |
-| `401 permission denied` en DELETE | Usar service role key en `.env` o SQL admin vía Supabase MCP. |
-| Pocas filas en verano en history | El rollover por upsert reemplaza NRCs compartidos; re-scrapear 202530 con `--target history` si hace falta el snapshot completo. |
+| Problema                          | Qué hacer                                                                                                                        |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Redirige a login                  | Inicia sesión manual en el navegador MCP y repite.                                                                               |
+| `raw is not iterable`             | Usar `page.evaluate(() => { ... })` inline (no pasar función externa).                                                           |
+| Upsert history falla `42P10`      | `upload_to_history` ahora borra+inserta por periodo; re-ejecutar upload.                                                         |
+| `401 permission denied` en DELETE | Usar service role key en `.env` o SQL admin vía Supabase MCP.                                                                    |
+| Pocas filas en verano en history  | El rollover por upsert reemplaza NRCs compartidos; re-scrapear 202530 con `--target history` si hace falta el snapshot completo. |
 
 ---
 

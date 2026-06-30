@@ -53,7 +53,7 @@ async (page) => {
         let groupLetters = [];
         for (const p of infoCell.querySelectorAll('p')) {
           if (p.innerText.includes('Agrupado con')) {
-            const matches = p.innerText.match(/\|\s*([A-Z]{1,3})\s*\|/g) || [];
+            const matches = p.innerText.match(/\|\s*([A-Z][A-Z0-9]{0,2})\s*\|/g) || [];
             groupLetters = matches.map(m => m.replace(/\|/g, '').trim());
             break;
           }
