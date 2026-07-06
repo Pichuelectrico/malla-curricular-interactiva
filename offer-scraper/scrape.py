@@ -8,7 +8,7 @@ Usage
   # First run / session expired: open a visible browser and log in manually
   python scrape.py login
 
-  # Every subsequent run while session is alive (headless)
+  # Scrape (visible browser by default; add --headless to hide the window)
   python scrape.py scrape
 
   # Explicit period
@@ -36,6 +36,7 @@ Environment variables (see .env.example)
 
 Notes
 -----
+- Login success is detected via #btnBuscarCursos (not the dashboard URL).
 - The browser profile lives in offer-scraper/.browser_profile/ (gitignored).
 - Credentials are NEVER sent to Supabase or any server. They stay on your machine.
 - No Edge Function / on-demand refresh: students read from the Supabase table
@@ -367,7 +368,7 @@ def cmd_scrape(args) -> None:
         log.error("SUPABASE_URL and SUPABASE_KEY must be set in .env")
         sys.exit(1)
 
-    headed = args.headed
+    headed = not args.headless
     username, password = _usfq_creds()
     session = BrowserSession(headed=headed)
 
@@ -420,7 +421,7 @@ def cmd_backfill(args) -> None:
             log.error("No matching periods for --only %s", args.only)
             sys.exit(1)
 
-    headed = args.headed
+    headed = not args.headless
     username, password = _usfq_creds()
     session = BrowserSession(headed=headed)
 
@@ -480,7 +481,7 @@ def cmd_rollover(args) -> None:
         log.info("Dry-run only. Re-run with --yes to execute.")
         return
 
-    headed = args.headed
+    headed = not args.headless
     username, password = _usfq_creds()
     session = BrowserSession(headed=headed)
 
@@ -531,8 +532,8 @@ def build_parser() -> argparse.ArgumentParser:
         help='Human-readable label, e.g. "Primer Semestre 2026/2027"',
     )
     sc.add_argument(
-        "--headed", action="store_true",
-        help="Show browser window (useful for debugging)",
+        "--headless", action="store_true",
+        help="Run browser without a visible window (default: visible for debugging)",
     )
     sc.add_argument(
         "--archive", action="store_true",
@@ -549,7 +550,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--only",
         help="Comma-separated period codes to backfill, e.g. 202510,202420",
     )
-    bf.add_argument("--headed", action="store_true")
+    bf.add_argument(
+        "--headless", action="store_true",
+        help="Run browser without a visible window (default: visible)",
+    )
     bf.add_argument(
         "--validate", action="store_true",
         help="Warn if period codes are missing from catalog dropdown",
@@ -565,7 +569,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--period", required=True,
         help='New period label, e.g. "Segundo Semestre 2025/2026"',
     )
-    ro.add_argument("--headed", action="store_true")
+    ro.add_argument(
+        "--headless", action="store_true",
+        help="Run browser without a visible window (default: visible)",
+    )
     ro.add_argument(
         "--yes", action="store_true",
         help="Execute rollover (default is dry-run)",

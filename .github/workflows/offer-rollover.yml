@@ -1,5 +1,7 @@
 name: USFQ Offer Rollover
 
+# DISABLED: use local scraper (offer-scraper/MCP_SCRAPING.md).
+
 on:
   workflow_dispatch:
     inputs:
@@ -14,6 +16,7 @@ on:
 
 jobs:
   rollover:
+    if: false
     name: Rollover course offer
     runs-on: ubuntu-latest
     timeout-minutes: 60

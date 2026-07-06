@@ -173,4 +173,4 @@ async (page) => {
     count: allRows.length,
     courses: allRows,
   };
-};
+}
