@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-28T17:23:52.308008+00:00",
+  "generated_at": "2026-07-06T18:38:52.050601+00:00",
   "version": 1,
   "by_edge": {
     "ESL0001->ESL0002": {
@@ -486,17 +486,6 @@
       "target_students": 28.0,
       "curriculum_id": "Malla-academica-ALI"
     },
-    "QUI1004->ALI3002": {
-      "from_id": "QUI1004",
-      "to_id": "ALI3002",
-      "edge_type": "cross_area_direct",
-      "p": 0.3012,
-      "prior": 0.5,
-      "n_pairs": 3,
-      "source_students": 96.0,
-      "target_students": 14.0,
-      "curriculum_id": "Malla-academica-ALI"
-    },
     "FIS2701->FIS2702": {
       "from_id": "FIS2701",
       "to_id": "FIS2702",
@@ -651,27 +640,27 @@
       "target_students": 24.0,
       "curriculum_id": "Malla-academica-ALI"
     },
-    "INQ4201->INQ4202": {
+    "ESL0006->INQ4202E": {
+      "from_id": "ESL0006",
+      "to_id": "INQ4202E",
+      "edge_type": "cross_area_direct",
+      "p": 0.1042,
+      "prior": 0.5,
+      "n_pairs": 1,
+      "source_students": 285.0,
+      "target_students": 0.0,
+      "curriculum_id": "Malla-academica-INQ"
+    },
+    "INQ4201->INQ4202E": {
       "from_id": "INQ4201",
-      "to_id": "INQ4202",
+      "to_id": "INQ4202E",
       "edge_type": "sequential",
-      "p": 0.3797,
+      "p": 0.7089,
       "prior": 0.8,
       "n_pairs": 4,
       "source_students": 83.0,
-      "target_students": 0.0,
-      "curriculum_id": "Malla-academica-ALI"
-    },
-    "INQ3003->INQ4202": {
-      "from_id": "INQ3003",
-      "to_id": "INQ4202",
-      "edge_type": "same_area",
-      "p": 0.3261,
-      "prior": 0.5,
-      "n_pairs": 2,
-      "source_students": 40.0,
-      "target_students": 0.0,
-      "curriculum_id": "Malla-academica-ALI"
+      "target_students": 52.0,
+      "curriculum_id": "Malla-academica-INQ"
     },
     "MCR3001->AGR4005E": {
       "from_id": "MCR3001",
@@ -2443,6 +2432,281 @@
       "source_students": 22.0,
       "target_students": 16.0,
       "curriculum_id": "Malla-academica-DIC"
+    },
+    "DIT1004->DIT2005": {
+      "from_id": "DIT1004",
+      "to_id": "DIT2005",
+      "edge_type": "sequential",
+      "p": 0.8571,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 30.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT1004->DIT2004": {
+      "from_id": "DIT1004",
+      "to_id": "DIT2004",
+      "edge_type": "sequential",
+      "p": 0.8571,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 30.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT1003->DIT2004": {
+      "from_id": "DIT1003",
+      "to_id": "DIT2004",
+      "edge_type": "sequential",
+      "p": 0.7692,
+      "prior": 0.8,
+      "n_pairs": 3,
+      "source_students": 42.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT1004->DIT2201": {
+      "from_id": "DIT1004",
+      "to_id": "DIT2201",
+      "edge_type": "sequential",
+      "p": 0.8571,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 30.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2005->DIT2006": {
+      "from_id": "DIT2005",
+      "to_id": "DIT2006",
+      "edge_type": "sequential",
+      "p": 0.8667,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 60.0,
+      "target_students": 57.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2201->DIT3004": {
+      "from_id": "DIT2201",
+      "to_id": "DIT3004",
+      "edge_type": "sequential",
+      "p": 0.95,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 60.0,
+      "target_students": 88.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2005->DIT3004": {
+      "from_id": "DIT2005",
+      "to_id": "DIT3004",
+      "edge_type": "sequential",
+      "p": 0.95,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 60.0,
+      "target_students": 88.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2004->DIT2002": {
+      "from_id": "DIT2004",
+      "to_id": "DIT2002",
+      "edge_type": "sequential",
+      "p": 0.9185,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 60.0,
+      "target_students": 64.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2201->DIT2202": {
+      "from_id": "DIT2201",
+      "to_id": "DIT2202",
+      "edge_type": "sequential",
+      "p": 0.8667,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 60.0,
+      "target_students": 57.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2202->DIT3005": {
+      "from_id": "DIT2202",
+      "to_id": "DIT3005",
+      "edge_type": "sequential",
+      "p": 0.5379,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 57.0,
+      "target_students": 11.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2006->DIT3005": {
+      "from_id": "DIT2006",
+      "to_id": "DIT3005",
+      "edge_type": "sequential",
+      "p": 0.5379,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 57.0,
+      "target_students": 11.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2202->DIT3003": {
+      "from_id": "DIT2202",
+      "to_id": "DIT3003",
+      "edge_type": "sequential",
+      "p": 0.6818,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 57.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2006->DIT3003": {
+      "from_id": "DIT2006",
+      "to_id": "DIT3003",
+      "edge_type": "sequential",
+      "p": 0.6818,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 57.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2202->DIT3203": {
+      "from_id": "DIT2202",
+      "to_id": "DIT3203",
+      "edge_type": "sequential",
+      "p": 0.6818,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 57.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT2006->DIT3203": {
+      "from_id": "DIT2006",
+      "to_id": "DIT3203",
+      "edge_type": "sequential",
+      "p": 0.6818,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 57.0,
+      "target_students": 30.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3203->DIT3006": {
+      "from_id": "DIT3203",
+      "to_id": "DIT3006",
+      "edge_type": "sequential",
+      "p": 0.7761,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 59.0,
+      "target_students": 44.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3005->DIT3006": {
+      "from_id": "DIT3005",
+      "to_id": "DIT3006",
+      "edge_type": "sequential",
+      "p": 0.8254,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 51.0,
+      "target_students": 44.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3203->DIT3204": {
+      "from_id": "DIT3203",
+      "to_id": "DIT3204",
+      "edge_type": "sequential",
+      "p": 0.7761,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 59.0,
+      "target_students": 44.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3005->DIT3204": {
+      "from_id": "DIT3005",
+      "to_id": "DIT3204",
+      "edge_type": "sequential",
+      "p": 0.8254,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 51.0,
+      "target_students": 44.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3204->DIT4002": {
+      "from_id": "DIT3204",
+      "to_id": "DIT4002",
+      "edge_type": "same_area",
+      "p": 0.3947,
+      "prior": 0.5,
+      "n_pairs": 1,
+      "source_students": 20.0,
+      "target_students": 0.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3006->DIT4002": {
+      "from_id": "DIT3006",
+      "to_id": "DIT4002",
+      "edge_type": "same_area",
+      "p": 0.3947,
+      "prior": 0.5,
+      "n_pairs": 1,
+      "source_students": 20.0,
+      "target_students": 0.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3204->DIT4205": {
+      "from_id": "DIT3204",
+      "to_id": "DIT4205",
+      "edge_type": "same_area",
+      "p": 0.3947,
+      "prior": 0.5,
+      "n_pairs": 1,
+      "source_students": 20.0,
+      "target_students": 0.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT3006->DIT4205": {
+      "from_id": "DIT3006",
+      "to_id": "DIT4205",
+      "edge_type": "same_area",
+      "p": 0.3947,
+      "prior": 0.5,
+      "n_pairs": 1,
+      "source_students": 20.0,
+      "target_students": 0.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT4002->DIT4992": {
+      "from_id": "DIT4002",
+      "to_id": "DIT4992",
+      "edge_type": "sequential",
+      "p": 0.7411,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 37.0,
+      "target_students": 23.0,
+      "curriculum_id": "Malla-academica-DIT"
+    },
+    "DIT4205->DIT4992": {
+      "from_id": "DIT4205",
+      "to_id": "DIT4992",
+      "edge_type": "sequential",
+      "p": 0.7477,
+      "prior": 0.8,
+      "n_pairs": 2,
+      "source_students": 36.0,
+      "target_students": 23.0,
+      "curriculum_id": "Malla-academica-DIT"
     },
     "MAT1201->ECN1003": {
       "from_id": "MAT1201",
@@ -4873,28 +5137,6 @@
       "n_pairs": 3,
       "source_students": 60.0,
       "target_students": 48.0,
-      "curriculum_id": "Malla-academica-INQ"
-    },
-    "ESL0006->INQ4202E": {
-      "from_id": "ESL0006",
-      "to_id": "INQ4202E",
-      "edge_type": "cross_area_direct",
-      "p": 0.1042,
-      "prior": 0.5,
-      "n_pairs": 1,
-      "source_students": 285.0,
-      "target_students": 0.0,
-      "curriculum_id": "Malla-academica-INQ"
-    },
-    "INQ4201->INQ4202E": {
-      "from_id": "INQ4201",
-      "to_id": "INQ4202E",
-      "edge_type": "sequential",
-      "p": 0.7089,
-      "prior": 0.8,
-      "n_pairs": 4,
-      "source_students": 83.0,
-      "target_students": 52.0,
       "curriculum_id": "Malla-academica-INQ"
     },
     "INQ4002->INQ4301E": {
@@ -8720,34 +8962,31 @@
       "from_id": "*",
       "to_id": "*",
       "edge_type": "same_area",
-      "p": 0.8402,
+      "p": 0.8426,
       "prior": 0.5,
-      "n_pairs": 1215,
-      "source_students": 210772.0,
-      "target_students": 177120.0,
-      "curriculum_id": ""
+      "n_pairs": 1229,
+      "source_students": 215012.0,
+      "target_students": 181204.0
     },
     "sequential": {
       "from_id": "*",
       "to_id": "*",
       "edge_type": "sequential",
-      "p": 0.7811,
+      "p": 0.7828,
       "prior": 0.8,
-      "n_pairs": 1505,
-      "source_students": 194655.0,
-      "target_students": 152043.0,
-      "curriculum_id": ""
+      "n_pairs": 1556,
+      "source_students": 199080.0,
+      "target_students": 155837.0
     },
     "cross_area_direct": {
       "from_id": "*",
       "to_id": "*",
       "edge_type": "cross_area_direct",
-      "p": 0.2371,
+      "p": 0.2363,
       "prior": 0.5,
-      "n_pairs": 594,
-      "source_students": 75577.0,
-      "target_students": 17901.0,
-      "curriculum_id": ""
+      "n_pairs": 592,
+      "source_students": 75766.0,
+      "target_students": 17887.0
     }
   },
   "summer_rates": {}

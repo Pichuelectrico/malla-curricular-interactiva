@@ -1,5 +1,7 @@
 name: USFQ Offer Backfill
 
+# DISABLED: use local scraper (offer-scraper/MCP_SCRAPING.md).
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,6 +12,7 @@ on:
 
 jobs:
   backfill:
+    if: false
     name: Backfill course offer history
     runs-on: ubuntu-latest
     timeout-minutes: 120

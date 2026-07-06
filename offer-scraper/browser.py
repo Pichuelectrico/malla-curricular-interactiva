@@ -1,5 +1,5 @@
 """
-Selenium browser session for USFQ catalog scraping.
+Splinter + Selenium browser session for USFQ catalog scraping.
 
 Uses a persistent Chrome profile (user-data-dir) so Microsoft SSO sessions
 survive ~30 h.  Login auto-fill runs **once** per session check — no retry loop.
@@ -7,7 +7,6 @@ survive ~30 h.  Login auto-fill runs **once** per session check — no retry loo
 
 from __future__ import annotations
 
-import json
 import logging
 import os
 import re
@@ -15,19 +14,24 @@ import sys
 import time
 from typing import Optional
 
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    NoSuchElementException,
+    TimeoutException,
+)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
+from splinter import Browser
 
 log = logging.getLogger("offer-scraper")
 
 CATALOG_URL = "https://catalogodecursos.usfq.edu.ec/dashboard/home"
+D2L_URL = "https://miusfv.usfq.edu.ec/d2l/home"
 TENANT_ID = "9f119962-8c62-431c-a8ef-e7e0a42d11fc"
 PROFILE_DIR = os.path.join(os.path.dirname(__file__), ".browser_profile")
+SEARCH_BTN_ID = "btnBuscarCursos"
 
 EXTRACT_JS = """
 () => {
@@ -126,31 +130,39 @@ class BrowserSession:
 
     def __init__(self, headed: bool = False):
         os.makedirs(PROFILE_DIR, exist_ok=True)
-        opts = Options()
-        opts.add_argument(f"--user-data-dir={PROFILE_DIR}")
-        opts.add_argument("--disable-blink-features=AutomationControlled")
-        opts.add_argument("--no-sandbox")
-        opts.add_argument("--disable-dev-shm-usage")
-        opts.add_argument("--window-size=1280,900")
-        opts.add_experimental_option("excludeSwitches", ["enable-automation"])
-        if not headed:
-            opts.add_argument("--headless=new")
-        self.driver = webdriver.Chrome(options=opts)
+        options = Options()
+        options.add_argument(f"--user-data-dir={PROFILE_DIR}")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1280,900")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        self.browser = Browser("chrome", headless=not headed, options=options)
         self._headed = headed
 
     @property
+    def driver(self):
+        return self.browser.driver
+
+    @property
     def url(self) -> str:
-        return self.driver.current_url
+        return self.browser.url
 
     def close(self) -> None:
-        self.driver.quit()
+        self.browser.quit()
 
     def goto(self, url: str, timeout: int = 60) -> None:
         self.driver.set_page_load_timeout(timeout)
-        self.driver.get(url)
+        self.browser.visit(url)
 
-    def _on_dashboard(self) -> bool:
-        return "catalogodecursos.usfq.edu.ec/dashboard" in self.url
+    def _catalog_ready(self) -> bool:
+        """True when the search form loaded (login complete)."""
+        if not self.browser.is_element_present_by_id(SEARCH_BTN_ID):
+            return False
+        try:
+            return self.browser.find_by_id(SEARCH_BTN_ID).visible
+        except Exception:
+            return False
 
     def _needs_login(self) -> bool:
         return (
@@ -159,57 +171,106 @@ class BrowserSession:
         )
 
     def _dismiss_stay_signed_in(self) -> bool:
+        if not self.browser.is_element_present_by_id("idBtn_Back", wait_time=2):
+            return False
         try:
-            btn = self.driver.find_element(By.ID, "idBtn_Back")
-            if btn.is_displayed():
+            btn = self.browser.find_by_id("idBtn_Back")
+            if btn.visible:
                 btn.click()
                 log.info("Dismissed 'Stay signed in?'")
                 return True
-        except NoSuchElementException:
+        except Exception:
             pass
         return False
 
-    def auto_fill_credentials(self, username: str, password: str) -> None:
-        """Submit Microsoft login form once (best-effort)."""
+    def _is_visible(self, element_id: str, wait_time: int = 3) -> bool:
+        if not self.browser.is_element_present_by_id(element_id, wait_time=wait_time):
+            return False
         try:
-            email = WebDriverWait(self.driver, 20).until(
-                EC.visibility_of_element_located((
-                    By.CSS_SELECTOR,
-                    "input[type='email'], input[name='loginfmt']",
-                ))
-            )
-            email.clear()
-            email.send_keys(username)
-            email.send_keys(Keys.RETURN)
-            log.info("Email submitted.")
+            return self.browser.find_by_id(element_id).visible
+        except Exception:
+            return False
 
-            pwd = WebDriverWait(self.driver, 15).until(
-                EC.visibility_of_element_located((
-                    By.CSS_SELECTOR,
-                    "input[type='password'], input[name='passwd']",
-                ))
-            )
-            pwd.clear()
-            pwd.send_keys(password)
-            pwd.send_keys(Keys.RETURN)
-            log.info("Password submitted — waiting for redirect…")
-        except TimeoutException:
-            log.warning("Could not auto-fill credentials (page may already be past login).")
+    def _submit_ms_password(self, password: str) -> bool:
+        if not self._is_visible("i0118", wait_time=10):
+            return False
+        log.info("Filling password (partial login — email already accepted).")
+        self.browser.find_by_id("i0118").fill(password)
+        self.browser.find_by_id("idSIButton9").click()
+        time.sleep(1.5)
+        if self.browser.is_element_present_by_id("idBtn_Back", wait_time=8):
+            self.browser.find_by_id("idBtn_Back").click()
+            time.sleep(1.4)
+            log.info("Dismissed 'Stay signed in?'")
+        log.info("Password submitted.")
+        return True
 
-    def wait_for_dashboard(self, timeout: float = 300) -> bool:
-        """Poll until dashboard loads or timeout."""
+    def _fill_ms_login(self, username: str, password: str) -> bool:
+        """Fill Microsoft SSO — full flow or password-only if partially logged in."""
+        email_visible = self._is_visible("i0116", wait_time=3)
+        password_visible = self._is_visible("i0118", wait_time=3)
+
+        if password_visible and not email_visible:
+            return self._submit_ms_password(password)
+
+        if not email_visible:
+            if password_visible:
+                return self._submit_ms_password(password)
+            return False
+
+        self.browser.find_by_id("i0116").fill(username)
+        time.sleep(0.5)
+        self.browser.find_by_id("idSIButton9").click()
+        time.sleep(1.5)
+
+        if not self._submit_ms_password(password):
+            log.error("Password field #i0118 not found after email step.")
+            return False
+
+        log.info("Microsoft SSO form submitted (email + password).")
+        return True
+
+    def auto_fill_credentials(self, username: str, password: str) -> None:
+        """Microsoft SSO via D2L — same flow as other USFQ scrapers."""
+        if not username or not password:
+            log.error("USFQ_USERNAME / USFQ_PASSWORD missing in .env")
+            return
+
+        log.info("Logging in via D2L (%s)…", D2L_URL)
+        self.browser.visit(D2L_URL)
+        time.sleep(1.5)
+
+        if self._fill_ms_login(username, password):
+            return
+
+        log.info("No login form on D2L — trying catalog redirect…")
+        self.browser.visit(CATALOG_URL)
+        time.sleep(1.5)
+
+        if not self._fill_ms_login(username, password):
+            log.warning("Login form not found on D2L or catalog.")
+
+    def _try_resume_partial_login(self, username: str, password: str) -> bool:
+        """If polling lands on password-only screen, complete login."""
+        if not password:
+            return False
+        if self._is_visible("i0118", wait_time=1) and not self._is_visible("i0116", wait_time=1):
+            log.info("Resuming partial login during wait…")
+            return self._submit_ms_password(password)
+        return False
+
+    def wait_for_catalog(self, timeout: float = 300, username: str = "", password: str = "") -> bool:
+        """Poll until #btnBuscarCursos is visible (catalog ready after login)."""
         deadline = time.time() + timeout
         dismissed = False
         while time.time() < deadline:
             time.sleep(0.8)
-            if self._on_dashboard():
-                try:
-                    WebDriverWait(self.driver, 20).until(
-                        EC.visibility_of_element_located((By.CSS_SELECTOR, "select"))
-                    )
-                except TimeoutException:
-                    pass
+            if self._catalog_ready():
+                log.info("Catalog ready — found #%s.", SEARCH_BTN_ID)
                 return True
+            if self._try_resume_partial_login(username, password):
+                time.sleep(1.5)
+                continue
             if (
                 not dismissed
                 and f"{TENANT_ID}/login" in self.url
@@ -218,23 +279,25 @@ class BrowserSession:
                 dismissed = self._dismiss_stay_signed_in()
         return False
 
+    wait_for_dashboard = wait_for_catalog  # alias for callers
+
     def ensure_logged_in(self, username: str = "", password: str = "") -> bool:
         """
-        Open catalog; return True if dashboard is reachable.
+        Open catalog; return True when #btnBuscarCursos is present.
         Auto-login runs at most once — never in a tight loop.
         """
         log.info("Opening catalog…")
         self.goto(CATALOG_URL)
 
-        if self._on_dashboard():
-            log.info("Session alive — dashboard loaded.")
+        if self._catalog_ready():
+            log.info("Session alive — catalog search button found.")
             return True
 
         if not self._needs_login():
-            if self.wait_for_dashboard(timeout=60):
-                log.info("Dashboard loaded after redirect.")
+            if self.wait_for_catalog(timeout=60, username=username, password=password):
+                log.info("Catalog loaded after redirect.")
                 return True
-            log.warning("Timed out waiting for catalog.")
+            log.warning("Timed out waiting for #%s.", SEARCH_BTN_ID)
             return False
 
         if not username or not password:
@@ -243,7 +306,8 @@ class BrowserSession:
 
         log.info("Session expired — attempting one-time auto-login…")
         self.auto_fill_credentials(username, password)
-        if self.wait_for_dashboard(timeout=180):
+        self.goto(CATALOG_URL)
+        if self.wait_for_catalog(timeout=180, username=username, password=password):
             log.info("Auto-login succeeded.")
             return True
 
@@ -256,21 +320,21 @@ class BrowserSession:
         log.info("Opening browser%s…", " with auto-fill" if auto else " for manual login")
         log.info("Profile dir: %s", PROFILE_DIR)
 
-        self.goto(CATALOG_URL)
-        log.info("Navigated to catalog. Current URL: %s", self.url)
-
         if auto:
             self.auto_fill_credentials(username, password)
 
-        log.info("Waiting for dashboard (up to 5 min)…")
+        self.goto(CATALOG_URL)
+        log.info("Navigated to catalog. Current URL: %s", self.url)
+
+        log.info("Waiting for #%s (up to 5 min)…", SEARCH_BTN_ID)
         if not auto:
             log.info("  → Please log in manually in the browser window.")
 
-        if not self.wait_for_dashboard(timeout=300):
-            log.error("Dashboard not reached within 5 minutes.")
+        if not self.wait_for_catalog(timeout=300, username=username, password=password):
+            log.error("#%s not found within 5 minutes.", SEARCH_BTN_ID)
             sys.exit(1)
 
-        log.info("Dashboard reached. Session saved.")
+        log.info("Catalog ready. Session saved.")
         time.sleep(3)
 
     def _select_period(self, period_code: str) -> None:
@@ -289,10 +353,7 @@ class BrowserSession:
         self._select_period(period_code)
 
         btn = WebDriverWait(self.driver, 15).until(
-            EC.element_to_be_clickable((
-                By.XPATH,
-                "//button[contains(., 'Actualizar') or contains(., 'Update Courses')]",
-            ))
+            EC.element_to_be_clickable((By.ID, SEARCH_BTN_ID))
         )
         btn.click()
         WebDriverWait(self.driver, 20).until(
@@ -312,6 +373,16 @@ class BrowserSession:
     def _extract_page(self) -> list[dict]:
         raw = self.driver.execute_script(f"return ({EXTRACT_JS})()")
         return raw if isinstance(raw, list) else []
+
+    def _click_next_page(self, next_btn) -> None:
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", next_btn,
+        )
+        time.sleep(0.4)
+        try:
+            next_btn.click()
+        except ElementClickInterceptedException:
+            self.driver.execute_script("arguments[0].click();", next_btn)
 
     def scrape_all(self, period: str, period_code: str, CourseRow) -> list:
         """Scrape all pages for the loaded period. CourseRow is the dataclass type."""
@@ -360,7 +431,7 @@ class BrowserSession:
                 break
 
             last_nrc = all_rows[-1].nrc if all_rows else ""
-            next_btn.click()
+            self._click_next_page(next_btn)
 
             try:
                 WebDriverWait(self.driver, 15).until(
@@ -379,7 +450,7 @@ class BrowserSession:
     def list_periods(self) -> list[dict]:
         self.goto(CATALOG_URL)
         WebDriverWait(self.driver, 20).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, "select"))
+            EC.visibility_of_element_located((By.ID, SEARCH_BTN_ID))
         )
         periods: list[dict] = []
         for sel_el in self.driver.find_elements(By.CSS_SELECTOR, "select"):
