@@ -9,7 +9,9 @@ cd predictor
 pip install -r requirements.txt
 ```
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` in `.env`.
+Set `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` (service_role) in `.env`.
+`SUPABASE_KEY` (anon) is an optional fallback; without the service key,
+`user_progress` exports as empty under RLS and `planned_count` stays 0.
 
 ## Usage
 

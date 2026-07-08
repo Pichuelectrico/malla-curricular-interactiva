@@ -52,7 +52,8 @@ Universidad San Francisco de Quito (USFQ). Combina el m\u00f3dulo h\u00edbrido
 12. Aplicaci\u00f3n del modelo
 13. Backtesting (opcional)
 14. Exportaci\u00f3n y resultados
-15. Resumen final''')
+15. Diagn\u00f3stico de ajuste (F1 / margen de error)
+16. Resumen final''')
 
 heading(2, "Par\u00e1metros de ejecuci\u00f3n")
 
@@ -61,8 +62,8 @@ Cambie `FACULTY` para filtrar por facultad (ej. `"CMP"`, `"MAC"`) o d\u00e9jelo
 en `None` para procesar todas las facultades.''')
 
 code('''# --- Parametros --------------------------------------------------------
-FACULTY: str | None = "MAC"         # None = todas las facultades
-SKIP_EXPORT: bool = True            # True = usa datos cacheados en predictor/output/
+FACULTY: str | None = None          # None = todas las facultades
+SKIP_EXPORT: bool = False           # False = re-exporta (necesita SERVICE_KEY para planned)
 SKIP_CALIBRATION: bool = False      # False = recalibrar tasas de transicion
 SKIP_BACKTEST: bool = True          # True = saltar backtesting (es lento)
 SKIP_GBR: bool = False              # False = entrenar GBR si hay datos suficientes
@@ -97,6 +98,7 @@ import seaborn as sns
 import requests
 from dotenv import load_dotenv
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import f1_score, mean_absolute_error
 
 warnings.filterwarnings("ignore")
 sns.set_theme(style="whitegrid")
@@ -113,9 +115,14 @@ PERIODS_JSON = REPO_ROOT / "offer-scraper" / "periods.json"
 sys.path.insert(0, str(PREDICTOR_DIR))
 
 load_dotenv(PREDICTOR_DIR / ".env")
+load_dotenv(NOTEBOOK_DIR / ".env", override=True)
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", os.environ.get("SUPABASE_SERVICE_KEY", ""))
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip()
+# Prefer service_role so user_progress RLS does not hide planned/in_progress counts.
+SUPABASE_KEY = (
+    os.environ.get("SUPABASE_SERVICE_KEY", "").strip()
+    or os.environ.get("SUPABASE_KEY", "").strip()
+)
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 PUBLIC_DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
@@ -123,7 +130,8 @@ PUBLIC_DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
 print("Configuracion cargada")
 print(f"  REPO_ROOT = {REPO_ROOT}")
 print(f"  OUTPUT_DIR = {OUTPUT_DIR}")
-print(f"  SUPABASE_URL = {'***' if SUPABASE_URL else 'no configurada'}")''')
+print(f"  SUPABASE_URL = {'***' if SUPABASE_URL else 'no configurada'}")
+print(f"  SUPABASE_SERVICE_KEY = {'set' if os.environ.get('SUPABASE_SERVICE_KEY') else 'MISSING (user_progress may be empty)'}")''')
 
 heading(2, "Constantes globales")
 
@@ -164,7 +172,11 @@ heading(2, "1. Exportaci\u00f3n de datos desde Supabase")
 
 md('''Se descargan las tablas `user_progress`, `course_offer_history` y `course_offer`
 desde Supabase via REST API. Si `SKIP_EXPORT=True` se usan los archivos JSON
-cacheados en `predictor/output/`.''')
+cacheados en `predictor/output/`.
+
+**Requiere `SUPABASE_SERVICE_KEY`** (service_role) en `.env` para exportar
+`user_progress` completo (bypass RLS). Con solo la anon key el export llega
+vacío y `planned_count` queda en 0.''')
 
 code('''def fetch_table(table: str, select: str = "*") -> list[dict]:
     if not SUPABASE_URL or not SUPABASE_KEY:
@@ -223,6 +235,12 @@ def export_all(out_dir: Path | None = None) -> dict[str, Path]:
             json.dump(data, f, indent=2, default=str)
         paths[table] = path
         print(f"Exportados {len(data)} registros -> {path}")
+        if table == "user_progress" and len(data) == 0:
+            print(
+                "ADVERTENCIA: user_progress vacio. "
+                "Configura SUPABASE_SERVICE_KEY (service_role) en .env; "
+                "sin eso planned_count / in_progress_count seran 0."
+            )
     meta = fetch_offer_metadata_()
     meta_path = dest / "offer_metadata.json"
     with open(meta_path, "w", encoding="utf-8") as f:
@@ -1346,18 +1364,41 @@ def compute_demand_prediction(
     )
     return estimated, sections, trend''')
 
-code('''test_planned = 5.0
-test_inflow_hist = 30.0
-test_inflow_curs = 10.0
+code('''DEMO_COURSE = "CMP-4005"
+test_inflow_hist = 30.0  # demo: inflow historico de ejemplo (DAG real llega en features)
+
+# Conteos reales desde user_progress.json (export con SERVICE_KEY)
+_demo_planned: dict[str, int] = defaultdict(int)
+_demo_cursando: dict[str, int] = defaultdict(int)
+_up = OUTPUT_DIR / "user_progress.json"
+if _up.exists():
+    with open(_up, encoding="utf-8") as _f:
+        for _r in json.load(_f):
+            for _cid in _r.get("planned_courses") or []:
+                _demo_planned[normalize_course_code(str(_cid))] += 1
+            for _cid in _r.get("in_progress_courses") or []:
+                _demo_cursando[normalize_course_code(str(_cid))] += 1
+
+demo_planned_count = float(_demo_planned.get(DEMO_COURSE, 0))
+demo_inflow_curs = float(_demo_cursando.get(DEMO_COURSE, 0))
+print(f"Plataforma {DEMO_COURSE}: planned={demo_planned_count:.0f}, in_progress={demo_inflow_curs:.0f}")
+if demo_planned_count == 0:
+    print("  ADVERTENCIA: planned=0 → re-exporta con SUPABASE_SERVICE_KEY y SKIP_EXPORT=False")
+
+test_planned = demo_planned_count if demo_planned_count > 0 else 5.0
+test_inflow_curs = demo_inflow_curs if demo_inflow_curs > 0 else 10.0
+
 if all_stats:
-    sample_code = next(iter(all_stats))
+    sample_code = DEMO_COURSE if DEMO_COURSE in all_stats else next(iter(all_stats))
     sample_hist = all_stats[sample_code]
-    est, sec, trend = compute_demand_prediction(test_planned, test_inflow_hist, test_inflow_curs, sample_hist)
+    est, sec, trend = compute_demand_prediction(
+        test_planned, test_inflow_hist, test_inflow_curs, sample_hist,
+    )
     print(f"Curso con historia ({sample_code}): estimado={est}, secciones={sec}, tendencia={trend}")
     print(f"  avg_students={sample_hist.avg_students:.0f}, "
           f"estimated_next={sample_hist.estimated_next_students}, "
-          f"num_periods={sample_hist.num_periods}")
-est_no, sec_no, trend_no = compute_demand_prediction(test_planned, test_inflow_hist, test_inflow_curs, None)
+          f"num_periods={sample_hist.num_periods}, planned_used={test_planned}")
+est_no, sec_no, trend_no = compute_demand_prediction(5.0, 30.0, 10.0, None)
 print(f"Curso SIN historia: estimado={est_no}, secciones={sec_no}, tendencia={trend_no}")
 print("  (deberia ser planned + inflow_hist + inflow_curs = 45)")''')
 
@@ -1365,7 +1406,7 @@ heading(3, "Visualización de los pesos de la fórmula")
 
 md('''Los gráficos siguientes muestran cómo se distribuyen los pesos en la estimación
 de estudiantes y secciones, y una descomposición de la contribución de cada
-componente al estimado final usando un ejemplo real.''')
+componente usando **CMP-4005** y su `planned_count` real de plataforma.''')
 
 code('''fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
 
@@ -1387,11 +1428,13 @@ axes[1].pie(sec_vals, labels=sec_labels, autopct="%1.0f%%",
             colors=colors_c, startangle=90, textprops={"fontsize": 8})
 axes[1].set_title("Pesos: Estimación de Secciones", fontsize=13, fontweight="bold")
 
-# 3. Waterfall: contribucion con dato real
+# 3. Waterfall: historia real + planned de plataforma
 if all_stats:
-    sample_code = next(iter(all_stats))
+    sample_code = DEMO_COURSE if DEMO_COURSE in all_stats else next(iter(all_stats))
     sample_hist = all_stats[sample_code]
-    tp = 5.0; ih = 30.0; ic = 10.0
+    tp = demo_planned_count if sample_code == DEMO_COURSE and demo_planned_count > 0 else test_planned
+    ih = test_inflow_hist
+    ic = demo_inflow_curs if sample_code == DEMO_COURSE else test_inflow_curs
     comps = {
         "est_next\\nx0.45": sample_hist.estimated_next_students * W_EST_NEXT,
         "avg\\nx0.15": sample_hist.avg_students * W_AVG_STUDENTS,
@@ -1406,13 +1449,16 @@ if all_stats:
     axes[2].set_xticks(range(6))
     axes[2].set_xticklabels(list(comps.keys()) + ["Total"], fontsize=8)
     axes[2].set_ylabel("Estudiantes")
-    axes[2].set_title(f"Descomposición: {sample_code[:12]}", fontsize=12)
+    axes[2].set_title(f"Descomposición: {sample_code} (planned={tp:.0f})", fontsize=11)
     for bar, val in zip(bars, vals + [total]):
-        axes[2].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
-                     f"{val:.0f}", ha="center", va="bottom", fontsize=8)
+        label = f"{val:.1f}" if 0 < abs(val) < 1 else f"{val:.0f}"
+        axes[2].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
+                     label, ha="center", va="bottom", fontsize=8)
 
 plt.tight_layout()
-plt.show()''')
+plt.show()
+print(f"Nota: planned×5% = {tp * W_PLANNED:.2f} estudiantes (peso bajo a proposito)."
+      if 'tp' in dir() else "")''')
 
 # ===========================================================================
 # CELL 8 — Feature engineering
@@ -1644,40 +1690,150 @@ code('''FEATURE_COLS = [
 ]
 
 
-def train_demand_model(features: pd.DataFrame) -> GradientBoostingRegressor | None:
+DEMAND_BIN_EDGES = [0, 25, 50, 100, 200, 400, np.inf]
+DEMAND_BIN_LABELS = ["0-24", "25-49", "50-99", "100-199", "200-399", "400+"]
+
+
+def _prepare_gbr_xy(features: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series, str] | None:
+    """Returns (X, y, label_source) or None if insufficient labeled rows."""
     labeled = features[features["num_periods"] > 0].copy()
     if len(labeled) < 20:
         return None
+    label_source = "estimated_students"
     if "actual_students_at_target" in labeled.columns:
         has_actual = labeled["actual_students_at_target"].fillna(0) > 0
         if has_actual.sum() >= 20:
-            train_df = labeled[has_actual].copy()
-            y = train_df["actual_students_at_target"].fillna(0)
+            labeled = labeled[has_actual].copy()
+            y = labeled["actual_students_at_target"].fillna(0)
+            label_source = "actual_students_at_target"
         else:
-            train_df = labeled
             y = labeled["estimated_students"].fillna(0)
     else:
-        train_df = labeled
         y = labeled["estimated_students"].fillna(0)
-    X = train_df[FEATURE_COLS].fillna(0)
+    X = labeled[FEATURE_COLS].fillna(0)
     if y.nunique() < 2:
         return None
-    if "target_period_code" in train_df.columns and train_df["target_period_code"].nunique() > 1:
-        sorted_df = train_df.sort_values("target_period_code")
-        split_idx = max(1, int(len(sorted_df) * 0.8))
-        X_train = X.iloc[:split_idx]
-        y_train = y.iloc[:split_idx]
-    else:
-        X_train = X
-        y_train = y
+    return X, y, label_source
+
+
+def _train_val_split(
+    X: pd.DataFrame,
+    y: pd.Series,
+    features_index: pd.Index,
+    features: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
+    """80/20 split; prefer temporal by target_period_code when available."""
+    if "target_period_code" in features.columns and features.loc[X.index, "target_period_code"].nunique() > 1:
+        order = features.loc[X.index].sort_values("target_period_code").index
+        Xo, yo = X.loc[order], y.loc[order]
+        split_idx = max(1, int(len(Xo) * 0.8))
+        if split_idx >= len(Xo):
+            split_idx = len(Xo) - 1
+        return Xo.iloc[:split_idx], yo.iloc[:split_idx], Xo.iloc[split_idx:], yo.iloc[split_idx:]
+    split_idx = max(1, int(len(X) * 0.8))
+    if split_idx >= len(X):
+        split_idx = len(X) - 1
+    return X.iloc[:split_idx], y.iloc[:split_idx], X.iloc[split_idx:], y.iloc[split_idx:]
+
+
+def demand_to_bin(values: np.ndarray) -> np.ndarray:
+    return pd.cut(
+        np.asarray(values, dtype=float),
+        bins=DEMAND_BIN_EDGES,
+        labels=DEMAND_BIN_LABELS,
+        right=False,
+        include_lowest=True,
+    ).astype(str)
+
+
+def train_demand_model(features: pd.DataFrame) -> GradientBoostingRegressor | None:
+    prepared = _prepare_gbr_xy(features)
+    if prepared is None:
+        return None
+    X, y, _ = prepared
+    X_train, y_train, X_val, y_val = _train_val_split(X, y, X.index, features)
     model = GradientBoostingRegressor(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
-    return model''')
+    return model
+
+
+def evaluate_gbr_fit(
+    features: pd.DataFrame,
+    model: GradientBoostingRegressor | None = None,
+) -> dict:
+    """Train/val diagnosis: MAE mean±std and F1 on demand bins (over/underfit)."""
+    prepared = _prepare_gbr_xy(features)
+    if prepared is None:
+        return {"status": "skipped", "reason": "datos etiquetados insuficientes (<20)"}
+    X, y, label_source = prepared
+    X_train, y_train, X_val, y_val = _train_val_split(X, y, X.index, features)
+    if len(X_val) < 1:
+        return {"status": "skipped", "reason": "split de validacion vacio"}
+
+    if model is None:
+        model = GradientBoostingRegressor(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
+
+    pred_train = np.clip(model.predict(X_train), 0, None)
+    pred_val = np.clip(model.predict(X_val), 0, None)
+    err_train = np.abs(y_train.to_numpy(dtype=float) - pred_train)
+    err_val = np.abs(y_val.to_numpy(dtype=float) - pred_val)
+
+    bins_true_tr = demand_to_bin(y_train.to_numpy())
+    bins_pred_tr = demand_to_bin(pred_train)
+    bins_true_va = demand_to_bin(y_val.to_numpy())
+    bins_pred_va = demand_to_bin(pred_val)
+    f1_train = float(f1_score(bins_true_tr, bins_pred_tr, average="weighted", zero_division=0))
+    f1_val = float(f1_score(bins_true_va, bins_pred_va, average="weighted", zero_division=0))
+    f1_gap = f1_train - f1_val
+
+    # Heuristicas: bajo F1 en ambos → underfitting (poco señal/datos);
+    # train alto y gap grande → overfitting.
+    if f1_train < 0.55 and f1_val < 0.55:
+        fit_label = "underfitting"
+        fit_reason = (
+            "F1 train y val bajos: el modelo no captura bien el nivel de demanda "
+            "(suele deberse a pocos datos etiquetados / poco planned / labels debiles)."
+        )
+    elif f1_gap > 0.15 and f1_train >= 0.70:
+        fit_label = "overfitting"
+        fit_reason = (
+            "F1 train alto y F1 val claramente peor: el modelo memoriza el train "
+            "y generaliza mal."
+        )
+    else:
+        fit_label = "aceptable"
+        fit_reason = "Gap train/val moderado; el ajuste no muestra over/underfitting extremo."
+
+    return {
+        "status": "ok",
+        "label_source": label_source,
+        "n_train": int(len(X_train)),
+        "n_val": int(len(X_val)),
+        "mae_train": float(mean_absolute_error(y_train, pred_train)),
+        "mae_val": float(mean_absolute_error(y_val, pred_val)),
+        "error_mean_val": float(np.mean(err_val)),
+        "error_std_val": float(np.std(err_val)),
+        "error_mean_train": float(np.mean(err_train)),
+        "error_std_train": float(np.std(err_train)),
+        "margin_low": float(max(0.0, np.mean(err_val) - np.std(err_val))),
+        "margin_high": float(np.mean(err_val) + np.std(err_val)),
+        "f1_train": f1_train,
+        "f1_val": f1_val,
+        "f1_gap": float(f1_gap),
+        "fit_label": fit_label,
+        "fit_reason": fit_reason,
+        "y_val": y_val.to_numpy(dtype=float),
+        "pred_val": pred_val,
+        "err_val": err_val,
+    }''')
 
 code('''model = None
+fit_report: dict = {"status": "skipped", "reason": "GBR no ejecutado"}
 if not SKIP_GBR:
     print("Entrenando modelo GBR...")
     model = train_demand_model(features)
+    fit_report = evaluate_gbr_fit(features, model=model)
     if model is not None:
         print(f"Modelo GBR entrenado: {len(model.feature_importances_)} features")
         imp_df = pd.DataFrame({
@@ -2061,9 +2217,95 @@ plt.tight_layout()
 plt.show()''')
 
 # ===========================================================================
-# CELL 13 — Final summary
+# CELL 12b — Fit diagnosis (before final summary)
 # ===========================================================================
-heading(2, "13. Resumen final")
+heading(2, "15. Diagn\u00f3stico de ajuste (over/underfitting)")
+
+md('''Como la demanda es **continua** (estudiantes), no hay un F1 \"nativo\".
+Convertimos el cupo predicho/real a **bins de demanda** y calculamos F1
+ponderado en train vs validaci\u00f3n (80/20):
+
+| Se\u00f1al | Interpretaci\u00f3n |
+|---|---|
+| F1 train y val bajos | **Underfitting** (poco dato / poca se\u00f1al; t\u00edpico con poco `planned`) |
+| F1 train alto, F1 val bajo (gap grande) | **Overfitting** |
+| Gap moderado | Ajuste **aceptable** |
+
+Adem\u00e1s reportamos el error absoluto en val: **media \u00b1 desviaci\u00f3n est\u00e1ndar**
+como margen de maniobra alrededor de la predicci\u00f3n.''')
+
+code('''print("=" * 60)
+print("DIAGNOSTICO DE AJUSTE GBR")
+print("=" * 60)
+
+if fit_report.get("status") != "ok":
+    print(f"  Saltado: {fit_report.get('reason', fit_report)}")
+    fit_report = fit_report if isinstance(fit_report, dict) else {"status": "skipped"}
+else:
+    fr = fit_report
+    print(f"  Label: {fr['label_source']}")
+    if fr["label_source"] == "estimated_students":
+        print(
+            "  NOTA: el label es la propia formula hibrida (pseudo-label). "
+            "F1 alto no implica buen poder predictivo real; "
+            "con pocos actual_students_at_target el diagnostico tiende a "
+            "verse 'aceptable' aunque haya poca senal de plataforma (planned)."
+        )
+    print(f"  n_train={fr['n_train']}  n_val={fr['n_val']}")
+    print()
+    print("  --- F1 (bins de demanda) ---")
+    print(f"  F1 train (weighted): {fr['f1_train']:.3f}")
+    print(f"  F1 val   (weighted): {fr['f1_val']:.3f}")
+    print(f"  Gap (train - val):   {fr['f1_gap']:+.3f}")
+    print(f"  Diagnostico: {fr['fit_label'].upper()}")
+    print(f"  Motivo: {fr['fit_reason']}")
+    print()
+    print("  --- Error absoluto (|y - yhat|) ---")
+    print(f"  Train: media={fr['error_mean_train']:.1f}  std={fr['error_std_train']:.1f}")
+    print(f"  Val:   media={fr['error_mean_val']:.1f}  std={fr['error_std_val']:.1f}")
+    print(
+        f"  Margen de maniobra (val): "
+        f"{fr['error_mean_val']:.1f} ± {fr['error_std_val']:.1f} estudiantes "
+        f"[{fr['margin_low']:.1f}, {fr['margin_high']:.1f}]"
+    )
+    print(
+        "  Interpretacion: alrededor de cada prediccion, espera un error tipico "
+        f"de ~{fr['error_mean_val']:.0f} asientos, con dispersion ±{fr['error_std_val']:.0f}."
+    )
+
+    fig, axes = plt.subplots(1, 3, figsize=(16, 4.5))
+    # F1 bars
+    axes[0].bar(["F1 train", "F1 val"], [fr["f1_train"], fr["f1_val"]],
+                color=["#3498DB", "#E67E22"], edgecolor="white")
+    axes[0].set_ylim(0, 1.05)
+    axes[0].set_title(f"F1 bins — {fr['fit_label']}")
+    for i, v in enumerate([fr["f1_train"], fr["f1_val"]]):
+        axes[0].text(i, v + 0.02, f"{v:.2f}", ha="center")
+
+    # Error distribution val
+    axes[1].hist(fr["err_val"], bins=30, color="#9B59B6", edgecolor="white", alpha=0.85)
+    axes[1].axvline(fr["error_mean_val"], color="#2C3E50", ls="--", label="media")
+    axes[1].axvline(fr["margin_low"], color="#27AE60", ls=":", label="media-std")
+    axes[1].axvline(fr["margin_high"], color="#C0392B", ls=":", label="media+std")
+    axes[1].set_title("Error absoluto (val)")
+    axes[1].set_xlabel("|y − ŷ| estudiantes")
+    axes[1].legend(fontsize=8)
+
+    # Pred vs actual val
+    axes[2].scatter(fr["y_val"], fr["pred_val"], alpha=0.45, s=18, c="#2980B9")
+    lo = min(fr["y_val"].min(), fr["pred_val"].min())
+    hi = max(fr["y_val"].max(), fr["pred_val"].max())
+    axes[2].plot([lo, hi], [lo, hi], "k--", lw=1)
+    axes[2].set_xlabel("Real / label")
+    axes[2].set_ylabel("Predicho")
+    axes[2].set_title("Val: predicho vs label")
+    plt.tight_layout()
+    plt.show()''')
+
+# ===========================================================================
+# CELL 14 — Final summary
+# ===========================================================================
+heading(2, "16. Resumen final")
 
 md('''### Resultados del pipeline
 
@@ -2071,6 +2313,7 @@ md('''### Resultados del pipeline
 - Se calcularon estad\u00edsticas hist\u00f3ricas, propagaci\u00f3n DAG y demanda estimada
 - Se calibraron tasas de transici\u00f3n emp\u00edricas con shrinkage Bayesiano
 - Se aplic\u00f3 la f\u00f3rmula h\u00edbrida + GBR (si aplica)
+- Se diagnostic\u00f3 over/underfitting con F1 por bins de demanda y margen media\pm std
 - Los resultados se exportaron a JSON para el dashboard web''')
 
 code('''print("=" * 60)
@@ -2084,6 +2327,17 @@ print(f"  Cursos procesados: {len(result)}")
 print(f"  Cursos con GBR: {result['gbr_available'].sum() if 'gbr_available' in result.columns else 0}")
 print(f"  Exportado a: {out_path}")
 print(f"  Dashboard: {dash_path}")
+print()
+
+if fit_report.get("status") == "ok":
+    fr = fit_report
+    print("Diagnostico del modelo:")
+    print(f"  Fit: {fr['fit_label'].upper()}  |  F1 train={fr['f1_train']:.3f}  F1 val={fr['f1_val']:.3f}  gap={fr['f1_gap']:+.3f}")
+    print(f"  Error val: {fr['error_mean_val']:.1f} ± {fr['error_std_val']:.1f} estudiantes "
+          f"(margen [{fr['margin_low']:.1f}, {fr['margin_high']:.1f}])")
+    print(f"  {fr['fit_reason']}")
+else:
+    print(f"Diagnostico del modelo: no disponible ({fit_report.get('reason', 'n/a')})")
 print()
 
 print("Top 10 cursos por demanda estimada:")

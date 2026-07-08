@@ -27,3 +27,5 @@ node_modules
 skills-lock.json
 .agents/
 supabase/.temp/
+notebook_predictor/.quarto/
+notebook_predictor/predictor.pdf
