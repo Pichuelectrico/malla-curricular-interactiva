@@ -14,8 +14,12 @@ OUTPUT_DIR = ROOT / "output"
 PUBLIC_DASHBOARD_JSON = REPO_ROOT / "frontend" / "public" / "data" / "predictor-dashboard.json"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", os.environ.get("SUPABASE_SERVICE_KEY", ""))
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip()
+# Prefer service_role so user_progress RLS does not hide planned/in_progress counts.
+SUPABASE_KEY = (
+    os.environ.get("SUPABASE_SERVICE_KEY", "").strip()
+    or os.environ.get("SUPABASE_KEY", "").strip()
+)
 
 # Aligned with frontend/lib/demandPrediction.ts and curriculumGraph.ts
 STUDENTS_PER_SECTION = 25

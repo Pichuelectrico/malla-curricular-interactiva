@@ -67,6 +67,13 @@ def export_all(out_dir: Path | None = None) -> dict[str, Path]:
             json.dump(data, f, indent=2, default=str)
         paths[table] = path
         print(f"Exported {len(data)} rows → {path}")
+        if table == "user_progress" and len(data) == 0:
+            print(
+                "WARNING: user_progress is empty. "
+                "Set SUPABASE_SERVICE_KEY (service_role) in .env and ensure "
+                "GRANT SELECT ON user_progress TO service_role; "
+                "otherwise planned_count / in_progress_count will be 0."
+            )
 
     meta = fetch_offer_metadata()
     meta_path = dest / "offer_metadata.json"
