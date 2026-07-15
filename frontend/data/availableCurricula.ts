@@ -41,17 +41,17 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
   },
   {
-    id: "arq-usfq",
-    slug: "malla-arq",
+    id: "aqq-usfq",
+    slug: "malla-aqq",
     name: "Arquitectura",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 145,
-    courses: 47,
+    credits: 150,
+    courses: 52,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
-      const res = await fetch(`${base}data/Malla-ARQ.json`);
-      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-ARQ.json');
+      const res = await fetch(`${base}data/Malla-AQQ.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-AQQ.json');
       return { default: await res.json() };
     },
   },
