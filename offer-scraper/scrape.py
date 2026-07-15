@@ -68,9 +68,23 @@ log = logging.getLogger("offer-scraper")
 
 # Columns that exist in the course_offer table
 DB_FIELDS = [
-    "nrc", "course_code", "title", "type", "group_letters", "paralelo",
-    "days", "start_time", "end_time", "teacher", "credits", "college",
-    "available", "total", "period", "period_code", "last_updated",
+    "nrc",
+    "course_code",
+    "title",
+    "type",
+    "group_letters",
+    "paralelo",
+    "days",
+    "start_time",
+    "end_time",
+    "teacher",
+    "credits",
+    "college",
+    "available",
+    "total",
+    "period",
+    "period_code",
+    "last_updated",
 ]
 
 HISTORY_FIELDS = [f for f in DB_FIELDS if f != "last_updated"] + ["scraped_at"]
@@ -106,6 +120,7 @@ class CourseRow:
 
 # ─── browser (Selenium) ─────────────────────────────────────────────────────
 
+
 def cmd_login(args) -> None:
     username, password = _usfq_creds()
     session = BrowserSession(headed=True)
@@ -115,15 +130,17 @@ def cmd_login(args) -> None:
         session.close()
 
 
-def _supabase_headers(supa_key: str, *, upsert: bool = False, on_conflict: str = "") -> dict:
+def _supabase_headers(
+    supa_key: str, *, upsert: bool = False, on_conflict: str = ""
+) -> dict:
     prefer = "return=minimal"
     if upsert:
         prefer = f"resolution=merge-duplicates,{prefer}"
     headers = {
-        "apikey":        supa_key,
+        "apikey": supa_key,
         "Authorization": f"Bearer {supa_key}",
-        "Content-Type":  "application/json",
-        "Prefer":        prefer,
+        "Content-Type": "application/json",
+        "Prefer": prefer,
     }
     return headers
 
@@ -158,7 +175,7 @@ def _batch_post(
     upserted = 0
     errors = 0
     for i in range(0, len(records), batch_size):
-        batch = records[i:i + batch_size]
+        batch = records[i : i + batch_size]
         post_url = url
         if on_conflict:
             post_url = f"{url}?on_conflict={on_conflict}"
@@ -167,14 +184,19 @@ def _batch_post(
             upserted += len(batch)
         else:
             errors += 1
-            log.error("  Batch %d failed: %s %s", i // batch_size + 1,
-                      resp.status_code, resp.text[:200])
+            log.error(
+                "  Batch %d failed: %s %s",
+                i // batch_size + 1,
+                resp.status_code,
+                resp.text[:200],
+            )
             if errors > 3:
                 break
     return upserted, errors
 
 
 # ─── Supabase upload via REST API (no SDK needed) ────────────────────────────
+
 
 def upload_to_supabase(
     courses: list[CourseRow],
@@ -188,7 +210,9 @@ def upload_to_supabase(
     headers = _supabase_headers(supa_key, upsert=True)
     records = _course_records(courses, include_last_updated=True)
     total_upserted, _ = _batch_post(
-        f"{supa_url}/rest/v1/course_offer", records, headers,
+        f"{supa_url}/rest/v1/course_offer",
+        records,
+        headers,
     )
     log.info("Upload complete: %d / %d courses.", total_upserted, len(records))
 
@@ -201,7 +225,9 @@ def delete_history_period(supa_url: str, supa_key: str, period_code: str) -> Non
         timeout=60,
     )
     if resp.status_code not in (200, 204):
-        log.warning("delete history %s: %s %s", period_code, resp.status_code, resp.text[:200])
+        log.warning(
+            "delete history %s: %s %s", period_code, resp.status_code, resp.text[:200]
+        )
     else:
         log.info("Cleared history rows for period %s.", period_code)
 
@@ -263,11 +289,11 @@ def update_offer_metadata(
 ) -> None:
     now_iso = datetime.now(timezone.utc).isoformat()
     payload = {
-        "id":                   1,
-        "current_period_code":  period_code,
+        "id": 1,
+        "current_period_code": period_code,
         "current_period_label": period_label,
-        "last_scraped_at":      last_scraped_at or now_iso,
-        "updated_at":           now_iso,
+        "last_scraped_at": last_scraped_at or now_iso,
+        "updated_at": now_iso,
     }
     if last_rollover_at:
         payload["last_rollover_at"] = last_rollover_at
@@ -280,8 +306,9 @@ def update_offer_metadata(
         timeout=15,
     )
     if resp.status_code not in (200, 201, 204):
-        log.warning("Failed to update offer_metadata: %s %s",
-                    resp.status_code, resp.text[:200])
+        log.warning(
+            "Failed to update offer_metadata: %s %s", resp.status_code, resp.text[:200]
+        )
 
 
 def fetch_current_offer(supa_url: str, supa_key: str) -> list[dict]:
@@ -308,25 +335,27 @@ def archive_current_offer_to_history(supa_url: str, supa_key: str) -> int:
     headers = _supabase_headers(supa_key)
     history_rows = []
     for r in rows:
-        history_rows.append({
-            "nrc":            r.get("nrc"),
-            "course_code":    r.get("course_code"),
-            "title":          r.get("title"),
-            "type":           r.get("type"),
-            "group_letters":  r.get("group_letters", []),
-            "paralelo":       r.get("paralelo"),
-            "days":           r.get("days", []),
-            "start_time":     r.get("start_time"),
-            "end_time":       r.get("end_time"),
-            "teacher":        r.get("teacher"),
-            "credits":        r.get("credits"),
-            "college":        r.get("college"),
-            "available":      r.get("available"),
-            "total":          r.get("total"),
-            "period":         r.get("period"),
-            "period_code":    r.get("period_code"),
-            "scraped_at":     now_iso,
-        })
+        history_rows.append(
+            {
+                "nrc": r.get("nrc"),
+                "course_code": r.get("course_code"),
+                "title": r.get("title"),
+                "type": r.get("type"),
+                "group_letters": r.get("group_letters", []),
+                "paralelo": r.get("paralelo"),
+                "days": r.get("days", []),
+                "start_time": r.get("start_time"),
+                "end_time": r.get("end_time"),
+                "teacher": r.get("teacher"),
+                "credits": r.get("credits"),
+                "college": r.get("college"),
+                "available": r.get("available"),
+                "total": r.get("total"),
+                "period": r.get("period"),
+                "period_code": r.get("period_code"),
+                "scraped_at": now_iso,
+            }
+        )
 
     upserted, _ = _batch_post(
         f"{supa_url}/rest/v1/course_offer_history",
@@ -358,10 +387,13 @@ def load_periods_config(path: str) -> list[dict]:
 
 # ─── main ─────────────────────────────────────────────────────────────────────
 
+
 def cmd_scrape(args) -> None:
     supa_url = os.environ.get("SUPABASE_URL", "")
-    supa_key = os.environ.get("SUPABASE_KEY") or os.environ.get("SUPABASE_SERVICE_KEY", "")
-    period      = args.period
+    supa_key = os.environ.get("SUPABASE_KEY") or os.environ.get(
+        "SUPABASE_SERVICE_KEY", ""
+    )
+    period = args.period
     period_code = args.period_code
 
     if not supa_url or not supa_key:
@@ -394,24 +426,31 @@ def cmd_scrape(args) -> None:
 
     upload_to_supabase(courses, supa_url, supa_key)
     update_offer_metadata(
-        supa_url, supa_key,
+        supa_url,
+        supa_key,
         period_code=period_code,
         period_label=period,
     )
     log.info(
         "Done. %d courses saved for %s (%s).",
-        len(courses), period, period_code,
+        len(courses),
+        period,
+        period_code,
     )
 
 
 def cmd_backfill(args) -> None:
     supa_url = os.environ.get("SUPABASE_URL", "")
-    supa_key = os.environ.get("SUPABASE_KEY") or os.environ.get("SUPABASE_SERVICE_KEY", "")
+    supa_key = os.environ.get("SUPABASE_KEY") or os.environ.get(
+        "SUPABASE_SERVICE_KEY", ""
+    )
     if not supa_url or not supa_key:
         log.error("SUPABASE_URL and SUPABASE_KEY must be set in .env")
         sys.exit(1)
 
-    periods_path = args.periods or os.path.join(os.path.dirname(__file__), "periods.json")
+    periods_path = args.periods or os.path.join(
+        os.path.dirname(__file__), "periods.json"
+    )
     all_periods = load_periods_config(periods_path)
 
     if args.only:
@@ -454,8 +493,10 @@ def cmd_backfill(args) -> None:
 
 def cmd_rollover(args) -> None:
     supa_url = os.environ.get("SUPABASE_URL", "")
-    supa_key = os.environ.get("SUPABASE_KEY") or os.environ.get("SUPABASE_SERVICE_KEY", "")
-    period      = args.period
+    supa_key = os.environ.get("SUPABASE_KEY") or os.environ.get(
+        "SUPABASE_SERVICE_KEY", ""
+    )
+    period = args.period
     period_code = args.period_code
 
     if not supa_url or not supa_key:
@@ -467,14 +508,17 @@ def cmd_rollover(args) -> None:
     if current_code and current_code == period_code:
         log.info(
             "No-op: current period is already %s (%s).",
-            meta.get("current_period_label"), period_code,
+            meta.get("current_period_label"),
+            period_code,
         )
         return
 
     current_rows = fetch_current_offer(supa_url, supa_key)
     log.info(
         "Rollover plan: archive %d rows → scrape %s (%s) → replace course_offer",
-        len(current_rows), period, period_code,
+        len(current_rows),
+        period,
+        period_code,
     )
 
     if not args.yes:
@@ -495,7 +539,9 @@ def cmd_rollover(args) -> None:
         session.close()
 
     if not courses:
-        log.error("Scrape returned 0 courses — aborting rollover (course_offer unchanged).")
+        log.error(
+            "Scrape returned 0 courses — aborting rollover (course_offer unchanged)."
+        )
         sys.exit(1)
 
     if current_rows:
@@ -505,13 +551,16 @@ def cmd_rollover(args) -> None:
     upload_to_supabase(courses, supa_url, supa_key)
     now_iso = datetime.now(timezone.utc).isoformat()
     update_offer_metadata(
-        supa_url, supa_key,
+        supa_url,
+        supa_key,
         period_code=period_code,
         period_label=period,
         last_scraped_at=now_iso,
         last_rollover_at=now_iso,
     )
-    log.info("Rollover complete: %d courses for %s (%s).", len(courses), period, period_code)
+    log.info(
+        "Rollover complete: %d courses for %s (%s).", len(courses), period, period_code
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -524,19 +573,23 @@ def build_parser() -> argparse.ArgumentParser:
     # ── scrape (default) ──────────────────────────────────────────────────────
     sc = sub.add_parser("scrape", help="Scrape and upload (default action)")
     sc.add_argument(
-        "--period-code", default=os.environ.get("PERIOD_CODE", "202610"),
+        "--period-code",
+        default=os.environ.get("PERIOD_CODE", "202610"),
         help="Numeric period code, e.g. 202610",
     )
     sc.add_argument(
-        "--period", default=os.environ.get("PERIOD", "Primer Semestre 2026/2027"),
+        "--period",
+        default=os.environ.get("PERIOD", "Primer Semestre 2026/2027"),
         help='Human-readable label, e.g. "Primer Semestre 2026/2027"',
     )
     sc.add_argument(
-        "--headless", action="store_true",
+        "--headless",
+        action="store_true",
         help="Run browser without a visible window (default: visible for debugging)",
     )
     sc.add_argument(
-        "--archive", action="store_true",
+        "--archive",
+        action="store_true",
         help="Also upsert into course_offer_history",
     )
 
@@ -551,30 +604,36 @@ def build_parser() -> argparse.ArgumentParser:
         help="Comma-separated period codes to backfill, e.g. 202510,202420",
     )
     bf.add_argument(
-        "--headless", action="store_true",
+        "--headless",
+        action="store_true",
         help="Run browser without a visible window (default: visible)",
     )
     bf.add_argument(
-        "--validate", action="store_true",
+        "--validate",
+        action="store_true",
         help="Warn if period codes are missing from catalog dropdown",
     )
 
     # ── rollover ──────────────────────────────────────────────────────────────
     ro = sub.add_parser("rollover", help="Archive current offer and scrape new period")
     ro.add_argument(
-        "--period-code", required=True,
+        "--period-code",
+        required=True,
         help="New period code, e.g. 202520",
     )
     ro.add_argument(
-        "--period", required=True,
+        "--period",
+        required=True,
         help='New period label, e.g. "Segundo Semestre 2025/2026"',
     )
     ro.add_argument(
-        "--headless", action="store_true",
+        "--headless",
+        action="store_true",
         help="Run browser without a visible window (default: visible)",
     )
     ro.add_argument(
-        "--yes", action="store_true",
+        "--yes",
+        action="store_true",
         help="Execute rollover (default is dry-run)",
     )
 

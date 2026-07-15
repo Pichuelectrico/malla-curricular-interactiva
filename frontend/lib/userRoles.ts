@@ -12,7 +12,7 @@ export function facultyFromCurriculumId(curriculumId: string): string | null {
 }
 
 export const ALL_FACULTIES = [
-  'ADM', 'ANT', 'ARQ', 'ARV', 'BTC', 'CIN', 'CMP', 'COM', 'JUR', 'DIC', 'DIT',
+  'ADM', 'ANT', 'AQQ', 'ARV', 'BTC', 'CIN', 'CMP', 'COM', 'JUR', 'DIC', 'DIT',
   'ECO', 'EDU', 'FIN', 'FIS', 'GST', 'HSP', 'AGE', 'ALI', 'ICV', 'IEL',
   'IIN', 'IME', 'INQ', 'LIT', 'MAC', 'MAK', 'MAT', 'MED', 'VET', 'NIT',
   'NUT', 'ODT', 'PER', 'POL', 'PSI', 'PSC', 'PUB',

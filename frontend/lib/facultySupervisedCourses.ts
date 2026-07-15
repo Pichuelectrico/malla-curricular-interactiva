@@ -9,6 +9,8 @@ import { normalizeOfferCourseCode } from './offerMatching';
  */
 export const FACULTY_OFFER_PREFIXES: Record<string, string[]> = {
   ECO: ['ECN'],
+  // Arquitectura: código de carrera/malla AQQ, pero los cursos usan prefijo ARQ.
+  AQQ: ['ARQ'],
 };
 
 /** Individual courses without a matching prefix but under faculty supervision. */

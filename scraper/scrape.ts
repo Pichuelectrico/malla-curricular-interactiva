@@ -81,7 +81,7 @@ interface RawCourse {
 const KNOWN_CAREERS: CareerEntry[] = [
   { code: "ADM", name: "Administración de Empresas" },
   { code: "ANT", name: "Antropología" },
-  { code: "ARQ", name: "Arquitectura" },
+  { code: "AQQ", name: "Arquitectura" },
   { code: "ARV", name: "Artes Visuales" },
   { code: "BTC", name: "Ingeniería en Biotecnología" },
   { code: "CIN", name: "Cine" },
