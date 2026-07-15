@@ -43793,17 +43793,17 @@ const availableCurricula = [
     }
   },
   {
-    id: "arq-usfq",
-    slug: "malla-arq",
+    id: "aqq-usfq",
+    slug: "malla-aqq",
     name: "Arquitectura",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 145,
-    courses: 47,
+    credits: 150,
+    courses: 52,
     dataLoader: async () => {
       const base = "/malla-curricular-interactiva/";
-      const res = await fetch(`${base}data/Malla-ARQ.json`);
-      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-ARQ.json");
+      const res = await fetch(`${base}data/Malla-AQQ.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-AQQ.json");
       return { default: await res.json() };
     }
   },
@@ -53982,7 +53982,9 @@ async function loadFacultyCurriculum(facultyCode) {
   return data.courses ?? [];
 }
 const FACULTY_OFFER_PREFIXES = {
-  ECO: ["ECN"]
+  ECO: ["ECN"],
+  // Arquitectura: código de carrera/malla AQQ, pero los cursos usan prefijo ARQ.
+  AQQ: ["ARQ"]
 };
 const FACULTY_EXTRA_SUPERVISED_CODES = {};
 function offerPrefixesForFaculty(facultyCode) {
@@ -55480,7 +55482,7 @@ function facultyFromCurriculumId(curriculumId) {
 const ALL_FACULTIES = [
   "ADM",
   "ANT",
-  "ARQ",
+  "AQQ",
   "ARV",
   "BTC",
   "CIN",
