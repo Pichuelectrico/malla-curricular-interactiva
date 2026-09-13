@@ -252,6 +252,7 @@
     <li><a href="#dag">La malla (DAG)</a></li>
     <li><a href="#calibracion">Calibración v2</a></li>
     <li><a href="#python">Script Python</a></li>
+    <li><a href="#notebook">Notebook</a></li>
     <li><a href="#vistas">Dos vistas en la app</a></li>
     <li><a href="#ejemplo">Ejemplo numérico</a></li>
     <li><a href="#dashboard">Leer el dashboard</a></li>
@@ -268,7 +269,8 @@
       El sistema <strong>sugiere cuántas secciones abrir</strong> mezclando histórico de cupos USFQ,
       demanda en la app y propagación por la malla con <strong>tasas calibradas</strong> (pares de períodos, ej. 202410→202510).
       La misma fórmula corre <strong>en vivo</strong> en el dashboard (lee <code>transition_rates.json</code>)
-      y en el <strong>batch Python</strong>, que alimenta el tab «Modelo Python» con período objetivo y GBR opcional.
+      y en el <strong>batch Python</strong> / notebook, que alimenta el tab «Modelo Python» con período objetivo y GBR opcional.
+      Última corrida documentada: <strong>8 jul 2026</strong>, período objetivo <strong>202610</strong>.
     </p>
   </section>
 
@@ -304,6 +306,11 @@
           <td><strong>Script Python</strong></td>
           <td><code>predictor/</code></td>
           <td>Exporta datos, aplica la misma fórmula híbrida + DAG, genera <code>predictor-dashboard.json</code> para la app.</td>
+        </tr>
+        <tr>
+          <td><strong>Notebook</strong></td>
+          <td><code>notebook_predictor/predictor.ipynb</code></td>
+          <td>Reproduce el pipeline paso a paso (calibración, GBR, backtest, diagnóstico F1) sobre los mismos módulos.</td>
         </tr>
       </table>
     </div>
@@ -474,11 +481,11 @@ flowchart LR
     <h3>Probabilidades: priors vs calibradas</h3>
     <p>El código conserva <strong>priors</strong> (80 / 50 / 25) como respaldo cuando no hay pares históricos. En producción usa <code>frontend/public/data/transition_rates.json</code>, generado por <code>python -m features.transition_calibration</code>.</p>
     <table>
-      <tr><th>Situación</th><th>Prior (fallback)</th><th>Ejemplo calibrado (batch jun 2026)</th></tr>
-      <tr><td>Siguiente materia misma área, semestre +1</td><td>80 %</td><td><strong>78 %</strong> global (<code>sequential</code>, 1505 pares)</td></tr>
-      <tr><td>Prerrequisito directo cross-área (MAT → MAC)</td><td>50 %</td><td><strong>MAT2010→MAC4002: 78 %</strong> (3 pares); <strong>MAT2008→MAC4002: 27 %</strong></td></tr>
-      <tr><td>Misma área, otra relación</td><td>50 %</td><td><strong>84 %</strong> global (<code>same_area</code>)</td></tr>
-      <tr><td>Otras rutas / cross-área agregado</td><td>25 %</td><td><strong>24 %</strong> global (<code>cross_area_direct</code>)</td></tr>
+      <tr><th>Situación</th><th>Prior (fallback)</th><th>Ejemplo calibrado (batch jul 2026)</th></tr>
+      <tr><td>Siguiente materia misma área, semestre +1</td><td>80 %</td><td><strong>78,3 %</strong> global (<code>sequential</code>, 1556 pares)</td></tr>
+      <tr><td>Prerrequisito directo cross-área (MAT → MAC)</td><td>50 %</td><td><strong>MAT2010→MAC4002: 78,2 %</strong> (3 pares); <strong>MAT2008→MAC4002: 27,3 %</strong></td></tr>
+      <tr><td>Misma área, otra relación</td><td>50 %</td><td><strong>84,3 %</strong> global (<code>same_area</code>, 1229 pares)</td></tr>
+      <tr><td>Otras rutas / cross-área agregado</td><td>25 %</td><td><strong>23,6 %</strong> global (<code>cross_area_direct</code>, 592 pares)</td></tr>
     </table>
 
     <h3>Otras reglas del DAG</h3>
@@ -514,13 +521,13 @@ flowchart LR
     </div>
 
     <h3>Backtest (holdout)</h3>
-    <p>El script <code>python -m eval.backtest</code> compara MAE con tasas fijas vs calibradas usando solo datos anteriores al período objetivo. Última corrida (jun 2026):</p>
+    <p>El script <code>python -m eval.backtest</code> compara MAE con tasas fijas vs calibradas usando solo datos anteriores al período objetivo. Última corrida (8 jul 2026, notebook + <code>backtest_report.json</code>):</p>
     <table>
-      <tr><th>Período holdout</th><th>MAE fijo</th><th>MAE calibrado</th><th>Subset MAC-*</th></tr>
-      <tr><td>202510</td><td>32,3</td><td>45,4</td><td>n=2 · fijo 8,5 · cal 17,5</td></tr>
-      <tr><td>202520</td><td>29,5</td><td>32,8</td><td>n=6 · fijo 48,3 · <strong>cal 32,2</strong></td></tr>
+      <tr><th>Período holdout</th><th>n</th><th>MAE fijo</th><th>MAE calibrado</th><th>Subset MAC-*</th></tr>
+      <tr><td>202510</td><td>1344</td><td>32,28</td><td>45,55</td><td>n=19 · fijo 16,21 · cal 23,95</td></tr>
+      <tr><td>202520</td><td>1371</td><td>29,43</td><td>32,79</td><td>n=18 · fijo 22,28 · cal 24,50</td></tr>
     </table>
-    <p class="tech-label">Interpretación: con pocos períodos (~5), el agregado global puede empeorar; en MAC-* el holdout 202520 mejora ~33 %. El backtest guía dónde confiar en calibración vs prior.</p>
+    <p><strong>Resumen:</strong> MAE promedio fijo <strong>30,86</strong> vs calibrado <strong>39,17</strong> (empeora ≈ <strong>27 %</strong>). Con ~5 períodos regulares, las tasas empíricas globales aún no baten de forma estable a los priors 80/50/25; el backtest indica cuándo preferir prior vs arista calibrada (ej. MAT2010→MAC4002 con 3 pares).</p>
 
     <h3>Archivos nuevos</h3>
     <table>
@@ -569,16 +576,17 @@ python predict.py --skip-export  # predice con model.pkl si existe
 python -m features.transition_calibration
 python -m eval.backtest</pre>
 
-    <p>Requiere <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> en <code>predictor/.env</code> para exportar.</p>
+    <p>Requiere <code>SUPABASE_URL</code> y <code>SUPABASE_SERVICE_KEY</code> (service_role) en <code>predictor/.env</code> para exportar.
+    <code>SUPABASE_KEY</code> (anon) es fallback; sin service key, <code>user_progress</code> sale vacío por RLS y <code>planned_count</code> queda en 0.</p>
 
-    <h3>Salidas</h3>
+    <h3>Salidas (batch 8 jul 2026)</h3>
     <table>
       <tr><th>Archivo</th><th>Contenido</th></tr>
-      <tr><td><code>predictor/output/predictions.json</code></td><td>~2100 filas, todas las carreras del batch</td></tr>
-      <tr><td><code>predictor/output/transition_rates.json</code></td><td>~792 aristas calibradas + tasas globales por tipo</td></tr>
-      <tr><td><code>predictor/output/backtest_report.json</code></td><td>MAE fijo vs calibrado por holdout</td></tr>
-      <tr><td><code>frontend/public/data/predictor-dashboard.json</code></td><td>Índice v3: <code>target_period_code</code>, <code>primary_students</code>, GBR</td></tr>
-      <tr><td><code>predictor/output/model.pkl</code></td><td>GBR entrenado (target = cupo real cuando existe)</td></tr>
+      <tr><td><code>predictor/output/predictions.json</code></td><td><strong>2164</strong> filas (40 mallas), todas las carreras del batch</td></tr>
+      <tr><td><code>predictor/output/transition_rates.json</code></td><td><strong>814</strong> aristas calibradas + tasas globales por tipo</td></tr>
+      <tr><td><code>predictor/output/backtest_report.json</code></td><td>MAE fijo vs calibrado por holdout (202510, 202520)</td></tr>
+      <tr><td><code>frontend/public/data/predictor-dashboard.json</code></td><td>Índice v3: <code>target_period_code=202610</code>, 927 ofertas, <code>primary_students</code>, GBR</td></tr>
+      <tr><td><code>predictor/output/model.pkl</code></td><td>GBR entrenado (~132 KB)</td></tr>
     </table>
 
     <h3>Misma lógica que la app (archivos Python)</h3>
@@ -592,15 +600,15 @@ python -m eval.backtest</pre>
 
     <p>Pesos en <code>predictor/config.py</code>: <code>STUDENTS_PER_SECTION = 25</code>, mismos <code>W_*</code> que la app.</p>
 
-    <h3>GBR con supervisión real</h3>
+    <h3>GBR con supervisión</h3>
     <div class="tech">
       <div class="tech-label">Detalle técnico — <code>models/demand.py</code></div>
       <ul>
-        <li>Si hay ≥ 20 cursos con historial, entrena <code>GradientBoostingRegressor</code>.</li>
-        <li><strong>Target:</strong> <code>actual_students_at_target</code> (cupo en el período objetivo), no la híbrida circular.</li>
-        <li>Split temporal por <code>target_period_code</code>.</li>
+        <li>Si hay ≥ 20 cursos con historial, entrena <code>GradientBoostingRegressor</code> (100 árboles).</li>
+        <li><strong>Target preferido:</strong> <code>actual_students_at_target</code> cuando ≥20 cursos tienen cupo real en el período objetivo; si no, usa la híbrida como pseudo-label.</li>
+        <li>Features principales por importancia (corrida jul 2026): <code>estimated_next_students</code> (49 %), <code>avg_students</code> (40 %), <code>last_regular_students</code> (5 %), inflow histórico y tasa verano→regular; planeada/cursando ≈ 0 (poca señal de plataforma).</li>
         <li>El tab «Modelo Python» puede mostrar GBR vía checkbox; campos <code>primary_students</code> / <code>primary_sections</code>.</li>
-        <li>Último batch: GBR disponible en <strong>757 / 905</strong> cursos con entrada en dashboard.</li>
+        <li>Último batch: GBR en <strong>1673 / 2164</strong> filas de predicción; en el índice del dashboard <strong>777 / 927</strong> ofertas con <code>gbr_available</code>.</li>
       </ul>
     </div>
 
@@ -611,9 +619,44 @@ python -m eval.backtest</pre>
     </div>
   </section>
 
+  <!-- NOTEBOOK -->
+  <section id="notebook">
+    <h2>7. Notebook (<code>notebook_predictor/predictor.ipynb</code>)</h2>
+
+    <div class="plain">
+      <div class="plain-label">En palabras simples</div>
+      <p>
+        Es la misma receta que el script, pero explicada celda a celda: exporta, calibra, entrena el GBR,
+        hace backtest y guarda el JSON del dashboard. Sirve para auditar números y gráficos sin tocar la app.
+      </p>
+    </div>
+
+    <div class="tech">
+      <div class="tech-label">Corrida guardada — 8 jul 2026 15:10 UTC</div>
+      <ul>
+        <li>Export: 35 <code>user_progress</code>, 15 597 historial, 3 760 ofertas; scrapeo 2026-07-06.</li>
+        <li>Calendario: 11 períodos (5 regulares); actual y objetivo = <strong>202610</strong> (el catálogo aún no tiene el siguiente regular).</li>
+        <li>Mallas: 40 · 2164 cursos · 1357 aristas · 814 tasas calibradas.</li>
+        <li>Tendencias en el feature frame: down 51 %, new 20 %, up 18 %, stable 11 %.</li>
+      </ul>
+    </div>
+
+    <h3>Diagnóstico de ajuste GBR (sección 15 del notebook)</h3>
+    <table>
+      <tr><th>Métrica</th><th>Valor</th></tr>
+      <tr><td>Label usado</td><td><code>estimated_students</code> (pseudo-label híbrida)</td></tr>
+      <tr><td>n train / val</td><td>1338 / 335</td></tr>
+      <tr><td>F1 train (bins ponderado)</td><td>0,975</td></tr>
+      <tr><td>F1 val</td><td>0,931</td></tr>
+      <tr><td>Gap train−val</td><td>+0,044 → diagnóstico <strong>ACEPTABLE</strong></td></tr>
+      <tr><td>Error abs. val</td><td>media 2,2 ± 3,0 estudiantes</td></tr>
+    </table>
+    <p class="tech-label">El notebook advierte: F1 alto con pseudo-label <strong>no</strong> implica buen poder predictivo frente a matrícula real; con pocos <code>actual_students_at_target</code> el diagnóstico tiende a verse aceptable aunque la señal de plataforma sea débil.</p>
+  </section>
+
   <!-- VISTAS -->
   <section id="vistas">
-    <h2>7. Dos vistas en el dashboard</h2>
+    <h2>8. Dos vistas en el dashboard</h2>
 
     <div class="plain">
       <div class="plain-label">En palabras simples</div>
@@ -656,18 +699,19 @@ flowchart TB
 
   <!-- EJEMPLO -->
   <section id="ejemplo">
-    <h2>8. Ejemplo numérico (batch real — 28 jun 2026)</h2>
+    <h2>9. Ejemplo numérico (batch real — 8 jul 2026)</h2>
 
-    <p>Valores del último <code>predictor-dashboard.json</code> tras <code>python train.py</code>.
-    Período objetivo: <strong>Primer Semestre 2026/2027 (202610)</strong> — coincide con <code>offer_metadata.current_period_code</code> porque el catálogo aún no incluye 202620.</p>
+    <p>Valores de <code>predictor-dashboard.json</code> tras el notebook / <code>train.py</code>
+    (<code>generated_at</code> 2026-07-08T15:10 UTC).
+    Período objetivo: <strong>Primer Semestre 2026/2027 (202610)</strong> — coincide con <code>offer_metadata.current_period_code</code> porque el catálogo aún no incluye el siguiente regular.</p>
 
-    <h3>8.1 MAC-4002 — Aprendizaje Automático</h3>
+    <h3>9.1 MAC-4002 — Aprendizaje Automático</h3>
 
     <div class="plain">
       <div class="plain-label">En palabras simples</div>
       <p>
         Con tasas calibradas, MAT-2010→MAC-4002 pasa al <strong>78 %</strong> (3 pares históricos) en lugar del 50 % fijo.
-        El DAG histórico aporta <strong>69</strong> estudiantes; la híbrida sugiere <strong>35</strong> y el GBR <strong>36</strong> → <strong>1 sección</strong>.
+        El DAG histórico aporta <strong>69</strong> estudiantes; la híbrida sugiere <strong>35</strong> y el GBR <strong>38</strong> → <strong>2 secciones</strong> (primary).
       </p>
     </div>
 
@@ -675,17 +719,18 @@ flowchart TB
 
     <table>
       <tr><th>Entrada</th><th>Valor (batch)</th></tr>
-      <tr><td>Tasa calibrada MAT2010→MAC4002</td><td><strong>78,1 %</strong> (prior 50 %, 3 pares)</td></tr>
+      <tr><td>Tasa calibrada MAT2010→MAC4002</td><td><strong>78,2 %</strong> (prior 50 %, 3 pares)</td></tr>
       <tr><td>DAG histórico (<code>inflow_from_history</code>)</td><td>68,94</td></tr>
       <tr><td>Estudiantes híbridos</td><td>35</td></tr>
-      <tr><td>Estudiantes GBR (<code>primary_students</code>)</td><td>36</td></tr>
-      <tr><td>Secciones sugeridas</td><td>1</td></tr>
+      <tr><td>Estudiantes GBR (<code>primary_students</code>)</td><td>38</td></tr>
+      <tr><td>Secciones sugeridas (primary)</td><td>2</td></tr>
+      <tr><td>Tendencia</td><td>down</td></tr>
       <tr><td>Modelo</td><td><code>hybrid+gbr</code></td></tr>
     </table>
 
-    <div class="step"><span class="step-num">✓</span><div><strong>Resultado batch (v2):</strong> 36 est. (GBR), 1 sec., DAG hist. 69, tasa MAT→MAC calibrada 78 %.</div></div>
+    <div class="step"><span class="step-num">✓</span><div><strong>Resultado batch:</strong> 38 est. (GBR), 2 sec., DAG hist. 69, tasa MAT→MAC calibrada 78 %.</div></div>
 
-    <h3>8.2 CMP-1101 — Programación en C++ (contraste)</h3>
+    <h3>9.2 CMP-1101 — Programación en C++ (contraste)</h3>
 
     <div class="plain">
       <div class="plain-label">En palabras simples</div>
@@ -696,25 +741,26 @@ flowchart TB
     </div>
 
     <table>
-      <tr><th>Entrada</th><th>Valor (batch)</th></tr>
+      <tr><th>Entrada</th><th>Valor (batch, facultad MAC)</th></tr>
       <tr><td>DAG histórico</td><td>0</td></tr>
-      <tr><td>Estudiantes (<code>primary_students</code>)</td><td><strong>63</strong></td></tr>
-      <tr><td>Secciones sugeridas</td><td><strong>3</strong></td></tr>
+      <tr><td>Estudiantes híbridos</td><td>61</td></tr>
+      <tr><td>Estudiantes (<code>primary_students</code> / GBR)</td><td><strong>62</strong></td></tr>
+      <tr><td>Secciones sugeridas (primary)</td><td><strong>2</strong></td></tr>
       <tr><td>Tendencia</td><td>up</td></tr>
     </table>
 
-    <h3>8.3 Otras materias MAC-* (mismo batch)</h3>
+    <h3>9.3 Otras materias MAC-* (mismo batch)</h3>
     <table>
-      <tr><th>Código</th><th>Est. (primary)</th><th>Sec.</th><th>DAG hist.</th><th>Tend.</th></tr>
-      <tr><td>MAC-4003</td><td>78</td><td>3</td><td>78</td><td>up</td></tr>
-      <tr><td>MAC-4005</td><td>30</td><td>1</td><td>30</td><td>up</td></tr>
-      <tr><td>MAC-5001</td><td>20</td><td>1</td><td>46</td><td>down</td></tr>
+      <tr><th>Código</th><th>Est. (primary)</th><th>Sec.</th><th>DAG hist.</th><th>Modelo</th><th>Tend.</th></tr>
+      <tr><td>MAC-4003</td><td>78</td><td>3</td><td>78</td><td>hybrid</td><td>up</td></tr>
+      <tr><td>MAC-4005</td><td>30</td><td>1</td><td>30</td><td>hybrid</td><td>up</td></tr>
+      <tr><td>MAC-5001</td><td>20</td><td>1</td><td>46</td><td>hybrid+gbr</td><td>down</td></tr>
     </table>
   </section>
 
   <!-- DASHBOARD -->
   <section id="dashboard">
-    <h2>9. Cómo leer el dashboard docente</h2>
+    <h2>10. Cómo leer el dashboard docente</h2>
 
     <div class="plain">
       <div class="plain-label">En palabras simples</div>
@@ -771,26 +817,27 @@ flowchart TB
 
   <!-- LIMITACIONES -->
   <section id="limites">
-    <h2>10. Limitaciones (honestas)</h2>
+    <h2>11. Limitaciones (honestas)</h2>
 
     <div class="split">
       <div class="card">
         <h3>Por qué sirve como guía</h3>
         <ul>
-          <li>App y Python comparten fórmula híbrida, calendario de períodos y tasas calibradas.</li>
+          <li>App, Python y notebook comparten fórmula híbrida, calendario de períodos y tasas calibradas.</li>
           <li>MAT→MAC y cadenas secuenciales usan ratios empíricos cuando hay pares (ej. MAT2010→MAC4002 ≈ 78 %).</li>
-          <li>Backtest en MAC-* mejora en holdout 202520 (MAE 48 → 32).</li>
           <li>El cupo histórico refleja decisiones reales de apertura de secciones.</li>
           <li>El piso de 8 refleja la regla operativa USFQ en materias estables.</li>
+          <li>El notebook documenta importancia de features y diagnóstico train/val del GBR.</li>
         </ul>
       </div>
       <div class="card warn">
         <h3>Qué no promete el proyecto</h3>
         <ul>
           <li>No usa matriculados reales; usa cupo ofertado como proxy.</li>
-          <li>Pocos períodos históricos (~5–6): calibración global puede empeorar MAE agregado; priors siguen como respaldo.</li>
-          <li>Si el catálogo no tiene el siguiente semestre (ej. 202620), el target puede coincidir con el período actual.</li>
-          <li>El export de <code>user_progress</code> puede tener menos señal que el RPC en vivo (RLS).</li>
+          <li>Pocos períodos históricos (~5): calibración global <strong>empeora</strong> MAE agregado vs priors (30,9 → 39,2 en jul 2026); aristas con pocos pares siguen con shrinkage fuerte.</li>
+          <li>Si el catálogo no tiene el siguiente semestre, el target puede coincidir con el período actual (hoy 202610).</li>
+          <li>El export de <code>user_progress</code> puede tener poca señal (35 filas en la última corrida) si falta service key o hay poco uso de la app.</li>
+          <li>El F1 alto del GBR mide ajuste a la híbrida (pseudo-label), no error frente a matrícula real.</li>
           <li><code>course_offer</code> del período actual aún no se mezcla en la predicción.</li>
           <li>En GitHub Pages hay que incluir <code>predictor-dashboard.json</code> y <code>transition_rates.json</code> en el deploy.</li>
         </ul>
@@ -817,13 +864,14 @@ flowchart TB
       <tr><td><code>predictor/features/build.py</code></td><td>Pipeline del batch</td></tr>
       <tr><td><code>predictor/models/demand.py</code></td><td>GBR opcional + guardado JSON</td></tr>
       <tr><td><code>predictor/train.py</code> / <code>predict.py</code></td><td>Entrada del batch</td></tr>
+      <tr><td><code>notebook_predictor/predictor.ipynb</code></td><td>Pipeline documentado + métricas</td></tr>
     </table>
   </section>
 
 </main>
 
 <footer>
-  Proyecto malla-curricular-interactiva · USFQ · Actualizado 28 jun 2026 (predictor v2)
+  Proyecto malla-curricular-interactiva · USFQ · Actualizado 8 jul 2026 (predictor v2 · notebook)
   Abrir este archivo en el navegador. Diagramas: Mermaid.js (requiere internet la primera vez).
 </footer>
 

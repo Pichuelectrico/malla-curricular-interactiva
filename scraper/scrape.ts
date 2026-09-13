@@ -345,12 +345,18 @@ async function scrapeRawCourses(page: Page, url: string): Promise<RawCourse[]> {
         const rawTitle = cells[1];
         const rawCredits = cells[2] ?? "";
 
-        // Skip TOTAL rows and empty rows
+        // Skip TOTAL rows, empty rows, and career-name header rows.
+        // Do NOT match real courses whose titles start with "Ingeniería…"
+        // (e.g. "Ingeniería de Reacciones +Lab" / INQ 4001).
+        const looksLikeCourseCode =
+          /^[A-Z*]{2,6}[\s-]?\d/i.test(code) ||
+          /^(OPT|CCSS|ARTE|HUM|ECL|ELECTIVA)\b/i.test(code);
         if (
           !code ||
           rawTitle === "TOTAL" ||
           code === "" ||
-          /^INGENIERÍA|^ADMINISTRACIÓN|^ECONOMÍA/i.test(rawTitle)
+          (!looksLikeCourseCode &&
+            /^INGENIERÍA|^ADMINISTRACIÓN|^ECONOMÍA/i.test(rawTitle))
         ) {
           continue;
         }

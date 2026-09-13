@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-INQ",
-  "Last-Modified": "2026-06-08T21:54:19.603Z",
+  "Last-Modified": "2026-09-13T17:33:59.242Z",
   "courses": [
     {
       "id": "INQ1002",
@@ -507,6 +507,23 @@
       "alternatives": []
     },
     {
+      "id": "INQ4001",
+      "code": "INQ 4001",
+      "title": "Ingeniería de Reacciones +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "INQ",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INQ3003 || INQ3003E",
+        "INQ3002 || INQ3002E || CMP1002 || CMP1002E || CMP1101 || CMP1101E",
+        "INQ4003 || INQ4003E || INQ3001 || INQ3001E"
+      ],
+      "alternatives": []
+    },
+    {
       "id": "INQ4201",
       "code": "INQ 4201",
       "title": "Operaciones Unitarias 1 +Lab",
@@ -627,9 +644,9 @@
       "alternatives": []
     },
     {
-      "id": "INQ5401",
-      "code": "INQ 5401",
-      "title": "Bioingeniería 1 +Lab",
+      "id": "INQ5401E",
+      "code": "INQ 5401E",
+      "title": "Bioengineering 1 +Lab",
       "description": "",
       "credits": 3,
       "semester": 8,
@@ -638,7 +655,8 @@
       "type": "obligatoria",
       "prerequisites": [
         "BIO1102 || BIO1102E",
-        "INQ4202 || INQ4202E"
+        "INQ4202 || INQ4202E",
+        "ESL0006 || ENG1001E"
       ],
       "alternatives": []
     },
@@ -701,7 +719,7 @@
       "description": "",
       "credits": 1,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ING",
       "type": "obligatoria",
       "prerequisites": [],
@@ -714,7 +732,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ELECTIVA",
       "type": "electiva",
       "prerequisites": [],
@@ -727,7 +745,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -740,7 +758,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ARTE",
       "type": "optativa",
       "prerequisites": [],
@@ -753,7 +771,7 @@
       "description": "",
       "credits": 5,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "INQ",
       "type": "obligatoria",
       "prerequisites": [
