@@ -421,8 +421,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     name: "Ingeniería Química",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 139,
-    courses: 53,
+    credits: 142,
+    courses: 54,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
       const res = await fetch(`${base}data/Malla-INQ.json`);
