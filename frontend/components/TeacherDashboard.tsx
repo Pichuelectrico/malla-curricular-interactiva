@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   BarChart3, BookOpen, TrendingUp, Users, RefreshCw,
-  GraduationCap, ChevronUp, ChevronDown, Minus, AlertCircle, Info,
+  GraduationCap, ChevronUp, ChevronDown, Minus, AlertCircle, Info, Printer,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,15 @@ import {
 import { loadTransitionRates, type TransitionRateTable } from '../lib/transitionRates';
 import type { ProfessorContext } from '../lib/useUserRole';
 import CourseDemandDetailDialog from './CourseDemandDetailDialog';
+import PredictionPrintReport, { type PrintReportRow } from './PredictionPrintReport';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { selectReportRows, type ReportScope } from '../lib/printReport';
 
 type EstimatorMode = 'live' | 'python';
 
@@ -144,6 +153,11 @@ export default function TeacherDashboard({
     setFaculty(profile.faculty);
   }, [profile.faculty]);
 
+  useEffect(() => {
+    setSelectedCodes(new Set());
+    setReportRows(null);
+  }, [faculty]);
+
   const [historyMap, setHistoryMap] = useState<Map<string, CourseHistoryStats>>(new Map());
   const [livePredictions, setLivePredictions] = useState<PredictionRow[]>([]);
   const [pythonIndex, setPythonIndex] = useState<PythonPredictionsIndex | null>(null);
@@ -156,6 +170,12 @@ export default function TeacherDashboard({
   const [targetPeriodCode, setTargetPeriodCode] = useState('');
   const [targetPeriodLabel, setTargetPeriodLabel] = useState('');
   const [transitionRates, setTransitionRates] = useState<TransitionRateTable | null>(null);
+  // Reporte imprimible: selección múltiple por checkbox + diálogo de alcance
+  const [selectedCodes, setSelectedCodes] = useState<Set<string>>(new Set());
+  const [printDialogOpen, setPrintDialogOpen] = useState(false);
+  const [printScope, setPrintScope] = useState<ReportScope>('faculty');
+  const [reportRows, setReportRows] = useState<PrintReportRow[] | null>(null);
+  const [reportScopeLabel, setReportScopeLabel] = useState('');
 
   const load = async () => {
     setIsLoading(true);
@@ -350,6 +370,32 @@ export default function TeacherDashboard({
   const totalCapacity = predictions.reduce((s, p) => s + (p.published_capacity ?? 0), 0);
   const totalDemand = predictions.reduce((s, p) => s + (p.estimated_students ?? 0), 0);
 
+  const toggleSelected = (code: string) =>
+    setSelectedCodes((prev) => {
+      const next = new Set(prev);
+      if (next.has(code)) next.delete(code);
+      else next.add(code);
+      return next;
+    });
+  const allSelected = sortedPredictions.length > 0 && sortedPredictions.every((p) => selectedCodes.has(p.offer_code));
+  const toggleAll = () =>
+    setSelectedCodes(allSelected ? new Set() : new Set(sortedPredictions.map((p) => p.offer_code)));
+  const selectedCount = predictions.filter((p) => selectedCodes.has(p.offer_code)).length;
+
+  const openPrintDialog = () => {
+    setPrintScope(selectedCount > 0 ? 'selected' : 'faculty');
+    setPrintDialogOpen(true);
+  };
+  const generateReport = () => {
+    const rows = selectReportRows(pythonPredictions, printScope, selectedCodes).map<PrintReportRow>((r) => ({
+      ...r,
+      history: historyMap.get(r.offer_code),
+    }));
+    setReportScopeLabel(printScope === 'faculty' ? `Toda la facultad ${faculty}` : 'Materias seleccionadas');
+    setReportRows(rows);
+    setPrintDialogOpen(false);
+  };
+
   const maxDemand = Math.max(
     ...predictions.map((p) => Math.max(p.inflow_from_history, p.inflow_from_cursando)),
     1,
@@ -389,15 +435,27 @@ export default function TeacherDashboard({
             <p className="text-xs text-gray-400">Actualizado: {lastLoaded.toLocaleTimeString()}</p>
           )}
         </div>
-        <Button
-          variant="outline"
-          onClick={load}
-          disabled={isLoading}
-          className="gap-2 dark:border-gray-600 dark:hover:bg-gray-700 self-start sm:self-auto"
-        >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          Actualizar
-        </Button>
+        <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+          <Button
+            variant="outline"
+            onClick={load}
+            disabled={isLoading}
+            className="gap-2 dark:border-gray-600 dark:hover:bg-gray-700"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            Actualizar
+          </Button>
+          {mode === 'python' && !isLoading && pythonPredictions.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={openPrintDialog}
+              className="gap-2 dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+              <Printer className="w-4 h-4" />
+              Imprimir reporte{selectedCount > 0 ? ` (${selectedCount})` : ''}
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -572,6 +630,18 @@ export default function TeacherDashboard({
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-700/50 text-left">
+                  {mode === 'python' && (
+                    <th className="pl-4 pr-1 py-3 w-8">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleAll}
+                        aria-label="Seleccionar todas las materias de la tabla"
+                        title="Seleccionar todas para el reporte"
+                        className="rounded border-gray-300 cursor-pointer"
+                      />
+                    </th>
+                  )}
                   <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Código</th>
                   <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Materia</th>
                   <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center" title="Estudiantes cursando esta materia este semestre (muestra de la app)">Cursando</th>
@@ -600,6 +670,17 @@ export default function TeacherDashboard({
                     onClick={() => setSelected(row)}
                     className="hover:bg-blue-50/60 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
                   >
+                    {mode === 'python' && (
+                      <td className="pl-4 pr-1 py-3 w-8" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={selectedCodes.has(row.offer_code)}
+                          onChange={() => toggleSelected(row.offer_code)}
+                          aria-label={`Incluir ${row.offer_code} en el reporte`}
+                          className="rounded border-gray-300 cursor-pointer"
+                        />
+                      </td>
+                    )}
                     <td className="px-4 py-3">
                       <span className="font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
                         {row.offer_code}
@@ -684,6 +765,85 @@ export default function TeacherDashboard({
           </div>
         )}
       </Card>
+
+      <Dialog open={printDialogOpen} onOpenChange={setPrintDialogOpen}>
+        <DialogContent className="sm:max-w-md dark:bg-gray-800 dark:border-gray-700">
+          <DialogHeader>
+            <DialogTitle className="text-left dark:text-white">Imprimir reporte</DialogTitle>
+            <DialogDescription className="text-left">
+              Reporte con resumen y un gráfico por materia (cupo ofertado vs matriculados y estimación).
+              Se imprime desde el navegador; elige «Guardar como PDF» para obtener un archivo.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 text-sm">
+            <label
+              className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer ${
+                selectedCount === 0 ? 'opacity-50 cursor-not-allowed' : ''
+              } ${printScope === 'selected' ? 'border-blue-500 bg-blue-50/60 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600'}`}
+            >
+              <input
+                type="radio"
+                name="print-scope"
+                className="mt-1"
+                checked={printScope === 'selected'}
+                disabled={selectedCount === 0}
+                onChange={() => setPrintScope('selected')}
+              />
+              <span>
+                <strong>Materias seleccionadas</strong> ({selectedCount})
+                <span className="block text-xs text-gray-500 dark:text-gray-400">
+                  {selectedCount === 0
+                    ? 'Marca materias con las casillas de la tabla para habilitar esta opción.'
+                    : 'Solo las marcadas en la tabla.'}
+                </span>
+              </span>
+            </label>
+            <label
+              className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer ${
+                printScope === 'faculty' ? 'border-blue-500 bg-blue-50/60 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600'
+              }`}
+            >
+              <input
+                type="radio"
+                name="print-scope"
+                className="mt-1"
+                checked={printScope === 'faculty'}
+                onChange={() => setPrintScope('faculty')}
+              />
+              <span>
+                <strong>Toda la facultad {faculty}</strong> ({pythonPredictions.length})
+                <span className="block text-xs text-gray-500 dark:text-gray-400">
+                  Todas las materias supervisadas cargadas.
+                  {pythonPredictions.length > 150 ? ' Es un reporte largo: se prepara por lotes antes de poder imprimir.' : ''}
+                </span>
+              </span>
+            </label>
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="outline" onClick={() => setPrintDialogOpen(false)}>Cancelar</Button>
+            <Button
+              onClick={generateReport}
+              disabled={printScope === 'selected' && selectedCount === 0}
+              className="gap-2"
+            >
+              <Printer className="w-4 h-4" /> Generar reporte
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {reportRows && (
+        <PredictionPrintReport
+          rows={reportRows}
+          faculty={faculty}
+          targetPeriodLabel={pythonIndex?.target_period_label ?? targetPeriodLabel}
+          targetPeriodCode={pythonIndex?.target_period_code ?? targetPeriodCode}
+          modelName={modelMeta?.name}
+          generatedAt={modelMeta?.generated_at ?? pythonIndex?.generated_at}
+          scopeLabel={reportScopeLabel}
+          onClose={() => setReportRows(null)}
+        />
+      )}
 
       {selected && (
         <CourseDemandDetailDialog

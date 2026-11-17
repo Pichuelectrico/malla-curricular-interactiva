@@ -128,3 +128,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Reporte imprimible del dashboard del predictor (PredictionPrintReport) */
+@media print {
+  @page { margin: 12mm; }
+  body.print-report-open #root { display: none !important; }
+  body.print-report-open { overflow: visible !important; background: #fff !important; }
+  #print-report-root {
+    position: static !important;
+    inset: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  #print-report-root .no-print { display: none !important; }
+  #print-report-root .report-sheet { max-width: none !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
+  #print-report-root .report-course-page { break-before: page; page-break-before: always; break-inside: avoid; }
+  #print-report-root thead { display: table-header-group; }
+  #print-report-root tr { break-inside: avoid; }
+  #print-report-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
