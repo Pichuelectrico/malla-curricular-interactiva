@@ -16430,7 +16430,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$Y = [
+const __iconNode$Z = [
   [
     "path",
     {
@@ -16439,7 +16439,18 @@ const __iconNode$Y = [
     }
   ]
 ];
-const Activity = createLucideIcon("activity", __iconNode$Y);
+const Activity = createLucideIcon("activity", __iconNode$Z);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$Y = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$Y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16447,17 +16458,6 @@ const Activity = createLucideIcon("activity", __iconNode$Y);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$X = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
-];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$X);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$W = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -16467,7 +16467,18 @@ const __iconNode$W = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$W);
+const BookOpen = createLucideIcon("book-open", __iconNode$X);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$W = [
+  ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
+  ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
+];
+const Briefcase = createLucideIcon("briefcase", __iconNode$W);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16475,17 +16486,6 @@ const BookOpen = createLucideIcon("book-open", __iconNode$W);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$V = [
-  ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
-  ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
-];
-const Briefcase = createLucideIcon("briefcase", __iconNode$V);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$U = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -16497,7 +16497,20 @@ const __iconNode$U = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$U);
+const Calculator = createLucideIcon("calculator", __iconNode$V);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$U = [
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }]
+];
+const Calendar = createLucideIcon("calendar", __iconNode$U);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16505,12 +16518,12 @@ const Calculator = createLucideIcon("calculator", __iconNode$U);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$T = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }]
+  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
+  ["path", { d: "M18 17V9", key: "2bz60n" }],
+  ["path", { d: "M13 17V5", key: "1frdt8" }],
+  ["path", { d: "M8 17v-3", key: "17ska0" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$T);
+const ChartColumn = createLucideIcon("chart-column", __iconNode$T);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16518,63 +16531,62 @@ const Calendar = createLucideIcon("calendar", __iconNode$T);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$S = [
-  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
-  ["path", { d: "M18 17V9", key: "2bz60n" }],
-  ["path", { d: "M13 17V5", key: "1frdt8" }],
-  ["path", { d: "M8 17v-3", key: "17ska0" }]
-];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$S);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$R = [
   ["path", { d: "M18 6 7 17l-5-5", key: "116fxf" }],
   ["path", { d: "m22 10-7.5 7.5L13 16", key: "ke71qq" }]
 ];
-const CheckCheck = createLucideIcon("check-check", __iconNode$R);
+const CheckCheck = createLucideIcon("check-check", __iconNode$S);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$Q = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$Q);
+const __iconNode$R = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$R);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$P = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$P);
+const __iconNode$Q = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$Q);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$O = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$O);
+const __iconNode$P = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$P);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$N = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$N);
+const __iconNode$O = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$O);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$M = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$M);
+const __iconNode$N = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$N);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$M = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+];
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$M);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16582,11 +16594,10 @@ const ChevronUp = createLucideIcon("chevron-up", __iconNode$M);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$L = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$L);
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$L);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16594,10 +16605,10 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$L);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$K = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$K);
+const Clock = createLucideIcon("clock", __iconNode$K);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16605,17 +16616,6 @@ const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$K);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$J = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
-];
-const Clock = createLucideIcon("clock", __iconNode$J);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$I = [
   ["path", { d: "M10 2v2", key: "7u0qdc" }],
   ["path", { d: "M14 2v2", key: "6buw04" }],
   [
@@ -16627,7 +16627,19 @@ const __iconNode$I = [
   ],
   ["path", { d: "M6 2v2", key: "colzsn" }]
 ];
-const Coffee = createLucideIcon("coffee", __iconNode$I);
+const Coffee = createLucideIcon("coffee", __iconNode$J);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$I = [
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
+  ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
+];
+const Download = createLucideIcon("download", __iconNode$I);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16635,11 +16647,11 @@ const Coffee = createLucideIcon("coffee", __iconNode$I);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$H = [
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
-  ["line", { x1: "12", x2: "12", y1: "15", y2: "3", key: "1vk2je" }]
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
 ];
-const Download = createLucideIcon("download", __iconNode$H);
+const ExternalLink = createLucideIcon("external-link", __iconNode$H);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16647,18 +16659,6 @@ const Download = createLucideIcon("download", __iconNode$H);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$G = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
-];
-const ExternalLink = createLucideIcon("external-link", __iconNode$G);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$F = [
   [
     "path",
     {
@@ -16668,7 +16668,21 @@ const __iconNode$F = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$F);
+const Eye = createLucideIcon("eye", __iconNode$G);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$F = [
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M10 9H8", key: "b1mrlr" }],
+  ["path", { d: "M16 13H8", key: "t4e002" }],
+  ["path", { d: "M16 17H8", key: "z1uh3a" }]
+];
+const FileText = createLucideIcon("file-text", __iconNode$F);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16676,20 +16690,6 @@ const Eye = createLucideIcon("eye", __iconNode$F);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$E = [
-  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M10 9H8", key: "b1mrlr" }],
-  ["path", { d: "M16 13H8", key: "t4e002" }],
-  ["path", { d: "M16 17H8", key: "z1uh3a" }]
-];
-const FileText = createLucideIcon("file-text", __iconNode$E);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$D = [
   [
     "path",
     {
@@ -16699,7 +16699,19 @@ const __iconNode$D = [
   ],
   ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
 ];
-const Github = createLucideIcon("github", __iconNode$D);
+const Github = createLucideIcon("github", __iconNode$E);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$D = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
+  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+];
+const Globe = createLucideIcon("globe", __iconNode$D);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16707,18 +16719,6 @@ const Github = createLucideIcon("github", __iconNode$D);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$C = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
-  ["path", { d: "M2 12h20", key: "9i4pu4" }]
-];
-const Globe = createLucideIcon("globe", __iconNode$C);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$B = [
   [
     "path",
     {
@@ -16729,7 +16729,19 @@ const __iconNode$B = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$B);
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$C);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$B = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 16v-4", key: "1dtifu" }],
+  ["path", { d: "M12 8h.01", key: "e9boi3" }]
+];
+const Info = createLucideIcon("info", __iconNode$B);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16737,18 +16749,6 @@ const GraduationCap = createLucideIcon("graduation-cap", __iconNode$B);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$A = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 16v-4", key: "1dtifu" }],
-  ["path", { d: "M12 8h.01", key: "e9boi3" }]
-];
-const Info = createLucideIcon("info", __iconNode$A);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$z = [
   [
     "path",
     {
@@ -16758,14 +16758,14 @@ const __iconNode$z = [
   ],
   ["circle", { cx: "16.5", cy: "7.5", r: ".5", fill: "currentColor", key: "w0ekpg" }]
 ];
-const KeyRound = createLucideIcon("key-round", __iconNode$z);
+const KeyRound = createLucideIcon("key-round", __iconNode$A);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [
+const __iconNode$z = [
   ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
   ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
   ["path", { d: "M2 5h12", key: "or177f" }],
@@ -16773,14 +16773,14 @@ const __iconNode$y = [
   ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
   ["path", { d: "M14 18h6", key: "1m8k6r" }]
 ];
-const Languages = createLucideIcon("languages", __iconNode$y);
+const Languages = createLucideIcon("languages", __iconNode$z);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$x = [
+const __iconNode$y = [
   [
     "path",
     {
@@ -16803,14 +16803,14 @@ const __iconNode$x = [
     }
   ]
 ];
-const Layers = createLucideIcon("layers", __iconNode$x);
+const Layers = createLucideIcon("layers", __iconNode$y);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$w = [
+const __iconNode$x = [
   [
     "path",
     {
@@ -16821,22 +16821,22 @@ const __iconNode$w = [
   ["rect", { width: "4", height: "12", x: "2", y: "9", key: "mk3on5" }],
   ["circle", { cx: "4", cy: "4", r: "2", key: "bt5ra8" }]
 ];
-const Linkedin = createLucideIcon("linkedin", __iconNode$w);
+const Linkedin = createLucideIcon("linkedin", __iconNode$x);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$v = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$v);
+const __iconNode$w = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$w);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$u = [
+const __iconNode$v = [
   ["path", { d: "M12 2v4", key: "3427ic" }],
   ["path", { d: "m16.2 7.8 2.9-2.9", key: "r700ao" }],
   ["path", { d: "M18 12h4", key: "wj9ykh" }],
@@ -16846,7 +16846,18 @@ const __iconNode$u = [
   ["path", { d: "M2 12h4", key: "j09sii" }],
   ["path", { d: "m4.9 4.9 2.9 2.9", key: "giyufr" }]
 ];
-const Loader = createLucideIcon("loader", __iconNode$u);
+const Loader = createLucideIcon("loader", __iconNode$v);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$u = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 9.9-1", key: "1mm8w8" }]
+];
+const LockOpen = createLucideIcon("lock-open", __iconNode$u);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16855,9 +16866,9 @@ const Loader = createLucideIcon("loader", __iconNode$u);
  */
 const __iconNode$t = [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 9.9-1", key: "1mm8w8" }]
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const LockOpen = createLucideIcon("lock-open", __iconNode$t);
+const Lock = createLucideIcon("lock", __iconNode$t);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16865,10 +16876,11 @@ const LockOpen = createLucideIcon("lock-open", __iconNode$t);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$s = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }],
+  ["polyline", { points: "10 17 15 12 10 7", key: "1ail0h" }],
+  ["line", { x1: "15", x2: "3", y1: "12", y2: "12", key: "v6grx8" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$s);
+const LogIn = createLucideIcon("log-in", __iconNode$s);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16876,11 +16888,11 @@ const Lock = createLucideIcon("lock", __iconNode$s);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$r = [
-  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }],
-  ["polyline", { points: "10 17 15 12 10 7", key: "1ail0h" }],
-  ["line", { x1: "15", x2: "3", y1: "12", y2: "12", key: "v6grx8" }]
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
+  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
+  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
 ];
-const LogIn = createLucideIcon("log-in", __iconNode$r);
+const LogOut = createLucideIcon("log-out", __iconNode$r);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16888,11 +16900,10 @@ const LogIn = createLucideIcon("log-in", __iconNode$r);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$q = [
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
-  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
-  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
+  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$q);
+const Mail = createLucideIcon("mail", __iconNode$q);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16900,35 +16911,24 @@ const LogOut = createLucideIcon("log-out", __iconNode$q);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$p = [
-  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
-  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
-];
-const Mail = createLucideIcon("mail", __iconNode$p);
-/**
- * @license lucide-react v0.484.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$o = [
   ["path", { d: "M7.9 20A9 9 0 1 0 4 16.1L2 22Z", key: "vv11sd" }]
 ];
-const MessageCircle = createLucideIcon("message-circle", __iconNode$o);
+const MessageCircle = createLucideIcon("message-circle", __iconNode$p);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$n);
+const __iconNode$o = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$o);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [
+const __iconNode$n = [
   ["path", { d: "M12 20h9", key: "t2du7b" }],
   [
     "path",
@@ -16938,14 +16938,14 @@ const __iconNode$m = [
     }
   ]
 ];
-const PenLine = createLucideIcon("pen-line", __iconNode$m);
+const PenLine = createLucideIcon("pen-line", __iconNode$n);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$m = [
   [
     "path",
     {
@@ -16955,7 +16955,18 @@ const __iconNode$l = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode$l);
+const Pencil = createLucideIcon("pencil", __iconNode$m);
+/**
+ * @license lucide-react v0.484.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$l);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -16963,10 +16974,17 @@ const Pencil = createLucideIcon("pencil", __iconNode$l);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$k = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  [
+    "path",
+    {
+      d: "M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2",
+      key: "143wyd"
+    }
+  ],
+  ["path", { d: "M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6", key: "1itne7" }],
+  ["rect", { x: "6", y: "14", width: "12", height: "8", rx: "1", key: "1ue0tg" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$k);
+const Printer = createLucideIcon("printer", __iconNode$k);
 /**
  * @license lucide-react v0.484.0 - ISC
  *
@@ -41535,7 +41553,7 @@ const badgeVariants = cva(
     }
   }
 );
-function Badge({
+function Badge$1({
   className,
   variant,
   asChild = false,
@@ -43378,7 +43396,7 @@ function CourseCard({
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium text-sm dark:text-gray-200", children: "Área:" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: `ml-2 text-white ${getAreaColor(course.area)}`, children: course.area })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Badge$1, { className: `ml-2 text-white ${getAreaColor(course.area)}`, children: course.area })
                 ] }),
                 course.description && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium text-sm dark:text-gray-200", children: "Descripción:" }),
@@ -43405,7 +43423,7 @@ function CourseCard({
         /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-0", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Badge,
+              Badge$1,
               {
                 variant: "outline",
                 className: `text-xs text-white ${getAreaColor(course.area)}`,
@@ -43418,12 +43436,12 @@ function CourseCard({
               " cr"
             ] })
           ] }),
-          isRemainder && /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "secondary", className: "text-xs mt-2 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200", children: [
+          isRemainder && /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge$1, { variant: "secondary", className: "text-xs mt-2 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200", children: [
             "Pendiente — ",
             course.credits,
             " cr"
           ] }),
-          course.type !== "obligatoria" && !isRemainder && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs mt-2 dark:bg-gray-700 dark:text-gray-300", children: getTypeLabel(course.type) })
+          course.type !== "obligatoria" && !isRemainder && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge$1, { variant: "secondary", className: "text-xs mt-2 dark:bg-gray-700 dark:text-gray-300", children: getTypeLabel(course.type) })
         ] })
       ]
     }
@@ -44472,7 +44490,7 @@ function CurriculumSelector({
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-medium text-sm dark:text-white", children: curriculum.name }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Badge,
+                  Badge$1,
                   {
                     variant: "secondary",
                     className: "text-xs dark:bg-gray-700 dark:text-gray-300",
@@ -44483,7 +44501,7 @@ function CurriculumSelector({
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-600 dark:text-gray-400 mb-2", children: curriculum.description }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  Badge,
+                  Badge$1,
                   {
                     variant: "outline",
                     className: "text-xs dark:border-gray-600 dark:text-gray-300",
@@ -44494,7 +44512,7 @@ function CurriculumSelector({
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  Badge,
+                  Badge$1,
                   {
                     variant: "outline",
                     className: "text-xs dark:border-gray-600 dark:text-gray-300",
@@ -53104,7 +53122,7 @@ function CurriculumGrid() {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-semibold text-gray-800 dark:text-gray-200", children: getBlockDisplayName(blockName, blockCourses, curriculumData.courses) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "outline", className: "dark:border-gray-600 dark:text-gray-300", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge$1, { variant: "outline", className: "dark:border-gray-600 dark:text-gray-300", children: [
             blockCompletedCredits,
             "/",
             blockTotalCredits,
@@ -54668,26 +54686,15 @@ function formatPeriodLabel(period) {
   }
   return period.periodCode;
 }
-function formatEdgeType(edgeType) {
-  switch (edgeType) {
-    case "sequential":
-      return "secuencial";
-    case "cross_area_direct":
-      return "cross-área";
-    case "same_area":
-      return "misma área";
-    case "summer_to_regular":
-      return "verano→regular";
-    default:
-      return edgeType;
-  }
-}
 function TrendChart({
   history,
   estimatedStudents,
   targetPeriodLabel,
-  publishedCapacity
+  publishedCapacity,
+  light = false,
+  compact = false
 }) {
+  const cx2 = (lightCls, darkCls) => light ? lightCls : `${lightCls} ${darkCls}`;
   const points = [
     ...history.periods.map((p) => ({
       key: p.periodCode,
@@ -54711,8 +54718,8 @@ function TrendChart({
   const maxValue = Math.max(...points.map((p) => Math.max(p.students, p.capacity ?? 0)), 1);
   const chartH = 140;
   const barW = Math.min(20, Math.max(12, 150 / points.length));
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-end justify-center gap-3 h-[180px] px-2 border-b border-gray-200 dark:border-gray-600", children: points.map((p) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", style: { WebkitPrintColorAdjust: "exact", printColorAdjust: "exact" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `flex items-end justify-center gap-3 h-[180px] px-2 border-b ${cx2("border-gray-200", "dark:border-gray-600")}`, children: points.map((p) => {
       const hStudents = Math.max(3, p.students / maxValue * chartH);
       const hCap = p.capacity != null ? Math.max(3, p.capacity / maxValue * chartH) : 0;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-1", style: { width: barW * 2 + 8 }, children: [
@@ -54722,30 +54729,30 @@ function TrendChart({
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "div",
               {
-                className: "rounded-t bg-gray-300 dark:bg-gray-500",
+                className: `rounded-t ${cx2("bg-gray-300", "dark:bg-gray-500")}`,
                 style: { height: hCap, width: barW },
                 title: p.capacity != null ? `Cupo ofertado: ${p.capacity} (${p.sections} sección(es) de Teoría)` : "Sin cupo"
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-medium text-gray-700 dark:text-gray-200", children: p.students }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-medium ${cx2("text-gray-700", "dark:text-gray-200")}`, children: p.students }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "div",
               {
-                className: `rounded-t ${p.isEstimate ? "bg-emerald-500/80 border-2 border-dashed border-emerald-600" : p.isSummer ? "bg-amber-400 dark:bg-amber-500" : "bg-blue-500 dark:bg-blue-400"}`,
+                className: `rounded-t ${p.isEstimate ? "bg-emerald-500/80 border-2 border-dashed border-emerald-600" : p.isSummer ? cx2("bg-amber-400", "dark:bg-amber-500") : cx2("bg-blue-500", "dark:bg-blue-400")}`,
                 style: { height: hStudents, width: barW },
                 title: p.isEstimate ? `Demanda estimada: ${p.students}` : `Matriculados: ${p.students}`
               }
             )
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-gray-500 dark:text-gray-400 text-center leading-tight", children: p.label })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[9px] text-center leading-tight ${cx2("text-gray-500", "dark:text-gray-400")}`, children: p.label })
       ] }, p.key);
     }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3 text-[11px] text-gray-500 dark:text-gray-400 justify-center", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `flex flex-wrap gap-3 text-[11px] justify-center ${cx2("text-gray-500", "dark:text-gray-400")}`, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-gray-300 dark:bg-gray-500" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `w-2.5 h-2.5 rounded-sm ${cx2("bg-gray-300", "dark:bg-gray-500")}` }),
         " Cupo ofertado"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
@@ -54761,8 +54768,22 @@ function TrendChart({
         " Demanda estimada"
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 text-center", children: "Barra gris = cupo ofertado (suma de NRC de Teoría; los laboratorios no se cuentan). Barra de color = matriculados (cupo − disponibles; en secciones llenas es un mínimo). La última columna es la estimación para el período objetivo junto a su cupo publicado." })
+    !compact && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-xs text-center ${cx2("text-gray-500", "dark:text-gray-400")}`, children: "Barra gris = cupo ofertado (suma de NRC de Teoría; los laboratorios no se cuentan). Barra de color = matriculados (cupo − disponibles; en secciones llenas es un mínimo). La última columna es la estimación para el período objetivo junto a su cupo publicado." })
   ] });
+}
+function formatEdgeType(edgeType) {
+  switch (edgeType) {
+    case "sequential":
+      return "secuencial";
+    case "cross_area_direct":
+      return "cross-área";
+    case "same_area":
+      return "misma área";
+    case "summer_to_regular":
+      return "verano→regular";
+    default:
+      return edgeType;
+  }
 }
 function CourseDemandDetailDialog({
   open,
@@ -54948,6 +54969,253 @@ function CourseDemandDetailDialog({
     ] })
   ] }) });
 }
+function selectReportRows(rows, scope, selected) {
+  return scope === "faculty" ? [...rows] : rows.filter((r2) => selected.has(r2.offer_code));
+}
+const shortfall = (r2) => (r2.estimated_students ?? 0) - (r2.published_capacity ?? 0);
+function sortForReport(rows) {
+  return [...rows].sort((a, b) => {
+    const sev = (COVERAGE_SEVERITY[b.coverage_class ?? "sin_base_historica"] ?? 0) - (COVERAGE_SEVERITY[a.coverage_class ?? "sin_base_historica"] ?? 0);
+    if (sev !== 0) return sev;
+    const gap = shortfall(b) - shortfall(a);
+    return gap !== 0 ? gap : a.offer_code.localeCompare(b.offer_code);
+  });
+}
+function summarizeReport(rows) {
+  const byClass = {};
+  let totalCapacity = 0;
+  let totalDemandCentral = 0;
+  for (const r2 of rows) {
+    if (r2.coverage_class) byClass[r2.coverage_class] = (byClass[r2.coverage_class] ?? 0) + 1;
+    totalCapacity += r2.published_capacity ?? 0;
+    totalDemandCentral += r2.estimated_students ?? 0;
+  }
+  return { count: rows.length, byClass, totalCapacity, totalDemandCentral };
+}
+function shortRecommendation(text, max2 = 90) {
+  const clean = (text ?? "").replace(/\s+/g, " ").trim();
+  if (clean.length <= max2) return clean;
+  return `${clean.slice(0, max2 - 1).trimEnd()}…`;
+}
+const REPORT_CHUNK_SIZE = 15;
+const BADGE = {
+  deficit_critico: "bg-red-100 text-red-700 border-red-300",
+  deficit_leve: "bg-amber-100 text-amber-700 border-amber-300",
+  equilibrado: "bg-emerald-100 text-emerald-700 border-emerald-300",
+  exceso: "bg-sky-100 text-sky-700 border-sky-300",
+  sin_base_historica: "bg-gray-100 text-gray-600 border-gray-300",
+  sin_capacidad: "bg-gray-100 text-gray-600 border-gray-300"
+};
+function Badge({ value }) {
+  if (!value) return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-400", children: "—" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full border whitespace-nowrap ${BADGE[value]}`, children: COVERAGE_LABELS[value] });
+}
+function Metric({ label, value, sub }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border border-gray-200 rounded-lg p-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[11px] text-gray-500", children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xl font-bold text-gray-900", children: value }),
+    sub ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[11px] text-gray-500", children: sub }) : null
+  ] });
+}
+const pct = (u) => u != null ? `${Math.round(u * 100)}%` : "—";
+function CourseSection({ row, targetPeriodLabel }) {
+  var _a2;
+  const hasDemand = Boolean(row.has_history) && row.demand_low != null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "report-course-page space-y-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex items-start justify-between gap-3 border-b border-gray-300 pb-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-sm font-semibold text-blue-700", children: row.offer_code }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-bold text-gray-900", children: row.title })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { value: row.coverage_class })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-4 gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Metric,
+        {
+          label: "Demanda estimada (central)",
+          value: hasDemand ? row.estimated_students : "—",
+          sub: hasDemand ? `rango ${row.demand_low} – ${row.demand_high}` : "Sin base histórica"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Metric,
+        {
+          label: "Cupo publicado",
+          value: row.published_capacity ?? 0,
+          sub: `${row.published_sections ?? 0} secc. de Teoría`
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "Demanda central / cupo", value: pct(row.utilization_central), sub: `Confianza: ${((_a2 = row.confidence) == null ? void 0 : _a2.replace(/_/g, " ")) ?? "—"}` }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "Señales (muestra app)", value: `${row.in_progress_count} / ${row.planned_next}`, sub: "cursando / planeada" })
+    ] }),
+    row.history && row.history.periods.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border border-gray-200 rounded-lg p-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TrendChart,
+      {
+        history: row.history,
+        estimatedStudents: row.estimated_students,
+        targetPeriodLabel,
+        publishedCapacity: row.published_capacity,
+        light: true,
+        compact: true
+      }
+    ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 border border-dashed border-gray-300 rounded-lg p-4 text-center", children: "Sin histórico de matrícula en el catálogo para esta materia." }),
+    row.possibly_partial_offer && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-700", children: "El cupo publicado es menos del 60% del de la misma estación del año anterior: puede ser una oferta parcial." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-800", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", children: "Recomendación:" }),
+      " ",
+      row.recommendation || "Sin recomendación."
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[11px] text-gray-500", children: [
+      "Barra gris = cupo ofertado (Teoría). Barra de color = matriculados (cupo − disponibles; mínimo en secciones llenas). Última columna = demanda estimada y cupo publicado para ",
+      targetPeriodLabel ?? "el período objetivo",
+      "."
+    ] })
+  ] });
+}
+function PredictionPrintReport({
+  rows,
+  faculty,
+  targetPeriodLabel,
+  targetPeriodCode,
+  modelName,
+  generatedAt,
+  scopeLabel,
+  onClose
+}) {
+  const sorted = reactExports.useMemo(() => sortForReport(rows), [rows]);
+  const summary = reactExports.useMemo(() => summarizeReport(sorted), [sorted]);
+  const [visible, setVisible] = reactExports.useState(Math.min(REPORT_CHUNK_SIZE, sorted.length));
+  const ready = visible >= sorted.length;
+  reactExports.useEffect(() => {
+    if (visible >= sorted.length) return;
+    const id = window.setTimeout(
+      () => setVisible((v) => Math.min(sorted.length, v + REPORT_CHUNK_SIZE)),
+      0
+    );
+    return () => window.clearTimeout(id);
+  }, [visible, sorted.length]);
+  reactExports.useEffect(() => {
+    const before = () => reactDomExports.flushSync(() => setVisible(sorted.length));
+    window.addEventListener("beforeprint", before);
+    return () => window.removeEventListener("beforeprint", before);
+  }, [sorted.length]);
+  reactExports.useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.classList.add("print-report-open");
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.classList.remove("print-report-open");
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+  const generated = generatedAt ? formatGeneratedAt(generatedAt) : "—";
+  return reactDomExports.createPortal(
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { id: "print-report-root", className: "fixed inset-0 z-[100] overflow-auto bg-gray-100 text-gray-900", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "no-print sticky top-0 z-10 flex items-center justify-between gap-3 bg-white border-b border-gray-200 px-6 py-3 shadow-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Reporte imprimible" }),
+          " · ",
+          scopeLabel,
+          " · ",
+          sorted.length,
+          " materia",
+          sorted.length === 1 ? "" : "s",
+          !ready && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-2 text-gray-500", children: [
+            "Preparando… ",
+            visible,
+            "/",
+            sorted.length
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-3 text-xs text-gray-500", children: "En el diálogo de impresión elige «Guardar como PDF»." })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: () => window.print(), disabled: !ready, className: "gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { className: "w-4 h-4" }),
+            " Imprimir"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { variant: "outline", onClick: onClose, className: "gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-4 h-4" }),
+            " Cerrar"
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "report-sheet mx-auto max-w-4xl bg-white my-6 print:my-0 px-8 py-8 space-y-8 shadow-sm print:shadow-none", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "border-b-2 border-gray-800 pb-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-2xl font-bold", children: [
+              "Reporte de cobertura de oferta — ",
+              faculty
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-gray-600", children: [
+              "Período objetivo: ",
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+                targetPeriodLabel ?? "—",
+                targetPeriodCode ? ` (${targetPeriodCode})` : ""
+              ] }),
+              " ",
+              "· Modelo: ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: modelName ?? "—" }),
+              " ",
+              "· Generado: ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: generated }),
+              " ",
+              "· Alcance: ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: scopeLabel }),
+              " (",
+              summary.count,
+              " materias)"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-4 gap-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "Déficit crítico", value: summary.byClass.deficit_critico ?? 0 }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "Déficit leve", value: summary.byClass.deficit_leve ?? 0 }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "Exceso de cupo", value: summary.byClass.exceso ?? 0 }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "Demanda central / cupo", value: `${Math.round(summary.totalDemandCentral)} / ${summary.totalCapacity}` })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-xs border-collapse", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-100 text-left", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1", children: "Código" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1", children: "Materia" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1", children: "Cobertura" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1 text-center", children: "Demanda (piso–central–techo)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1 text-center", children: "Cupo / secc." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1 text-center", children: "Util." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "border border-gray-300 px-2 py-1", children: "Recomendación" })
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: sorted.map((r2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "align-top break-inside-avoid", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 px-2 py-1 font-mono", children: r2.offer_code }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 px-2 py-1", children: r2.title }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 px-2 py-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { value: r2.coverage_class }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 px-2 py-1 text-center", children: r2.has_history && r2.demand_low != null ? `${r2.demand_low} – ${r2.estimated_students} – ${r2.demand_high}` : "Sin base" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "border border-gray-300 px-2 py-1 text-center", children: [
+                r2.published_capacity ?? 0,
+                " / ",
+                r2.published_sections ?? 0
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 px-2 py-1 text-center", children: pct(r2.utilization_central) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "border border-gray-300 px-2 py-1", children: shortRecommendation(r2.recommendation) })
+            ] }, r2.offer_code)) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-gray-500", children: "Cupo publicado = suma de NRC de Teoría. Demanda = matrícula estimada (cupo − disponibles históricos); la oferta actual aún no tiene matrícula. Las señales de usuarios de la app son una muestra pequeña y solo ajustan la estimación." })
+        ] }),
+        sorted.slice(0, visible).map((row) => /* @__PURE__ */ jsxRuntimeExports.jsx(CourseSection, { row, targetPeriodLabel }, row.offer_code)),
+        !ready && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "no-print text-center text-sm text-gray-500", children: [
+          "Preparando materias… ",
+          visible,
+          "/",
+          sorted.length
+        ] })
+      ] })
+    ] }),
+    document.body
+  );
+}
 const COVERAGE_BADGE = {
   deficit_critico: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
   deficit_leve: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
@@ -54976,13 +55244,13 @@ function TrendIcon({ t }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "w-4 h-4 text-gray-400" });
 }
 function DemandBar({ value, max: max2 }) {
-  const pct = max2 > 0 ? Math.round(value / max2 * 100) : 0;
+  const pct2 = max2 > 0 ? Math.round(value / max2 * 100) : 0;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 w-full min-w-[80px]", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
         className: "h-2 rounded-full bg-blue-500 dark:bg-blue-400 transition-all duration-500",
-        style: { width: `${pct}%` }
+        style: { width: `${pct2}%` }
       }
     ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-medium text-gray-600 dark:text-gray-300 w-8 text-right", children: Math.round(value) })
@@ -55000,6 +55268,10 @@ function TeacherDashboard({
   reactExports.useEffect(() => {
     setFaculty(profile.faculty);
   }, [profile.faculty]);
+  reactExports.useEffect(() => {
+    setSelectedCodes(/* @__PURE__ */ new Set());
+    setReportRows(null);
+  }, [faculty]);
   const [historyMap, setHistoryMap] = reactExports.useState(/* @__PURE__ */ new Map());
   const [livePredictions, setLivePredictions] = reactExports.useState([]);
   const [pythonIndex, setPythonIndex] = reactExports.useState(null);
@@ -55012,6 +55284,11 @@ function TeacherDashboard({
   const [targetPeriodCode, setTargetPeriodCode] = reactExports.useState("");
   const [targetPeriodLabel, setTargetPeriodLabel] = reactExports.useState("");
   const [transitionRates, setTransitionRates] = reactExports.useState(null);
+  const [selectedCodes, setSelectedCodes] = reactExports.useState(/* @__PURE__ */ new Set());
+  const [printDialogOpen, setPrintDialogOpen] = reactExports.useState(false);
+  const [printScope, setPrintScope] = reactExports.useState("faculty");
+  const [reportRows, setReportRows] = reactExports.useState(null);
+  const [reportScopeLabel, setReportScopeLabel] = reactExports.useState("");
   const load = async () => {
     setIsLoading(true);
     setError(null);
@@ -55161,11 +55438,11 @@ function TeacherDashboard({
   const mode = estimatorMode === "python" && !pythonAvailable && !isLoading ? "live" : estimatorMode;
   const predictions = mode === "live" ? livePredictions : pythonPredictions;
   const modelMeta = pythonIndex == null ? void 0 : pythonIndex.model_meta;
-  const shortfall = (p) => (p.estimated_students ?? 0) - (p.published_capacity ?? 0);
+  const shortfall2 = (p) => (p.estimated_students ?? 0) - (p.published_capacity ?? 0);
   const sortedPredictions = [...predictions].sort((a, b) => {
     if (sortBy === "coverage" && mode === "python") {
       const sev = (COVERAGE_SEVERITY[b.coverage_class ?? "sin_base_historica"] ?? 0) - (COVERAGE_SEVERITY[a.coverage_class ?? "sin_base_historica"] ?? 0);
-      return sev !== 0 ? sev : shortfall(b) - shortfall(a);
+      return sev !== 0 ? sev : shortfall2(b) - shortfall2(a);
     }
     if (sortBy === "planned") return b.planned_next - a.planned_next;
     if (sortBy === "predicted" || sortBy === "coverage") return b.predicted_sections - a.predicted_sections;
@@ -55178,6 +55455,28 @@ function TeacherDashboard({
   }, {});
   const totalCapacity = predictions.reduce((s, p) => s + (p.published_capacity ?? 0), 0);
   const totalDemand = predictions.reduce((s, p) => s + (p.estimated_students ?? 0), 0);
+  const toggleSelected = (code) => setSelectedCodes((prev) => {
+    const next = new Set(prev);
+    if (next.has(code)) next.delete(code);
+    else next.add(code);
+    return next;
+  });
+  const allSelected = sortedPredictions.length > 0 && sortedPredictions.every((p) => selectedCodes.has(p.offer_code));
+  const toggleAll = () => setSelectedCodes(allSelected ? /* @__PURE__ */ new Set() : new Set(sortedPredictions.map((p) => p.offer_code)));
+  const selectedCount = predictions.filter((p) => selectedCodes.has(p.offer_code)).length;
+  const openPrintDialog = () => {
+    setPrintScope(selectedCount > 0 ? "selected" : "faculty");
+    setPrintDialogOpen(true);
+  };
+  const generateReport = () => {
+    const rows = selectReportRows(pythonPredictions, printScope, selectedCodes).map((r2) => ({
+      ...r2,
+      history: historyMap.get(r2.offer_code)
+    }));
+    setReportScopeLabel(printScope === "faculty" ? `Toda la facultad ${faculty}` : "Materias seleccionadas");
+    setReportRows(rows);
+    setPrintDialogOpen(false);
+  };
   const maxDemand = Math.max(
     ...predictions.map((p) => Math.max(p.inflow_from_history, p.inflow_from_cursando)),
     1
@@ -55218,19 +55517,34 @@ function TeacherDashboard({
           lastLoaded.toLocaleTimeString()
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Button,
-        {
-          variant: "outline",
-          onClick: load,
-          disabled: isLoading,
-          className: "gap-2 dark:border-gray-600 dark:hover:bg-gray-700 self-start sm:self-auto",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${isLoading ? "animate-spin" : ""}` }),
-            "Actualizar"
-          ]
-        }
-      )
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2 self-start sm:self-auto", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            variant: "outline",
+            onClick: load,
+            disabled: isLoading,
+            className: "gap-2 dark:border-gray-600 dark:hover:bg-gray-700",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${isLoading ? "animate-spin" : ""}` }),
+              "Actualizar"
+            ]
+          }
+        ),
+        mode === "python" && !isLoading && pythonPredictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            variant: "outline",
+            onClick: openPrintDialog,
+            className: "gap-2 dark:border-gray-600 dark:hover:bg-gray-700",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { className: "w-4 h-4" }),
+              "Imprimir reporte",
+              selectedCount > 0 ? ` (${selectedCount})` : ""
+            ]
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex rounded-lg border border-gray-200 dark:border-gray-600 p-0.5 bg-gray-50 dark:bg-gray-800/80", children: [
@@ -55407,6 +55721,17 @@ function TeacherDashboard({
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-50 dark:bg-gray-700/50 text-left", children: [
+          mode === "python" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "pl-4 pr-1 py-3 w-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "checkbox",
+              checked: allSelected,
+              onChange: toggleAll,
+              "aria-label": "Seleccionar todas las materias de la tabla",
+              title: "Seleccionar todas para el reporte",
+              className: "rounded border-gray-300 cursor-pointer"
+            }
+          ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Código" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Materia" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes cursando esta materia este semestre (muestra de la app)", children: "Cursando" }),
@@ -55429,6 +55754,16 @@ function TeacherDashboard({
             onClick: () => setSelected(row),
             className: "hover:bg-blue-50/60 dark:hover:bg-blue-900/20 transition-colors cursor-pointer",
             children: [
+              mode === "python" && /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "pl-4 pr-1 py-3 w-8", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "checkbox",
+                  checked: selectedCodes.has(row.offer_code),
+                  onChange: () => toggleSelected(row.offer_code),
+                  "aria-label": `Incluir ${row.offer_code} en el reporte`,
+                  className: "rounded border-gray-300 cursor-pointer"
+                }
+              ) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded", children: row.offer_code }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-700 dark:text-gray-300 max-w-[200px] truncate", title: row.title, children: row.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center text-gray-700 dark:text-gray-300", children: row.in_progress_count }),
@@ -55486,6 +55821,99 @@ function TeacherDashboard({
         )) })
       ] }) })
     ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: printDialogOpen, onOpenChange: setPrintDialogOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "sm:max-w-md dark:bg-gray-800 dark:border-gray-700", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-left dark:text-white", children: "Imprimir reporte" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { className: "text-left", children: "Reporte con resumen y un gráfico por materia (cupo ofertado vs matriculados y estimación). Se imprime desde el navegador; elige «Guardar como PDF» para obtener un archivo." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "label",
+          {
+            className: `flex items-start gap-3 rounded-lg border p-3 cursor-pointer ${selectedCount === 0 ? "opacity-50 cursor-not-allowed" : ""} ${printScope === "selected" ? "border-blue-500 bg-blue-50/60 dark:bg-blue-900/20" : "border-gray-200 dark:border-gray-600"}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "radio",
+                  name: "print-scope",
+                  className: "mt-1",
+                  checked: printScope === "selected",
+                  disabled: selectedCount === 0,
+                  onChange: () => setPrintScope("selected")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Materias seleccionadas" }),
+                " (",
+                selectedCount,
+                ")",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-xs text-gray-500 dark:text-gray-400", children: selectedCount === 0 ? "Marca materias con las casillas de la tabla para habilitar esta opción." : "Solo las marcadas en la tabla." })
+              ] })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "label",
+          {
+            className: `flex items-start gap-3 rounded-lg border p-3 cursor-pointer ${printScope === "faculty" ? "border-blue-500 bg-blue-50/60 dark:bg-blue-900/20" : "border-gray-200 dark:border-gray-600"}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "radio",
+                  name: "print-scope",
+                  className: "mt-1",
+                  checked: printScope === "faculty",
+                  onChange: () => setPrintScope("faculty")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+                  "Toda la facultad ",
+                  faculty
+                ] }),
+                " (",
+                pythonPredictions.length,
+                ")",
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "block text-xs text-gray-500 dark:text-gray-400", children: [
+                  "Todas las materias supervisadas cargadas.",
+                  pythonPredictions.length > 150 ? " Es un reporte largo: se prepara por lotes antes de poder imprimir." : ""
+                ] })
+              ] })
+            ]
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2 pt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setPrintDialogOpen(false), children: "Cancelar" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            onClick: generateReport,
+            disabled: printScope === "selected" && selectedCount === 0,
+            className: "gap-2",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { className: "w-4 h-4" }),
+              " Generar reporte"
+            ]
+          }
+        )
+      ] })
+    ] }) }),
+    reportRows && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      PredictionPrintReport,
+      {
+        rows: reportRows,
+        faculty,
+        targetPeriodLabel: (pythonIndex == null ? void 0 : pythonIndex.target_period_label) ?? targetPeriodLabel,
+        targetPeriodCode: (pythonIndex == null ? void 0 : pythonIndex.target_period_code) ?? targetPeriodCode,
+        modelName: modelMeta == null ? void 0 : modelMeta.name,
+        generatedAt: (modelMeta == null ? void 0 : modelMeta.generated_at) ?? (pythonIndex == null ? void 0 : pythonIndex.generated_at),
+        scopeLabel: reportScopeLabel,
+        onClose: () => setReportRows(null)
+      }
+    ),
     selected && /* @__PURE__ */ jsxRuntimeExports.jsx(
       CourseDemandDetailDialog,
       {

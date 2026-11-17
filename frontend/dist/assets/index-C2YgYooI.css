@@ -762,6 +762,10 @@
     margin-block: calc(var(--spacing) * 1);
   }
 
+  .my-6 {
+    margin-block: calc(var(--spacing) * 6);
+  }
+
   .mt-0\.5 {
     margin-top: calc(var(--spacing) * .5);
   }
@@ -1383,6 +1387,10 @@
     list-style-type: disc;
   }
 
+  .break-inside-avoid {
+    break-inside: avoid;
+  }
+
   .auto-rows-min {
     grid-auto-rows: min-content;
   }
@@ -1393,6 +1401,10 @@
 
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .grid-cols-\[0_1fr\] {
@@ -1612,6 +1624,10 @@
     overflow: hidden;
   }
 
+  .overflow-auto {
+    overflow: auto;
+  }
+
   .overflow-hidden {
     overflow: hidden;
   }
@@ -1776,6 +1792,11 @@
     border-bottom-width: 1px;
   }
 
+  .border-b-2 {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 2px;
+  }
+
   .border-l {
     border-left-style: var(--tw-border-style);
     border-left-width: 1px;
@@ -1793,6 +1814,10 @@
 
   .border-amber-200 {
     border-color: var(--color-amber-200);
+  }
+
+  .border-amber-300 {
+    border-color: var(--color-amber-300);
   }
 
   .border-blue-100 {
@@ -1819,6 +1844,10 @@
     border-color: var(--destructive);
   }
 
+  .border-emerald-300 {
+    border-color: var(--color-emerald-300);
+  }
+
   .border-emerald-600 {
     border-color: var(--color-emerald-600);
   }
@@ -1837,6 +1866,10 @@
 
   .border-gray-300 {
     border-color: var(--color-gray-300);
+  }
+
+  .border-gray-800 {
+    border-color: var(--color-gray-800);
   }
 
   .border-green-200 {
@@ -1861,6 +1894,14 @@
 
   .border-red-200 {
     border-color: var(--color-red-200);
+  }
+
+  .border-red-300 {
+    border-color: var(--color-red-300);
+  }
+
+  .border-sky-300 {
+    border-color: var(--color-sky-300);
   }
 
   .border-transparent {
@@ -1942,6 +1983,16 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-blue-50\/50 {
       background-color: color-mix(in oklab, var(--color-blue-50) 50%, transparent);
+    }
+  }
+
+  .bg-blue-50\/60 {
+    background-color: #eff6ff99;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-blue-50\/60 {
+      background-color: color-mix(in oklab, var(--color-blue-50) 60%, transparent);
     }
   }
 
@@ -2238,6 +2289,10 @@
     padding-inline: calc(var(--spacing) * 6);
   }
 
+  .px-8 {
+    padding-inline: calc(var(--spacing) * 8);
+  }
+
   .py-0 {
     padding-block: calc(var(--spacing) * 0);
   }
@@ -2310,6 +2365,10 @@
     padding-top: calc(var(--spacing) * 6);
   }
 
+  .pr-1 {
+    padding-right: calc(var(--spacing) * 1);
+  }
+
   .pr-2 {
     padding-right: calc(var(--spacing) * 2);
   }
@@ -2352,6 +2411,10 @@
 
   .text-right {
     text-align: right;
+  }
+
+  .align-top {
+    vertical-align: top;
   }
 
   .font-mono {
@@ -4518,6 +4581,17 @@
     background-color: var(--primary);
   }
 
+  @media print {
+    .print\:my-0 {
+      margin-block: calc(var(--spacing) * 0);
+    }
+
+    .print\:shadow-none {
+      --tw-shadow: 0 0 #0000;
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
+
   .\[\&_p\]\:leading-relaxed p {
     --tw-leading: var(--leading-relaxed);
     line-height: var(--leading-relaxed);
@@ -4797,6 +4871,58 @@
   --sidebar-accent-foreground: oklch(98.5% 0 0);
   --sidebar-border: oklch(100% 0 0 / .1);
   --sidebar-ring: oklch(43.9% 0 0);
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  body.print-report-open #root {
+    display: none !important;
+  }
+
+  body.print-report-open {
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  #print-report-root {
+    background: #fff !important;
+    position: static !important;
+    inset: auto !important;
+    overflow: visible !important;
+  }
+
+  #print-report-root .no-print {
+    display: none !important;
+  }
+
+  #print-report-root .report-sheet {
+    max-width: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #print-report-root .report-course-page {
+    break-before: page;
+    page-break-before: always;
+    break-inside: avoid;
+  }
+
+  #print-report-root thead {
+    display: table-header-group;
+  }
+
+  #print-report-root tr {
+    break-inside: avoid;
+  }
+
+  #print-report-root * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 @property --tw-translate-x {
