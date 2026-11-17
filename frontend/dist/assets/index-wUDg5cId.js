@@ -44023,8 +44023,8 @@ const availableCurricula = [
     name: "Hospitalidad y Hotelería",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 121,
-    courses: 47,
+    credits: 127,
+    courses: 49,
     dataLoader: async () => {
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-HSP.json`);
@@ -44173,8 +44173,8 @@ const availableCurricula = [
     name: "Ingeniería Química",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 139,
-    courses: 53,
+    credits: 142,
+    courses: 54,
     dataLoader: async () => {
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-INQ.json`);
@@ -48851,15 +48851,23 @@ function formatSessionTimeRange(session) {
   return session.startTime;
 }
 function getOffersForCourse(offerMap, course, type = "Teoría") {
-  return [...offerMap.values()].filter(
+  const matches = [...offerMap.values()].filter(
     (row) => row.type === type && courseMatchesOffer(course, row)
   );
+  if (matches.length) return matches;
+  return getOffersForExplicitCode(offerMap, course.code, type);
 }
 function getOffersForExplicitCode(offerMap, explicitCode, type = "Teoría") {
-  const normalized = normalizeCurriculumCode(explicitCode);
+  const normalized = normalizeOfferCourseCode(explicitCode);
   if (!normalized) return [];
-  return [...offerMap.values()].filter(
-    (row) => row.type === type && row.course_code.toUpperCase() === normalized
+  const rows = [...offerMap.values()].filter((row) => row.type === type);
+  const exact = rows.filter(
+    (row) => normalizeOfferCourseCode(row.course_code) === normalized
+  );
+  if (exact.length || !/^[A-Z]{2,5}-\d{3,4}E?$/.test(normalized)) return exact;
+  const alternative = normalized.endsWith("E") ? normalized.slice(0, -1) : `${normalized}E`;
+  return rows.filter(
+    (row) => normalizeOfferCourseCode(row.course_code) === alternative
   );
 }
 function getOffersForSchedule(offerMap, course, explicitCode, type = "Teoría") {
@@ -51033,7 +51041,6 @@ function SchedulePlanningDrawer({
               /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTitle, { children: "Solo planificación — sin registro automático" }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDescription, { className: "text-amber-800 dark:text-amber-200/90", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Este planeador sirve únicamente para organizar tu horario de forma visual. Por ahora no registra materias en el sistema académico en tu nombre: eso requiere tus credenciales personales y aún no contamos con autorización de la USFQ para conectar con ese servicio." }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Existe una automatización de autoregistro que funciona aproximadamente el 60% de las veces, pero no está publicada de momento. Gracias por tu comprensión y atención." }),
                 crossMallaEnabled && multiMallaAvailable && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2", children: [
                   "En ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Configuración" }),
