@@ -1,4 +1,7 @@
 .env
+.env.local
+.env.*.local
+user_progress.json
 offer-scraper/.env
 predictor/.env
 offer-scraper/snaps/
