@@ -271,8 +271,8 @@ export const availableCurricula: AvailableCurriculum[] = [
     name: "Hospitalidad y Hotelería",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 121,
-    courses: 47,
+    credits: 127,
+    courses: 49,
     dataLoader: async () => {
       const base = (import.meta as any).env?.BASE_URL || '/';
       const res = await fetch(`${base}data/Malla-HSP.json`);

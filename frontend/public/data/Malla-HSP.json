@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-HSP",
-  "Last-Modified": "2026-06-08T21:54:08.474Z",
+  "Last-Modified": "2026-11-17T18:29:40.745Z",
   "courses": [
     {
       "id": "MAT1009",
@@ -111,7 +111,7 @@
     {
       "id": "HSP1006",
       "code": "HSP 1006",
-      "title": "Comunicación para el servicio",
+      "title": "Comunicación para el Servicio",
       "description": "",
       "credits": 3,
       "semester": 2,
@@ -201,7 +201,23 @@
       "area": "MAT",
       "type": "obligatoria",
       "prerequisites": [
-        "MAT1009 || MAT1009E || MAT1003"
+        "MAT1009 || MAT1009E || MAT1003 || MAT1201 || MAT1008 || MAT1301 || MAT1203"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "HSP2001",
+      "code": "HSP 2001",
+      "title": "Administración de A & B",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "HSP",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1009",
+        "HSP1001"
       ],
       "alternatives": []
     },
@@ -534,13 +550,29 @@
       "alternatives": []
     },
     {
+      "id": "HSP3002",
+      "code": "HSP 3002",
+      "title": "Administración de Eventos",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 7",
+      "area": "HSP",
+      "type": "obligatoria",
+      "prerequisites": [
+        "GST2001",
+        "HSP1001 || COM2101"
+      ],
+      "alternatives": []
+    },
+    {
       "id": "HSP4002",
       "code": "HSP 4002",
       "title": "Revenue Management",
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "HSP",
       "type": "obligatoria",
       "prerequisites": [
@@ -557,7 +589,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -570,7 +602,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -583,7 +615,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "ARTE",
       "type": "optativa",
       "prerequisites": [],
@@ -596,7 +628,7 @@
       "description": "",
       "credits": 1,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "DEP",
       "type": "obligatoria",
       "prerequisites": [],
@@ -609,7 +641,7 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "ELECTIVA",
       "type": "electiva",
       "prerequisites": [],
@@ -622,7 +654,7 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "ELECTIVA",
       "type": "electiva",
       "prerequisites": [],
@@ -635,7 +667,7 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -648,7 +680,7 @@
       "description": "",
       "credits": 5,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "HSP",
       "type": "obligatoria",
       "prerequisites": [
