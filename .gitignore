@@ -33,3 +33,4 @@ supabase/.temp/
 notebook_predictor/.quarto/
 notebook_predictor/predictor.pdf
 proyecto python avanzado/
+predictor/.venv/
