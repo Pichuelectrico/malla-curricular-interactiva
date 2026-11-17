@@ -9,6 +9,8 @@ import {
   formatGroupLetters,
   getLinkedOffers,
   courseRequiresLabEj,
+  getOffersForCourse,
+  getOffersForExplicitCode,
 } from './offerMatching';
 import type { Course } from '../types/curriculum';
 import type { CourseOfferRow } from './useCourseOffer';
@@ -49,6 +51,37 @@ function course(code: string, area = ''): Course {
     alternatives: [],
   };
 }
+
+describe('E-suffixed offer fallback', () => {
+  const base = offerRow({ nrc: '1000', type: 'Teoría', course_code: 'CMP-5006' });
+  const variant = offerRow({ nrc: '4122', type: 'Teoría', course_code: 'CMP-5006E' });
+  const map = (...rows: CourseOfferRow[]) => new Map(rows.map(row => [row.nrc, row]));
+
+  it('finds the base offer for an E-suffixed curriculum or explicit code', () => {
+    expect(getOffersForCourse(map(base), course('CMP 5006E'))).toEqual([base]);
+    expect(getOffersForExplicitCode(map(base), 'cmp5006e')).toEqual([base]);
+  });
+
+  it('finds the E variant for a base code when only that variant is offered', () => {
+    expect(getOffersForCourse(map(variant), course('CMP 5006'))).toEqual([variant]);
+    expect(getOffersForExplicitCode(map(variant), 'CMP-5006')).toEqual([variant]);
+  });
+
+  it('keeps exact matches instead of merging or replacing them', () => {
+    const both = map(base, variant);
+    expect(getOffersForCourse(both, course('CMP 5006E'))).toEqual([variant]);
+    expect(getOffersForCourse(both, course('CMP 5006'))).toEqual([base]);
+    expect(getOffersForExplicitCode(both, 'CMP-5006E')).toEqual([variant]);
+    expect(getOffersForExplicitCode(both, 'CMP-5006')).toEqual([base]);
+  });
+
+  it('does not confuse other suffixes or session types', () => {
+    const other = offerRow({ nrc: '2000', type: 'Teoría', course_code: 'CMP-5006EE' });
+    expect(getOffersForExplicitCode(map(base, other), 'CMP-5006EE')).toEqual([other]);
+    expect(getOffersForExplicitCode(map(base), 'CMP-5006EE')).toEqual([]);
+    expect(getOffersForExplicitCode(map(variant), 'CMP-5006', 'Laboratorio')).toEqual([]);
+  });
+});
 
 describe('requiresOfferCourseCode', () => {
   it('requires code for OPT buckets', () => {

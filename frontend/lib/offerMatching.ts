@@ -203,9 +203,11 @@ export function getOffersForCourse(
   course: Course,
   type: OfferSessionType = 'Teoría'
 ): CourseOfferRow[] {
-  return [...offerMap.values()].filter(
+  const matches = [...offerMap.values()].filter(
     row => row.type === type && courseMatchesOffer(course, row)
   );
+  if (matches.length) return matches;
+  return getOffersForExplicitCode(offerMap, course.code, type);
 }
 
 export function getOffersForExplicitCode(
@@ -213,10 +215,19 @@ export function getOffersForExplicitCode(
   explicitCode: string,
   type: OfferSessionType = 'Teoría'
 ): CourseOfferRow[] {
-  const normalized = normalizeCurriculumCode(explicitCode);
+  const normalized = normalizeOfferCourseCode(explicitCode);
   if (!normalized) return [];
-  return [...offerMap.values()].filter(
-    row => row.type === type && row.course_code.toUpperCase() === normalized
+  const rows = [...offerMap.values()].filter(row => row.type === type);
+  const exact = rows.filter(
+    row => normalizeOfferCourseCode(row.course_code) === normalized
+  );
+  if (exact.length || !/^[A-Z]{2,5}-\d{3,4}E?$/.test(normalized)) return exact;
+
+  const alternative = normalized.endsWith('E')
+    ? normalized.slice(0, -1)
+    : `${normalized}E`;
+  return rows.filter(
+    row => normalizeOfferCourseCode(row.course_code) === alternative
   );
 }
 
