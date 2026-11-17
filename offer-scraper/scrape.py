@@ -313,15 +313,22 @@ def update_offer_metadata(
 
 def fetch_current_offer(supa_url: str, supa_key: str) -> list[dict]:
     headers = _supabase_headers(supa_key)
-    resp = requests.get(
-        f"{supa_url}/rest/v1/course_offer?select=*",
-        headers=headers,
-        timeout=60,
-    )
-    if resp.status_code != 200:
-        log.error("Failed to fetch course_offer: %s", resp.text[:200])
-        return []
-    return resp.json()
+    rows: list[dict] = []
+    page_size = 1000
+    offset = 0
+    while True:
+        resp = requests.get(
+            f"{supa_url}/rest/v1/course_offer",
+            headers=headers,
+            params={"select": "*", "order": "nrc", "offset": offset, "limit": page_size},
+            timeout=60,
+        )
+        resp.raise_for_status()
+        batch = resp.json()
+        rows.extend(batch)
+        if len(batch) < page_size:
+            return rows
+        offset += page_size
 
 
 def archive_current_offer_to_history(supa_url: str, supa_key: str) -> int:
@@ -545,7 +552,13 @@ def cmd_rollover(args) -> None:
         sys.exit(1)
 
     if current_rows:
-        archive_current_offer_to_history(supa_url, supa_key)
+        archived_count = archive_current_offer_to_history(supa_url, supa_key)
+        if archived_count != len(current_rows):
+            log.error(
+                "Rollover aborted: archived %d / %d rows; course_offer unchanged.",
+                archived_count, len(current_rows),
+            )
+            sys.exit(1)
 
     clear_course_offer(supa_url, supa_key)
     upload_to_supabase(courses, supa_url, supa_key)
