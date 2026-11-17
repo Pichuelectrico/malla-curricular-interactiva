@@ -2482,11 +2482,6 @@ export default function SchedulePlanningDrawer({
                       nombre: eso requiere tus credenciales personales y aún no contamos
                       con autorización de la USFQ para conectar con ese servicio.
                     </p>
-                    <p className="mt-2">
-                      Existe una automatización de autoregistro que funciona aproximadamente
-                      el 60% de las veces, pero no está publicada de momento. Gracias por
-                      tu comprensión y atención.
-                    </p>
                     {crossMallaEnabled && multiMallaAvailable && (
                       <p className="mt-2">
                         En <strong>Configuración</strong> puedes activar
