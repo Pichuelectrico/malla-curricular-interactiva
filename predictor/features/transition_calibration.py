@@ -21,7 +21,7 @@ from config import (
     TRANSITION_RATES_JSON,
     TRANSITION_SHRINKAGE_ALPHA,
 )
-from features.codes import normalize_course_code
+from features.codes import canonical_course_code
 from features.history_stats import aggregate_history_rows, load_history_rows
 from features.period_calendar import AcademicCalendar, build_calendar, is_regular
 from graph.curriculum import iter_curricula, parse_prereq_group
@@ -217,14 +217,14 @@ def calibrate_transitions(
 
         for course in courses:
             to_id = course["id"]
-            to_offer = normalize_course_code(to_id)
+            to_offer = canonical_course_code(to_id)
             to_cupo = _cupo_by_period(history_by_offer, to_offer)
 
             for expr in course.get("prerequisites") or []:
                 for from_id in parse_prereq_group(expr):
                     if from_id not in graph.nodes:
                         continue
-                    from_offer = normalize_course_code(from_id)
+                    from_offer = canonical_course_code(from_id)
                     from_cupo = _cupo_by_period(history_by_offer, from_offer)
                     et = classify_edge_type(graph, from_id, to_id)
                     delta = semester_delta(graph, from_id, to_id)

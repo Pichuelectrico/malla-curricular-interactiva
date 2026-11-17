@@ -16,3 +16,14 @@ def normalize_course_code(code: str) -> str:
     if match:
         return f"{match.group(1)}-{match.group(2)}"
     return raw
+
+
+_E_SUFFIX = re.compile(r"(?<=\d)E$")
+
+
+def canonical_course_code(code: str) -> str:
+    """Normalized code without trailing 'E' (CMP-5006E == CMP-5006), for demand aggregation.
+
+    Mirrors the frontend's matching (exact first, then base-without-E); aggregation keys use the base.
+    """
+    return _E_SUFFIX.sub("", normalize_course_code(code))

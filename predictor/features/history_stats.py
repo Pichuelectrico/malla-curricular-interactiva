@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from config import OUTPUT_DIR, STUDENTS_PER_SECTION
-from features.codes import normalize_course_code
+from features.codes import canonical_course_code, normalize_course_code
 from features.period_calendar import (
     AcademicCalendar,
     build_calendar,
@@ -74,10 +74,15 @@ def aggregate_history_rows(
     for row in rows:
         if row.get("type") != "Teoría":
             continue
-        code = normalize_course_code(str(row.get("course_code", "")))
+        code = canonical_course_code(str(row.get("course_code", "")))
         period_code = row.get("period_code") or row.get("period") or ""
         period_label = row.get("period") or period_code
-        total = float(row.get("total") or 0)
+        # Demand proxy = enrolled seats (total - available). `total` alone is CAPACITY, not demand.
+        # Rows without both fields cannot be measured and are skipped.
+        total_seats, available = row.get("total"), row.get("available")
+        if total_seats is None or available is None or float(total_seats) <= 0:
+            continue
+        total = max(0.0, float(total_seats) - float(available))
 
         by_period = per_course_period.setdefault(code, {})
         current = by_period.setdefault(
