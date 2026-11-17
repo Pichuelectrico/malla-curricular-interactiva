@@ -53988,6 +53988,14 @@ async function loadFacultyCurriculum(facultyCode) {
   const data = module.default ?? module;
   return data.courses ?? [];
 }
+const E_SUFFIX = new RegExp("(?<=\\d)E$");
+function canonicalOfferCourseCode(code) {
+  return normalizeOfferCourseCode(code).replace(E_SUFFIX, "");
+}
+function offerCodeVariants(code) {
+  const base = canonicalOfferCourseCode(code);
+  return /^[A-Z]{2,5}-\d/.test(base) ? [base, `${base}E`] : [base];
+}
 const FACULTY_OFFER_PREFIXES = {
   ECO: ["ECN"],
   // Arquitectura: código de carrera/malla AQQ, pero los cursos usan prefijo ARQ.
@@ -54003,8 +54011,11 @@ function extraSupervisedCodes(facultyCode) {
 }
 function offerCodeToCourseId(offerCode, mallaCourses) {
   const normalized = normalizeOfferCourseCode(offerCode);
+  const canonical = canonicalOfferCourseCode(offerCode);
   const match = mallaCourses.find(
     (c) => normalizeOfferCourseCode(c.id) === normalized || normalizeOfferCourseCode(c.code) === normalized
+  ) ?? mallaCourses.find(
+    (c) => canonicalOfferCourseCode(c.id) === canonical || canonicalOfferCourseCode(c.code) === canonical
   );
   if (match) return match.id;
   return normalized.replace(/-/g, "");
@@ -54023,15 +54034,29 @@ async function fetchFacultySupervisedCourses(facultyCode) {
     mallaCourses = await loadFacultyCurriculum(faculty);
   } catch {
   }
-  return (data ?? []).map((row) => {
-    const offerCode = normalizeOfferCourseCode(row.course_code);
-    return {
-      offerCode,
-      courseId: offerCodeToCourseId(offerCode, mallaCourses),
-      title: row.title ?? offerCode,
-      facultyCode: faculty
-    };
-  });
+  return dedupeSupervisedByCanonicalCode(
+    data ?? [],
+    faculty,
+    mallaCourses
+  );
+}
+function dedupeSupervisedByCanonicalCode(rows, faculty, mallaCourses) {
+  const byCanonical = /* @__PURE__ */ new Map();
+  for (const row of rows) {
+    const normalized = normalizeOfferCourseCode(row.course_code);
+    const canonical = canonicalOfferCourseCode(normalized);
+    const isBase = normalized === canonical;
+    const prev = byCanonical.get(canonical);
+    if (!prev || isBase && !prev.hasBase) {
+      byCanonical.set(canonical, { title: row.title ?? (prev == null ? void 0 : prev.title) ?? null, hasBase: isBase });
+    }
+  }
+  return [...byCanonical.entries()].map(([offerCode, v]) => ({
+    offerCode,
+    courseId: offerCodeToCourseId(offerCode, mallaCourses),
+    title: v.title ?? offerCode,
+    facultyCode: faculty
+  }));
 }
 class TransitionRateTable {
   constructor() {
@@ -54170,7 +54195,7 @@ function transitionProbability(graph, fromId, toId, rates) {
   return defaultTransitionProbability(graph, fromId, toId);
 }
 function collectDagHistoryOfferCodes(courses2) {
-  return [...new Set(courses2.map((c) => normalizeOfferCourseCode(c.id)))];
+  return [...new Set(courses2.map((c) => canonicalOfferCourseCode(c.id)))];
 }
 function propagateInflow(graph, seedsByCourseId, maxHops = 5, rates) {
   const inflow = /* @__PURE__ */ new Map();
@@ -54211,7 +54236,7 @@ function propagateInflow(graph, seedsByCourseId, maxHops = 5, rates) {
 function buildHistoricalSeeds(courses2, historyByOfferCode) {
   const seeds = /* @__PURE__ */ new Map();
   for (const course of courses2) {
-    const offerCode = normalizeOfferCourseCode(course.id);
+    const offerCode = canonicalOfferCourseCode(course.id);
     const hist = historyByOfferCode.get(offerCode);
     if (hist && hist.lastRegularStudents > 0) {
       seeds.set(course.id, hist.lastRegularStudents);
@@ -54407,7 +54432,7 @@ const FALLBACK_PERIODS = [
   { code: "202410", label: "Primer Semestre 2024/2025" }
 ];
 const PAGE_SIZE = 1e3;
-const IN_BATCH = 50;
+const IN_BATCH = 25;
 function isUsableForRegularAvg(kind) {
   return isRegularKind(kind);
 }
@@ -54447,18 +54472,37 @@ function computeSummerRate(periods) {
   if (ref <= 0) return 0;
   return Math.min(0.95, Math.max(0.05, lastSummer / ref));
 }
+function dedupeHistoryRows(rows) {
+  const seen = /* @__PURE__ */ new Set();
+  const out = [];
+  for (const row of rows) {
+    const key = row.id != null ? `id:${row.id}` : `${row.period_code ?? row.period}|${row.nrc ?? ""}|${row.course_code}`;
+    if (row.id == null && row.nrc == null) {
+      out.push(row);
+      continue;
+    }
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(row);
+  }
+  return out;
+}
 function aggregateRows(rows, options = {}) {
   const { targetPeriodCode, calendar, veranoCourseCodes } = options;
   const perCoursePeriod = /* @__PURE__ */ new Map();
-  for (const row of rows) {
-    const code = normalizeOfferCourseCode(row.course_code);
+  for (const row of dedupeHistoryRows(rows)) {
+    const code = canonicalOfferCourseCode(row.course_code);
     const periodCode = row.period_code ?? row.period;
     const periodLabel = row.period ?? periodCode;
     if (!perCoursePeriod.has(code)) perCoursePeriod.set(code, /* @__PURE__ */ new Map());
     const byPeriod = perCoursePeriod.get(code);
-    const current = byPeriod.get(periodCode) ?? { label: periodLabel, sections: 0, students: 0 };
+    const current = byPeriod.get(periodCode) ?? { label: periodLabel, sections: 0, students: 0, capacity: 0, measured: 0 };
     current.sections += 1;
-    current.students += row.total ?? 0;
+    current.capacity += row.total ?? 0;
+    if (row.total != null && row.available != null) {
+      current.students += Math.max(0, row.total - row.available);
+      current.measured += 1;
+    }
     byPeriod.set(periodCode, current);
   }
   const result = /* @__PURE__ */ new Map();
@@ -54471,6 +54515,8 @@ function aggregateRows(rows, options = {}) {
         periodLabel: stats.label,
         sections: stats.sections,
         totalStudents: stats.students,
+        capacity: stats.capacity,
+        measuredSections: stats.measured,
         isSummer: kind === "summer",
         periodKind: kind
       };
@@ -54486,6 +54532,7 @@ function aggregateRows(rows, options = {}) {
     }
     const avgSections = basis.reduce((s, p) => s + p.sections, 0) / basis.length;
     const avgStudents = basis.reduce((s, p) => s + p.totalStudents, 0) / basis.length;
+    const avgCapacity = basis.reduce((s, p) => s + p.capacity, 0) / basis.length;
     const maxSections = Math.max(...periods.map((p) => p.sections), 0);
     const recent = basis.slice(-3).map((p) => p.totalStudents);
     const estimatedNextStudents = recent.length >= 2 ? Math.round(recent.reduce((a, b) => a + b, 0) / recent.length) : Math.round(avgStudents);
@@ -54505,6 +54552,7 @@ function aggregateRows(rows, options = {}) {
       periods,
       avgSections,
       avgStudents,
+      avgCapacity,
       maxSections,
       numPeriods: periods.length,
       estimatedNextStudents,
@@ -54520,7 +54568,7 @@ async function fetchHistoryBatch(offerCodes) {
   const rows = [];
   let offset2 = 0;
   while (true) {
-    const { data, error } = await supabase.from("course_offer_history").select("course_code, total, period, period_code").in("course_code", offerCodes).eq("type", "Teoría").range(offset2, offset2 + PAGE_SIZE - 1);
+    const { data, error } = await supabase.from("course_offer_history").select("id, nrc, course_code, total, available, period, period_code").in("course_code", offerCodes).eq("type", "Teoría").order("id", { ascending: true }).range(offset2, offset2 + PAGE_SIZE - 1);
     if (error) throw new Error(error.message);
     const batch = data ?? [];
     rows.push(...batch);
@@ -54542,9 +54590,10 @@ async function fetchOfferMetadata() {
 async function fetchOfferHistoryForCourses(offerCodes, options = {}) {
   if (offerCodes.length === 0) return /* @__PURE__ */ new Map();
   const calendar = options.calendar ?? await loadAcademicCalendar();
+  const queryCodes = [...new Set(offerCodes.flatMap((code) => offerCodeVariants(code)))];
   const allRows = [];
-  for (let i = 0; i < offerCodes.length; i += IN_BATCH) {
-    const batch = offerCodes.slice(i, i + IN_BATCH);
+  for (let i = 0; i < queryCodes.length; i += IN_BATCH * 2) {
+    const batch = queryCodes.slice(i, i + IN_BATCH * 2);
     const rows = await fetchHistoryBatch(batch);
     allRows.push(...rows);
   }
@@ -54554,7 +54603,7 @@ function veranoOfferCodesFromCourses(courses2) {
   const codes = /* @__PURE__ */ new Set();
   for (const c of courses2) {
     if (isVeranoBlockCourse(c.block)) {
-      codes.add(normalizeOfferCourseCode(c.id));
+      codes.add(canonicalOfferCourseCode(c.id));
     }
   }
   return codes;
@@ -54584,8 +54633,7 @@ function getPythonPredictionsUrl() {
 }
 function lookupPythonPrediction(index2, offerCode) {
   if (!index2) return void 0;
-  const key = normalizeOfferCourseCode(offerCode);
-  return index2.by_offer_code[key];
+  return index2.by_offer_code[normalizeOfferCourseCode(offerCode)] ?? index2.by_offer_code[canonicalOfferCourseCode(offerCode)];
 }
 function formatGeneratedAt(iso) {
   if (!iso) return "desconocida";
@@ -54595,6 +54643,22 @@ function formatGeneratedAt(iso) {
     return iso;
   }
 }
+const COVERAGE_LABELS = {
+  deficit_critico: "Déficit crítico",
+  deficit_leve: "Déficit leve",
+  equilibrado: "Equilibrado",
+  exceso: "Exceso de cupo",
+  sin_base_historica: "Sin base histórica",
+  sin_capacidad: "Sin cupo publicado"
+};
+const COVERAGE_SEVERITY = {
+  deficit_critico: 5,
+  deficit_leve: 4,
+  sin_capacidad: 3,
+  exceso: 2,
+  equilibrado: 1,
+  sin_base_historica: 0
+};
 function formatPeriodLabel(period) {
   const match = period.periodLabel.match(/(\d{4})\/(\d{4})/);
   if (match) {
@@ -54621,13 +54685,15 @@ function formatEdgeType(edgeType) {
 function TrendChart({
   history,
   estimatedStudents,
-  targetPeriodLabel
+  targetPeriodLabel,
+  publishedCapacity
 }) {
   const points = [
     ...history.periods.map((p) => ({
       key: p.periodCode,
       label: formatPeriodLabel(p),
       students: p.totalStudents,
+      capacity: p.capacity,
       sections: p.sections,
       isEstimate: false,
       isSummer: p.isSummer
@@ -54636,45 +54702,66 @@ function TrendChart({
       key: "estimate",
       label: targetPeriodLabel ? `→ ${targetPeriodLabel.slice(0, 12)}…` : "Próximo",
       students: estimatedStudents,
+      capacity: publishedCapacity ?? null,
       sections: Math.max(1, Math.round(estimatedStudents / 25)),
       isEstimate: true,
       isSummer: false
     }
   ];
-  const maxStudents = Math.max(...points.map((p) => p.students), 1);
-  const chartH = 160;
-  const barW = Math.min(48, Math.max(28, 320 / points.length - 8));
+  const maxValue = Math.max(...points.map((p) => Math.max(p.students, p.capacity ?? 0)), 1);
+  const chartH = 140;
+  const barW = Math.min(20, Math.max(12, 150 / points.length));
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-end justify-center gap-2 h-[180px] px-2 border-b border-gray-200 dark:border-gray-600", children: points.map((p) => {
-      const h = Math.max(4, p.students / maxStudents * chartH);
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-1", style: { width: barW + 8 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-medium text-gray-600 dark:text-gray-300", children: p.students }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
-          {
-            className: `w-full rounded-t transition-all ${p.isEstimate ? "bg-emerald-500/80 border-2 border-dashed border-emerald-600" : p.isSummer ? "bg-amber-400 dark:bg-amber-500" : "bg-blue-500 dark:bg-blue-400"}`,
-            style: { height: h, width: barW },
-            title: `${p.sections} sección(es)`
-          }
-        ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-end justify-center gap-3 h-[180px] px-2 border-b border-gray-200 dark:border-gray-600", children: points.map((p) => {
+      const hStudents = Math.max(3, p.students / maxValue * chartH);
+      const hCap = p.capacity != null ? Math.max(3, p.capacity / maxValue * chartH) : 0;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-1", style: { width: barW * 2 + 8 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-end gap-0.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-gray-400", children: p.capacity ?? "" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "rounded-t bg-gray-300 dark:bg-gray-500",
+                style: { height: hCap, width: barW },
+                title: p.capacity != null ? `Cupo ofertado: ${p.capacity} (${p.sections} sección(es) de Teoría)` : "Sin cupo"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-medium text-gray-700 dark:text-gray-200", children: p.students }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: `rounded-t ${p.isEstimate ? "bg-emerald-500/80 border-2 border-dashed border-emerald-600" : p.isSummer ? "bg-amber-400 dark:bg-amber-500" : "bg-blue-500 dark:bg-blue-400"}`,
+                style: { height: hStudents, width: barW },
+                title: p.isEstimate ? `Demanda estimada: ${p.students}` : `Matriculados: ${p.students}`
+              }
+            )
+          ] })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-gray-500 dark:text-gray-400 text-center leading-tight", children: p.label })
       ] }, p.key);
     }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3 text-[11px] text-gray-500 dark:text-gray-400 justify-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-gray-300 dark:bg-gray-500" }),
+        " Cupo ofertado"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-blue-500" }),
-        " Semestre regular"
+        " Matriculados (regular)"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-amber-400" }),
-        " Verano"
+        " Matriculados (verano)"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-dashed border-emerald-700" }),
-        " Estimado"
+        " Demanda estimada"
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 text-center", children: "Altura = cupo total ofertado (suma de cupos de Teoría en ese período)." })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-gray-500 dark:text-gray-400 text-center", children: "Barra gris = cupo ofertado (suma de NRC de Teoría; los laboratorios no se cuentan). Barra de color = matriculados (cupo − disponibles; en secciones llenas es un mínimo). La última columna es la estimación para el período objetivo junto a su cupo publicado." })
   ] });
 }
 function CourseDemandDetailDialog({
@@ -54693,13 +54780,13 @@ function CourseDemandDetailDialog({
   history,
   targetPeriodLabel,
   targetPeriodCode,
-  gbrStudents,
-  gbrSections,
   modelLabel,
+  modelGeneratedAt,
+  coverage,
   prerequisiteRates = []
 }) {
+  var _a2;
   const trendLabel = trend === "up" ? "Al alza" : trend === "down" ? "A la baja" : trend === "new" ? "Sin historial" : "Estable";
-  const showGbr = gbrStudents != null && gbrStudents > 0 && (modelLabel == null ? void 0 : modelLabel.includes("gbr"));
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open, onOpenChange, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "sm:max-w-lg dark:bg-gray-800 dark:border-gray-700 max-h-[90vh] overflow-y-auto", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { className: "text-left dark:text-white", children: [
@@ -54712,25 +54799,21 @@ function CourseDemandDetailDialog({
         /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: targetPeriodLabel }),
         targetPeriodCode ? ` (${targetPeriodCode})` : "",
         "."
-      ] }) : "Tendencia histórica de cupo ofertado y estimación para el próximo período." })
+      ] }) : "Cupo ofertado y matriculados por período, y estimación para el próximo período." })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3 text-sm", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Secciones sugeridas" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold text-blue-600 dark:text-blue-400", children: suggestedSections }),
-        showGbr && gbrSections != null && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[10px] text-emerald-600 dark:text-emerald-400 mt-1", children: [
-          "GBR: ",
-          gbrSections,
-          " sec."
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold text-blue-600 dark:text-blue-400", children: suggestedSections })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Estudiantes estimados" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Demanda estimada (matriculados)" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold text-gray-800 dark:text-gray-200", children: estimatedStudents }),
-        showGbr && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[10px] text-emerald-600 dark:text-emerald-400 mt-1", children: [
-          "GBR: ",
-          gbrStudents,
-          " est."
+        coverage && coverage.demandLow != null && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[10px] text-gray-400 mt-1", children: [
+          "rango ",
+          coverage.demandLow,
+          " – ",
+          coverage.demandHigh
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg bg-gray-50 dark:bg-gray-700/50 p-3", children: [
@@ -54742,16 +54825,54 @@ function CourseDemandDetailDialog({
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-lg font-semibold text-blue-600 dark:text-blue-400", children: plannedNext })
       ] })
     ] }),
+    coverage && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg border border-gray-100 dark:border-gray-700 p-3 space-y-2 text-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2 flex-wrap", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold text-gray-700 dark:text-gray-300", children: "Cobertura de la oferta" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200", children: COVERAGE_LABELS[coverage.coverageClass] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 text-xs", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "Cupo publicado:" }),
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { className: "text-gray-800 dark:text-gray-200", children: [
+            coverage.publishedCapacity,
+            " (",
+            coverage.publishedSections,
+            " secc. de Teoría)"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "Demanda central / cupo:" }),
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-gray-800 dark:text-gray-200", children: coverage.utilization != null ? `${Math.round(coverage.utilization * 100)}%` : "—" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "Confianza:" }),
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-gray-800 dark:text-gray-200", children: ((_a2 = coverage.confidence) == null ? void 0 : _a2.replace(/_/g, " ")) ?? "—" })
+        ] })
+      ] }),
+      coverage.possiblyPartialOffer && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-amber-700 dark:text-amber-400", children: "El cupo publicado es menos del 60% del de la misma estación del año anterior: puede ser una oferta parcial." }),
+      coverage.recommendation && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-700 dark:text-gray-300", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", children: "Recomendación:" }),
+        " ",
+        coverage.recommendation
+      ] })
+    ] }),
     modelLabel && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
       "Modelo: ",
       /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: modelLabel }),
+      modelGeneratedAt ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        " · generado ",
+        formatGeneratedAt(modelGeneratedAt)
+      ] }) : null,
       (history == null ? void 0 : history.summerToRegularRate) ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         " · tasa verano/regular: ",
         Math.round((history.summerToRegularRate ?? 0) * 100),
         "%"
       ] }) : null
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 text-xs rounded-lg border border-gray-100 dark:border-gray-700 p-3", children: [
+    !coverage && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 text-xs rounded-lg border border-gray-100 dark:border-gray-700 p-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gray-500 dark:text-gray-400", children: "DAG desde histórico:" }),
         " ",
@@ -54770,7 +54891,7 @@ function CourseDemandDetailDialog({
     ] }),
     prerequisiteRates.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg border border-gray-100 dark:border-gray-700 p-3 space-y-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-semibold text-gray-700 dark:text-gray-300", children: [
-        "Tasas calibradas (prerrequisitos → ",
+        "Tasas de transición (prerrequisitos → ",
         normalizeOfferCourseCode(offerCode),
         ")"
       ] }),
@@ -54803,7 +54924,8 @@ function CourseDemandDetailDialog({
       {
         history,
         estimatedStudents,
-        targetPeriodLabel
+        targetPeriodLabel,
+        publishedCapacity: coverage == null ? void 0 : coverage.publishedCapacity
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-gray-500 dark:text-gray-400 text-center py-6", children: "Sin histórico en el catálogo. La sugerencia se basa en demanda de la plataforma y propagación por la malla." }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3", children: [
@@ -54812,17 +54934,31 @@ function CourseDemandDetailDialog({
       ".",
       history && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         " ",
-        "Promedio histórico: ",
+        "Promedio histórico por período regular: ",
         Math.round(history.avgSections),
         " secciones,",
         " ",
+        Math.round(history.avgCapacity),
+        " cupos ofertados y ",
         Math.round(history.avgStudents),
-        " cupos por período regular.",
+        " matriculados.",
         history.isVeranoCourse ? " Curso de verano: promedios basados en períodos *30." : null,
         trend === "stable" || trend === "up" ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: " Piso mínimo de 8 estudiantes en materias estables." }) : null
       ] })
     ] })
   ] }) });
+}
+const COVERAGE_BADGE = {
+  deficit_critico: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  deficit_leve: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+  equilibrado: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+  exceso: "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300",
+  sin_base_historica: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
+  sin_capacidad: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+};
+function CoverageBadge({ value }) {
+  if (!value) return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "—" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${COVERAGE_BADGE[value]}`, children: COVERAGE_LABELS[value] });
 }
 function StatCard$1({ label, value, icon }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "p-4 dark:bg-gray-800 flex items-center gap-4", children: [
@@ -54867,16 +55003,15 @@ function TeacherDashboard({
   const [historyMap, setHistoryMap] = reactExports.useState(/* @__PURE__ */ new Map());
   const [livePredictions, setLivePredictions] = reactExports.useState([]);
   const [pythonIndex, setPythonIndex] = reactExports.useState(null);
-  const [estimatorMode, setEstimatorMode] = reactExports.useState("live");
+  const [estimatorMode, setEstimatorMode] = reactExports.useState("python");
   const [isLoading, setIsLoading] = reactExports.useState(true);
   const [error, setError] = reactExports.useState(null);
   const [lastLoaded, setLastLoaded] = reactExports.useState(null);
-  const [sortBy, setSortBy] = reactExports.useState("predicted");
+  const [sortBy, setSortBy] = reactExports.useState("coverage");
   const [selected, setSelected] = reactExports.useState(null);
   const [targetPeriodCode, setTargetPeriodCode] = reactExports.useState("");
   const [targetPeriodLabel, setTargetPeriodLabel] = reactExports.useState("");
   const [transitionRates, setTransitionRates] = reactExports.useState(null);
-  const [useGbr, setUseGbr] = reactExports.useState(true);
   const load = async () => {
     setIsLoading(true);
     setError(null);
@@ -54962,6 +55097,7 @@ function TeacherDashboard({
           propagated_students: totalInflow.get(course.courseId) ?? 0,
           avg_sections: (hist == null ? void 0 : hist.avgSections) ?? 0,
           avg_students: (hist == null ? void 0 : hist.avgStudents) ?? 0,
+          avg_capacity: (hist == null ? void 0 : hist.avgCapacity) ?? 0,
           num_periods: (hist == null ? void 0 : hist.numPeriods) ?? 0,
           predicted_sections: result.suggestedSections,
           estimated_students: result.estimatedStudents,
@@ -55005,22 +55141,43 @@ function TeacherDashboard({
       inflow_from_history: py.inflow_from_history,
       inflow_from_cursando: py.inflow_from_cursando,
       propagated_students: py.inflow_from_history + py.inflow_from_cursando,
-      predicted_sections: useGbr && py.gbr_available && py.primary_sections != null ? py.primary_sections : py.suggested_sections,
-      estimated_students: useGbr && py.gbr_available && py.primary_students != null ? py.primary_students : py.estimated_students,
-      gbr_students: py.gbr_estimated_students,
-      gbr_sections: py.gbr_suggested_sections,
+      predicted_sections: py.suggested_sections,
+      estimated_students: py.estimated_students,
       trend: py.trend,
-      model_label: py.model
+      model_label: py.model,
+      demand_low: py.demand_low,
+      demand_high: py.demand_high,
+      published_capacity: py.published_capacity,
+      published_sections: py.published_sections,
+      coverage_class: py.coverage_class,
+      utilization_central: py.utilization_central,
+      confidence: py.confidence,
+      recommendation: py.recommendation,
+      possibly_partial_offer: py.possibly_partial_offer,
+      has_history: py.has_history
     };
   });
-  const predictions = estimatorMode === "live" ? livePredictions : pythonPredictions;
   const pythonAvailable = Boolean((pythonIndex == null ? void 0 : pythonIndex.by_offer_code) && Object.keys(pythonIndex.by_offer_code).length > 0);
+  const mode = estimatorMode === "python" && !pythonAvailable && !isLoading ? "live" : estimatorMode;
+  const predictions = mode === "live" ? livePredictions : pythonPredictions;
+  const modelMeta = pythonIndex == null ? void 0 : pythonIndex.model_meta;
+  const shortfall = (p) => (p.estimated_students ?? 0) - (p.published_capacity ?? 0);
   const sortedPredictions = [...predictions].sort((a, b) => {
+    if (sortBy === "coverage" && mode === "python") {
+      const sev = (COVERAGE_SEVERITY[b.coverage_class ?? "sin_base_historica"] ?? 0) - (COVERAGE_SEVERITY[a.coverage_class ?? "sin_base_historica"] ?? 0);
+      return sev !== 0 ? sev : shortfall(b) - shortfall(a);
+    }
     if (sortBy === "planned") return b.planned_next - a.planned_next;
-    if (sortBy === "predicted") return b.predicted_sections - a.predicted_sections;
+    if (sortBy === "predicted" || sortBy === "coverage") return b.predicted_sections - a.predicted_sections;
     const order = { up: 3, stable: 2, new: 1, down: 0 };
     return order[b.trend] - order[a.trend];
   });
+  const coverageCounts = predictions.reduce((acc, p) => {
+    if (p.coverage_class) acc[p.coverage_class] = (acc[p.coverage_class] ?? 0) + 1;
+    return acc;
+  }, {});
+  const totalCapacity = predictions.reduce((s, p) => s + (p.published_capacity ?? 0), 0);
+  const totalDemand = predictions.reduce((s, p) => s + (p.estimated_students ?? 0), 0);
   const maxDemand = Math.max(
     ...predictions.map((p) => Math.max(p.inflow_from_history, p.inflow_from_cursando)),
     1
@@ -55081,51 +55238,39 @@ function TeacherDashboard({
           "button",
           {
             type: "button",
-            onClick: () => setEstimatorMode("live"),
-            className: `px-4 py-2 text-sm font-medium rounded-md transition-colors ${estimatorMode === "live" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`,
-            children: "Estimador actual"
+            onClick: () => setEstimatorMode("python"),
+            disabled: !pythonAvailable,
+            className: `px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === "python" ? "bg-emerald-600 text-white shadow-sm" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"}`,
+            children: "Cobertura (modelo v4)"
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             type: "button",
-            onClick: () => setEstimatorMode("python"),
-            disabled: !pythonAvailable,
-            className: `px-4 py-2 text-sm font-medium rounded-md transition-colors ${estimatorMode === "python" ? "bg-emerald-600 text-white shadow-sm" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"}`,
-            children: "Modelo Python"
+            onClick: () => setEstimatorMode("live"),
+            className: `px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === "live" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`,
+            children: "Estimador en vivo (legado)"
           }
         )
       ] }),
-      estimatorMode === "python" && pythonIndex && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
-        "Batch: ",
-        formatGeneratedAt(pythonIndex.generated_at),
-        pythonIndex.version ? ` · v${pythonIndex.version}` : "",
-        pythonIndex.target_period_label ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      mode === "python" && pythonIndex && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+        "Modelo ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: (modelMeta == null ? void 0 : modelMeta.name) ?? `v${pythonIndex.version}` }),
+        " ",
+        "· generado ",
+        formatGeneratedAt((modelMeta == null ? void 0 : modelMeta.generated_at) ?? pythonIndex.generated_at),
+        (pythonIndex.target_period_label || targetPeriodLabel) && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           " · Predicción para ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: pythonIndex.target_period_label })
-        ] }) : targetPeriodLabel ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          " · Predicción para ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: targetPeriodLabel })
-        ] }) : null
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: pythonIndex.target_period_label ?? targetPeriodLabel }),
+          pythonIndex.target_period_code || targetPeriodCode ? ` (${pythonIndex.target_period_code ?? targetPeriodCode})` : ""
+        ] })
       ] }),
-      estimatorMode === "live" && targetPeriodLabel && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
+      mode === "live" && targetPeriodLabel && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-500 dark:text-gray-400", children: [
         "Predicción para ",
         /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: targetPeriodLabel }),
         targetPeriodCode ? ` (${targetPeriodCode})` : "",
         transitionRates ? " · tasas DAG calibradas" : " · tasas DAG por defecto (80/50/25)"
-      ] }),
-      estimatorMode === "python" && pythonAvailable && /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "input",
-          {
-            type: "checkbox",
-            checked: useGbr,
-            onChange: (e) => setUseGbr(e.target.checked),
-            className: "rounded border-gray-300"
-          }
-        ),
-        "Usar refinamiento GBR cuando esté disponible"
       ] })
     ] }),
     !pythonAvailable && !isLoading && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2", children: [
@@ -55153,16 +55298,19 @@ function TeacherDashboard({
       /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { className: "w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm text-gray-700 dark:text-gray-300 space-y-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium text-gray-900 dark:text-white", children: "¿Cómo leer esta tabla?" }),
-        estimatorMode === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-emerald-700 dark:text-emerald-400", children: [
+        mode === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-emerald-700 dark:text-emerald-400", children: [
           "Vista ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Modelo Python" }),
-          ": predicciones del batch offline (fórmula híbrida + DAG",
-          pythonIndex ? ", con GBR opcional si hubo entrenamiento" : "",
-          "). Los históricos del gráfico siguen viniendo del catálogo en vivo."
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Cobertura (modelo v4)" }),
+          ": compara la ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "demanda estimada" }),
+          " (matrícula esperada, con rango piso–central–techo) contra el ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "cupo publicado" }),
+          " del período objetivo.",
+          (modelMeta == null ? void 0 : modelMeta.method) ? ` ${modelMeta.method}` : ""
         ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-400", children: [
           "Vista ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Estimador actual" }),
-          ": cálculo en tiempo real en el navegador."
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Estimador en vivo (legado)" }),
+          ": fórmula híbrida calculada en el navegador con la matrícula histórica del catálogo y propagación DAG. Se conserva para comparar; la vista de cobertura es la referencia."
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-gray-600 dark:text-gray-400", children: [
           "Se listan las materias bajo supervisión de la facultad ",
@@ -55174,63 +55322,74 @@ function TeacherDashboard({
           ] }),
           " en el catálogo; Economía usa ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "ECN-*" }),
-          "). No es la malla completa de la carrera."
+          "). Las variantes con sufijo E (p. ej. CMP-5006E) se agrupan con su código base."
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "list-disc list-inside text-xs space-y-1 text-gray-600 dark:text-gray-400", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Cursando:" }),
-            " estudiantes tomando la materia ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "este semestre" }),
-            " en la app."
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Cupo ofertado / publicado:" }),
+            " asientos abiertos por la universidad (suma de NRC de Teoría). No es demanda."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Planeada:" }),
-            " estudiantes que la marcaron para el ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "próximo semestre" }),
-            " (demanda directa)."
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Matriculados:" }),
+            " estudiantes inscritos = cupo − disponibles al cierre del período (se subestima donde la sección se llenó)."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "DAG hist.:" }),
-            " cohorte del catálogo propagada con tasas calibradas por pares de períodos (fallback 80/50/25)."
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Demanda estimada:" }),
+            " proyección de matriculados para el período objetivo; la oferta aún no tiene matrícula (disponibles vacío ≠ agotado)."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "DAG cursando:" }),
-            " quienes ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "cursan" }),
-            " un prerrequisito ahora y probablemente tomarán esta materia el próximo semestre."
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Cursando / Planeada:" }),
+            " señales de la muestra de usuarios de la app (pequeña y no representativa); solo ajustan la estimación."
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Histórico / Secciones:" }),
-            " oferta real pasada del catálogo USFQ + sugerencia combinada."
+          mode === "live" && /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "DAG hist. / DAG curs.:" }),
+            " demanda propagada por prerrequisitos desde el histórico y desde quienes cursan ahora."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Clic en una fila" }),
-            " abre el gráfico por período."
+            " abre el detalle por período."
           ] })
         ] })
       ] })
     ] }) }),
-    !isLoading && predictions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
+    !isLoading && predictions.length > 0 && (mode === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Déficit crítico", value: coverageCounts.deficit_critico ?? 0, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-5 h-5" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Déficit leve", value: coverageCounts.deficit_leve ?? 0, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Exceso de cupo", value: coverageCounts.exceso ?? 0, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-5 h-5" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        StatCard$1,
+        {
+          label: "Demanda central / cupo publicado",
+          value: `${Math.round(totalDemand)} / ${totalCapacity}`,
+          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-5 h-5" })
+        }
+      )
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Materias supervisadas", value: predictions.length, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Con histórico", value: withHistory, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-5 h-5" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Cursando (este sem.)", value: totalCursando, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-5 h-5" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard$1, { label: "Planean próximo sem.", value: totalPlannedNext, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5" }) })
-    ] }),
+    ] })),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "dark:bg-gray-800 overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-wrap gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-semibold text-gray-900 dark:text-white", children: [
-          "Predicción de demanda — ",
+          mode === "python" ? "Cobertura de oferta vs demanda" : "Predicción de demanda",
+          " — ",
           faculty,
-          estimatorMode === "python" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-400", children: "(modelo Python)" })
+          mode === "python" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-400", children: [
+            "(",
+            (modelMeta == null ? void 0 : modelMeta.name) ?? "modelo v4",
+            ")"
+          ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-500 dark:text-gray-400", children: "Ordenar:" }),
-          ["predicted", "planned", "trend"].map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          (mode === "python" ? ["coverage", "predicted", "planned", "trend"] : ["predicted", "planned", "trend"]).map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
               onClick: () => setSortBy(opt),
-              className: `text-xs px-2.5 py-1 rounded-md transition-colors ${sortBy === opt ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`,
-              children: opt === "planned" ? "Planeadas" : opt === "predicted" ? "Secciones" : "Tendencia"
+              className: `text-xs px-2.5 py-1 rounded-md transition-colors ${sortBy === opt || opt === "predicted" && sortBy === "coverage" && mode === "live" ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`,
+              children: opt === "coverage" ? "Cobertura" : opt === "planned" ? "Planeadas" : opt === "predicted" ? "Secciones" : "Tendencia"
             },
             opt
           ))
@@ -55250,12 +55409,18 @@ function TeacherDashboard({
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-gray-50 dark:bg-gray-700/50 text-left", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Código" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400", children: "Materia" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes cursando esta materia este semestre", children: "Cursando" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes que la planean para el próximo semestre", children: "Planeada" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", title: "Demanda propagada desde el histórico del catálogo", children: "DAG hist." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", title: "Demanda propagada desde quienes cursan prerrequisitos ahora", children: "DAG curs." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center", children: "Histórico" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center", children: "Secciones" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes cursando esta materia este semestre (muestra de la app)", children: "Cursando" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", title: "Estudiantes que la planean para el próximo semestre (muestra de la app)", children: "Planeada" }),
+          mode === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-40 text-center", title: "Matrícula esperada: piso – central – techo", children: "Demanda estimada" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center", title: "Cupo publicado = suma de cupos de Teoría del período objetivo", children: "Cupo publicado" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-36 text-center", children: "Cobertura" })
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", title: "Demanda propagada desde la matrícula histórica del catálogo", children: "DAG hist." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center", title: "Demanda propagada desde quienes cursan prerrequisitos ahora", children: "DAG curs." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center", title: "Matriculados y cupo ofertado promedio por período regular", children: "Histórico" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center", children: "Secciones" })
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center", children: "Tend." })
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "divide-y divide-gray-100 dark:divide-gray-700", children: sortedPredictions.map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -55268,35 +55433,56 @@ function TeacherDashboard({
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-gray-700 dark:text-gray-300 max-w-[200px] truncate", title: row.title, children: row.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center text-gray-700 dark:text-gray-300", children: row.in_progress_count }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center font-medium text-blue-700 dark:text-blue-400", children: row.planned_next }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { value: row.inflow_from_history, max: maxDemand }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { value: row.inflow_from_cursando, max: maxDemand }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: row.num_periods > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-medium text-gray-800 dark:text-gray-200", children: [
-                  Math.round(row.avg_sections),
-                  " secc."
+              mode === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: row.demand_low != null && row.has_history ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-gray-800 dark:text-gray-200", children: row.estimated_students }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] text-gray-400", children: [
+                    row.demand_low,
+                    " – ",
+                    row.demand_high
+                  ] })
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "Sin base histórica" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 text-center", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-gray-800 dark:text-gray-200", children: row.published_capacity ?? 0 }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] text-gray-400", children: [
+                    row.published_sections ?? 0,
+                    " secc."
+                  ] })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-gray-400", children: [
-                  "~",
-                  Math.round(row.avg_students),
-                  " cupos · ",
-                  row.num_periods,
-                  " períodos"
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 text-center", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoverageBadge, { value: row.coverage_class }),
+                  row.possibly_partial_offer && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-amber-600 dark:text-amber-400 mt-0.5", title: "El cupo publicado es menos del 60% del de la misma estación del año anterior: ¿oferta parcial?", children: "¿oferta parcial?" })
                 ] })
-              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "Sin datos" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 text-center", children: [
-                row.model_label === "sin datos" ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "—" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { value: row.inflow_from_history, max: maxDemand }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DemandBar, { value: row.inflow_from_cursando, max: maxDemand }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: row.num_periods > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-medium text-gray-800 dark:text-gray-200", children: [
+                    "~",
+                    Math.round(row.avg_students),
+                    " matric."
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-gray-400", children: [
+                    Math.round(row.avg_sections),
+                    " secc. · ~",
+                    Math.round(row.avg_capacity),
+                    " cupos · ",
+                    row.num_periods,
+                    " per."
+                  ] })
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-gray-400", children: "Sin datos" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "span",
                   {
                     className: `text-lg font-bold ${row.predicted_sections >= (row.avg_sections || 1) ? "text-green-600 dark:text-green-400" : "text-orange-500 dark:text-orange-400"}`,
                     children: row.predicted_sections
                   }
-                ),
-                estimatorMode === "python" && row.model_label && row.model_label !== "sin datos" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-gray-400 mt-0.5", children: row.model_label })
+                ) })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendIcon, { t: row.trend }) }) })
             ]
           },
-          row.course_id
+          row.offer_code
         )) })
       ] }) })
     ] }),
@@ -55320,12 +55506,22 @@ function TeacherDashboard({
         history: historyMap.get(selected.offer_code),
         targetPeriodLabel,
         targetPeriodCode,
-        gbrStudents: selected.gbr_students,
-        gbrSections: selected.gbr_sections,
-        modelLabel: selected.model_label ?? (estimatorMode === "live" ? "híbrido+calibrado" : void 0),
-        prerequisiteRates: (transitionRates == null ? void 0 : transitionRates.incomingEdges(
+        modelLabel: mode === "live" ? "híbrido legado (en vivo)" : selected.model_label,
+        modelGeneratedAt: mode === "python" ? (modelMeta == null ? void 0 : modelMeta.generated_at) ?? (pythonIndex == null ? void 0 : pythonIndex.generated_at) : void 0,
+        coverage: mode === "python" && selected.coverage_class ? {
+          coverageClass: selected.coverage_class,
+          demandLow: selected.demand_low ?? null,
+          demandHigh: selected.demand_high ?? null,
+          publishedCapacity: selected.published_capacity ?? 0,
+          publishedSections: selected.published_sections ?? 0,
+          utilization: selected.utilization_central ?? null,
+          confidence: selected.confidence ?? null,
+          recommendation: selected.recommendation ?? "",
+          possiblyPartialOffer: Boolean(selected.possibly_partial_offer)
+        } : void 0,
+        prerequisiteRates: mode === "live" ? (transitionRates == null ? void 0 : transitionRates.incomingEdges(
           ((_a2 = livePredictions.find((r2) => r2.offer_code === selected.offer_code)) == null ? void 0 : _a2.course_id) ?? selected.course_id
-        )) ?? []
+        )) ?? [] : []
       }
     )
   ] });
