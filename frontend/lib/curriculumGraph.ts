@@ -1,6 +1,6 @@
 import type { Course } from '../types/curriculum';
 import type { CourseHistoryStats } from './offerHistory';
-import { normalizeOfferCourseCode } from './offerMatching';
+import { canonicalOfferCourseCode } from './offerCodes';
 import {
   classifyEdgeType,
   type TransitionRateTable,
@@ -110,7 +110,7 @@ export function transitionProbability(
 
 /** Offer codes needed to seed DAG propagation (full malla, not only faculty prefix). */
 export function collectDagHistoryOfferCodes(courses: Course[]): string[] {
-  return [...new Set(courses.map((c) => normalizeOfferCourseCode(c.id)))];
+  return [...new Set(courses.map((c) => canonicalOfferCourseCode(c.id)))];
 }
 
 function propagateInflow(
@@ -161,14 +161,14 @@ function propagateInflow(
   return inflow;
 }
 
-/** Seeds from period-anchored cupo — proxy for “who passed this course last term”. */
+/** Seeds from period-anchored matriculados (cupo − disponibles) — proxy for “who passed this course last term”. */
 export function buildHistoricalSeeds(
   courses: Course[],
   historyByOfferCode: Map<string, CourseHistoryStats>,
 ): Map<string, number> {
   const seeds = new Map<string, number>();
   for (const course of courses) {
-    const offerCode = normalizeOfferCourseCode(course.id);
+    const offerCode = canonicalOfferCourseCode(course.id);
     const hist = historyByOfferCode.get(offerCode);
     if (hist && hist.lastRegularStudents > 0) {
       seeds.set(course.id, hist.lastRegularStudents);

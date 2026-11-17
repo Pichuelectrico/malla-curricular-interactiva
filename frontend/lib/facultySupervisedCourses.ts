@@ -2,6 +2,7 @@ import type { Course } from '../types/curriculum';
 import { supabase } from './supabaseClient';
 import { loadFacultyCurriculum } from './facultyCurriculum';
 import { normalizeOfferCourseCode } from './offerMatching';
+import { canonicalOfferCourseCode } from './offerCodes';
 
 /**
  * Catalog code prefixes supervised by each faculty.
@@ -35,11 +36,18 @@ export function extraSupervisedCodes(facultyCode: string): string[] {
 /** Map USFQ offer code to curriculum slot id used in user_progress. */
 export function offerCodeToCourseId(offerCode: string, mallaCourses: Course[]): string {
   const normalized = normalizeOfferCourseCode(offerCode);
-  const match = mallaCourses.find(
-    (c) =>
-      normalizeOfferCourseCode(c.id) === normalized ||
-      normalizeOfferCourseCode(c.code) === normalized,
-  );
+  const canonical = canonicalOfferCourseCode(offerCode);
+  const match =
+    mallaCourses.find(
+      (c) =>
+        normalizeOfferCourseCode(c.id) === normalized ||
+        normalizeOfferCourseCode(c.code) === normalized,
+    ) ??
+    mallaCourses.find(
+      (c) =>
+        canonicalOfferCourseCode(c.id) === canonical ||
+        canonicalOfferCourseCode(c.code) === canonical,
+    );
   if (match) return match.id;
   return normalized.replace(/-/g, '');
 }
@@ -64,13 +72,37 @@ export async function fetchFacultySupervisedCourses(
     // Career malla optional for id mapping
   }
 
-  return (data ?? []).map((row: { course_code: string; title: string }) => {
-    const offerCode = normalizeOfferCourseCode(row.course_code);
-    return {
-      offerCode,
-      courseId: offerCodeToCourseId(offerCode, mallaCourses),
-      title: row.title ?? offerCode,
-      facultyCode: faculty,
-    };
-  });
+  return dedupeSupervisedByCanonicalCode(
+    (data ?? []) as { course_code: string; title: string }[],
+    faculty,
+    mallaCourses,
+  );
+}
+
+/**
+ * Una sola fila por código canónico: CMP-4004E y CMP-4004 son la misma materia para demanda.
+ * El RPC devuelve ambas grafías como filas separadas. Se conserva el código base como llave y el
+ * título de la variante sin E si existe (si no, el de la variante E).
+ */
+export function dedupeSupervisedByCanonicalCode(
+  rows: { course_code: string; title: string }[],
+  faculty: string,
+  mallaCourses: Course[],
+): SupervisedCourse[] {
+  const byCanonical = new Map<string, { title: string | null; hasBase: boolean }>();
+  for (const row of rows) {
+    const normalized = normalizeOfferCourseCode(row.course_code);
+    const canonical = canonicalOfferCourseCode(normalized);
+    const isBase = normalized === canonical;
+    const prev = byCanonical.get(canonical);
+    if (!prev || (isBase && !prev.hasBase)) {
+      byCanonical.set(canonical, { title: row.title ?? prev?.title ?? null, hasBase: isBase });
+    }
+  }
+  return [...byCanonical.entries()].map(([offerCode, v]) => ({
+    offerCode,
+    courseId: offerCodeToCourseId(offerCode, mallaCourses),
+    title: v.title ?? offerCode,
+    facultyCode: faculty,
+  }));
 }

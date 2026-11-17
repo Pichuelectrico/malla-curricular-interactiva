@@ -1,5 +1,14 @@
 import { normalizeOfferCourseCode } from './offerMatching';
+import { canonicalOfferCourseCode } from './offerCodes';
 import type { DemandTrend } from './demandPrediction';
+
+export type CoverageClass =
+  | 'deficit_critico'
+  | 'deficit_leve'
+  | 'equilibrado'
+  | 'exceso'
+  | 'sin_base_historica'
+  | 'sin_capacidad';
 
 export interface PythonPredictionEntry {
   offer_code: string;
@@ -19,6 +28,33 @@ export interface PythonPredictionEntry {
   planned_count: number;
   in_progress_count: number;
   model: string;
+  // ---- v4 (enrollment-proxy-v4); opcionales para datos v3 ----
+  demand_low?: number | null;
+  demand_central?: number | null;
+  demand_high?: number | null;
+  published_capacity?: number;
+  published_sections?: number;
+  coverage_class?: CoverageClass;
+  utilization_central?: number | null;
+  risk_above_high?: boolean | null;
+  confidence?: string | null;
+  has_history?: boolean;
+  possibly_partial_offer?: boolean;
+  recommendation?: string;
+  aliases?: string[];
+  alias_of?: string;
+  nrc_without_total?: number;
+}
+
+export interface PythonModelMeta {
+  name: string;
+  generated_at: string;
+  method: string;
+  backtest_summary?: Record<string, number | string>;
+  coverage_thresholds?: string;
+  caveats?: string[];
+  aggregate?: { n: number; capacidad: number; demanda_piso: number; demanda_central: number; demanda_techo: number };
+  classification_counts?: Record<string, number>;
 }
 
 export interface PythonPredictionsIndex {
@@ -27,6 +63,7 @@ export interface PythonPredictionsIndex {
   target_period_code?: string;
   target_period_label?: string;
   current_period_code?: string;
+  model_meta?: PythonModelMeta;
   by_offer_code: Record<string, PythonPredictionEntry>;
   by_faculty: Record<string, string[]>;
 }
@@ -65,8 +102,11 @@ export function lookupPythonPrediction(
   offerCode: string,
 ): PythonPredictionEntry | undefined {
   if (!index) return undefined;
-  const key = normalizeOfferCourseCode(offerCode);
-  return index.by_offer_code[key];
+  // Exacto primero (incluye alias E), luego código canónico sin E.
+  return (
+    index.by_offer_code[normalizeOfferCourseCode(offerCode)] ??
+    index.by_offer_code[canonicalOfferCourseCode(offerCode)]
+  );
 }
 
 export function formatGeneratedAt(iso: string | undefined): string {
@@ -77,3 +117,22 @@ export function formatGeneratedAt(iso: string | undefined): string {
     return iso;
   }
 }
+
+export const COVERAGE_LABELS: Record<CoverageClass, string> = {
+  deficit_critico: 'Déficit crítico',
+  deficit_leve: 'Déficit leve',
+  equilibrado: 'Equilibrado',
+  exceso: 'Exceso de cupo',
+  sin_base_historica: 'Sin base histórica',
+  sin_capacidad: 'Sin cupo publicado',
+};
+
+/** Orden de severidad para ordenar por cobertura (mayor = más urgente). */
+export const COVERAGE_SEVERITY: Record<CoverageClass, number> = {
+  deficit_critico: 5,
+  deficit_leve: 4,
+  sin_capacidad: 3,
+  exceso: 2,
+  equilibrado: 1,
+  sin_base_historica: 0,
+};

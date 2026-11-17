@@ -23,11 +23,14 @@ import {
 } from '../lib/offerHistory';
 import { loadAcademicCalendar } from '../lib/periodCalendar';
 import {
+  COVERAGE_LABELS,
+  COVERAGE_SEVERITY,
   formatGeneratedAt,
   clearPythonPredictionsCache,
   getPythonPredictionsUrl,
   loadPythonPredictions,
   lookupPythonPrediction,
+  type CoverageClass,
   type PythonPredictionsIndex,
 } from '../lib/pythonPredictions';
 import { loadTransitionRates, type TransitionRateTable } from '../lib/transitionRates';
@@ -47,13 +50,41 @@ interface PredictionRow {
   propagated_students: number;
   avg_sections: number;
   avg_students: number;
+  avg_capacity: number;
   num_periods: number;
   predicted_sections: number;
   estimated_students: number;
   trend: DemandTrend;
   model_label?: string;
-  gbr_students?: number | null;
-  gbr_sections?: number | null;
+  // v4 (solo vista Modelo): demanda estimada con rango vs cupo publicado
+  demand_low?: number | null;
+  demand_high?: number | null;
+  published_capacity?: number;
+  published_sections?: number;
+  coverage_class?: CoverageClass;
+  utilization_central?: number | null;
+  confidence?: string | null;
+  recommendation?: string;
+  possibly_partial_offer?: boolean;
+  has_history?: boolean;
+}
+
+const COVERAGE_BADGE: Record<CoverageClass, string> = {
+  deficit_critico: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+  deficit_leve: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  equilibrado: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+  exceso: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300',
+  sin_base_historica: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
+  sin_capacidad: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
+};
+
+function CoverageBadge({ value }: { value?: CoverageClass }) {
+  if (!value) return <span className="text-xs text-gray-400">—</span>;
+  return (
+    <span className={`inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${COVERAGE_BADGE[value]}`}>
+      {COVERAGE_LABELS[value]}
+    </span>
+  );
 }
 
 function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
@@ -116,16 +147,15 @@ export default function TeacherDashboard({
   const [historyMap, setHistoryMap] = useState<Map<string, CourseHistoryStats>>(new Map());
   const [livePredictions, setLivePredictions] = useState<PredictionRow[]>([]);
   const [pythonIndex, setPythonIndex] = useState<PythonPredictionsIndex | null>(null);
-  const [estimatorMode, setEstimatorMode] = useState<EstimatorMode>('live');
+  const [estimatorMode, setEstimatorMode] = useState<EstimatorMode>('python');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
-  const [sortBy, setSortBy] = useState<'planned' | 'predicted' | 'trend'>('predicted');
+  const [sortBy, setSortBy] = useState<'coverage' | 'planned' | 'predicted' | 'trend'>('coverage');
   const [selected, setSelected] = useState<PredictionRow | null>(null);
   const [targetPeriodCode, setTargetPeriodCode] = useState('');
   const [targetPeriodLabel, setTargetPeriodLabel] = useState('');
   const [transitionRates, setTransitionRates] = useState<TransitionRateTable | null>(null);
-  const [useGbr, setUseGbr] = useState(true);
 
   const load = async () => {
     setIsLoading(true);
@@ -230,6 +260,7 @@ export default function TeacherDashboard({
           propagated_students: totalInflow.get(course.courseId) ?? 0,
           avg_sections: hist?.avgSections ?? 0,
           avg_students: hist?.avgStudents ?? 0,
+          avg_capacity: hist?.avgCapacity ?? 0,
           num_periods: hist?.numPeriods ?? 0,
           predicted_sections: result.suggestedSections,
           estimated_students: result.estimatedStudents,
@@ -275,28 +306,49 @@ export default function TeacherDashboard({
       inflow_from_history: py.inflow_from_history,
       inflow_from_cursando: py.inflow_from_cursando,
       propagated_students: py.inflow_from_history + py.inflow_from_cursando,
-      predicted_sections: useGbr && py.gbr_available && py.primary_sections != null
-        ? py.primary_sections
-        : py.suggested_sections,
-      estimated_students: useGbr && py.gbr_available && py.primary_students != null
-        ? py.primary_students
-        : py.estimated_students,
-      gbr_students: py.gbr_estimated_students,
-      gbr_sections: py.gbr_suggested_sections,
+      predicted_sections: py.suggested_sections,
+      estimated_students: py.estimated_students,
       trend: py.trend,
       model_label: py.model,
+      demand_low: py.demand_low,
+      demand_high: py.demand_high,
+      published_capacity: py.published_capacity,
+      published_sections: py.published_sections,
+      coverage_class: py.coverage_class,
+      utilization_central: py.utilization_central,
+      confidence: py.confidence,
+      recommendation: py.recommendation,
+      possibly_partial_offer: py.possibly_partial_offer,
+      has_history: py.has_history,
     };
   });
 
-  const predictions = estimatorMode === 'live' ? livePredictions : pythonPredictions;
   const pythonAvailable = Boolean(pythonIndex?.by_offer_code && Object.keys(pythonIndex.by_offer_code).length > 0);
+  // Sin índice del modelo se cae al estimador en vivo (el botón del modelo queda deshabilitado).
+  const mode: EstimatorMode = estimatorMode === 'python' && !pythonAvailable && !isLoading ? 'live' : estimatorMode;
+  const predictions = mode === 'live' ? livePredictions : pythonPredictions;
+  const modelMeta = pythonIndex?.model_meta;
 
+  const shortfall = (p: PredictionRow) =>
+    (p.estimated_students ?? 0) - (p.published_capacity ?? 0);
   const sortedPredictions = [...predictions].sort((a, b) => {
+    if (sortBy === 'coverage' && mode === 'python') {
+      const sev = (COVERAGE_SEVERITY[b.coverage_class ?? 'sin_base_historica'] ?? 0) -
+        (COVERAGE_SEVERITY[a.coverage_class ?? 'sin_base_historica'] ?? 0);
+      return sev !== 0 ? sev : shortfall(b) - shortfall(a);
+    }
     if (sortBy === 'planned') return b.planned_next - a.planned_next;
-    if (sortBy === 'predicted') return b.predicted_sections - a.predicted_sections;
+    if (sortBy === 'predicted' || sortBy === 'coverage') return b.predicted_sections - a.predicted_sections;
     const order = { up: 3, stable: 2, new: 1, down: 0 };
     return order[b.trend] - order[a.trend];
   });
+
+  const coverageCounts = predictions.reduce<Record<string, number>>((acc, p) => {
+    if (p.coverage_class) acc[p.coverage_class] = (acc[p.coverage_class] ?? 0) + 1;
+    return acc;
+  }, {});
+  const totalCapacity = predictions.reduce((s, p) => s + (p.published_capacity ?? 0), 0);
+  const totalDemand = predictions.reduce((s, p) => s + (p.estimated_students ?? 0), 0);
 
   const maxDemand = Math.max(
     ...predictions.map((p) => Math.max(p.inflow_from_history, p.inflow_from_cursando)),
@@ -352,56 +404,45 @@ export default function TeacherDashboard({
         <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-600 p-0.5 bg-gray-50 dark:bg-gray-800/80">
           <button
             type="button"
-            onClick={() => setEstimatorMode('live')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              estimatorMode === 'live'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-            }`}
-          >
-            Estimador actual
-          </button>
-          <button
-            type="button"
             onClick={() => setEstimatorMode('python')}
             disabled={!pythonAvailable}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              estimatorMode === 'python'
+              mode === 'python'
                 ? 'bg-emerald-600 text-white shadow-sm'
                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed'
             }`}
           >
-            Modelo Python
+            Cobertura (modelo v4)
+          </button>
+          <button
+            type="button"
+            onClick={() => setEstimatorMode('live')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              mode === 'live'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`}
+          >
+            Estimador en vivo (legado)
           </button>
         </div>
-        {estimatorMode === 'python' && pythonIndex && (
+        {mode === 'python' && pythonIndex && (
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            Batch: {formatGeneratedAt(pythonIndex.generated_at)}
-            {pythonIndex.version ? ` · v${pythonIndex.version}` : ''}
-            {pythonIndex.target_period_label ? (
-              <> · Predicción para <strong>{pythonIndex.target_period_label}</strong></>
-            ) : targetPeriodLabel ? (
-              <> · Predicción para <strong>{targetPeriodLabel}</strong></>
-            ) : null}
+            Modelo <strong>{modelMeta?.name ?? `v${pythonIndex.version}`}</strong>
+            {' '}· generado {formatGeneratedAt(modelMeta?.generated_at ?? pythonIndex.generated_at)}
+            {(pythonIndex.target_period_label || targetPeriodLabel) && (
+              <> · Predicción para <strong>{pythonIndex.target_period_label ?? targetPeriodLabel}</strong>
+                {(pythonIndex.target_period_code || targetPeriodCode) ? ` (${pythonIndex.target_period_code ?? targetPeriodCode})` : ''}
+              </>
+            )}
           </p>
         )}
-        {estimatorMode === 'live' && targetPeriodLabel && (
+        {mode === 'live' && targetPeriodLabel && (
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Predicción para <strong>{targetPeriodLabel}</strong>
             {targetPeriodCode ? ` (${targetPeriodCode})` : ''}
             {transitionRates ? ' · tasas DAG calibradas' : ' · tasas DAG por defecto (80/50/25)'}
           </p>
-        )}
-        {estimatorMode === 'python' && pythonAvailable && (
-          <label className="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={useGbr}
-              onChange={(e) => setUseGbr(e.target.checked)}
-              className="rounded border-gray-300"
-            />
-            Usar refinamiento GBR cuando esté disponible
-          </label>
         )}
       </div>
 
@@ -433,29 +474,32 @@ export default function TeacherDashboard({
             <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
               <p className="font-medium text-gray-900 dark:text-white">¿Cómo leer esta tabla?</p>
-              {estimatorMode === 'python' ? (
+              {mode === 'python' ? (
                 <p className="text-xs text-emerald-700 dark:text-emerald-400">
-                  Vista <strong>Modelo Python</strong>: predicciones del batch offline (fórmula híbrida + DAG
-                  {pythonIndex ? ', con GBR opcional si hubo entrenamiento' : ''}).
-                  Los históricos del gráfico siguen viniendo del catálogo en vivo.
+                  Vista <strong>Cobertura (modelo v4)</strong>: compara la <strong>demanda estimada</strong> (matrícula esperada,
+                  con rango piso–central–techo) contra el <strong>cupo publicado</strong> del período objetivo.
+                  {modelMeta?.method ? ` ${modelMeta.method}` : ''}
                 </p>
               ) : (
                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Vista <strong>Estimador actual</strong>: cálculo en tiempo real en el navegador.
+                  Vista <strong>Estimador en vivo (legado)</strong>: fórmula híbrida calculada en el navegador con la
+                  matrícula histórica del catálogo y propagación DAG. Se conserva para comparar; la vista de cobertura es la referencia.
                 </p>
               )}
               <p className="text-xs text-gray-600 dark:text-gray-400">
                 Se listan las materias bajo supervisión de la facultad <strong>{faculty}</strong>
                 (p. ej. <strong>{faculty}-*</strong> en el catálogo; Economía usa <strong>ECN-*</strong>).
-                No es la malla completa de la carrera.
+                Las variantes con sufijo E (p. ej. CMP-5006E) se agrupan con su código base.
               </p>
               <ul className="list-disc list-inside text-xs space-y-1 text-gray-600 dark:text-gray-400">
-                <li><strong>Cursando:</strong> estudiantes tomando la materia <em>este semestre</em> en la app.</li>
-                <li><strong>Planeada:</strong> estudiantes que la marcaron para el <em>próximo semestre</em> (demanda directa).</li>
-                <li><strong>DAG hist.:</strong> cohorte del catálogo propagada con tasas calibradas por pares de períodos (fallback 80/50/25).</li>
-                <li><strong>DAG cursando:</strong> quienes <em>cursan</em> un prerrequisito ahora y probablemente tomarán esta materia el próximo semestre.</li>
-                <li><strong>Histórico / Secciones:</strong> oferta real pasada del catálogo USFQ + sugerencia combinada.</li>
-                <li><strong>Clic en una fila</strong> abre el gráfico por período.</li>
+                <li><strong>Cupo ofertado / publicado:</strong> asientos abiertos por la universidad (suma de NRC de Teoría). No es demanda.</li>
+                <li><strong>Matriculados:</strong> estudiantes inscritos = cupo − disponibles al cierre del período (se subestima donde la sección se llenó).</li>
+                <li><strong>Demanda estimada:</strong> proyección de matriculados para el período objetivo; la oferta aún no tiene matrícula (disponibles vacío ≠ agotado).</li>
+                <li><strong>Cursando / Planeada:</strong> señales de la muestra de usuarios de la app (pequeña y no representativa); solo ajustan la estimación.</li>
+                {mode === 'live' && (
+                  <li><strong>DAG hist. / DAG curs.:</strong> demanda propagada por prerrequisitos desde el histórico y desde quienes cursan ahora.</li>
+                )}
+                <li><strong>Clic en una fila</strong> abre el detalle por período.</li>
               </ul>
             </div>
           </div>
@@ -463,35 +507,51 @@ export default function TeacherDashboard({
       )}
 
       {!isLoading && predictions.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard label="Materias supervisadas" value={predictions.length} icon={<BookOpen className="w-5 h-5" />} />
-          <StatCard label="Con histórico" value={withHistory} icon={<BarChart3 className="w-5 h-5" />} />
-          <StatCard label="Cursando (este sem.)" value={totalCursando} icon={<Users className="w-5 h-5" />} />
-          <StatCard label="Planean próximo sem." value={totalPlannedNext} icon={<TrendingUp className="w-5 h-5" />} />
-        </div>
+        mode === 'python' ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <StatCard label="Déficit crítico" value={coverageCounts.deficit_critico ?? 0} icon={<AlertCircle className="w-5 h-5" />} />
+            <StatCard label="Déficit leve" value={coverageCounts.deficit_leve ?? 0} icon={<TrendingUp className="w-5 h-5" />} />
+            <StatCard label="Exceso de cupo" value={coverageCounts.exceso ?? 0} icon={<BarChart3 className="w-5 h-5" />} />
+            <StatCard
+              label="Demanda central / cupo publicado"
+              value={`${Math.round(totalDemand)} / ${totalCapacity}`}
+              icon={<Users className="w-5 h-5" />}
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <StatCard label="Materias supervisadas" value={predictions.length} icon={<BookOpen className="w-5 h-5" />} />
+            <StatCard label="Con histórico" value={withHistory} icon={<BarChart3 className="w-5 h-5" />} />
+            <StatCard label="Cursando (este sem.)" value={totalCursando} icon={<Users className="w-5 h-5" />} />
+            <StatCard label="Planean próximo sem." value={totalPlannedNext} icon={<TrendingUp className="w-5 h-5" />} />
+          </div>
+        )
       )}
 
       <Card className="dark:bg-gray-800 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex-wrap gap-2">
           <h2 className="font-semibold text-gray-900 dark:text-white">
-            Predicción de demanda — {faculty}
-            {estimatorMode === 'python' && (
-              <span className="ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-400">(modelo Python)</span>
+            {mode === 'python' ? 'Cobertura de oferta vs demanda' : 'Predicción de demanda'} — {faculty}
+            {mode === 'python' && (
+              <span className="ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-400">({modelMeta?.name ?? 'modelo v4'})</span>
             )}
           </h2>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-500 dark:text-gray-400">Ordenar:</span>
-            {(['predicted', 'planned', 'trend'] as const).map((opt) => (
+            {(mode === 'python'
+              ? (['coverage', 'predicted', 'planned', 'trend'] as const)
+              : (['predicted', 'planned', 'trend'] as const)
+            ).map((opt) => (
               <button
                 key={opt}
                 onClick={() => setSortBy(opt)}
                 className={`text-xs px-2.5 py-1 rounded-md transition-colors ${
-                  sortBy === opt
+                  (sortBy === opt || (opt === 'predicted' && sortBy === 'coverage' && mode === 'live'))
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
-                {opt === 'planned' ? 'Planeadas' : opt === 'predicted' ? 'Secciones' : 'Tendencia'}
+                {opt === 'coverage' ? 'Cobertura' : opt === 'planned' ? 'Planeadas' : opt === 'predicted' ? 'Secciones' : 'Tendencia'}
               </button>
             ))}
           </div>
@@ -514,19 +574,29 @@ export default function TeacherDashboard({
                 <tr className="bg-gray-50 dark:bg-gray-700/50 text-left">
                   <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Código</th>
                   <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Materia</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center" title="Estudiantes cursando esta materia este semestre">Cursando</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center" title="Estudiantes que la planean para el próximo semestre">Planeada</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center" title="Demanda propagada desde el histórico del catálogo">DAG hist.</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center" title="Demanda propagada desde quienes cursan prerrequisitos ahora">DAG curs.</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center">Histórico</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center">Secciones</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center" title="Estudiantes cursando esta materia este semestre (muestra de la app)">Cursando</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center" title="Estudiantes que la planean para el próximo semestre (muestra de la app)">Planeada</th>
+                  {mode === 'python' ? (
+                    <>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-40 text-center" title="Matrícula esperada: piso – central – techo">Demanda estimada</th>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center" title="Cupo publicado = suma de cupos de Teoría del período objetivo">Cupo publicado</th>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-36 text-center">Cobertura</th>
+                    </>
+                  ) : (
+                    <>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center" title="Demanda propagada desde la matrícula histórica del catálogo">DAG hist.</th>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-24 text-center" title="Demanda propagada desde quienes cursan prerrequisitos ahora">DAG curs.</th>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-32 text-center" title="Matriculados y cupo ofertado promedio por período regular">Histórico</th>
+                      <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-28 text-center">Secciones</th>
+                    </>
+                  )}
                   <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 w-20 text-center">Tend.</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                 {sortedPredictions.map((row) => (
                   <tr
-                    key={row.course_id}
+                    key={row.offer_code}
                     onClick={() => setSelected(row)}
                     className="hover:bg-blue-50/60 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
                   >
@@ -544,44 +614,64 @@ export default function TeacherDashboard({
                     <td className="px-4 py-3 text-center font-medium text-blue-700 dark:text-blue-400">
                       {row.planned_next}
                     </td>
-                    <td className="px-4 py-3">
-                      <DemandBar value={row.inflow_from_history} max={maxDemand} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <DemandBar value={row.inflow_from_cursando} max={maxDemand} />
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      {row.num_periods > 0 ? (
-                        <div>
-                          <div className="font-medium text-gray-800 dark:text-gray-200">
-                            {Math.round(row.avg_sections)} secc.
-                          </div>
-                          <div className="text-xs text-gray-400">
-                            ~{Math.round(row.avg_students)} cupos · {row.num_periods} períodos
-                          </div>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-gray-400">Sin datos</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      {row.model_label === 'sin datos' ? (
-                        <span className="text-xs text-gray-400">—</span>
-                      ) : (
-                        <span
-                          className={`text-lg font-bold ${
-                            row.predicted_sections >= (row.avg_sections || 1)
-                              ? 'text-green-600 dark:text-green-400'
-                              : 'text-orange-500 dark:text-orange-400'
-                          }`}
-                        >
-                          {row.predicted_sections}
-                        </span>
-                      )}
-                      {estimatorMode === 'python' && row.model_label && row.model_label !== 'sin datos' && (
-                        <div className="text-[10px] text-gray-400 mt-0.5">{row.model_label}</div>
-                      )}
-                    </td>
+                    {mode === 'python' ? (
+                      <>
+                        <td className="px-4 py-3 text-center">
+                          {row.demand_low != null && row.has_history ? (
+                            <div>
+                              <div className="font-semibold text-gray-800 dark:text-gray-200">{row.estimated_students}</div>
+                              <div className="text-[11px] text-gray-400">{row.demand_low} – {row.demand_high}</div>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-400">Sin base histórica</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <div className="font-semibold text-gray-800 dark:text-gray-200">{row.published_capacity ?? 0}</div>
+                          <div className="text-[11px] text-gray-400">{row.published_sections ?? 0} secc.</div>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <CoverageBadge value={row.coverage_class} />
+                          {row.possibly_partial_offer && (
+                            <div className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5" title="El cupo publicado es menos del 60% del de la misma estación del año anterior: ¿oferta parcial?">¿oferta parcial?</div>
+                          )}
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-4 py-3">
+                          <DemandBar value={row.inflow_from_history} max={maxDemand} />
+                        </td>
+                        <td className="px-4 py-3">
+                          <DemandBar value={row.inflow_from_cursando} max={maxDemand} />
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          {row.num_periods > 0 ? (
+                            <div>
+                              <div className="font-medium text-gray-800 dark:text-gray-200">
+                                ~{Math.round(row.avg_students)} matric.
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                {Math.round(row.avg_sections)} secc. · ~{Math.round(row.avg_capacity)} cupos · {row.num_periods} per.
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-400">Sin datos</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span
+                            className={`text-lg font-bold ${
+                              row.predicted_sections >= (row.avg_sections || 1)
+                                ? 'text-green-600 dark:text-green-400'
+                                : 'text-orange-500 dark:text-orange-400'
+                            }`}
+                          >
+                            {row.predicted_sections}
+                          </span>
+                        </td>
+                      </>
+                    )}
                     <td className="px-4 py-3">
                       <div className="flex justify-center">
                         <TrendIcon t={row.trend} />
@@ -612,13 +702,25 @@ export default function TeacherDashboard({
           history={historyMap.get(selected.offer_code)}
           targetPeriodLabel={targetPeriodLabel}
           targetPeriodCode={targetPeriodCode}
-          gbrStudents={selected.gbr_students}
-          gbrSections={selected.gbr_sections}
-          modelLabel={selected.model_label ?? (estimatorMode === 'live' ? 'híbrido+calibrado' : undefined)}
+          modelLabel={mode === 'live' ? 'híbrido legado (en vivo)' : selected.model_label}
+          modelGeneratedAt={mode === 'python' ? (modelMeta?.generated_at ?? pythonIndex?.generated_at) : undefined}
+          coverage={mode === 'python' && selected.coverage_class ? {
+            coverageClass: selected.coverage_class,
+            demandLow: selected.demand_low ?? null,
+            demandHigh: selected.demand_high ?? null,
+            publishedCapacity: selected.published_capacity ?? 0,
+            publishedSections: selected.published_sections ?? 0,
+            utilization: selected.utilization_central ?? null,
+            confidence: selected.confidence ?? null,
+            recommendation: selected.recommendation ?? '',
+            possiblyPartialOffer: Boolean(selected.possibly_partial_offer),
+          } : undefined}
           prerequisiteRates={
-            transitionRates?.incomingEdges(
-              livePredictions.find((r) => r.offer_code === selected.offer_code)?.course_id ?? selected.course_id,
-            ) ?? []
+            mode === 'live'
+              ? transitionRates?.incomingEdges(
+                  livePredictions.find((r) => r.offer_code === selected.offer_code)?.course_id ?? selected.course_id,
+                ) ?? []
+              : []
           }
         />
       )}
