@@ -1,6 +1,6 @@
 {
   "source_file": "Malla-academica-MAC",
-  "Last-Modified": "2026-06-08T21:54:23.265Z",
+  "Last-Modified": "2026-11-18T20:40:27.895Z",
   "courses": [
     {
       "id": "ESP1001",
@@ -132,7 +132,7 @@
       "area": "MAT",
       "type": "obligatoria",
       "prerequisites": [
-        "MAT1201 || MAT1301 || MAT1203"
+        "MAT1201 || MAT1301 || MAT1203 || MAT1301"
       ],
       "alternatives": []
     },
@@ -244,7 +244,7 @@
       "area": "MAT",
       "type": "obligatoria",
       "prerequisites": [
-        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E"
+        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E || MAT1301"
       ],
       "alternatives": []
     },
@@ -334,7 +334,7 @@
       "area": "MAT",
       "type": "obligatoria",
       "prerequisites": [
-        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E"
+        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E || MAT1301"
       ],
       "alternatives": []
     },
@@ -472,9 +472,9 @@
       "alternatives": []
     },
     {
-      "id": "CMP4004",
-      "code": "CMP 4004",
-      "title": "Inteligencia Artificial",
+      "id": "CMP4004E",
+      "code": "CMP 4004E",
+      "title": "Artificial Intelligence",
       "description": "",
       "credits": 3,
       "semester": 6,
@@ -482,7 +482,8 @@
       "area": "CMP",
       "type": "obligatoria",
       "prerequisites": [
-        "CMP3002"
+        "CMP3002",
+        "ENG1001E || ESL0006 || ESL0007"
       ],
       "alternatives": []
     },
@@ -525,10 +526,10 @@
       "area": "IIN",
       "type": "obligatoria",
       "prerequisites": [
-        "MAT1202 || MAT1302",
+        "MAT1202 || MAT1302 || MAT1301",
         "MAT1401",
         "MAT2008 || MAT2010",
-        "CMP1002 || CMP1101"
+        "CMP1002 || CMP1101 || ADM3080"
       ],
       "alternatives": []
     },
@@ -552,7 +553,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "MAC",
       "type": "obligatoria",
       "prerequisites": [
@@ -567,11 +568,11 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "CMP",
       "type": "obligatoria",
       "prerequisites": [
-        "MAC4002"
+        "MAC4002 || MAC4002E"
       ],
       "alternatives": []
     },
@@ -582,7 +583,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "MAC",
       "type": "obligatoria",
       "prerequisites": [
@@ -597,7 +598,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "PRC",
       "type": "obligatoria",
       "prerequisites": [],
@@ -610,7 +611,7 @@
       "description": "",
       "credits": 3,
       "semester": 8,
-      "block": "Semestre 8",
+      "block": "Semestre 7",
       "area": "ELECTIVA",
       "type": "electiva",
       "prerequisites": [],
@@ -623,11 +624,26 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "MAC",
       "type": "obligatoria",
       "prerequisites": [
         "MAC4002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAC4004",
+      "code": "MAC 4004",
+      "title": "Ingeniería de Datos",
+      "description": "",
+      "credits": 3,
+      "semester": 9,
+      "block": "Semestre 8",
+      "area": "MAC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "CMP5002"
       ],
       "alternatives": []
     },
@@ -638,7 +654,7 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "MAC",
       "type": "obligatoria",
       "prerequisites": [
@@ -653,7 +669,7 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "ELECTIVA",
       "type": "electiva",
       "prerequisites": [],
@@ -666,7 +682,7 @@
       "description": "",
       "credits": 3,
       "semester": 9,
-      "block": "Semestre 9",
+      "block": "Semestre 8",
       "area": "CCSS",
       "type": "optativa",
       "prerequisites": [],
@@ -679,7 +695,7 @@
       "description": "",
       "credits": 1,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "ING",
       "type": "obligatoria",
       "prerequisites": [],
@@ -692,12 +708,11 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "IIN",
       "type": "obligatoria",
       "prerequisites": [
-        "IIN2101",
-        "FIS2702"
+        "IIN2101"
       ],
       "alternatives": []
     },
@@ -708,7 +723,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -721,7 +736,7 @@
       "description": "",
       "credits": 3,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "OPT",
       "type": "optativa",
       "prerequisites": [],
@@ -734,15 +749,10 @@
       "description": "",
       "credits": 5,
       "semester": 10,
-      "block": "Semestre 10",
+      "block": "Semestre 9",
       "area": "MAC",
       "type": "obligatoria",
-      "prerequisites": [
-        "MAC4081",
-        "MAC2010",
-        "MAC4001",
-        "MAC4002"
-      ],
+      "prerequisites": [],
       "alternatives": []
     }
   ]
