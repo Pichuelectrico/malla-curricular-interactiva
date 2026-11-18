@@ -44146,8 +44146,8 @@ const availableCurricula = [
     name: "Ingeniería en Matemáticas Aplicadas y Computación",
     description: "Universidad San Francisco de Quito",
     year: "2026",
-    credits: 136,
-    courses: 52,
+    credits: 139,
+    courses: 53,
     dataLoader: async () => {
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-MAC.json`);
