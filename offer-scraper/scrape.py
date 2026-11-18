@@ -428,6 +428,19 @@ def cmd_scrape(args) -> None:
         log.error("No courses scraped — aborting upload to avoid wiping the table.")
         sys.exit(1)
 
+    try:
+        snapshot_path = os.path.join(os.path.dirname(__file__), f"scraped_{period_code}_last.json")
+        with open(snapshot_path, "w", encoding="utf-8") as snapshot_file:
+            json.dump({
+                "period_code": period_code,
+                "scraped_at": datetime.now(timezone.utc).isoformat(),
+                "row_count": len(courses),
+                "nrcs_unicos": len({c.nrc for c in courses}),
+                "rows": [asdict(c) for c in courses],
+            }, snapshot_file, ensure_ascii=False, indent=2)
+    except (OSError, TypeError, ValueError) as exc:
+        log.warning("Could not persist raw scrape snapshot: %s", exc)
+
     if args.archive:
         upload_to_history(courses, supa_url, supa_key)
 
