@@ -1,0 +1,785 @@
+{
+  "source_file": "Malla-academica-INA",
+  "Last-Modified": "2026-11-19T19:04:26.367Z",
+  "courses": [
+    {
+      "id": "ESP1001",
+      "code": "ESP 1001",
+      "title": "Escritura Académica",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1201",
+      "code": "MAT 1201",
+      "title": "Cálculo Diferencial + Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA1002",
+      "code": "INA 1002",
+      "title": "Taller de Ing. Ambiental",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "QUI1003",
+      "code": "QUI 1003",
+      "title": "Química General 1 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "QUI",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL1001",
+      "code": "ARL 1001",
+      "title": "Autoconocimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0001",
+      "code": "ESL 0001",
+      "title": "Inglés Nivel 1",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0002",
+      "code": "ESL 0002",
+      "title": "Inglés Nivel 2",
+      "description": "",
+      "credits": 0,
+      "semester": 1,
+      "block": "Semestre 1",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "BIO1102",
+      "code": "BIO 1102",
+      "title": "Biología General + Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "BIO",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "QUI1004",
+      "code": "QUI 1004",
+      "title": "Química General 2 +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "QUI",
+      "type": "obligatoria",
+      "prerequisites": [
+        "QUI1003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT1202",
+      "code": "MAT 1202",
+      "title": "Cálculo Integral + Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1201 || MAT1301 || MAT1203 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ECN1001",
+      "code": "ECN 1001",
+      "title": "Introducción a la Economía",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ECN",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ARL2001",
+      "code": "ARL 2001",
+      "title": "Ser y Cosmos",
+      "description": "",
+      "credits": 3,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ARL",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0003",
+      "code": "ESL 0003",
+      "title": "Inglés Nivel 3",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0004",
+      "code": "ESL 0004",
+      "title": "Inglés Nivel 4",
+      "description": "",
+      "credits": 0,
+      "semester": 2,
+      "block": "Semestre 2",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0003"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2002",
+      "code": "MAT 2002",
+      "title": "Ecuaciones Diferenciales",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1202E || MAT1302 || MAT1302E || MAT1303 || MAT1303E || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA2101",
+      "code": "INA 2101",
+      "title": "Herramientas Ing. Ambiental 1",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "QUI1004 || QUI2001",
+        "MAT1201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIS2701",
+      "code": "FIS 2701",
+      "title": "Física para Ing. 1+Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "FIS",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "MAT2008",
+      "code": "MAT 2008",
+      "title": "Probabilidad y Estadística +Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "MAT",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MAT1202 || MAT1301"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ARTE",
+      "code": "ARTE",
+      "title": "Arte: ART/MUS/DAN/TEA",
+      "description": "",
+      "credits": 3,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ARTE",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0005",
+      "code": "ESL 0005",
+      "title": "Inglés Nivel 5",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ESL0006",
+      "code": "ESL 0006",
+      "title": "Inglés Nivel 6",
+      "description": "",
+      "credits": 0,
+      "semester": 3,
+      "block": "Semestre 3",
+      "area": "ESL",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA2102",
+      "code": "INA 2102",
+      "title": "Herramientas Ing. Ambiental 2",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA2101"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ECL2101",
+      "code": "ECL 2101",
+      "title": "Ecología General",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "ECL",
+      "type": "optativa",
+      "prerequisites": [
+        "BIO1102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "REC3103",
+      "code": "REC 3103",
+      "title": "SIG y Sensores Remotos",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "REC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ECL2101 || ECL2002"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "FIS2702",
+      "code": "FIS 2702",
+      "title": "Física para Ing. 2 +Lab/Ej",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "FIS",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2701 || FIS2101 || FIS1201"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "CCSS",
+      "code": "CCSS",
+      "title": "CCSS:HIS/SOC/ ANT /POL/REL/PSI",
+      "description": "",
+      "credits": 3,
+      "semester": 4,
+      "block": "Semestre 4",
+      "area": "CCSS",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "DEP0010",
+      "code": "DEP 0010",
+      "title": "Deportes",
+      "description": "",
+      "credits": 1,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "DEP",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA4001",
+      "code": "INA 4001",
+      "title": "Calidad del Aire",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA2102",
+        "MAT2008"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ADM3002",
+      "code": "ADM 3002",
+      "title": "Emprendimiento",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "ADM",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA3004",
+      "code": "INA 3004",
+      "title": "Ingeniería del Flujo +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "FIS2701",
+        "INA2102"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA4080",
+      "code": "INA 4080",
+      "title": "Seguridad, Salud y Ambiente",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "PRC2000",
+      "code": "PRC 2000",
+      "title": "Aprendizaje y Servicio PASEC",
+      "description": "",
+      "credits": 3,
+      "semester": 5,
+      "block": "Semestre 5",
+      "area": "PRC",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "GST0010",
+      "code": "GST 0010",
+      "title": "Cultura Gastronómica",
+      "description": "",
+      "credits": 1,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "GST",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA3001",
+      "code": "INA 3001",
+      "title": "Caracterización Ambiental +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA2102",
+        "FIS2702"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA3003E",
+      "code": "INA 3003E",
+      "title": "Environmental Chemistry +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA2102",
+        "ESL0006 || ESL0007 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA4005",
+      "code": "INA 4005",
+      "title": "Contaminación Industrial",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA4001 || INA4001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA3005",
+      "code": "INA 3005",
+      "title": "Transporte de Contaminantes",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA3004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA1",
+      "code": "ELECTIVA 1",
+      "title": "Electiva Libre 1/2",
+      "description": "",
+      "credits": 3,
+      "semester": 6,
+      "block": "Semestre 6",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "BTC5001",
+      "code": "BTC 5001",
+      "title": "Biorremediación +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "BTC",
+      "type": "obligatoria",
+      "prerequisites": [
+        "MCR2001",
+        "INA2101 || BTC5005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA5003E",
+      "code": "INA 5003E",
+      "title": "Climate Change and Society",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0006 || ESL0007 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA4003E",
+      "code": "INA 4003E",
+      "title": "Meteorology",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0006 || ESL0007 || ENG1001E",
+        "INA3005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA5201E",
+      "code": "INA 5201E",
+      "title": "Wastewater Treatment 1 +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0006 || ESL0007 || ENG1001E",
+        "INA3004"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "HUM",
+      "code": "HUM",
+      "title": "Humanidades: LIT/FIL/ARH/ESC",
+      "description": "",
+      "credits": 3,
+      "semester": 7,
+      "block": "Semestre 7",
+      "area": "HUM",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA3081E",
+      "code": "INA 3081E",
+      "title": "Atmospheric Monitoring",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0006 || ESL0007 || ENG1001E",
+        "INA4003E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA5001",
+      "code": "INA 5001",
+      "title": "Modelado Ambiental",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA4005"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA4082E",
+      "code": "INA 4082E",
+      "title": "Renewable Energy",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ENG1001E || ESL0006 || ESL0007"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA4006E",
+      "code": "INA 4006E",
+      "title": "Waste Management + Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA2102",
+        "INA4005",
+        "ESL0006 || ESL0007 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "INA5202E",
+      "code": "INA 5202E",
+      "title": "Wastewater Treatment 2 +Lab",
+      "description": "",
+      "credits": 3,
+      "semester": 8,
+      "block": "Semestre 8",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "ESL0006 || ESL0007 || ENG1001E",
+        "INA5201E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "PAS4000",
+      "code": "PAS 4000",
+      "title": "Práctica Pre-Profesional PASEM",
+      "description": "",
+      "credits": 5,
+      "semester": 9,
+      "block": "Verano",
+      "area": "PAS",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "ING0001",
+      "code": "ING 0001",
+      "title": "Coloquios",
+      "description": "",
+      "credits": 1,
+      "semester": 10,
+      "block": "Semestre 9",
+      "area": "ING",
+      "type": "obligatoria",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA5004E",
+      "code": "INA 5004E",
+      "title": "Env. Impact and Sustainability",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 9",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA5001E",
+        "ESL0006 || ESL0007 || ENG1001E"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "ELECTIVA2",
+      "code": "ELECTIVA 2",
+      "title": "Electiva Libre 2/2",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 9",
+      "area": "ELECTIVA",
+      "type": "electiva",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "OPTINA",
+      "code": "OPT INA",
+      "title": "Optativa INA",
+      "description": "",
+      "credits": 3,
+      "semester": 10,
+      "block": "Semestre 9",
+      "area": "OPT",
+      "type": "optativa",
+      "prerequisites": [],
+      "alternatives": []
+    },
+    {
+      "id": "INA5992",
+      "code": "INA 5992",
+      "title": "Proyecto Integrador INA",
+      "description": "",
+      "credits": 5,
+      "semester": 10,
+      "block": "Semestre 9",
+      "area": "INA",
+      "type": "obligatoria",
+      "prerequisites": [
+        "INA5001E"
+      ],
+      "alternatives": []
+    }
+  ]
+}
