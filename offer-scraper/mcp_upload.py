@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from dotenv import load_dotenv
+from supabase_key_check import ensure_service_role
 
 # Reuse upload helpers from scrape.py
 from scrape import (
@@ -69,6 +70,7 @@ def main() -> None:
     if not supa_url or not supa_key:
         print("SUPABASE_URL and SUPABASE_KEY required in .env", file=sys.stderr)
         sys.exit(1)
+    ensure_service_role(supa_key)
 
     courses = load_json(args.json_file, args.period, args.period_code)
     if not courses:

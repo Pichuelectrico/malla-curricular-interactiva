@@ -56,6 +56,7 @@ import requests
 from dotenv import load_dotenv
 
 from browser import BrowserSession
+from supabase_key_check import ensure_service_role
 
 load_dotenv()
 
@@ -406,6 +407,7 @@ def cmd_scrape(args) -> None:
     if not supa_url or not supa_key:
         log.error("SUPABASE_URL and SUPABASE_KEY must be set in .env")
         sys.exit(1)
+    ensure_service_role(supa_key)
 
     headed = not args.headless
     username, password = _usfq_creds()
@@ -467,6 +469,7 @@ def cmd_backfill(args) -> None:
     if not supa_url or not supa_key:
         log.error("SUPABASE_URL and SUPABASE_KEY must be set in .env")
         sys.exit(1)
+    ensure_service_role(supa_key)
 
     periods_path = args.periods or os.path.join(
         os.path.dirname(__file__), "periods.json"
@@ -522,6 +525,7 @@ def cmd_rollover(args) -> None:
     if not supa_url or not supa_key:
         log.error("SUPABASE_URL and SUPABASE_KEY must be set in .env")
         sys.exit(1)
+    ensure_service_role(supa_key)
 
     meta = fetch_offer_metadata(supa_url, supa_key)
     current_code = meta.get("current_period_code")
