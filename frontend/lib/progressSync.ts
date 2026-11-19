@@ -103,3 +103,23 @@ export function readLocalAnonProgress(
     return null;
   }
 }
+
+/** Serialización estable del conjunto planeado (para saber si el usuario lo editó). */
+export function serializePlanned(planned: Iterable<string>): string {
+  return [...planned].sort().join('|');
+}
+
+/**
+ * Sello «para qué período se planeó»: solo se actualiza al período objetivo cuando el usuario EDITA
+ * lo planeado; si no lo tocó (p. ej. marcó una materia completada) se conserva el sello cargado.
+ */
+export function resolvePlannedPeriodCode(
+  planned: ReadonlySet<string> | readonly string[],
+  loaded: { serialized: string; periodCode: string | null },
+  targetPeriodCode: string | null,
+): string | null {
+  const list = [...planned];
+  if (list.length === 0) return null;
+  if (serializePlanned(list) !== loaded.serialized) return targetPeriodCode ?? loaded.periodCode;
+  return loaded.periodCode;
+}

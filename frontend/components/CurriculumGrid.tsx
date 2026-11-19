@@ -25,10 +25,14 @@ import { getBlockDisplayName, getOrderedBlocks } from '../utils/curriculumBlocks
 import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
 import { deleteAllProgressForUser, type ProgressData } from '../lib/supabaseProgress';
+import { fetchOfferMetadata } from '../lib/offerHistory';
+import { loadAcademicCalendar } from '../lib/periodCalendar';
 import {
   globalCompletedKey,
   progressKey,
   readLocalAnonProgress,
+  resolvePlannedPeriodCode,
+  serializePlanned,
   retryWithBackoff,
   serializeProgress,
 } from '../lib/progressSync';
@@ -98,6 +102,9 @@ export default function CurriculumGrid() {
   const lastSavedRef = useRef<string | null>(null);
   const pendingSaveRef = useRef<{ key: string; run: () => Promise<void> } | null>(null);
   const restoredCurriculumRef = useRef(false);
+  // Período objetivo (p. ej. 202620) y sello de «para qué período se planeó» (solo cambia si el usuario edita lo planeado).
+  const targetPeriodRef = useRef<string | null>(null);
+  const loadedPlannedRef = useRef<{ serialized: string; periodCode: string | null }>({ serialized: '', periodCode: null });
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const { toast } = useToast();
 
@@ -117,6 +124,22 @@ export default function CurriculumGrid() {
   const accountId = isSignedIn ? user?.id ?? null : null;
   const currentProgressKey = progressKey(accountId, curriculumId);
   const globalStoreKey = globalCompletedKey(accountId);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [calendar, metadata] = await Promise.all([loadAcademicCalendar(), fetchOfferMetadata()]);
+        const { targetPeriodCode } = calendar.inferTargetPeriod(metadata.currentPeriodCode || undefined);
+        if (!cancelled) targetPeriodRef.current = targetPeriodCode || null;
+      } catch {
+        // sin período objetivo no se sella: las filas quedan como «legacy» en el predictor
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Load curriculum based on URL slug
   // Prefer hash-based routing (#/malla-adm) for GitHub Pages compatibility, fallback to pathname (/malla-adm)
@@ -197,6 +220,10 @@ export default function CurriculumGrid() {
           hasWritingIntensive: wi,
           bucketFulfillments: buckets,
         });
+        loadedPlannedRef.current = {
+          serialized: serializePlanned(planned),
+          periodCode: response?.plannedPeriodCode ?? null,
+        };
         if (isSignedIn && !completed.length && !inProgress.length && !planned.length) {
           setLocalImportOffer(readLocalAnonProgress(curriculumId));
         }
@@ -292,6 +319,8 @@ export default function CurriculumGrid() {
     });
     if (serialized === lastSavedRef.current) return;
 
+    const plannedSerialized = serializePlanned(plannedCourses);
+    const stampedPeriod = resolvePlannedPeriodCode(plannedCourses, loadedPlannedRef.current, targetPeriodRef.current);
     const payload = {
       curriculumId,
       completedCourses: [...completedCourses],
@@ -300,6 +329,7 @@ export default function CurriculumGrid() {
       plannedCourses: [...plannedCourses],
       hasWritingIntensive,
       bucketFulfillments: isSignedIn ? bucketFulfillments : undefined,
+      plannedPeriodCode: stampedPeriod,
       lastUpdated: new Date().toISOString(),
     };
     const run = async () => {
@@ -307,6 +337,7 @@ export default function CurriculumGrid() {
       try {
         await backend.progress.saveProgress(payload);
         lastSavedRef.current = serialized;
+        loadedPlannedRef.current = { serialized: plannedSerialized, periodCode: stampedPeriod };
       } catch (error) {
         console.error('Error saving progress:', error);
         toast({

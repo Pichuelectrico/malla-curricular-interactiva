@@ -9,6 +9,8 @@ export interface ProgressData {
   hasWritingIntensive: boolean;
   lastUpdated: string;
   bucketFulfillments?: BucketFulfillmentsMap;
+  /** Período objetivo para el que se editó por última vez `plannedCourses` (p. ej. '202620'). */
+  plannedPeriodCode?: string | null;
   /** Legacy field from Encore backend — ignored in Supabase storage */
   selectedCourses?: string[];
 }
@@ -16,8 +18,11 @@ export interface ProgressData {
 const BASE_COLUMNS =
   'curriculum_id, completed_courses, in_progress_courses, planned_courses, has_writing_intensive, updated_at';
 
-function isMissingBucketColumnError(message: string): boolean {
-  return /bucket_fulfillments/i.test(message);
+/** Columnas añadidas por migraciones posteriores: si la BD aún no las tiene, se reintenta sin ellas. */
+const OPTIONAL_COLUMNS = ['bucket_fulfillments', 'planned_period_code'] as const;
+
+function missingOptionalColumn(message: string): (typeof OPTIONAL_COLUMNS)[number] | null {
+  return OPTIONAL_COLUMNS.find((c) => message.toLowerCase().includes(c)) ?? null;
 }
 
 function emptyProgress(curriculumId: string): ProgressData {
@@ -42,52 +47,48 @@ function mapProgressRow(
     plannedCourses: (row.planned_courses as string[]) ?? [],
     hasWritingIntensive: (row.has_writing_intensive as boolean) ?? false,
     bucketFulfillments: (row.bucket_fulfillments as BucketFulfillmentsMap) ?? {},
+    plannedPeriodCode: (row.planned_period_code as string | null | undefined) ?? null,
     lastUpdated: (row.updated_at as string) ?? new Date().toISOString(),
   };
 }
 
-async function fetchProgressRow(
-  curriculumId: string,
-  userId: string,
-  includeBucketColumn: boolean,
-) {
-  const columns = includeBucketColumn
-    ? `${BASE_COLUMNS}, bucket_fulfillments`
-    : BASE_COLUMNS;
-
-  return supabase
-    .from('user_progress')
-    .select(columns)
-    .eq('user_id', userId)
-    .eq('curriculum_id', curriculumId)
-    .maybeSingle();
+function selectColumns(skipped: ReadonlySet<string>): string {
+  return [BASE_COLUMNS, ...OPTIONAL_COLUMNS.filter((c) => !skipped.has(c))].join(', ');
 }
 
 export async function loadProgressFromSupabase(
   curriculumId: string,
   userId: string
 ): Promise<ProgressData> {
-  let { data, error } = await fetchProgressRow(curriculumId, userId, true);
+  const skipped = new Set<string>();
+  for (let attempt = 0; attempt <= OPTIONAL_COLUMNS.length; attempt++) {
+    const { data, error } = await supabase
+      .from('user_progress')
+      .select(selectColumns(skipped))
+      .eq('user_id', userId)
+      .eq('curriculum_id', curriculumId)
+      .maybeSingle();
 
-  if (error && isMissingBucketColumnError(error.message)) {
-    ({ data, error } = await fetchProgressRow(curriculumId, userId, false));
+    const missing = error ? missingOptionalColumn(error.message) : null;
+    if (error && missing && !skipped.has(missing)) {
+      skipped.add(missing);
+      continue;
+    }
+    if (error) {
+      console.error('Error loading progress from Supabase:', error.message);
+      throw error;
+    }
+    if (!data) return emptyProgress(curriculumId);
+    return mapProgressRow(curriculumId, data as unknown as Record<string, unknown>);
   }
-
-  if (error) {
-    console.error('Error loading progress from Supabase:', error.message);
-    throw error;
-  }
-
-  if (!data) return emptyProgress(curriculumId);
-
-  return mapProgressRow(curriculumId, data as Record<string, unknown>);
+  throw new Error('No se pudo cargar el progreso');
 }
 
 export async function saveProgressToSupabase(
   params: ProgressData,
   userId: string
 ): Promise<void> {
-  const basePayload = {
+  const full: Record<string, unknown> = {
     user_id: userId,
     curriculum_id: params.curriculumId,
     completed_courses: params.completedCourses,
@@ -95,51 +96,52 @@ export async function saveProgressToSupabase(
     planned_courses: params.plannedCourses ?? [],
     has_writing_intensive: params.hasWritingIntensive ?? false,
     updated_at: new Date().toISOString(),
+    bucket_fulfillments: params.bucketFulfillments ?? {},
+    planned_period_code: params.plannedPeriodCode ?? null,
   };
 
-  let { error } = await supabase
-    .from('user_progress')
-    .upsert(
-      {
-        ...basePayload,
-        bucket_fulfillments: params.bucketFulfillments ?? {},
-      },
-      { onConflict: 'user_id,curriculum_id' },
-    );
-
-  if (error && isMissingBucketColumnError(error.message)) {
-    ({ error } = await supabase
+  const skipped = new Set<string>();
+  for (let attempt = 0; attempt <= OPTIONAL_COLUMNS.length; attempt++) {
+    const payload = Object.fromEntries(Object.entries(full).filter(([k]) => !skipped.has(k)));
+    const { error } = await supabase
       .from('user_progress')
-      .upsert(basePayload, { onConflict: 'user_id,curriculum_id' }));
-  }
+      .upsert(payload, { onConflict: 'user_id,curriculum_id' });
 
-  if (error) {
-    console.error('Error saving progress to Supabase:', error.message);
-    throw error;
+    const missing = error ? missingOptionalColumn(error.message) : null;
+    if (error && missing && !skipped.has(missing)) {
+      skipped.add(missing);
+      continue;
+    }
+    if (error) {
+      console.error('Error saving progress to Supabase:', error.message);
+      throw error;
+    }
+    return;
   }
 }
 
 export async function loadAllUserProgress(userId: string): Promise<ProgressData[]> {
-  let { data, error } = await supabase
-    .from('user_progress')
-    .select(`${BASE_COLUMNS}, bucket_fulfillments`)
-    .eq('user_id', userId);
-
-  if (error && isMissingBucketColumnError(error.message)) {
-    ({ data, error } = await supabase
+  const skipped = new Set<string>();
+  for (let attempt = 0; attempt <= OPTIONAL_COLUMNS.length; attempt++) {
+    const { data, error } = await supabase
       .from('user_progress')
-      .select(BASE_COLUMNS)
-      .eq('user_id', userId));
-  }
+      .select(selectColumns(skipped))
+      .eq('user_id', userId);
 
-  if (error) {
-    console.error('Error loading all progress from Supabase:', error.message);
-    throw error;
+    const missing = error ? missingOptionalColumn(error.message) : null;
+    if (error && missing && !skipped.has(missing)) {
+      skipped.add(missing);
+      continue;
+    }
+    if (error) {
+      console.error('Error loading all progress from Supabase:', error.message);
+      throw error;
+    }
+    return ((data ?? []) as unknown as Record<string, unknown>[]).map((row) =>
+      mapProgressRow(row.curriculum_id as string, row),
+    );
   }
-
-  return (data ?? []).map((row) =>
-    mapProgressRow(row.curriculum_id as string, row as Record<string, unknown>),
-  );
+  return [];
 }
 
 export async function deleteProgressForCurriculum(

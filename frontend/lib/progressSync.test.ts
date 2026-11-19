@@ -3,6 +3,7 @@ import {
   escapeLikePattern,
   globalCompletedKey,
   readLocalAnonProgress,
+  resolvePlannedPeriodCode,
   hasMeaningfulProgress,
   isAccountScopedLocalKey,
   progressKey,
@@ -117,5 +118,22 @@ describe('readLocalAnonProgress', () => {
     expect(readLocalAnonProgress('M', store(JSON.stringify({ completedCourses: [] })))).toBeNull();
     expect(readLocalAnonProgress('M', store(null))).toBeNull();
     expect(readLocalAnonProgress('M', store('{no json'))).toBeNull();
+  });
+});
+
+describe('resolvePlannedPeriodCode', () => {
+  const loaded = { serialized: 'A|B', periodCode: '202610' };
+  it('sin materias planeadas no hay sello', () => {
+    expect(resolvePlannedPeriodCode([], loaded, '202620')).toBeNull();
+  });
+  it('conserva el sello cargado si el usuario no tocó lo planeado', () => {
+    expect(resolvePlannedPeriodCode(new Set(['B', 'A']), loaded, '202620')).toBe('202610');
+    expect(resolvePlannedPeriodCode(['A', 'B'], { serialized: 'A|B', periodCode: null }, '202620')).toBeNull();
+  });
+  it('sella con el período objetivo al editar lo planeado', () => {
+    expect(resolvePlannedPeriodCode(['A', 'B', 'C'], loaded, '202620')).toBe('202620');
+  });
+  it('sin período objetivo conocido cae al sello cargado', () => {
+    expect(resolvePlannedPeriodCode(['C'], loaded, null)).toBe('202610');
   });
 });

@@ -549,6 +549,17 @@ export default function TeacherDashboard({
                   con rango piso–central–techo) contra el <strong>cupo publicado</strong> del período objetivo.
                   {modelMeta?.method ? ` ${modelMeta.method}` : ''}
                 </p>
+              ) : null}
+              {mode === 'python' ? (
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  <strong>Cómo interpretarlo:</strong> el <em>cupo publicado</em> es lo que la facultad espera necesitar y, en las pruebas
+                  históricas, predice la matrícula mejor que el modelo
+                  {modelMeta?.backtest_summary?.avg_mae_capacidad_publicada_como_prediccion != null && modelMeta?.backtest_summary?.avg_mae_modelo_produccion != null
+                    ? ` (error medio ${modelMeta.backtest_summary.avg_mae_capacidad_publicada_como_prediccion} frente a ${modelMeta.backtest_summary.avg_mae_modelo_produccion} estudiantes por materia)`
+                    : ''}
+                  . El modelo no reemplaza ese cupo: sirve como contrapeso para <strong>detectar desvíos</strong> (déficit o exceso)
+                  que conviene revisar con criterio académico, sobre todo donde la confianza es alta.
+                </p>
               ) : (
                 <p className="text-xs text-gray-600 dark:text-gray-400">
                   Vista <strong>Estimador en vivo (legado)</strong>: fórmula híbrida calculada en el navegador con la
@@ -724,6 +735,14 @@ export default function TeacherDashboard({
                         </td>
                         <td className="px-4 py-3 text-center">
                           <CoverageBadge value={row.coverage_class} />
+                          {row.confidence && row.has_history && (
+                            <div
+                              className={`text-[10px] mt-0.5 ${row.confidence === 'alta' ? 'text-gray-400' : 'text-amber-600 dark:text-amber-400'}`}
+                              title="Confianza de la estimación según cuántos períodos históricos hay (incluida la misma estación del año anterior)"
+                            >
+                              confianza {row.confidence.replace(/_/g, ' ')}
+                            </div>
+                          )}
                           {row.possibly_partial_offer && (
                             <div className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5" title="El cupo publicado es menos del 60% del de la misma estación del año anterior: ¿oferta parcial?">¿oferta parcial?</div>
                           )}
