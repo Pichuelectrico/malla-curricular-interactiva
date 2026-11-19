@@ -24,6 +24,7 @@ import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import { getBlockDisplayName, getOrderedBlocks } from '../utils/curriculumBlocks';
 import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
+import { deleteAllProgressForUser } from '../lib/supabaseProgress';
 import { useUserBypassCourses } from '../lib/useUserBypassCourses';
 import { availableCurricula } from '../data/availableCurricula';
 import { requiresOfferCourseCode } from '../lib/offerMatching';
@@ -794,37 +795,33 @@ export default function CurriculumGrid() {
     // Clear global overlay so it doesn't re-apply on other mallas
     localStorage.removeItem('globalCompletedCourses');
 
-    // Persist empty progress for current curriculum and all other curricula to backend
+    // Una sola operación: signed-in borra todas las filas del usuario (el id de cada malla en
+    // user_progress es su source_file, no el id de availableCurricula); anon limpia sus claves locales.
     (async () => {
       try {
-        const now = new Date().toISOString();
-        const empty = {
-          completedCourses: [] as string[],
-          selectedCourses: [] as string[],
-          inProgressCourses: [] as string[],
-          plannedCourses: [] as string[],
-          hasWritingIntensive: false,
-          bucketFulfillments: {} as BucketFulfillmentsMap,
-          lastUpdated: now,
-        };
-
-        // Current curriculum
-        await backend.progress.saveProgress({ curriculumId, ...empty });
-
-        // All known curricula
-        for (const c of availableCurricula) {
-          if (!c?.id || c.id === curriculumId) continue;
-          await backend.progress.saveProgress({ curriculumId: c.id, ...empty });
+        if (isSignedIn && user?.id) {
+          await deleteAllProgressForUser(user.id);
+        } else {
+          const keys: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key?.startsWith('progress_')) keys.push(key);
+          }
+          keys.forEach((k) => localStorage.removeItem(k));
         }
+        toast({
+          title: "Progreso reiniciado",
+          description: "Se borró el progreso de todas las mallas.",
+        });
       } catch (e) {
         console.error('Error clearing backend progress:', e);
+        toast({
+          title: "No se pudo reiniciar el progreso",
+          description: "Revisa tu conexión e inténtalo de nuevo.",
+          variant: 'destructive',
+        });
       }
     })();
-
-    toast({
-      title: "Progreso reiniciado",
-      description: "Se borró el progreso de esta malla y el progreso global (todas las mallas).",
-    });
   };
 
   const exportProgress = async () => {

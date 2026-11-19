@@ -157,3 +157,16 @@ export async function deleteProgressForCurriculum(
     throw error;
   }
 }
+
+/** Borra TODAS las filas de progreso del usuario (todas las mallas) en una sola llamada. */
+export async function deleteAllProgressForUser(userId: string): Promise<void> {
+  const { error } = await supabase
+    .from('user_progress')
+    .delete()
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error deleting all progress:', error.message);
+    throw error;
+  }
+}
