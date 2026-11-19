@@ -83,6 +83,7 @@ const KNOWN_CAREERS: CareerEntry[] = [
   { code: "ANT", name: "Antropología" },
   { code: "AQQ", name: "Arquitectura" },
   { code: "ARV", name: "Artes Visuales" },
+  { code: "BIO", name: "Biología" },
   { code: "BTC", name: "Ingeniería en Biotecnología" },
   { code: "CIN", name: "Cine" },
   { code: "CMC", name: "Composición para Medios Contemporáneos" },

@@ -71,6 +71,21 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
   },
   {
+    id: "bio-usfq",
+    slug: "malla-bio",
+    name: "Biología",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-BIO.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-BIO.json');
+      return { default: await res.json() };
+    },
+  },
+  {
     id: "pol-usfq",
     slug: "malla-pol",
     name: "Ciencias Políticas",
