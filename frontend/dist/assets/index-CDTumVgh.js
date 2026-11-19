@@ -43796,6 +43796,36 @@ const availableCurricula = [
     }
   },
   {
+    id: "admg-usfq",
+    slug: "malla-admg",
+    name: "Administración de Empresas (Galápagos)",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-ADMG.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-ADMG.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "and-usfq",
+    slug: "malla-and",
+    name: "Animación Digital",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-AND.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-AND.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "ant-usfq",
     slug: "malla-ant",
     name: "Antropología",
@@ -43826,6 +43856,21 @@ const availableCurricula = [
     }
   },
   {
+    id: "arl-usfq",
+    slug: "malla-arl",
+    name: "Artes Liberales",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-ARL.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-ARL.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "arv-usfq",
     slug: "malla-arv",
     name: "Artes Visuales",
@@ -43841,6 +43886,21 @@ const availableCurricula = [
     }
   },
   {
+    id: "arm-usfq",
+    slug: "malla-arm",
+    name: "Artes Visuales: Diseño de Modas",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-ARM.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-ARM.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "bio-usfq",
     slug: "malla-bio",
     name: "Biología",
@@ -43852,6 +43912,21 @@ const availableCurricula = [
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-BIO.json`);
       if (!res.ok) throw new Error("No se pudo cargar /data/Malla-BIO.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "bsc-usfq",
+    slug: "malla-bsc",
+    name: "Biología (Santa Cruz)",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-BSC.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-BSC.json");
       return { default: await res.json() };
     }
   },
@@ -43942,6 +44017,21 @@ const availableCurricula = [
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-DIT.json`);
       if (!res.ok) throw new Error("No se pudo cargar /data/Malla-DIT.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "dmi-usfq",
+    slug: "malla-dmi",
+    name: "Diseño de Medios Interactivos",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-DMI.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-DMI.json");
       return { default: await res.json() };
     }
   },
@@ -44051,6 +44141,21 @@ const availableCurricula = [
     }
   },
   {
+    id: "gam-usfq",
+    slug: "malla-gam",
+    name: "Gestión Ambiental en Galápagos",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 124,
+    courses: 48,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-GAM.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-GAM.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "hsp-usfq",
     slug: "malla-hsp",
     name: "Hospitalidad y Hotelería",
@@ -44062,6 +44167,21 @@ const availableCurricula = [
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-HSP.json`);
       if (!res.ok) throw new Error("No se pudo cargar /data/Malla-HSP.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "ina-usfq",
+    slug: "malla-ina",
+    name: "Ingeniería Ambiental",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 142,
+    courses: 54,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-INA.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-INA.json");
       return { default: await res.json() };
     }
   },
@@ -44392,6 +44512,21 @@ const availableCurricula = [
       const base = "/malla-curricular-interactiva/";
       const res = await fetch(`${base}data/Malla-PUB.json`);
       if (!res.ok) throw new Error("No se pudo cargar /data/Malla-PUB.json");
+      return { default: await res.json() };
+    }
+  },
+  {
+    id: "rel-usfq",
+    slug: "malla-rel",
+    name: "Relaciones Internacionales",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 127,
+    courses: 49,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-REL.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-REL.json");
       return { default: await res.json() };
     }
   }
