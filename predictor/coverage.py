@@ -195,6 +195,59 @@ def history_estimate(code, enr):
     }
 
 
+REAL_MALLA_ID = re.compile(r"^Malla-(academica-)?[A-Za-z0-9]+$")
+MIN_FRESH_OFFER_SHARE = 0.9  # guarda: solo se descartan NRC obsoletos si el lote más reciente cubre >=90% de filas
+MIN_MEASURED_SHARE = 0.5  # avance de matrícula: solo si >=50% de las secciones de Teoría tienen `available`
+
+
+def is_real_progress_row(row: dict) -> bool:
+    """False para filas fantasma (curriculum_id tipo 'cmp-usfq' que creaba el reset antiguo)."""
+    return bool(REAL_MALLA_ID.match(str(row.get("curriculum_id", ""))))
+
+
+def planned_applies(row: dict, target: str = TARGET) -> str:
+    """'target' | 'legacy' | 'other' según planned_period_code (None = fila previa a la columna)."""
+    code = row.get("planned_period_code")
+    if not code:
+        return "legacy"
+    return "target" if code == target else "other"
+
+
+def split_obsolete_offer(offer: list[dict], min_share: float = MIN_FRESH_OFFER_SHARE) -> tuple[list[dict], list[dict]]:
+    """Separa NRC obsoletos: los que no llevan el `last_updated` del último scrape.
+
+    Guardas (iguales a las del cron): el lote más reciente debe ser >0 y >= `min_share` de las filas;
+    si no, no se descarta nada.
+    """
+    stamps = Counter(r.get("last_updated") for r in offer if r.get("last_updated"))
+    if not stamps:
+        return list(offer), []
+    latest = max(stamps)
+    fresh = [r for r in offer if r.get("last_updated") == latest]
+    if not fresh or len(fresh) < min_share * len(offer):
+        return list(offer), []
+    return fresh, [r for r in offer if r.get("last_updated") != latest]
+
+
+def enrollment_progress_by_code(offer: list[dict]) -> dict[str, dict]:
+    """Matrícula observada en la oferta actual (total−available) por materia, con cobertura de secciones."""
+    acc: dict[str, dict] = {}
+    for r in teoria(offer):
+        if r.get("total") is None or r["total"] <= 0:
+            continue
+        d = acc.setdefault(canon(r["course_code"]), {"enr": 0, "measured": 0, "sections": 0})
+        d["sections"] += 1
+        if r.get("available") is not None:
+            d["measured"] += 1
+            d["enr"] += max(0, r["total"] - r["available"])
+    return {
+        c: {"matriculados": d["enr"], "secciones_medidas": d["measured"], "secciones": d["sections"],
+            "cobertura_secciones": round(d["measured"] / d["sections"], 2),
+            "informativo": d["measured"] / d["sections"] >= MIN_MEASURED_SHARE}
+        for c, d in acc.items() if d["measured"] > 0
+    }
+
+
 def user_signals(progress):
     """Contadores de señales por materia (codigo oferta) + propagación 1 salto desde cursando."""
     planned, cursando = Counter(), Counter()
@@ -204,8 +257,13 @@ def user_signals(progress):
     graphs = {cid: (build_curriculum_graph(d["courses"]), d["courses"]) for cid, d in curricula.items()}
     unmapped = Counter()
     used_users = 0
+    planned_legacy = Counter()
+    ghost_rows = 0
     for u in progress:
         cid = u["curriculum_id"]
+        if not is_real_progress_row(u):
+            ghost_rows += 1
+            continue
         if cid not in graphs:
             continue
         g, courses = graphs[cid]
@@ -216,10 +274,16 @@ def user_signals(progress):
         if not (cur or pln):
             continue
         used_users += 1
+        scope = planned_applies(u)
         for x in pln:
             if x in ids:
+                if scope == "other":  # planeada para otro período: no es demanda de 202620
+                    continue
                 planned[canon(x)] += 1
-                if u["updated_at"][:10] >= FRESH_SINCE:
+                if scope == "legacy":
+                    planned_legacy[canon(x)] += 1
+                # «fresca» = sellada con el período objetivo (o, sin sello, editada tras publicarse 202620)
+                if scope == "target" or (scope == "legacy" and u["updated_at"][:10] >= FRESH_SINCE):
                     planned_fresh[canon(x)] += 1
             else:
                 unmapped[x] += 1
@@ -241,12 +305,15 @@ def user_signals(progress):
                 succ_lo[yy] += PASS_RATE[0] * TRANS_SCALE[0] * p
                 succ_hi[yy] += PASS_RATE[1] * TRANS_SCALE[1] * p
     return {
-        "planned": planned, "planned_fresh": planned_fresh, "cursando": cursando,
+        "planned": planned, "planned_fresh": planned_fresh, "planned_legacy": planned_legacy, "ghost_rows": ghost_rows,
+        "cursando": cursando,
         "succ_lo": succ_lo, "succ_hi": succ_hi, "unmapped": unmapped, "users_with_signal": used_users,
     }
 
 
 def audit_signals(progress, sig):
+    all_rows = len(progress)
+    progress = [u for u in progress if is_real_progress_row(u)]
     states = Counter()
     by_fac = defaultdict(lambda: {"users": 0, "con_planeada": 0, "con_cursando": 0, "con_completadas": 0})
     for u in progress:
@@ -265,7 +332,9 @@ def audit_signals(progress, sig):
     fresh_sig = sum(1 for u in progress if u["updated_at"][:10] >= FRESH_SINCE and (u.get("planned_courses") or u.get("in_progress_courses")))
     top_fac = sorted(((v["users"], k) for k, v in by_fac.items() if v["con_planeada"] or v["con_cursando"]), reverse=True)
     return {
-        "usuarios_totales": len(progress), "estados": dict(states),
+        "filas_totales_user_progress": all_rows, "filas_fantasma_excluidas": all_rows - len(progress),
+        "usuarios_totales": len({u["user_id"] for u in progress}), "filas_reales": len(progress), "estados": dict(states),
+        "planeada_por_periodo": dict(Counter(planned_applies(u) for u in progress if u.get("planned_courses"))),
         "usuarios_editados_desde_" + FRESH_SINCE: fresh,
         "usuarios_fresh_con_senal": fresh_sig,
         "materias_con_planeada": len(sig["planned"]), "materias_con_cursando": len(sig["cursando"]),
@@ -311,6 +380,8 @@ def recommend(cls, low, central, high, cap, sections, sizes):
 
 def build_report(history, offer, progress, enr):
     sig = user_signals(progress)
+    offer, obsolete = split_obsolete_offer(offer)
+    now_enr = enrollment_progress_by_code(offer)
     cap_by_code, sections_by_code, sizes_by_code, null_total = defaultdict(int), Counter(), defaultdict(list), Counter()
     for r in teoria(offer):
         code = canon(r["course_code"])
@@ -343,11 +414,15 @@ def build_report(history, offer, progress, enr):
         s_mid = (s_lo + s_hi) / 2
         n_obs = p + s_mid
         row = {
+            "nrc_obsoletos_excluidos": sum(1 for r in obsolete if canon(r["course_code"]) == code and r.get("type") == "Teoría"),
             "offer_code": code, "alias_variantes": sorted(ALIASES.get(code, {code})), "capacidad_publicada": cap, "secciones_publicadas": sections_by_code.get(code, 0),
             "nrc_sin_total": null_total.get(code, 0),
             "senales": {"planeada": p, "planeada_fresca": pf, "cursando_ahora": c,
                         "sucesoras_esperadas_muestra": round(s_mid, 2)},
         }
+        live = now_enr.get(code)
+        if live:
+            row["avance_matricula"] = live
         if hist is None:
             row.update({"base_historica": False, "clasificacion": "sin_base_historica",
                         "demanda": None, "recomendacion":
@@ -364,6 +439,9 @@ def build_report(history, offer, progress, enr):
         low = min(hist["low"], central) if lam == 0 else min(central, max(hist["low"], sig_floor * 0.5 + hist["low"] * 0.5))
         high = max(hist["high"], central) if lam == 0 else max(central, min(hist["high"] * 1.5 + 1, max(hist["high"], sig_ceil)))
         low, high = min(low, central), max(high, central)
+        if live and live["informativo"]:
+            # Matrícula ya observada en la oferta actual: es un piso real de la demanda.
+            low, central, high = max(low, live["matriculados"]), max(central, live["matriculados"]), max(high, live["matriculados"])
         cls = classify(low, central, high, cap)
         row.update({
             "base_historica": True, "historia": hist, "peso_senal": round(lam, 2),
@@ -382,6 +460,7 @@ def build_report(history, offer, progress, enr):
         rows.append(row)
     scale = {"cobertura_muestra_implicita": {"p25": round(r_lo, 3), "mediana": round(r_med, 3), "p75": round(r_hi, 3),
                                               "n_materias": len(ratios)}}
+    sig["obsolete_nrc"] = len(obsolete)
     return rows, sig, scale
 
 
@@ -558,6 +637,8 @@ def build_dashboard(rep: dict, backtest_summary: dict | None = None) -> dict:
             "possibly_partial_offer": m.get("oferta_posiblemente_parcial", False),
             "recommendation": m["recomendacion"], "aliases": m["alias_variantes"],
             "nrc_without_total": m["nrc_sin_total"],
+            "enrolled_so_far": (m.get("avance_matricula") or {}).get("matriculados"),
+            "enrollment_measured_share": (m.get("avance_matricula") or {}).get("cobertura_secciones"),
         }
         by_offer[code] = entry
         by_faculty.setdefault(fac, []).append(code)

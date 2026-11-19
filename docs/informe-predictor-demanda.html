@@ -229,6 +229,11 @@
       border-top: 1px solid var(--border);
       background: var(--surface);
     }
+    .v4 { background:#ecfdf5; border:1px solid #6ee7b7; border-radius:10px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; }
+    .v4 h2 { border:none; font-size:1.15rem; color:#065f46; margin:0 0 .5rem; }
+    .v4 table { width:100%; border-collapse:collapse; font-size:.9rem; margin:.6rem 0; }
+    .v4 th, .v4 td { border:1px solid #a7f3d0; padding:.35rem .6rem; text-align:left; }
+    .obsolete-note { background:#fef3c7; border-left:4px solid #d97706; padding:.5rem .9rem; margin:.5rem 0 1rem; font-size:.9rem; }
   </style>
 </head>
 <body>
@@ -238,14 +243,15 @@
     <h1>Predictor de demanda curricular</h1>
     <p class="subtitle">
       Documentación del proyecto <strong>malla-curricular-interactiva</strong> (USFQ).
-      Describe únicamente lo que el código hace hoy.
+      La sección «Modelo v4» describe lo que el código hace hoy; el resto documenta el modelo anterior (obsoleto).
     </p>
   </div>
 </header>
 
 <nav class="toc">
   <ul>
-    <li><a href="#rapido">Resumen</a></li>
+    <li><a href="#v4"><strong>Modelo v4 (vigente)</strong></a></li>
+    <li><a href="#rapido">Resumen (histórico)</a></li>
     <li><a href="#que-hace">Qué hace</a></li>
     <li><a href="#datos">Datos</a></li>
     <li><a href="#app">Cálculo en la app</a></li>
@@ -262,8 +268,41 @@
 
 <main class="container">
 
+  <!-- MODELO VIGENTE v4 -->
+  <section id="v4" class="v4">
+    <h2>Modelo vigente: <code>enrollment-proxy-v4</code> (desde el 17-nov-2026)</h2>
+    <p>
+      <strong>Todo el resto de este informe describe el modelo anterior</strong> (fórmula híbrida + calibración + GBR) y se conserva
+      como historia. Ese modelo usaba el <strong>cupo</strong> de cada NRC (<code>total</code>) como si fuera demanda: era circular, el GBR se
+      entrenaba con sus propias pseudoetiquetas y perdía contra un baseline ingenuo.
+    </p>
+    <ul>
+      <li><strong>Demanda</strong> = matrícula observada: <code>total − available</code> por NRC de Teoría. Las secciones llenas están censuradas (demanda ≥ cupo; el techo suma 25 % de su cupo).</li>
+      <li><strong>Estimador</strong> = 75 % matrícula de la misma estación (p. ej. 202520 para 202620) + 25 % del semestre previo; rango piso–central–techo. La estacionalidad domina.</li>
+      <li><strong>Señales de la app</strong> (prerregistro <code>planned_courses</code> sellado con <code>planned_period_code</code>, y <code>in_progress</code> propagado un salto por prerrequisitos) solo ajustan, con peso n/(n+5). La muestra es pequeña y autoseleccionada.</li>
+      <li><strong>Matrícula en vivo</strong>: si ≥ 50 % de las secciones de una materia ya reportan <code>available</code>, la matrícula observada es un piso de la estimación.</li>
+      <li><strong>Códigos con sufijo E</strong> (CMP-5006E ≡ CMP-5006) se unifican; los NRC obsoletos (de un scrape anterior) no suman capacidad.</li>
+      <li><strong>Calibración de tasas y GBR</strong> ya no intervienen en el estimador.</li>
+    </ul>
+    <table>
+      <tr><th>Predictor (backtest 202510/202520/202610)</th><th>MAE medio (estudiantes por materia)</th></tr>
+      <tr><td>Modelo de producción (75 % estación + 25 % previo)</td><td>≈ 10.2</td></tr>
+      <tr><td>Baseline: semestre anterior</td><td>≈ 15.2</td></tr>
+      <tr><td>Cupo publicado del período usado como predicción</td><td>≈ 8.6</td></tr>
+    </table>
+    <p>
+      El <strong>cupo publicado predice mejor la matrícula que el modelo</strong> porque las facultades ya conocen su demanda: el modelo es un
+      contrapeso para <strong>detectar desvíos</strong> (déficit/exceso), no un oráculo. El backtest no valida el ajuste por señales.
+    </p>
+    <p>
+      <strong>Salida</strong>: clasificación de cobertura por materia (<em>déficit crítico, déficit leve, equilibrado, exceso, sin base histórica, sin cupo</em>)
+      con recomendación; en la app, vista «Cobertura (modelo v4)» y reporte imprimible. Detalle técnico y comandos: <code>predictor/README.md</code>.
+    </p>
+  </section>
+
   <!-- RESUMEN RÁPIDO -->
   <section id="rapido" class="quick">
+    <div class="obsolete-note"><strong>Histórico (modelo anterior, obsoleto):</strong> las secciones 1–11 describen el estimador previo a v4.</div>
     <h2>Resumen en una frase</h2>
     <p style="margin:0;font-size:1.05rem;">
       El sistema <strong>sugiere cuántas secciones abrir</strong> mezclando histórico de cupos USFQ,
