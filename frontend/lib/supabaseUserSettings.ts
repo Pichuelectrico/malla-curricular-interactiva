@@ -39,37 +39,21 @@ export async function loadUserSettings(userId: string): Promise<UserSettings> {
   };
 }
 
+/** Upsert por user_id: sin select→insert/update (dos pestañas ya no chocan con la clave única). */
 export async function saveBypassCourses(
   userId: string,
   bypassCourses: string[],
 ): Promise<void> {
-  const { data: existing } = await supabase
+  const { error } = await supabase
     .from('user_settings')
-    .select('user_id')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  if (existing) {
-    const { error } = await supabase
-      .from('user_settings')
-      .update({
+    .upsert(
+      {
+        user_id: userId,
         bypass_courses: bypassCourses,
         updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', userId);
-    if (error) {
-      console.error('Error saving bypass courses:', error.message, error);
-      throw new Error(error.message);
-    }
-    return;
-  }
-
-  const { error } = await supabase.from('user_settings').insert({
-    user_id: userId,
-    bypass_courses: bypassCourses,
-    include_other_mallas: false,
-    updated_at: new Date().toISOString(),
-  });
+      },
+      { onConflict: 'user_id' },
+    );
 
   if (error) {
     console.error('Error saving bypass courses:', error.message, error);
@@ -81,41 +65,19 @@ export async function saveIncludeOtherMallas(
   userId: string,
   includeOtherMallas: boolean,
 ): Promise<void> {
-  const { data: existing } = await supabase
+  const { error } = await supabase
     .from('user_settings')
-    .select('user_id')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  if (existing) {
-    let { error } = await supabase
-      .from('user_settings')
-      .update({
+    .upsert(
+      {
+        user_id: userId,
         include_other_mallas: includeOtherMallas,
         updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', userId);
+      },
+      { onConflict: 'user_id' },
+    );
 
-    if (error && isMissingIncludeOtherMallasColumn(error.message)) {
-      return;
-    }
-    if (error) {
-      console.error('Error saving planner setting:', error.message, error);
-      throw new Error(error.message);
-    }
-    return;
-  }
-
-  const { error } = await supabase.from('user_settings').insert({
-    user_id: userId,
-    bypass_courses: [],
-    include_other_mallas: includeOtherMallas,
-    updated_at: new Date().toISOString(),
-  });
-
-  if (error && isMissingIncludeOtherMallasColumn(error.message)) {
-    return;
-  }
+  // Columna aún no migrada: se ignora como antes.
+  if (error && isMissingIncludeOtherMallasColumn(error.message)) return;
   if (error) {
     console.error('Error saving planner setting:', error.message, error);
     throw new Error(error.message);

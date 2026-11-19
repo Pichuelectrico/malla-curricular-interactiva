@@ -48,22 +48,38 @@ export function useCourseOffer(): UseOfferResult {
     setError(null);
     try {
       const PAGE_SIZE = 1000;
-      const allRows: CourseOfferRow[] = [];
-      let from = 0;
+      // Paginar con ORDER BY único (nrc): con empates (course_code) las páginas pueden repetir/saltar filas.
+      const fetchAll = async () => {
+        const rows: CourseOfferRow[] = [];
+        let expected: number | null = null;
+        let from = 0;
+        while (true) {
+          const { data, error: dbError, count } = await supabase
+            .from('course_offer')
+            .select('*', { count: 'exact' })
+            .order('nrc', { ascending: true })
+            .range(from, from + PAGE_SIZE - 1);
 
-      while (true) {
-        const { data, error: dbError } = await supabase
-          .from('course_offer')
-          .select('*')
-          .order('course_code')
-          .range(from, from + PAGE_SIZE - 1);
+          if (dbError) throw new Error(dbError.message);
+          if (expected === null && typeof count === 'number') expected = count;
+          if (!data?.length) break;
 
-        if (dbError) throw new Error(dbError.message);
-        if (!data?.length) break;
+          rows.push(...(data as CourseOfferRow[]));
+          if (data.length < PAGE_SIZE) break;
+          from += PAGE_SIZE;
+        }
+        return { rows, expected };
+      };
 
-        allRows.push(...(data as CourseOfferRow[]));
-        if (data.length < PAGE_SIZE) break;
-        from += PAGE_SIZE;
+      let { rows: allRows, expected } = await fetchAll();
+      const distinct = (rows: CourseOfferRow[]) => new Set(rows.map((r) => r.nrc)).size;
+      if (expected !== null && distinct(allRows) < expected) {
+        // La oferta cambió entre páginas (scrape en curso) o hubo una lectura incompleta: un reintento.
+        ({ rows: allRows, expected } = await fetchAll());
+      }
+      if (expected !== null && distinct(allRows) < expected) {
+        console.warn(`Oferta incompleta: ${distinct(allRows)} de ${expected} NRC`);
+        setError(`La oferta se cargó incompleta (${distinct(allRows)} de ${expected} NRC). Actualiza la página.`);
       }
 
       const map = new Map<string, CourseOfferRow>();

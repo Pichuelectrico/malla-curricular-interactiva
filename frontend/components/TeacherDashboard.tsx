@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import {
   BarChart3, BookOpen, TrendingUp, Users, RefreshCw,
   GraduationCap, ChevronUp, ChevronDown, Minus, AlertCircle, Info, Printer,
@@ -36,7 +36,9 @@ import {
 import { loadTransitionRates, type TransitionRateTable } from '../lib/transitionRates';
 import type { ProfessorContext } from '../lib/useUserRole';
 import CourseDemandDetailDialog from './CourseDemandDetailDialog';
-import PredictionPrintReport, { type PrintReportRow } from './PredictionPrintReport';
+import type { PrintReportRow } from './PredictionPrintReport';
+
+const PredictionPrintReport = lazy(() => import('./PredictionPrintReport'));
 import {
   Dialog,
   DialogContent,
@@ -177,7 +179,13 @@ export default function TeacherDashboard({
   const [reportRows, setReportRows] = useState<PrintReportRow[] | null>(null);
   const [reportScopeLabel, setReportScopeLabel] = useState('');
 
+  // Token de petición: si cambia la facultad (o se pulsa Actualizar) mientras hay una carga en vuelo,
+  // la respuesta vieja se descarta en vez de pisar la nueva.
+  const loadSeq = useRef(0);
+
   const load = async () => {
+    const seq = ++loadSeq.current;
+    const stale = () => seq !== loadSeq.current;
     setIsLoading(true);
     setError(null);
     try {
@@ -230,6 +238,7 @@ export default function TeacherDashboard({
         loadTransitionRates(),
         fetchOfferMetadata(),
       ]);
+      if (stale()) return;
       setTransitionRates(rates);
 
       const { targetPeriodCode: tgtCode, targetPeriodLabel: tgtLabel } = calendar.inferTargetPeriod(
@@ -288,11 +297,13 @@ export default function TeacherDashboard({
         };
       });
 
+      if (stale()) return;
       setHistoryMap(histMap);
       setLivePredictions(preds);
 
       clearPythonPredictionsCache();
       const pyIndex = await loadPythonPredictions();
+      if (stale()) return;
       setPythonIndex(pyIndex);
       if (pyIndex?.target_period_code) {
         setTargetPeriodCode(pyIndex.target_period_code);
@@ -300,9 +311,9 @@ export default function TeacherDashboard({
       }
       setLastLoaded(new Date());
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar los datos');
+      if (!stale()) setError(err instanceof Error ? err.message : 'Error al cargar los datos');
     } finally {
-      setIsLoading(false);
+      if (!stale()) setIsLoading(false);
     }
   };
 
@@ -833,6 +844,7 @@ export default function TeacherDashboard({
       </Dialog>
 
       {reportRows && (
+        <Suspense fallback={null}>
         <PredictionPrintReport
           rows={reportRows}
           faculty={faculty}
@@ -843,6 +855,7 @@ export default function TeacherDashboard({
           scopeLabel={reportScopeLabel}
           onClose={() => setReportRows(null)}
         />
+        </Suspense>
       )}
 
       {selected && (

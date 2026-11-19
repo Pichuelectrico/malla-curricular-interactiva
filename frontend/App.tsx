@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import CurriculumGrid from './components/CurriculumGrid';
@@ -6,8 +6,9 @@ import ThemeToggle from './components/ThemeToggle';
 import Footer from './components/Footer';
 import AuthModal, { type AuthMode } from './components/AuthModal';
 import SettingsModal from './components/SettingsModal';
-import TeacherDashboard from './components/TeacherDashboard';
-import AdminDashboard from './components/AdminDashboard';
+// Dashboards pesados: se cargan bajo demanda (la malla de estudiantes no los necesita).
+const TeacherDashboard = lazy(() => import('./components/TeacherDashboard'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 import HeaderNav from './components/HeaderNav';
 import {
   loadAdminViewMode,
@@ -122,7 +123,7 @@ function AuthButton({ onOpenAuth, onOpenPasswordReset }: AuthButtonProps) {
 }
 
 function AppInner() {
-  const { isSignedIn, user, isPasswordRecovery } = useSupabaseAuth();
+  const { isSignedIn, user, isPasswordRecovery, sessionExpired, dismissSessionExpired } = useSupabaseAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [adminViewMode, setAdminViewMode] = useState<AdminViewMode>(loadAdminViewMode);
@@ -130,7 +131,12 @@ function AppInner() {
   const [showSobrepaso, setShowSobrepaso] = useState(false);
   const [showTutoriales, setShowTutoriales] = useState(false);
 
-  const { adminProfile, isLoading: isAdminLoading } = useAdminProfile(
+  const {
+    adminProfile,
+    isLoading: isAdminLoading,
+    error: adminError,
+    retry: retryAdmin,
+  } = useAdminProfile(
     isSignedIn ? user?.email ?? null : null,
   );
 
@@ -139,6 +145,8 @@ function AppInner() {
     isProfessor,
     professorContext,
     isLoading: isRoleLoading,
+    roleError,
+    retryRole,
   } = useUserRole({
     userId: isSignedIn ? user?.id ?? null : null,
     email: isSignedIn ? user?.email ?? null : null,
@@ -228,7 +236,21 @@ function AppInner() {
           />
         </div>
       </header>
+      {sessionExpired && !isSignedIn && (
+        <div role="alert" className="bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 px-4 py-2 text-sm text-amber-800 dark:text-amber-200 flex flex-wrap items-center justify-center gap-3">
+          <span>Tu sesión expiró. Inicia sesión de nuevo para seguir guardando tu progreso en tu cuenta.</span>
+          <button onClick={() => { dismissSessionExpired(); openAuth('login'); }} className="underline font-medium">Iniciar sesión</button>
+          <button onClick={dismissSessionExpired} className="underline">Cerrar aviso</button>
+        </div>
+      )}
+      {isSignedIn && (adminError || roleError) && (
+        <div role="alert" className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-4 py-2 text-sm text-red-700 dark:text-red-300 flex flex-wrap items-center justify-center gap-3">
+          <span>No pudimos verificar tu rol ({adminError ?? roleError}). Podrías ver una vista distinta a la que te corresponde.</span>
+          <button onClick={() => { retryAdmin(); retryRole(); }} className="underline font-medium">Reintentar</button>
+        </div>
+      )}
       <div className="flex-1">
+        <Suspense fallback={<div className="flex items-center justify-center py-24 text-gray-500">Cargando…</div>}>
         {showTutoriales ? (
           <TutorialsPage onBack={closeTutoriales} />
         ) : isSignedIn && isRoleLoading ? (
@@ -246,6 +268,7 @@ function AppInner() {
         ) : (
           <CurriculumGrid />
         )}
+        </Suspense>
       </div>
       <Footer />
       <ThemeToggle />
