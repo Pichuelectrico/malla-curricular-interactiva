@@ -44471,6 +44471,21 @@ const availableCurricula = [
     }
   },
   {
+    id: "mps-usfq",
+    slug: "malla-mps",
+    name: "Producción Musical y Sonora",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 126,
+    courses: 62,
+    dataLoader: async () => {
+      const base = "/malla-curricular-interactiva/";
+      const res = await fetch(`${base}data/Malla-MPS.json`);
+      if (!res.ok) throw new Error("No se pudo cargar /data/Malla-MPS.json");
+      return { default: await res.json() };
+    }
+  },
+  {
     id: "psi-usfq",
     slug: "malla-psi",
     name: "Psicología",
