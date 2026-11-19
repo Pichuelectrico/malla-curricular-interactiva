@@ -1,3 +1,4 @@
+import { globalCompletedKey } from './progressSync';
 import { availableCurricula } from '../data/availableCurricula';
 import { normalizeCurriculumId } from './aggregatedPlanningMerge';
 import type { Course } from '../types/curriculum';
@@ -105,17 +106,19 @@ async function loadCourseIdsForCurriculum(curriculumId: string): Promise<string[
 
 export async function cleanupLocalProgressArtifacts(
   curriculumId: string,
+  userId?: string | null,
 ): Promise<void> {
   try {
     localStorage.removeItem(`hasWritingIntensive:${curriculumId}`);
     const courseIds = new Set(await loadCourseIdsForCurriculum(curriculumId));
     if (courseIds.size === 0) return;
 
-    const raw = localStorage.getItem('globalCompletedCourses');
+    const storeKey = globalCompletedKey(userId);
+    const raw = localStorage.getItem(storeKey);
     if (!raw) return;
     const globalCompleted: string[] = JSON.parse(raw);
     const next = globalCompleted.filter((id) => !courseIds.has(id));
-    localStorage.setItem('globalCompletedCourses', JSON.stringify(next));
+    localStorage.setItem(storeKey, JSON.stringify(next));
   } catch {
     /* ignore local cleanup errors */
   }

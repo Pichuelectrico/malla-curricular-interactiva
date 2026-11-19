@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSupabaseAuth } from './auth';
 import { loadProgressFromSupabase, saveProgressToSupabase } from './supabaseProgress';
 import { mockBackendClient } from './localBackend';
@@ -8,9 +9,13 @@ import { mockBackendClient } from './localBackend';
  */
 export function useBackend() {
   const { isSignedIn, user } = useSupabaseAuth();
+  const userId = isSignedIn && user ? user.id : null;
+  const email = user?.email ?? null;
+  const avatarUrl = (user?.user_metadata?.avatar_url as string) ?? '';
 
-  if (isSignedIn && user) {
-    const userId = user.id;
+  // Referencia estable por usuario: evita re-suscribir efectos que dependen de `backend` en cada render.
+  return useMemo(() => {
+    if (!userId) return mockBackendClient;
     return {
       progress: {
         loadProgress: (params: { curriculumId: string }) =>
@@ -19,14 +24,8 @@ export function useBackend() {
           saveProgressToSupabase(params, userId),
       },
       user: {
-        getUserInfo: async () => ({
-          id: user.id,
-          email: user.email ?? null,
-          imageUrl: (user.user_metadata?.avatar_url as string) ?? '',
-        }),
+        getUserInfo: async () => ({ id: userId, email, imageUrl: avatarUrl }),
       },
     };
-  }
-
-  return mockBackendClient;
+  }, [userId, email, avatarUrl]);
 }

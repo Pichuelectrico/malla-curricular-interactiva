@@ -131,7 +131,7 @@ export default function SettingsModal({
     setCareerDeleteError(null);
     try {
       await deleteProgressForCurriculum(user.id, curriculumId);
-      await cleanupLocalProgressArtifacts(curriculumId);
+      await cleanupLocalProgressArtifacts(curriculumId, user.id);
       setConfirmDeleteCareerId(null);
       await refreshCareerSummaries();
       emitProgressChanged({ curriculumId });

@@ -24,7 +24,14 @@ import { generateMermaidDiagram, downloadPDF } from '../utils/mermaidExport';
 import { getBlockDisplayName, getOrderedBlocks } from '../utils/curriculumBlocks';
 import defaultCurriculumData from '../data/Malla-CMP.json';
 import { useBackend } from '../lib/backend';
-import { deleteAllProgressForUser } from '../lib/supabaseProgress';
+import { deleteAllProgressForUser, type ProgressData } from '../lib/supabaseProgress';
+import {
+  globalCompletedKey,
+  progressKey,
+  readLocalAnonProgress,
+  retryWithBackoff,
+  serializeProgress,
+} from '../lib/progressSync';
 import { useUserBypassCourses } from '../lib/useUserBypassCourses';
 import { availableCurricula } from '../data/availableCurricula';
 import { requiresOfferCourseCode } from '../lib/offerMatching';
@@ -49,6 +56,21 @@ import { PROGRESS_CHANGED_EVENT, type ProgressChangedDetail } from '../lib/progr
 
 const MAX_SEMESTER_CREDITS = 16;
 
+/** Slug de malla indicado por la URL (#/malla-adm o /malla-adm), o '' si no hay. */
+function currentUrlSlug(): string {
+  const base = (import.meta as any).env?.BASE_URL || '/';
+  let raw = window.location.hash.replace(/^#/, '');
+  if (raw.startsWith('/')) raw = raw.slice(1);
+  let clean = raw.replace(/^\/+|\/+$/g, '');
+  if (!clean) {
+    const path = window.location.pathname;
+    const slug = path.startsWith(base) ? path.slice(base.length) : path.replace(/^\/+/, '');
+    clean = slug.replace(/^\/+|\/+$/g, '');
+  }
+  if (!clean || clean === 'tutoriales' || clean.startsWith('tutoriales/')) return '';
+  return availableCurricula.some((c) => c.slug === clean) ? clean : '';
+}
+
 export default function CurriculumGrid() {
   const { isSignedIn, user, isLoading: authLoading } = useSupabaseAuth();
   const backend = useBackend();
@@ -68,7 +90,14 @@ export default function CurriculumGrid() {
   const prevEsl0006CompletedRef = useRef<boolean | null>(null);
   const prevSignedInRef = useRef<boolean | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [progressHydrated, setProgressHydrated] = useState(false);
+  // Llave (usuario + malla) de la que provienen los sets en memoria; solo se guarda si coincide con la actual.
+  const [hydratedKey, setHydratedKey] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloadNonce, setReloadNonce] = useState(0);
+  const [localImportOffer, setLocalImportOffer] = useState<ReturnType<typeof readLocalAnonProgress>>(null);
+  const lastSavedRef = useRef<string | null>(null);
+  const pendingSaveRef = useRef<{ key: string; run: () => Promise<void> } | null>(null);
+  const restoredCurriculumRef = useRef(false);
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const { toast } = useToast();
 
@@ -85,6 +114,9 @@ export default function CurriculumGrid() {
   } | null>(null);
 
   const curriculumId = curriculumData.source_file || 'Malla-CMP';
+  const accountId = isSignedIn ? user?.id ?? null : null;
+  const currentProgressKey = progressKey(accountId, curriculumId);
+  const globalStoreKey = globalCompletedKey(accountId);
 
   // Load curriculum based on URL slug
   // Prefer hash-based routing (#/malla-adm) for GitHub Pages compatibility, fallback to pathname (/malla-adm)
@@ -131,59 +163,78 @@ export default function CurriculumGrid() {
   useEffect(() => {
     if (authLoading) return;
 
+    // Cada ejecución es una "generación": si cambia usuario/malla o se desmonta, la respuesta vieja se descarta.
+    let cancelled = false;
+    const key = currentProgressKey;
+
     const loadData = async () => {
       setIsLoadingProgress(true);
-      setProgressHydrated(false);
+      setHydratedKey(null);
+      setLoadError(null);
+      setLocalImportOffer(null);
       try {
-        const response = await backend.progress.loadProgress({ curriculumId });
-        if (response) {
-          setCompletedCourses(new Set(response.completedCourses || []));
-          setInProgressCourses(new Set(response.inProgressCourses || []));
-          setPlannedCourses(new Set(response.plannedCourses || []));
-          if (typeof response.hasWritingIntensive === 'boolean') {
-            setHasWritingIntensive(response.hasWritingIntensive);
-          }
-          if (isSignedIn) {
-            setBucketFulfillments(response.bucketFulfillments ?? {});
-          } else {
-            setBucketFulfillments({});
-          }
-        } else {
-          setCompletedCourses(new Set());
-          setInProgressCourses(new Set());
-          setPlannedCourses(new Set());
-          setBucketFulfillments({});
+        const response = await retryWithBackoff(
+          async () => (await backend.progress.loadProgress({ curriculumId })) as ProgressData | null,
+          undefined,
+          { isCancelled: () => cancelled },
+        );
+        if (cancelled) return;
+        const completed = response?.completedCourses || [];
+        const inProgress = response?.inProgressCourses || [];
+        const planned = response?.plannedCourses || [];
+        const wi = typeof response?.hasWritingIntensive === 'boolean' ? response.hasWritingIntensive : false;
+        const buckets = isSignedIn ? (response?.bucketFulfillments ?? {}) : {};
+        setCompletedCourses(new Set(completed));
+        setInProgressCourses(new Set(inProgress));
+        setPlannedCourses(new Set(planned));
+        setHasWritingIntensive(wi);
+        setBucketFulfillments(buckets);
+        // Lo recién cargado ya está en el servidor: no re-subirlo.
+        lastSavedRef.current = serializeProgress({
+          completedCourses: completed,
+          inProgressCourses: inProgress,
+          plannedCourses: planned,
+          hasWritingIntensive: wi,
+          bucketFulfillments: buckets,
+        });
+        if (isSignedIn && !completed.length && !inProgress.length && !planned.length) {
+          setLocalImportOffer(readLocalAnonProgress(curriculumId));
         }
-        setProgressHydrated(true);
+        setHydratedKey(key);
       } catch (error) {
+        if (cancelled) return;
         console.error('Error loading progress:', error);
+        // No dejar en pantalla (ni guardar) los sets de la malla/usuario anterior.
+        setCompletedCourses(new Set());
+        setInProgressCourses(new Set());
+        setPlannedCourses(new Set());
+        setBucketFulfillments({});
+        setLoadError(error instanceof Error ? error.message : 'Error desconocido');
         toast({
           title: 'No se pudo cargar tu progreso',
-          description: 'Tus cambios no se guardarán hasta que se restablezca la conexión.',
+          description: 'No se guardará nada hasta que se cargue correctamente. Puedes reintentar desde el aviso superior.',
           variant: 'destructive',
         });
       }
+      if (cancelled) return;
 
-      const savedCurriculum = localStorage.getItem('curriculumData');
-      let idForWI = curriculumId;
-      let savedWritingIntensive: string | null = null;
-      const legacyWritingIntensive = localStorage.getItem('hasWritingIntensive');
-
-      if (savedCurriculum) {
-        try {
-          const parsed = JSON.parse(savedCurriculum);
-          setCurriculumData(parsed);
-          if (parsed?.source_file && typeof parsed.source_file === 'string') {
-            idForWI = parsed.source_file;
+      // La malla guardada en el navegador solo se restaura una vez y nunca si la URL ya indica una malla.
+      if (!restoredCurriculumRef.current) {
+        restoredCurriculumRef.current = true;
+        const savedCurriculum = localStorage.getItem('curriculumData');
+        if (savedCurriculum && !currentUrlSlug()) {
+          try {
+            const parsed = JSON.parse(savedCurriculum);
+            if (parsed?.source_file !== curriculumId) setCurriculumData(parsed);
+          } catch (error) {
+            console.error('Error loading curriculum data:', error);
           }
-        } catch (error) {
-          console.error('Error loading curriculum data:', error);
         }
       }
 
       if (!isSignedIn) {
-        savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${idForWI}`);
-
+        const savedWritingIntensive = localStorage.getItem(`hasWritingIntensive:${curriculumId}`);
+        const legacyWritingIntensive = localStorage.getItem('hasWritingIntensive');
         if (savedWritingIntensive) {
           try {
             setHasWritingIntensive(JSON.parse(savedWritingIntensive));
@@ -194,7 +245,7 @@ export default function CurriculumGrid() {
           try {
             const legacy = JSON.parse(legacyWritingIntensive);
             setHasWritingIntensive(legacy);
-            localStorage.setItem(`hasWritingIntensive:${idForWI}`, JSON.stringify(legacy));
+            localStorage.setItem(`hasWritingIntensive:${curriculumId}`, JSON.stringify(legacy));
             localStorage.removeItem('hasWritingIntensive');
           } catch (error) {
             console.error('Error migrating legacy writing intensive status:', error);
@@ -207,7 +258,10 @@ export default function CurriculumGrid() {
     };
 
     loadData();
-  }, [isSignedIn, curriculumId, authLoading]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, accountId, curriculumId, authLoading, reloadNonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (prevSignedInRef.current === true && !isSignedIn) {
@@ -216,21 +270,43 @@ export default function CurriculumGrid() {
     prevSignedInRef.current = isSignedIn;
   }, [isSignedIn]);
 
-  useEffect(() => {
-    if (!dataLoaded || isLoadingProgress || !progressHydrated || authLoading) return;
+  const SAVE_DEBOUNCE_MS = 800;
 
-    const saveProgress = async () => {
+  useEffect(() => {
+    // Un guardado pendiente de otra malla/usuario se envía ya (con su propio payload), no se pierde.
+    const pending = pendingSaveRef.current;
+    if (pending && pending.key !== currentProgressKey) {
+      pendingSaveRef.current = null;
+      void pending.run();
+    }
+
+    // Solo se guarda lo que provenga de la carga de ESTA llave usuario+malla.
+    if (!dataLoaded || isLoadingProgress || authLoading || hydratedKey !== currentProgressKey) return;
+
+    const serialized = serializeProgress({
+      completedCourses,
+      inProgressCourses,
+      plannedCourses,
+      hasWritingIntensive,
+      bucketFulfillments: isSignedIn ? bucketFulfillments : undefined,
+    });
+    if (serialized === lastSavedRef.current) return;
+
+    const payload = {
+      curriculumId,
+      completedCourses: [...completedCourses],
+      selectedCourses: [] as string[],
+      inProgressCourses: [...inProgressCourses],
+      plannedCourses: [...plannedCourses],
+      hasWritingIntensive,
+      bucketFulfillments: isSignedIn ? bucketFulfillments : undefined,
+      lastUpdated: new Date().toISOString(),
+    };
+    const run = async () => {
+      if (pendingSaveRef.current?.run === run) pendingSaveRef.current = null;
       try {
-        await backend.progress.saveProgress({
-          curriculumId,
-          completedCourses: [...completedCourses],
-          selectedCourses: [],
-          inProgressCourses: [...inProgressCourses],
-          plannedCourses: [...plannedCourses],
-          hasWritingIntensive,
-          bucketFulfillments: isSignedIn ? bucketFulfillments : undefined,
-          lastUpdated: new Date().toISOString()
-        });
+        await backend.progress.saveProgress(payload);
+        lastSavedRef.current = serialized;
       } catch (error) {
         console.error('Error saving progress:', error);
         toast({
@@ -240,15 +316,33 @@ export default function CurriculumGrid() {
         });
       }
     };
+    pendingSaveRef.current = { key: currentProgressKey, run };
+    const timer = setTimeout(() => void run(), SAVE_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, bucketFulfillments, isSignedIn, dataLoaded, hydratedKey, currentProgressKey, authLoading, curriculumId, isLoadingProgress]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    saveProgress();
-  }, [completedCourses, inProgressCourses, plannedCourses, hasWritingIntensive, bucketFulfillments, isSignedIn, dataLoaded, progressHydrated, authLoading, curriculumId, isLoadingProgress]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Overlay global completed courses onto current curriculum after data loads
+  // No perder la última edición si la pestaña se oculta/cierra dentro de la ventana de debounce.
   useEffect(() => {
-    if (!dataLoaded) return;
+    const flush = () => {
+      const pending = pendingSaveRef.current;
+      if (pending) void pending.run();
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') flush();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', flush);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', flush);
+    };
+  }, []);
+
+  // Overlay global completed courses onto current curriculum after data loads (por cuenta, ver globalCompletedKey)
+  useEffect(() => {
+    if (!dataLoaded || hydratedKey !== currentProgressKey) return;
     try {
-      const raw = localStorage.getItem('globalCompletedCourses');
+      const raw = localStorage.getItem(globalStoreKey);
       if (!raw) return;
       const globalCompleted: string[] = JSON.parse(raw);
       const currentIds = new Set(curriculumData.courses.map(c => c.id));
@@ -258,13 +352,13 @@ export default function CurriculumGrid() {
     } catch (e) {
       console.error('Error overlaying global completed courses:', e);
     }
-  }, [dataLoaded, curriculumData.courses]);
+  }, [dataLoaded, hydratedKey, currentProgressKey, globalStoreKey, curriculumData.courses]);
 
-  // Keep a global store of completed courses across curricula in localStorage
+  // Keep a global store of completed courses across curricula in localStorage (namespaced per account)
   useEffect(() => {
-    if (!dataLoaded) return;
+    if (!dataLoaded || hydratedKey !== currentProgressKey) return;
     try {
-      const raw = localStorage.getItem('globalCompletedCourses');
+      const raw = localStorage.getItem(globalStoreKey);
       const globalSet = new Set<string>(raw ? JSON.parse(raw) : []);
       const currentIds = new Set(curriculumData.courses.map(c => c.id));
 
@@ -278,11 +372,11 @@ export default function CurriculumGrid() {
       for (const id of completedCourses) {
         globalSet.add(id);
       }
-      localStorage.setItem('globalCompletedCourses', JSON.stringify(Array.from(globalSet)));
+      localStorage.setItem(globalStoreKey, JSON.stringify(Array.from(globalSet)));
     } catch (e) {
       console.error('Error saving global completed courses:', e);
     }
-  }, [completedCourses, dataLoaded, curriculumData.courses]);
+  }, [completedCourses, dataLoaded, hydratedKey, currentProgressKey, globalStoreKey, curriculumData.courses]);
 
   // Auto-complete courses that declare an already-completed course as an alternative
   useEffect(() => {
@@ -327,9 +421,10 @@ export default function CurriculumGrid() {
   }, [curriculumData]);
 
   useEffect(() => {
-    if (!dataLoaded || isLoadingProgress) return;
+    // Con sesión el flag vive en Supabase; escribirlo aquí lo filtraría a la siguiente persona del navegador.
+    if (isSignedIn || !dataLoaded || isLoadingProgress || hydratedKey !== currentProgressKey) return;
     localStorage.setItem(`hasWritingIntensive:${curriculumId}`, JSON.stringify(hasWritingIntensive));
-  }, [hasWritingIntensive, curriculumId, dataLoaded, isLoadingProgress]);
+  }, [hasWritingIntensive, curriculumId, dataLoaded, isLoadingProgress, isSignedIn, hydratedKey, currentProgressKey]);
 
   const hasESL0006 = curriculumData.courses.some(course => course.id === 'ESL0006');
   const esl0006Completed = completedCourses.has('ESL0006');
@@ -446,13 +541,20 @@ export default function CurriculumGrid() {
       }
       void (async () => {
         try {
-          const response = await backend.progress.loadProgress({ curriculumId });
+          const response = (await backend.progress.loadProgress({ curriculumId })) as ProgressData | null;
           if (response) {
             setCompletedCourses(new Set(response.completedCourses || []));
             setInProgressCourses(new Set(response.inProgressCourses || []));
             setPlannedCourses(new Set(response.plannedCourses || []));
             setHasWritingIntensive(response.hasWritingIntensive ?? false);
             setBucketFulfillments(response.bucketFulfillments ?? {});
+            lastSavedRef.current = serializeProgress({
+              completedCourses: response.completedCourses || [],
+              inProgressCourses: response.inProgressCourses || [],
+              plannedCourses: response.plannedCourses || [],
+              hasWritingIntensive: response.hasWritingIntensive ?? false,
+              bucketFulfillments: isSignedIn ? (response.bucketFulfillments ?? {}) : undefined,
+            });
           } else {
             setCompletedCourses(new Set());
             setInProgressCourses(new Set());
@@ -793,7 +895,15 @@ export default function CurriculumGrid() {
     // Clear per-curriculum WI current key (idempotent)
     localStorage.removeItem(`hasWritingIntensive:${curriculumId}`);
     // Clear global overlay so it doesn't re-apply on other mallas
-    localStorage.removeItem('globalCompletedCourses');
+    localStorage.removeItem(globalStoreKey);
+    lastSavedRef.current = serializeProgress({
+      completedCourses: [],
+      inProgressCourses: [],
+      plannedCourses: [],
+      hasWritingIntensive: false,
+      bucketFulfillments: isSignedIn ? {} : undefined,
+    });
+    pendingSaveRef.current = null;
 
     // Una sola operación: signed-in borra todas las filas del usuario (el id de cada malla en
     // user_progress es su source_file, no el id de availableCurricula); anon limpia sus claves locales.
@@ -918,6 +1028,45 @@ export default function CurriculumGrid() {
               <div className="text-6xl animate-bounce">🌟</div>
             </div>
           </div>
+        </div>
+      )}
+
+      {loadError && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
+          <span>
+            No se pudo cargar tu progreso ({loadError}). Mientras no cargue no se guarda nada para no sobrescribir tus datos.
+          </span>
+          <Button size="sm" variant="outline" onClick={() => setReloadNonce((n) => n + 1)}>
+            Reintentar
+          </Button>
+        </div>
+      )}
+
+      {localImportOffer && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-200">
+          <span>
+            Encontramos progreso guardado en este navegador para esta malla
+            ({localImportOffer.completedCourses.length} completadas, {localImportOffer.inProgressCourses.length} cursando,{' '}
+            {localImportOffer.plannedCourses.length} planeadas). ¿Quieres importarlo a tu cuenta?
+          </span>
+          <span className="flex gap-2">
+            <Button
+              size="sm"
+              onClick={() => {
+                setCompletedCourses(new Set(localImportOffer.completedCourses));
+                setInProgressCourses(new Set(localImportOffer.inProgressCourses));
+                setPlannedCourses(new Set(localImportOffer.plannedCourses));
+                setHasWritingIntensive(localImportOffer.hasWritingIntensive);
+                setLocalImportOffer(null);
+                toast({ title: 'Progreso importado', description: 'Se guardará en tu cuenta.' });
+              }}
+            >
+              Importar
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setLocalImportOffer(null)}>
+              Ahora no
+            </Button>
+          </span>
         </div>
       )}
 

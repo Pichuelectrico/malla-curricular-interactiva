@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { cleanAuthHashFromUrl, getPasswordResetRedirectUrl, hasAuthCallbackHash } from './authRedirect';
 import { supabase } from './supabaseClient';
+import { isAccountScopedLocalKey } from './progressSync';
 
 interface AuthContextValue {
   session: Session | null;
@@ -9,6 +10,9 @@ interface AuthContextValue {
   isSignedIn: boolean;
   isLoading: boolean;
   isPasswordRecovery: boolean;
+  /** La sesión terminó sin que el usuario pulsara «Cerrar sesión» (token vencido/revocado). */
+  sessionExpired: boolean;
+  dismissSessionExpired: () => void;
   clearPasswordRecovery: () => void;
   signInWithPassword: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -19,14 +23,43 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+/** Quita del navegador lo que pertenece a la cuenta que cerró sesión (no toca tema ni progreso anónimo). */
+function clearAccountLocalState(): void {
+  try {
+    const keys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && isAccountScopedLocalKey(key)) keys.push(key);
+    }
+    keys.forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // localStorage no disponible
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const hadSessionRef = useRef(false);
+  const userInitiatedSignOutRef = useRef(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
+      if (newSession) {
+        hadSessionRef.current = true;
+        setSessionExpired(false);
+      }
+      if (event === 'SIGNED_OUT') {
+        clearAccountLocalState();
+        if (hadSessionRef.current && !userInitiatedSignOutRef.current) {
+          setSessionExpired(true);
+        }
+        hadSessionRef.current = false;
+        userInitiatedSignOutRef.current = false;
+      }
       if (event === 'PASSWORD_RECOVERY') {
         setIsPasswordRecovery(true);
       }
@@ -44,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      if (data.session) hadSessionRef.current = true;
       if (hasAuthCallbackHash()) {
         const hash = window.location.hash;
         if (hash.includes('type=recovery')) {
@@ -52,6 +86,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         cleanAuthHashFromUrl();
       }
+      setIsLoading(false);
+    }).catch((err) => {
+      // Sin red al restaurar la sesión: no dejar la app esperando para siempre.
+      console.error('Error restoring session:', err);
       setIsLoading(false);
     });
 
@@ -103,6 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    userInitiatedSignOutRef.current = true;
     await supabase.auth.signOut();
   };
 
@@ -119,6 +158,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isSignedIn: !!session,
         isLoading,
         isPasswordRecovery,
+        sessionExpired,
+        dismissSessionExpired: () => setSessionExpired(false),
         clearPasswordRecovery,
         signInWithPassword,
         signUp,
