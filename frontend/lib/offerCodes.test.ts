@@ -18,3 +18,17 @@ describe('canonicalOfferCourseCode', () => {
     expect(offerCodeVariants('ARTE')).toEqual(['ARTE']);
   });
 });
+
+describe('canonicalOfferCourseCode (compatibilidad de parser)', () => {
+  it('el patrón del sufijo E no usa lookbehind (Safari < 16.4 no lo parsea)', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync(new URL('./offerCodes.ts', import.meta.url), 'utf8');
+    expect(src).not.toMatch(/\(\?<[=!]/);
+  });
+
+  it('solo quita la E final precedida de dígito', () => {
+    expect(canonicalOfferCourseCode('ADM-3001E')).toBe('ADM-3001');
+    expect(canonicalOfferCourseCode('ADM-3001')).toBe('ADM-3001');
+    expect(canonicalOfferCourseCode('CMP-4004EE')).toBe('CMP-4004EE');
+  });
+});
