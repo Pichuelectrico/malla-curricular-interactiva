@@ -22,6 +22,7 @@ import { ensureBrowsersInstalled } from "./setup-env.js";
 import { chromium, type Page } from "playwright";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
+import { disambiguateRecurringCourses } from "./recurringCourses";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -437,7 +438,7 @@ async function scrapeMalla(
     });
   }
 
-  return courses;
+  return disambiguateRecurringCourses(courses);
 }
 
 // ─── CLI entry point ──────────────────────────────────────────────────────────

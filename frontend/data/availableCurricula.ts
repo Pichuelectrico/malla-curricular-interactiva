@@ -701,6 +701,21 @@ export const availableCurricula: AvailableCurriculum[] = [
     },
   },
   {
+    id: "mps-usfq",
+    slug: "malla-mps",
+    name: "Producción Musical y Sonora",
+    description: "Universidad San Francisco de Quito",
+    year: "2026",
+    credits: 126,
+    courses: 62,
+    dataLoader: async () => {
+      const base = (import.meta as any).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/Malla-MPS.json`);
+      if (!res.ok) throw new Error('No se pudo cargar /data/Malla-MPS.json');
+      return { default: await res.json() };
+    },
+  },
+  {
     id: "psi-usfq",
     slug: "malla-psi",
     name: "Psicología",
