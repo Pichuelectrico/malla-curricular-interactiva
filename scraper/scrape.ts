@@ -77,7 +77,7 @@ interface RawCourse {
 }
 
 // ─── Known careers ────────────────────────────────────────────────────────────
-// codigoCarrera for USFQ API = "1" + code (e.g. BTC → 1BTC)
+// Default codigoCarrera = "1" + code; Galápagos careers may override the prefix.
 const KNOWN_CAREERS: CareerEntry[] = [
   { code: "ADM", name: "Administración de Empresas" },
   { code: "ANT", name: "Antropología" },
@@ -120,7 +120,17 @@ const KNOWN_CAREERS: CareerEntry[] = [
   { code: "PSC", name: "Psicología Clínica" },
   { code: "DIT", name: "Diseño de Interiores" },
   { code: "PUB", name: "Publicidad" },
-].map(({ code, name }) => ({ code, name, codigoCarrera: `1${code}` }));
+  { code: "AND", name: "Animación Digital" },
+  { code: "ARL", name: "Artes Liberales" },
+  { code: "ARM", name: "Artes Visuales: Diseño de Modas" },
+  { code: "DMI", name: "Diseño de Medios Interactivos" },
+  { code: "INA", name: "Ingeniería Ambiental" },
+  { code: "MPS", name: "Producción Musical y Sonora" },
+  { code: "REL", name: "Relaciones Internacionales" },
+  { code: "GAM", name: "Gestión Ambiental en Galápagos", codigoCarrera: "3GAM" },
+  { code: "ADMG", name: "Administración de Empresas (Galápagos)", codigoCarrera: "3ADM" },
+  { code: "BSC", name: "Biología (Santa Cruz)", codigoCarrera: "1BIO" },
+].map(({ code, name, codigoCarrera }) => ({ code, name, codigoCarrera: codigoCarrera ?? `1${code}` }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
